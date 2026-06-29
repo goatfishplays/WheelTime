@@ -1,0 +1,37 @@
+\doxysection{Inputs.\+hpp}
+\hypertarget{_inputs_8hpp_source}{}\label{_inputs_8hpp_source}\index{E:/Github/WheelTime/platform/include/Platform/Inputs.hpp@{E:/Github/WheelTime/platform/include/Platform/Inputs.hpp}}
+\doxymbox{\hyperlink{_inputs_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_platform}{Platform}}}
+\DoxyCodeLine{00018\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_platform_1_1_input_rcvr_ab4515f10ee7adde317ee4d9a1556d399}{InputRcvr}}}
+\DoxyCodeLine{00024\ \ \ \ \ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_ab4515f10ee7adde317ee4d9a1556d399}{InputRcvr}}();}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_aa8d43c61b8b55decf1e55c8d34dcfc32}{\string~InputRcvr}}();}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_platform_1_1_input_rcvr_1_1_v_e_c2}{VEC2}}}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_platform_1_1_input_rcvr_1_1_v_e_c2_a736f307c05d60eb18e890d37c021dea4}{x}};}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_platform_1_1_input_rcvr_1_1_v_e_c2_a509c23592d11fd01dcd8093f1bf9bd2d}{y}};}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ Oh\ gosh\ I\ just\ realized\ multimonitor\ exists,\ I\ have\ no\ idea\ how\ that\ works,\ good\ luck\ :)}}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_platform_1_1_input_rcvr_1_1_v_e_c2}{VEC2}}\ \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_adb0e7697316ea117d13ad387c594e305}{getAbsoluteMousePosition}}();}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_platform_1_1_input_rcvr_1_1_v_e_c2}{VEC2}}\ \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_ab98ef6af3da3c2981f2a8d6fe7bea758}{getRelativeMousePosition}}();}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_a30bf3d0fa4b56a06a42671cad7ce46bb}{registerInputBinding}}(\textcolor{keywordtype}{int});}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{keyword}{class\ }Impl;}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ std::unique\_ptr<Impl>\ m\_impl;}
+\DoxyCodeLine{00069\ \ \ \ \ \};}
+\DoxyCodeLine{00070\ \}}
+
+\end{DoxyCode}
