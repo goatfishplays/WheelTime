@@ -62,6 +62,14 @@ namespace Platform
          */
         void registerInputBinding(Hotkey);
 
+        /**
+         * @brief Unregisters an input being tracked
+         *
+         * Currently only aim to support keyboard inputs
+         *
+         */
+        void unregisterInputBinding(Hotkey);
+
     private:
         /**
          * @brief The actual implementation detail

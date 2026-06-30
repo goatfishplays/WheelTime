@@ -1,0 +1,148 @@
+\doxysection{App::\+Menu Class Reference}
+\hypertarget{class_app_1_1_menu}{}\label{class_app_1_1_menu}\index{App::Menu@{App::Menu}}
+
+
+{\ttfamily \+\#include $<$App.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{class_app_1_1_menu_aa6c4bb69435768a0483d4cea56a5402e}{add\+Action}} (int ind, \doxymbox{\hyperlink{class_app_1_1_action}{Action}} action)
+\begin{DoxyCompactList}\small\item\em Add an action to this menu. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_app_1_1_menu_a67e1668fbe6313c7ec6454929bcc20e0}{rem\+Action}} (int ind)
+\begin{DoxyCompactList}\small\item\em Remove an action from this menu. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{class_app_1_1_menu_a5e393590ea8c4532d7902c18e1f8c288}{num\+Actions}} ()
+\begin{DoxyCompactList}\small\item\em Gets the number of actions in this menu. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_app_1_1_menu_a9a6f842bd99ba642f35df4562e83752d}{save}} (std::\+string filepath)
+\begin{DoxyCompactList}\small\item\em Saves menu/\+settings to a file. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_app_1_1_menu_a28faeadd36a50e76c16933f0c384feeb}{load}} (std::\+string filepath)
+\begin{DoxyCompactList}\small\item\em Loads menu/\+settings from a file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{struct_platform_1_1_hotkey}{Platform::\+\+Hotkey}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_app_1_1_menu_ae83d0fe94b99fddf2eb5c43474d32625}{hotkey}}
+\begin{DoxyCompactList}\small\item\em Hotkey to trigger this menu, if not set then this will likely only be being used as a recursive menu. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_app_1_1_menu_a4cb894490cb0186651102be0424d531f}{execute\+On\+Release}}
+\begin{DoxyCompactList}\small\item\em On hotkey release will automatically execute the action under the mouse. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_app_1_1_menu_aa5024e3875df88283f5853bb40d6fe82}{exit\+On\+Action}}
+\begin{DoxyCompactList}\small\item\em Automatically exit the menu on performing an action(as opposed to individual actions requiring exit, allows people to spam buttons easier). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{class_app_1_1_menu_doc-func-members}
+\Hypertarget{class_app_1_1_menu_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_app_1_1_menu_aa6c4bb69435768a0483d4cea56a5402e}\index{App::Menu@{App::Menu}!addAction@{addAction}}
+\index{addAction@{addAction}!App::Menu@{App::Menu}}
+\doxysubsubsection{\texorpdfstring{addAction()}{addAction()}}
+{\footnotesize\ttfamily \label{class_app_1_1_menu_aa6c4bb69435768a0483d4cea56a5402e} 
+void App::\+\+Menu::\+add\+Action (\begin{DoxyParamCaption}\item[{int}]{ind}{, }\item[{\doxymbox{\hyperlink{class_app_1_1_action}{Action}}}]{action}{}\end{DoxyParamCaption})}
+
+
+
+Add an action to this menu. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ind} & Index of action to add \\
+\hline
+{\em action} & \doxylink{class_app_1_1_action}{Action} to add \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_app_1_1_menu_a28faeadd36a50e76c16933f0c384feeb}\index{App::Menu@{App::Menu}!load@{load}}
+\index{load@{load}!App::Menu@{App::Menu}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily \label{class_app_1_1_menu_a28faeadd36a50e76c16933f0c384feeb} 
+void App::\+\+Menu::\+load (\begin{DoxyParamCaption}\item[{std::\+string}]{filepath}{}\end{DoxyParamCaption})}
+
+
+
+Loads menu/\+settings from a file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filepath} & file to load from \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_app_1_1_menu_a5e393590ea8c4532d7902c18e1f8c288}\index{App::Menu@{App::Menu}!numActions@{numActions}}
+\index{numActions@{numActions}!App::Menu@{App::Menu}}
+\doxysubsubsection{\texorpdfstring{numActions()}{numActions()}}
+{\footnotesize\ttfamily \label{class_app_1_1_menu_a5e393590ea8c4532d7902c18e1f8c288} 
+int App::\+\+Menu::\+num\+Actions (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Gets the number of actions in this menu. 
+
+\begin{DoxyReturn}{Returns}
+int 
+\end{DoxyReturn}
+\Hypertarget{class_app_1_1_menu_a67e1668fbe6313c7ec6454929bcc20e0}\index{App::Menu@{App::Menu}!remAction@{remAction}}
+\index{remAction@{remAction}!App::Menu@{App::Menu}}
+\doxysubsubsection{\texorpdfstring{remAction()}{remAction()}}
+{\footnotesize\ttfamily \label{class_app_1_1_menu_a67e1668fbe6313c7ec6454929bcc20e0} 
+void App::\+\+Menu::\+rem\+Action (\begin{DoxyParamCaption}\item[{int}]{ind}{}\end{DoxyParamCaption})}
+
+
+
+Remove an action from this menu. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ind} & Index of action to remove \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_app_1_1_menu_a9a6f842bd99ba642f35df4562e83752d}\index{App::Menu@{App::Menu}!save@{save}}
+\index{save@{save}!App::Menu@{App::Menu}}
+\doxysubsubsection{\texorpdfstring{save()}{save()}}
+{\footnotesize\ttfamily \label{class_app_1_1_menu_a9a6f842bd99ba642f35df4562e83752d} 
+void App::\+\+Menu::\+save (\begin{DoxyParamCaption}\item[{std::\+string}]{filepath}{}\end{DoxyParamCaption})}
+
+
+
+Saves menu/\+settings to a file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filepath} & file to save to \\
+\hline
+\end{DoxyParams}
+
+
+\label{class_app_1_1_menu_doc-variable-members}
+\Hypertarget{class_app_1_1_menu_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_app_1_1_menu_a4cb894490cb0186651102be0424d531f}\index{App::Menu@{App::Menu}!executeOnRelease@{executeOnRelease}}
+\index{executeOnRelease@{executeOnRelease}!App::Menu@{App::Menu}}
+\doxysubsubsection{\texorpdfstring{executeOnRelease}{executeOnRelease}}
+{\footnotesize\ttfamily \label{class_app_1_1_menu_a4cb894490cb0186651102be0424d531f} 
+bool App::\+\+Menu::\+execute\+On\+Release}
+
+
+
+On hotkey release will automatically execute the action under the mouse. 
+
+\Hypertarget{class_app_1_1_menu_aa5024e3875df88283f5853bb40d6fe82}\index{App::Menu@{App::Menu}!exitOnAction@{exitOnAction}}
+\index{exitOnAction@{exitOnAction}!App::Menu@{App::Menu}}
+\doxysubsubsection{\texorpdfstring{exitOnAction}{exitOnAction}}
+{\footnotesize\ttfamily \label{class_app_1_1_menu_aa5024e3875df88283f5853bb40d6fe82} 
+bool App::\+\+Menu::\+exit\+On\+Action}
+
+
+
+Automatically exit the menu on performing an action(as opposed to individual actions requiring exit, allows people to spam buttons easier). 
+
+\Hypertarget{class_app_1_1_menu_ae83d0fe94b99fddf2eb5c43474d32625}\index{App::Menu@{App::Menu}!hotkey@{hotkey}}
+\index{hotkey@{hotkey}!App::Menu@{App::Menu}}
+\doxysubsubsection{\texorpdfstring{hotkey}{hotkey}}
+{\footnotesize\ttfamily \label{class_app_1_1_menu_ae83d0fe94b99fddf2eb5c43474d32625} 
+\doxymbox{\hyperlink{struct_platform_1_1_hotkey}{Platform::\+\+Hotkey}}\texorpdfstring{$\ast$}{*} App::\+\+Menu::\+hotkey}
+
+
+
+Hotkey to trigger this menu, if not set then this will likely only be being used as a recursive menu. 
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\doxymbox{\hyperlink{_app_8hpp}{App.\+hpp}}\end{DoxyCompactItemize}

@@ -1,5 +1,5 @@
 add_library(App 
-    src/Application.cpp
+    src/App.cpp
 )
 
 target_include_directories(App 

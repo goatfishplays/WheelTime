@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hwnd_0',['hwnd',['../class_window_1_1_impl.html#a3f8c38141f5aabb33ab83910bb892839',1,'Window::Impl']]]
+  ['duration_0',['duration',['../class_app_1_1_a_i___delay.html#af062a952ae1869c05a1f0a09f4d2a06f',1,'App::AI_Delay']]]
 ];

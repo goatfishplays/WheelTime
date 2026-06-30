@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['note_20for_20team_0',['Note For Team',['../index.html#autotoc_md5',1,'']]]
+  ['handling_0',['Error Handling',['../md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics.html#autotoc_md9',1,'']]],
+  ['hotkey_1',['Receiving the Hotkey',['../md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics.html#autotoc_md5',1,'']]]
 ];

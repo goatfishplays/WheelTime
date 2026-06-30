@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hide_0',['hide',['../class_platform_1_1_window.html#ad858d283d92fdce5ac5ddc422e319811',1,'Platform::Window']]]
+  ['focus_0',['focus',['../class_platform_1_1_window.html#a03985e4ca2c9b4fcf572b5029e8c0115',1,'Platform::Window']]]
 ];

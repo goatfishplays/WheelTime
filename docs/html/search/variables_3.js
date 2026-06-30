@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['y_0',['y',['../struct_platform_1_1_input_rcvr_1_1_v_e_c2.html#a509c23592d11fd01dcd8093f1bf9bd2d',1,'Platform::InputRcvr::VEC2']]]
+  ['holdduration_0',['holdDuration',['../class_app_1_1_a_i___keystroke.html#a64df2bfe4df1c38d920985be7702db0c',1,'App::AI_Keystroke']]],
+  ['hotkey_1',['hotkey',['../class_app_1_1_menu.html#ae83d0fe94b99fddf2eb5c43474d32625',1,'App::Menu']]],
+  ['hwnd_2',['hwnd',['../class_window_1_1_impl.html#a3f8c38141f5aabb33ab83910bb892839',1,'Window::Impl']]]
 ];

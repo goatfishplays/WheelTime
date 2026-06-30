@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['getabsolutemouseposition_0',['getAbsoluteMousePosition',['../class_platform_1_1_input_rcvr.html#adb0e7697316ea117d13ad387c594e305',1,'Platform::InputRcvr']]],
-  ['getrelativemouseposition_1',['getRelativeMousePosition',['../class_platform_1_1_input_rcvr.html#ab98ef6af3da3c2981f2a8d6fe7bea758',1,'Platform::InputRcvr']]]
+  ['filepath_0',['filepath',['../class_app_1_1_a_i___script.html#a828f7e1e9eb5cc3e975d5f099ad33def',1,'App::AI_Script']]],
+  ['focus_1',['focus',['../class_platform_1_1_window.html#a03985e4ca2c9b4fcf572b5029e8c0115',1,'Platform::Window']]],
+  ['focus_20info_2',['Window Focus Info',['../md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics.html#autotoc_md7',1,'']]],
+  ['for_20team_3',['Note For Team',['../index.html#autotoc_md12',1,'']]]
 ];

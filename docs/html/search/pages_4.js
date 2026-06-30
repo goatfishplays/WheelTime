@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['platform_3a_0',['Platform:',['../dir_c5a52a81292cf9a5167198f4f346d6d9.html#autotoc_md3',1,'']]]
+  ['info_0',['Window Focus Info',['../md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics.html#autotoc_md7',1,'']]]
 ];

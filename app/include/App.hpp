@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <Platform/Inputs.hpp>
+#include <Platform/Window.hpp>
 
 namespace App
 {

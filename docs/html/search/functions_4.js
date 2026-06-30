@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['main_0',['main',['../main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'main.cpp']]]
+  ['hide_0',['hide',['../class_platform_1_1_window.html#ad858d283d92fdce5ac5ddc422e319811',1,'Platform::Window']]]
 ];

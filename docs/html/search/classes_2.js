@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['window_0',['Window',['../class_platform_1_1_window.html',1,'Platform']]]
+  ['hotkey_0',['Hotkey',['../struct_platform_1_1_hotkey.html',1,'Platform']]]
 ];

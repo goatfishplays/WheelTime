@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['instance_0',['instance',['../class_window_1_1_impl.html#a43cb580c1d779a79ddd2f7333bf299b0',1,'Window::Impl']]]
+  ['executeonrelease_0',['executeOnRelease',['../class_app_1_1_menu.html#a4cb894490cb0186651102be0424d531f',1,'App::Menu']]],
+  ['exitonaction_1',['exitOnAction',['../class_app_1_1_menu.html#aa5024e3875df88283f5853bb40d6fe82',1,'App::Menu']]]
 ];
