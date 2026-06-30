@@ -16,6 +16,18 @@
 
 namespace Platform
 {
+    // TODO: Come up with legend for special keys, mouse buttons, midi, etc
+    struct Hotkey
+    {
+        int input;
+        int mod;
+    };
+    struct Vec2
+    {
+        int x;
+        int y;
+    };
+
     /**
      * @brief OS agnostic input receiver
      *
@@ -25,11 +37,6 @@ namespace Platform
     public:
         InputRcvr();
         ~InputRcvr();
-        struct VEC2
-        {
-            int x;
-            int y;
-        };
         // TODO: Oh gosh I just realized multimonitor exists, I have no idea how that works, good luck :)
         /**
          * @brief Get mouse position relative to the monitor
@@ -37,7 +44,7 @@ namespace Platform
          * Note: Position is x: left to right, y: top to bottom
          *
          */
-        VEC2 getAbsoluteMousePosition();
+        Vec2 getAbsoluteMousePosition();
 
         /**
          * @brief Get mouse position relative to window,
@@ -45,19 +52,15 @@ namespace Platform
          * Note: Position is x: left to right, y: top to bottom
          *
          */
-        VEC2 getRelativeMousePosition();
+        Vec2 getRelativeMousePosition();
 
         /**
          * @brief Registers an input to be tracked
          *
          * Currently only aim to support keyboard inputs
          *
-         * TODO: MIDI and mouse extra buttons and other input support
-         *
-         * TODO: Come up with legend for special keys and modifiers "<C-KEY>"" perhaps or something or make separate mod arg, would probs be better to handle this with ints or something anyway
-         *
          */
-        void registerInputBinding(int);
+        void registerInputBinding(Hotkey);
 
     private:
         /**

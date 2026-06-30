@@ -12,23 +12,45 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <Platform/Inputs.hpp>
 
 namespace App
 {
     /**
-     * @brief
+     * @brief Controls the current state of the application and visible window
      */
     class App
     {
     public:
         App();
         ~App();
-        Settings settings;
+        /// @brief All currently cached/loaded menus TODO: likely want to keep a timer/lifetime + lru combo for menus or just load all
+        std::vector<Menu *> loadedMenus;
+
+        /// @brief Gets the active Menu
+        /// @return Pointer to the active menu
+        Menu *getActiveMenu();
+
+        /// @brief Set the active menu
+        /// @param menu
+        void setActiveMenu(Menu *menu);
+
+        /// @brief Exits the active menu and returns to previous window (or newly open window? might need to look into this)
+        void exitMenu();
+
+        /// @brief Run an action
+        /// @param action
+        void runAction(Action action);
 
     private:
+        /// @brief The currently viewed menu
+        Menu *activeMenu;
+
+        Platform::Vec2 priorMousePos;
+        Platform::Window window;
     };
 
-    class Settings
+    class Menu
     {
     public:
         /**
@@ -54,21 +76,28 @@ namespace App
         int numActions();
 
         /**
-         * @brief Saves settings to a file
+         * @brief Saves menu/settings to a file
          *
          * @param filepath file to save to
          */
         void save(std::string filepath);
 
         /**
-         * @brief Loads settings from a file
+         * @brief Loads menu/settings from a file
          *
          * @param filepath file to load from
          */
         void load(std::string filepath);
 
+        /// @brief Hotkey to trigger this menu, if not set then this will likely only be being used as a recursive menu
+        // TODO: Might be better to have app control hotkeys
+        Platform::Hotkey *hotkey;
+
         /// @brief On hotkey release will automatically execute the action under the mouse
         bool executeOnRelease;
+
+        /// @brief Automatically exit the menu on performing an action(as opposed to individual actions requiring exit, allows people to spam buttons easier)
+        bool exitOnAction;
 
     private:
         std::vector<Action> actions;
@@ -87,7 +116,7 @@ namespace App
          * @param ind Index of item to add
          * @param ai Action item to add
          */
-        void addItem(int ind, ActionItem ai);
+        void addItem(int ind, ActionItem &ai);
 
         /**
          * @brief Remove an item from the sequence
