@@ -1,0 +1,93 @@
+\doxysection{Platform::\+Input\+Rcvr Class Reference}
+\hypertarget{class_platform_1_1_input_rcvr}{}\label{class_platform_1_1_input_rcvr}\index{Platform::InputRcvr@{Platform::InputRcvr}}
+
+
+OS agnostic input receiver.  
+
+
+
+
+{\ttfamily \+\#include $<$Inputs.\+hpp$>$}
+
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_platform_1_1_input_rcvr_1_1_v_e_c2}{VEC2}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_platform_1_1_input_rcvr_ab4515f10ee7adde317ee4d9a1556d399}{Input\+Rcvr}} ()
+\item 
+\doxymbox{\hyperlink{class_platform_1_1_input_rcvr_aa8d43c61b8b55decf1e55c8d34dcfc32}{\texorpdfstring{$\sim$}{\string~}\+Input\+Rcvr}} ()
+\item 
+\doxymbox{\hyperlink{struct_platform_1_1_input_rcvr_1_1_v_e_c2}{VEC2}} \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_adb0e7697316ea117d13ad387c594e305}{get\+Absolute\+Mouse\+Position}} ()
+\begin{DoxyCompactList}\small\item\em Get mouse position relative to the monitor. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_platform_1_1_input_rcvr_1_1_v_e_c2}{VEC2}} \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_ab98ef6af3da3c2981f2a8d6fe7bea758}{get\+Relative\+Mouse\+Position}} ()
+\begin{DoxyCompactList}\small\item\em Get mouse position relative to window,. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_a30bf3d0fa4b56a06a42671cad7ce46bb}{register\+Input\+Binding}} (int)
+\begin{DoxyCompactList}\small\item\em Registers an input to be tracked. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+OS agnostic input receiver. 
+
+\label{class_platform_1_1_input_rcvr_doc-constructors}
+\Hypertarget{class_platform_1_1_input_rcvr_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_platform_1_1_input_rcvr_ab4515f10ee7adde317ee4d9a1556d399}\index{Platform::InputRcvr@{Platform::InputRcvr}!InputRcvr@{InputRcvr}}
+\index{InputRcvr@{InputRcvr}!Platform::InputRcvr@{Platform::InputRcvr}}
+\doxysubsubsection{\texorpdfstring{InputRcvr()}{InputRcvr()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_input_rcvr_ab4515f10ee7adde317ee4d9a1556d399} 
+Platform::\+\+Input\+Rcvr::\+\+Input\+Rcvr (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_platform_1_1_input_rcvr_aa8d43c61b8b55decf1e55c8d34dcfc32}\index{Platform::InputRcvr@{Platform::InputRcvr}!````~InputRcvr@{\texorpdfstring{$\sim$}{\string~}InputRcvr}}
+\index{````~InputRcvr@{\texorpdfstring{$\sim$}{\string~}InputRcvr}!Platform::InputRcvr@{Platform::InputRcvr}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}InputRcvr()}{\string~InputRcvr()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_input_rcvr_aa8d43c61b8b55decf1e55c8d34dcfc32} 
+Platform::\+\+Input\+Rcvr::\+\texorpdfstring{$\sim$}{\string~}\+Input\+Rcvr (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+\label{class_platform_1_1_input_rcvr_doc-func-members}
+\Hypertarget{class_platform_1_1_input_rcvr_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_platform_1_1_input_rcvr_adb0e7697316ea117d13ad387c594e305}\index{Platform::InputRcvr@{Platform::InputRcvr}!getAbsoluteMousePosition@{getAbsoluteMousePosition}}
+\index{getAbsoluteMousePosition@{getAbsoluteMousePosition}!Platform::InputRcvr@{Platform::InputRcvr}}
+\doxysubsubsection{\texorpdfstring{getAbsoluteMousePosition()}{getAbsoluteMousePosition()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_input_rcvr_adb0e7697316ea117d13ad387c594e305} 
+\doxymbox{\hyperlink{struct_platform_1_1_input_rcvr_1_1_v_e_c2}{VEC2}} Platform::\+\+Input\+Rcvr::\+get\+Absolute\+Mouse\+Position (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Get mouse position relative to the monitor. 
+
+Note:\+ Position is x:\+ left to right, y:\+ top to bottom \Hypertarget{class_platform_1_1_input_rcvr_ab98ef6af3da3c2981f2a8d6fe7bea758}\index{Platform::InputRcvr@{Platform::InputRcvr}!getRelativeMousePosition@{getRelativeMousePosition}}
+\index{getRelativeMousePosition@{getRelativeMousePosition}!Platform::InputRcvr@{Platform::InputRcvr}}
+\doxysubsubsection{\texorpdfstring{getRelativeMousePosition()}{getRelativeMousePosition()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_input_rcvr_ab98ef6af3da3c2981f2a8d6fe7bea758} 
+\doxymbox{\hyperlink{struct_platform_1_1_input_rcvr_1_1_v_e_c2}{VEC2}} Platform::\+\+Input\+Rcvr::\+get\+Relative\+Mouse\+Position (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Get mouse position relative to window,. 
+
+Note:\+ Position is x:\+ left to right, y:\+ top to bottom \Hypertarget{class_platform_1_1_input_rcvr_a30bf3d0fa4b56a06a42671cad7ce46bb}\index{Platform::InputRcvr@{Platform::InputRcvr}!registerInputBinding@{registerInputBinding}}
+\index{registerInputBinding@{registerInputBinding}!Platform::InputRcvr@{Platform::InputRcvr}}
+\doxysubsubsection{\texorpdfstring{registerInputBinding()}{registerInputBinding()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_input_rcvr_a30bf3d0fa4b56a06a42671cad7ce46bb} 
+void Platform::\+\+Input\+Rcvr::\+register\+Input\+Binding (\begin{DoxyParamCaption}\item[{int}]{}{}\end{DoxyParamCaption})}
+
+
+
+Registers an input to be tracked. 
+
+Currently only aim to support keyboard inputs
+
+TODO:\+ MIDI and mouse extra buttons and other input support
+
+TODO:\+ Come up with legend for special keys and modifiers "{}$<$\+C-\/\+KEY$>$"{}"{} perhaps or something or make separate mod arg, would probs be better to handle this with ints or something anyway 
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+platform/\+include/\+\+Platform/\+\doxymbox{\hyperlink{_inputs_8hpp}{Inputs.\+hpp}}\end{DoxyCompactItemize}

@@ -1,1 +1,0 @@
-// Window controls such as bringing it forth or hiding it once again
