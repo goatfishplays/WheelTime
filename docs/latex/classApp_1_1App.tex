@@ -1,0 +1,129 @@
+\doxysection{App::\+App Class Reference}
+\hypertarget{classApp_1_1App}{}\label{classApp_1_1App}\index{App::App@{App::App}}
+
+
+Controls the current state of the application and visible window.  
+
+
+
+
+{\ttfamily \+\#include $<$App.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classApp_1_1App_a4ae3379e31cfdeaceca189eed92e507b}{App}} ()
+\item 
+\doxymbox{\hyperlink{classApp_1_1App_a1d67fe363d8d6a30d1205c7f78d61c3b}{\texorpdfstring{$\sim$}{\string~}\+App}} ()
+\item 
+\doxymbox{\hyperlink{classApp_1_1Menu}{Menu}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{classApp_1_1App_a929ff86eb4dd3edad7f9bab285b78ca5}{get\+Active\+Menu}} ()
+\begin{DoxyCompactList}\small\item\em Gets the active \doxylink{classApp_1_1Menu}{Menu}. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{classApp_1_1App_abf37e59ee3f68d10530783ae42a3484f}{set\+Active\+Menu}} (\doxymbox{\hyperlink{classApp_1_1Menu}{Menu}} \texorpdfstring{$\ast$}{*}menu)
+\begin{DoxyCompactList}\small\item\em Set the active menu. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{classApp_1_1App_a444f83f995079ae3fb9b22dacfaa97e8}{exit\+Menu}} ()
+\begin{DoxyCompactList}\small\item\em Exits the active menu and returns to previous window (or newly open window? might need to look into this). \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{classApp_1_1App_a8953b968ef9a8941cf5f3906020e8af6}{run\+Action}} (\doxymbox{\hyperlink{classApp_1_1Action}{Action}} action)
+\begin{DoxyCompactList}\small\item\em Run an action. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std::\+vector$<$ \doxymbox{\hyperlink{classApp_1_1Menu}{Menu}} \texorpdfstring{$\ast$}{*} $>$ \doxymbox{\hyperlink{classApp_1_1App_a18c6cb7759f2a78f482e45580acabccf}{loaded\+Menus}}
+\begin{DoxyCompactList}\small\item\em All currently cached/\+loaded menus TODO:\+ likely want to keep a timer/\+lifetime + lru combo for menus or just load all. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Controls the current state of the application and visible window. 
+
+\label{doc-constructors}
+\Hypertarget{classApp_1_1App_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classApp_1_1App_a4ae3379e31cfdeaceca189eed92e507b}\index{App::App@{App::App}!App@{App}}
+\index{App@{App}!App::App@{App::App}}
+\doxysubsubsection{\texorpdfstring{App()}{App()}}
+{\footnotesize\ttfamily \label{classApp_1_1App_a4ae3379e31cfdeaceca189eed92e507b} 
+App::\+\+App::\+\+App (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{classApp_1_1App_a1d67fe363d8d6a30d1205c7f78d61c3b}\index{App::App@{App::App}!````~App@{\texorpdfstring{$\sim$}{\string~}App}}
+\index{````~App@{\texorpdfstring{$\sim$}{\string~}App}!App::App@{App::App}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}App()}{\string~App()}}
+{\footnotesize\ttfamily \label{classApp_1_1App_a1d67fe363d8d6a30d1205c7f78d61c3b} 
+App::\+\+App::\+\texorpdfstring{$\sim$}{\string~}\+App (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+\label{doc-func-members}
+\Hypertarget{classApp_1_1App_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classApp_1_1App_a444f83f995079ae3fb9b22dacfaa97e8}\index{App::App@{App::App}!exitMenu@{exitMenu}}
+\index{exitMenu@{exitMenu}!App::App@{App::App}}
+\doxysubsubsection{\texorpdfstring{exitMenu()}{exitMenu()}}
+{\footnotesize\ttfamily \label{classApp_1_1App_a444f83f995079ae3fb9b22dacfaa97e8} 
+void App::\+\+App::\+exit\+Menu (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Exits the active menu and returns to previous window (or newly open window? might need to look into this). 
+
+\Hypertarget{classApp_1_1App_a929ff86eb4dd3edad7f9bab285b78ca5}\index{App::App@{App::App}!getActiveMenu@{getActiveMenu}}
+\index{getActiveMenu@{getActiveMenu}!App::App@{App::App}}
+\doxysubsubsection{\texorpdfstring{getActiveMenu()}{getActiveMenu()}}
+{\footnotesize\ttfamily \label{classApp_1_1App_a929ff86eb4dd3edad7f9bab285b78ca5} 
+\doxymbox{\hyperlink{classApp_1_1Menu}{Menu}} \texorpdfstring{$\ast$}{*} App::\+\+App::\+get\+Active\+Menu (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Gets the active \doxylink{classApp_1_1Menu}{Menu}. 
+
+\begin{DoxyReturn}{Returns}
+Pointer to the active menu 
+\end{DoxyReturn}
+\Hypertarget{classApp_1_1App_a8953b968ef9a8941cf5f3906020e8af6}\index{App::App@{App::App}!runAction@{runAction}}
+\index{runAction@{runAction}!App::App@{App::App}}
+\doxysubsubsection{\texorpdfstring{runAction()}{runAction()}}
+{\footnotesize\ttfamily \label{classApp_1_1App_a8953b968ef9a8941cf5f3906020e8af6} 
+void App::\+\+App::\+run\+Action (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classApp_1_1Action}{Action}}}]{action}{}\end{DoxyParamCaption})}
+
+
+
+Run an action. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em action} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classApp_1_1App_abf37e59ee3f68d10530783ae42a3484f}\index{App::App@{App::App}!setActiveMenu@{setActiveMenu}}
+\index{setActiveMenu@{setActiveMenu}!App::App@{App::App}}
+\doxysubsubsection{\texorpdfstring{setActiveMenu()}{setActiveMenu()}}
+{\footnotesize\ttfamily \label{classApp_1_1App_abf37e59ee3f68d10530783ae42a3484f} 
+void App::\+\+App::\+set\+Active\+Menu (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{classApp_1_1Menu}{Menu}} \texorpdfstring{$\ast$}{*}}]{menu}{}\end{DoxyParamCaption})}
+
+
+
+Set the active menu. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em menu} & \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-variable-members}
+\Hypertarget{classApp_1_1App_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classApp_1_1App_a18c6cb7759f2a78f482e45580acabccf}\index{App::App@{App::App}!loadedMenus@{loadedMenus}}
+\index{loadedMenus@{loadedMenus}!App::App@{App::App}}
+\doxysubsubsection{\texorpdfstring{loadedMenus}{loadedMenus}}
+{\footnotesize\ttfamily \label{classApp_1_1App_a18c6cb7759f2a78f482e45580acabccf} 
+std::\+vector$<$\doxymbox{\hyperlink{classApp_1_1Menu}{Menu}} \texorpdfstring{$\ast$}{*}$>$ App::\+\+App::\+loaded\+Menus}
+
+
+
+All currently cached/\+loaded menus TODO:\+ likely want to keep a timer/\+lifetime + lru combo for menus or just load all. 
+
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+/\+shr/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\doxymbox{\hyperlink{App_8hpp}{App.\+hpp}}\end{DoxyCompactItemize}

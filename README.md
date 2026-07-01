@@ -24,9 +24,9 @@ The MVP is complete when:
 ## Tech Stack
 
 - Language: C++
-- Core Libraries: Windows API
+- Core Libraries: Windows API, QT
 - Build System: CMake
-- Development Tools: VSCode, Cursor, Git/GitHub
+- Development Tools: VSCode, Cursor, Git/GitHub, Doxygen
 
 ## Sprint 1 Goal
 
@@ -55,3 +55,10 @@ mkdir build
 cd build
 cmake ..
 cmake --build .
+
+## Document Regeneration
+
+```bash
+cd docs
+doxygen
+```

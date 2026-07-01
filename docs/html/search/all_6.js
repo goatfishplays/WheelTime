@@ -1,9 +1,8 @@
 var searchData=
 [
-  ['impl_0',['Impl',['../class_window_1_1_impl.html',1,'Platform::Window']]],
-  ['info_1',['Window Focus Info',['../md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics.html#autotoc_md7',1,'']]],
-  ['input_2',['input',['../struct_platform_1_1_hotkey.html#a4884bccbc203cb7ee8cef97d9238d69b',1,'Platform::Hotkey']]],
-  ['inputrcvr_3',['InputRcvr',['../class_platform_1_1_input_rcvr.html',1,'Platform::InputRcvr'],['../class_platform_1_1_input_rcvr.html#ab4515f10ee7adde317ee4d9a1556d399',1,'Platform::InputRcvr::InputRcvr()']]],
-  ['inputs_2ehpp_4',['Inputs.hpp',['../_inputs_8hpp.html',1,'']]],
-  ['instance_5',['instance',['../class_window_1_1_impl.html#a43cb580c1d779a79ddd2f7333bf299b0',1,'Window::Impl']]]
+  ['getabsolutemouseposition_0',['getAbsoluteMousePosition',['../classPlatform_1_1InputRcvr.html#a7876b5f6c8a133340fce671a742873db',1,'Platform::InputRcvr']]],
+  ['getactivemenu_1',['getActiveMenu',['../classApp_1_1App.html#a929ff86eb4dd3edad7f9bab285b78ca5',1,'App::App']]],
+  ['getrelativemouseposition_2',['getRelativeMousePosition',['../classPlatform_1_1InputRcvr.html#aeced2a888895a39a85974ab096a01f9a',1,'Platform::InputRcvr']]],
+  ['goal_3',['Sprint 1 Goal',['../index.html#autotoc_md15',1,'']]],
+  ['goals_4',['Project Goals',['../index.html#autotoc_md12',1,'']]]
 ];

@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['save_0',['save',['../class_app_1_1_menu.html#a9a6f842bd99ba642f35df4562e83752d',1,'App::Menu']]],
-  ['setactivemenu_1',['setActiveMenu',['../class_app_1_1_app.html#abf37e59ee3f68d10530783ae42a3484f',1,'App::App']]],
-  ['settingsfilepath_2',['settingsFilepath',['../class_app_1_1_a_i___submenu.html#a12a1d0631cdb86addefbc42efa4f3332',1,'App::AI_Submenu']]],
-  ['socketmsg_3',['socketMsg',['../class_app_1_1_a_i___close.html#a43659b25a0f61f06c5fca4bf8fca6f7b',1,'App::AI_Close']]]
+  ['paintevent_0',['paintEvent',['../classEmoteWheel.html#a1f3d6933239d02c50b743b711cb89701',1,'EmoteWheel']]],
+  ['params_1',['Params',['../md__2shr_2Github_2WheelTime_2notes_2hotkey-basics.html#autotoc_md4',1,'']]],
+  ['platform_2',['Platform',['../namespacePlatform.html',1,'']]],
+  ['platform_3a_3',['Platform:',['../dir_c5a52a81292cf9a5167198f4f346d6d9.html#autotoc_md10',1,'']]],
+  ['proceed_4',['proceed',['../classApp_1_1AI__Keystroke.html#a14befe9c5c428f2db0c14b7b4ff60114',1,'App::AI_Keystroke']]],
+  ['project_20goals_5',['Project Goals',['../index.html#autotoc_md12',1,'']]]
 ];

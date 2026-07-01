@@ -25,21 +25,22 @@
 var NAVTREE =
 [
   [ "Wheel Time", "index.html", [
-    [ "WheelTime", "index.html", "index" ],
-    [ "AppLaunchingPrototype", "md__e_1_2_github_2_wheel_time_2notes_2_app_launching_prototype.html", null ],
-    [ "RegisterHotKey", "md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics.html", [
-      [ "Receiving the Hotkey", "md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics.html#autotoc_md5", null ],
-      [ "Unregister", "md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics.html#autotoc_md6", null ],
-      [ "Window Focus Info", "md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics.html#autotoc_md7", null ],
-      [ "Threading Note", "md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics.html#autotoc_md8", null ],
-      [ "Error Handling", "md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics.html#autotoc_md9", null ]
+    [ "Project Goals", "index.html#autotoc_md12", null ],
+    [ "MVP", "index.html#autotoc_md13", null ],
+    [ "Tech Stack", "index.html#autotoc_md14", null ],
+    [ "Sprint 1 Goal", "index.html#autotoc_md15", null ],
+    [ "Sprint 1 Tasks", "index.html#autotoc_md16", null ],
+    [ "Build Instructions", "index.html#autotoc_md17", null ],
+    [ "AppLaunchingResearch", "md__2shr_2Github_2WheelTime_2notes_2AppLaunchingResearch.html", null ],
+    [ "RegisterHotKey", "md__2shr_2Github_2WheelTime_2notes_2hotkey-basics.html", [
+      [ "Receiving the Hotkey", "md__2shr_2Github_2WheelTime_2notes_2hotkey-basics.html#autotoc_md5", null ],
+      [ "Unregister", "md__2shr_2Github_2WheelTime_2notes_2hotkey-basics.html#autotoc_md6", null ],
+      [ "Window Focus Info", "md__2shr_2Github_2WheelTime_2notes_2hotkey-basics.html#autotoc_md7", null ],
+      [ "Threading Note", "md__2shr_2Github_2WheelTime_2notes_2hotkey-basics.html#autotoc_md8", null ],
+      [ "Error Handling", "md__2shr_2Github_2WheelTime_2notes_2hotkey-basics.html#autotoc_md9", null ]
     ] ],
     [ "Namespaces", "namespaces.html", [
-      [ "Namespace List", "namespaces.html", "namespaces_dup" ],
-      [ "Namespace Members", "namespacemembers.html", [
-        [ "All", "namespacemembers.html", null ],
-        [ "Functions", "namespacemembers_func.html", null ]
-      ] ]
+      [ "Namespace List", "namespaces.html", "namespaces_dup" ]
     ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
@@ -63,9 +64,9 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"_app_8hpp.html"
+"App_8hpp.html"
 ];
 
-const SYNCONMSG = 'click to disable panel synchronization';
-const SYNCOFFMSG = 'click to enable panel synchronization';
-const LISTOFALLMEMBERS = 'List of all members';
+var SYNCONMSG = 'click to disable panel synchronization';
+var SYNCOFFMSG = 'click to enable panel synchronization';
+var LISTOFALLMEMBERS = 'List of all members';

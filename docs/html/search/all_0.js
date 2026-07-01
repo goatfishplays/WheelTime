@@ -1,20 +1,5 @@
 var searchData=
 [
-  ['action_0',['Action',['../class_app_1_1_action.html',1,'App']]],
-  ['actionitem_1',['ActionItem',['../class_app_1_1_action_item.html',1,'App::ActionItem'],['../class_app_1_1_action_item.html#a6c2279061f1a37971ae6233fe2051bc9',1,'App::ActionItem::ActionItem()']]],
-  ['addaction_2',['addAction',['../class_app_1_1_menu.html#aa6c4bb69435768a0483d4cea56a5402e',1,'App::Menu']]],
-  ['addemote_3',['addEmote',['../class_emote_wheel.html#aa8960ac10e321ed2d2b3c9b54ea006fa',1,'EmoteWheel']]],
-  ['additem_4',['addItem',['../class_app_1_1_action.html#a5ab9c6049ae775029bcb269cda7162dc',1,'App::Action']]],
-  ['ai_5fclose_5',['AI_Close',['../class_app_1_1_a_i___close.html',1,'App']]],
-  ['ai_5fdelay_6',['AI_Delay',['../class_app_1_1_a_i___delay.html',1,'App']]],
-  ['ai_5fkeystroke_7',['AI_Keystroke',['../class_app_1_1_a_i___keystroke.html',1,'App']]],
-  ['ai_5fscript_8',['AI_Script',['../class_app_1_1_a_i___script.html',1,'App']]],
-  ['ai_5fsubmenu_9',['AI_Submenu',['../class_app_1_1_a_i___submenu.html',1,'App']]],
-  ['app_10',['App',['../class_app_1_1_app.html',1,'App::App'],['../namespace_app.html',1,'App'],['../class_app_1_1_app.html#a4ae3379e31cfdeaceca189eed92e507b',1,'App::App::App()']]],
-  ['app_20assets_11',['app/assets',['../dir_d422163b96683743ed3963d4aac17747.html#autotoc_md1',1,'']]],
-  ['app_2ehpp_12',['App.hpp',['../_app_8hpp.html',1,'']]],
-  ['app_3a_13',['App:',['../dir_d422163b96683743ed3963d4aac17747.html#autotoc_md0',1,'']]],
-  ['applaunchingprototype_14',['AppLaunchingPrototype',['../md__e_1_2_github_2_wheel_time_2notes_2_app_launching_prototype.html',1,'']]],
-  ['applaunchingprototype_2emd_15',['AppLaunchingPrototype.md',['../_app_launching_prototype_8md.html',1,'']]],
-  ['assets_16',['app/assets',['../dir_d422163b96683743ed3963d4aac17747.html#autotoc_md1',1,'']]]
+  ['1_20goal_0',['Sprint 1 Goal',['../index.html#autotoc_md15',1,'']]],
+  ['1_20tasks_1',['Sprint 1 Tasks',['../index.html#autotoc_md16',1,'']]]
 ];

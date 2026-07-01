@@ -157,6 +157,7 @@ namespace App
         /**
          * @brief To be overwritten performs the said action
          *
+         * TODO: Think this needs to be passed the application, discuss this later
          */
         virtual void execute() = 0;
     };
@@ -200,10 +201,10 @@ namespace App
     };
 
     /**
-     * @brief Opens a submenu
+     * @brief Opens another menu
      *
      */
-    class AI_Submenu : public ActionItem
+    class AI_Menu : public ActionItem
     {
     public:
         std::string settingsFilepath;
@@ -231,4 +232,27 @@ namespace App
         std::string outputDst;
         void execute() override;
     };
+
+    /**
+     * @brief Executes the `n`th most recent unique action
+     *
+     */
+    class AI_nthRecent : public ActionItem
+    {
+    public:
+        int n;
+        void execute() override;
+    };
+
+    /**
+     * @brief Executes the `n`th most frequently used action
+     *
+     */
+    class AI_nthFrequent : public ActionItem
+    {
+    public:
+        int n;
+        void execute() override;
+    };
+
 }

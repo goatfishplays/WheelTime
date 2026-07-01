@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['error_20handling_0',['Error Handling',['../md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics.html#autotoc_md9',1,'']]]
+  ['app_20assets_0',['app/assets',['../dir_d422163b96683743ed3963d4aac17747.html#autotoc_md1',1,'']]],
+  ['app_3a_1',['App:',['../dir_d422163b96683743ed3963d4aac17747.html#autotoc_md0',1,'']]],
+  ['applaunchingresearch_2',['AppLaunchingResearch',['../md__2shr_2Github_2WheelTime_2notes_2AppLaunchingResearch.html',1,'']]],
+  ['assets_3',['app/assets',['../dir_d422163b96683743ed3963d4aac17747.html#autotoc_md1',1,'']]]
 ];

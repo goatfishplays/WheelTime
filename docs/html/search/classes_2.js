@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hotkey_0',['Hotkey',['../struct_platform_1_1_hotkey.html',1,'Platform']]]
+  ['hotkey_0',['Hotkey',['../structPlatform_1_1Hotkey.html',1,'Platform']]]
 ];

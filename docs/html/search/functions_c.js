@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['window_0',['Window',['../class_platform_1_1_window.html#a74e6087da23d3c24e9fac0245e5ec92c',1,'Platform::Window']]]
+  ['unregisterinputbinding_0',['unregisterInputBinding',['../classPlatform_1_1InputRcvr.html#aaf9f099aad1639c3ef10a6e0ceeec040',1,'Platform::InputRcvr']]]
 ];

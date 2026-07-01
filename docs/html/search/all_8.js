@@ -1,7 +1,10 @@
 var searchData=
 [
-  ['launcher_0',['Launcher',['../dir_77e266768808d4607c75338d3aaf6d92.html#autotoc_md2',1,'']]],
-  ['len_1',['len',['../class_app_1_1_action.html#a7ca2d026dbb006d6d68aa7957d6c19ea',1,'App::Action']]],
-  ['load_2',['load',['../class_app_1_1_menu.html#a28faeadd36a50e76c16933f0c384feeb',1,'App::Menu']]],
-  ['loadedmenus_3',['loadedMenus',['../class_app_1_1_app.html#a18c6cb7759f2a78f482e45580acabccf',1,'App::App']]]
+  ['impl_0',['Impl',['../classWindow_1_1Impl.html',1,'Platform::Window']]],
+  ['info_1',['Window Focus Info',['../md__2shr_2Github_2WheelTime_2notes_2hotkey-basics.html#autotoc_md7',1,'']]],
+  ['input_2',['input',['../structPlatform_1_1Hotkey.html#a4884bccbc203cb7ee8cef97d9238d69b',1,'Platform::Hotkey']]],
+  ['inputrcvr_3',['InputRcvr',['../classPlatform_1_1InputRcvr.html',1,'Platform::InputRcvr'],['../classPlatform_1_1InputRcvr.html#ab4515f10ee7adde317ee4d9a1556d399',1,'Platform::InputRcvr::InputRcvr()']]],
+  ['inputs_2ehpp_4',['Inputs.hpp',['../Inputs_8hpp.html',1,'']]],
+  ['instance_5',['instance',['../classWindow_1_1Impl.html#a43cb580c1d779a79ddd2f7333bf299b0',1,'Window::Impl']]],
+  ['instructions_6',['Build Instructions',['../index.html#autotoc_md17',1,'']]]
 ];

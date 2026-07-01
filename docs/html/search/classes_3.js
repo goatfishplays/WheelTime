@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['impl_0',['Impl',['../class_window_1_1_impl.html',1,'Platform::Window']]],
-  ['inputrcvr_1',['InputRcvr',['../class_platform_1_1_input_rcvr.html',1,'Platform']]]
+  ['impl_0',['Impl',['../classWindow_1_1Impl.html',1,'Platform::Window']]],
+  ['inputrcvr_1',['InputRcvr',['../classPlatform_1_1InputRcvr.html',1,'Platform']]]
 ];

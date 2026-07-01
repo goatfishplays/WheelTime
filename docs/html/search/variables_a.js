@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['settingsfilepath_0',['settingsFilepath',['../class_app_1_1_a_i___submenu.html#a12a1d0631cdb86addefbc42efa4f3332',1,'App::AI_Submenu']]],
-  ['socketmsg_1',['socketMsg',['../class_app_1_1_a_i___close.html#a43659b25a0f61f06c5fca4bf8fca6f7b',1,'App::AI_Close']]]
+  ['settingsfilepath_0',['settingsFilepath',['../classApp_1_1AI__Menu.html#a8e5cce913f91b20088c4d3c589df2dd5',1,'App::AI_Menu']]],
+  ['socketmsg_1',['socketMsg',['../classApp_1_1AI__Close.html#a43659b25a0f61f06c5fca4bf8fca6f7b',1,'App::AI_Close']]]
 ];

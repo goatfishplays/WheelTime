@@ -1,0 +1,46 @@
+\doxysection{Inputs.\+hpp}
+\hypertarget{Inputs_8hpp_source}{}\label{Inputs_8hpp_source}\index{/shr/Github/WheelTime/platform/include/Platform/Inputs.hpp@{/shr/Github/WheelTime/platform/include/Platform/Inputs.hpp}}
+\doxymbox{\hyperlink{Inputs_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespacePlatform}{Platform}}}
+\DoxyCodeLine{00018\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{comment}{//\ TODO:\ Come\ up\ with\ legend\ for\ special\ keys,\ mouse\ buttons,\ midi,\ etc}}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structPlatform_1_1Hotkey}{Hotkey}}}
+\DoxyCodeLine{00021\ \ \ \ \ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{structPlatform_1_1Hotkey_a4884bccbc203cb7ee8cef97d9238d69b}{input}};}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{structPlatform_1_1Hotkey_a92a6c74f2cb9497d3f88509698975c21}{mod}};}
+\DoxyCodeLine{00024\ \ \ \ \ \};}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{structPlatform_1_1Vec2}{Vec2}}}
+\DoxyCodeLine{00026\ \ \ \ \ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{structPlatform_1_1Vec2_aed750bc2752c78ba2b70ce8130df1958}{x}};}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{structPlatform_1_1Vec2_a6fadf85e596a53a103c0b42d53b68c5e}{y}};}
+\DoxyCodeLine{00029\ \ \ \ \ \};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classPlatform_1_1InputRcvr_ab4515f10ee7adde317ee4d9a1556d399}{InputRcvr}}}
+\DoxyCodeLine{00036\ \ \ \ \ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classPlatform_1_1InputRcvr_ab4515f10ee7adde317ee4d9a1556d399}{InputRcvr}}();}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classPlatform_1_1InputRcvr_aa8d43c61b8b55decf1e55c8d34dcfc32}{\string~InputRcvr}}();}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ Oh\ gosh\ I\ just\ realized\ multimonitor\ exists,\ I\ have\ no\ idea\ how\ that\ works,\ good\ luck\ :)}}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structPlatform_1_1Vec2}{Vec2}}\ \doxymbox{\hyperlink{classPlatform_1_1InputRcvr_a7876b5f6c8a133340fce671a742873db}{getAbsoluteMousePosition}}();}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structPlatform_1_1Vec2}{Vec2}}\ \doxymbox{\hyperlink{classPlatform_1_1InputRcvr_aeced2a888895a39a85974ab096a01f9a}{getRelativeMousePosition}}();}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classPlatform_1_1InputRcvr_addbec4b23b0cbb7f8d199943c7f00c7f}{registerInputBinding}}(\doxymbox{\hyperlink{structPlatform_1_1Hotkey}{Hotkey}});}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classPlatform_1_1InputRcvr_aaf9f099aad1639c3ef10a6e0ceeec040}{unregisterInputBinding}}(\doxymbox{\hyperlink{structPlatform_1_1Hotkey}{Hotkey}});}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keyword}{class\ }Impl;}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ std::unique\_ptr<Impl>\ m\_impl;}
+\DoxyCodeLine{00080\ \ \ \ \ \};}
+\DoxyCodeLine{00081\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,33 @@
+\doxysection{Emote\+Wheel.\+h}
+\hypertarget{EmoteWheel_8h_source}{}\label{EmoteWheel_8h_source}\index{/shr/Github/WheelTime/Wheel-\/Time/EmoteWheel.h@{/shr/Github/WheelTime/Wheel-\/Time/EmoteWheel.h}}
+\doxymbox{\hyperlink{EmoteWheel_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ <QWidget>}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <QVector>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <QPixmap>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classEmoteWheel_adf54129b73839b5517657bc02b0d768e}{EmoteWheel}}\ :\ \textcolor{keyword}{public}\ QWidget}
+\DoxyCodeLine{00007\ \{}
+\DoxyCodeLine{00008\ \ \ \ \ Q\_OBJECT}
+\DoxyCodeLine{00009\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keyword}{explicit}\ \doxymbox{\hyperlink{classEmoteWheel_adf54129b73839b5517657bc02b0d768e}{EmoteWheel}}(QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classEmoteWheel_aa8960ac10e321ed2d2b3c9b54ea006fa}{addEmote}}(\textcolor{keyword}{const}\ QString\ \&name,\ \textcolor{keyword}{const}\ QPixmap\ \&icon);}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ signals:}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classEmoteWheel_ae0193419c1d687cd596c19184c19e7e6}{emoteSelected}}(\textcolor{keyword}{const}\ QString\ \&name);}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classEmoteWheel_a1f3d6933239d02c50b743b711cb89701}{paintEvent}}(QPaintEvent\ *event)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classEmoteWheel_ae4fc5e7ba2168a0a9ca28b727dfe5035}{mouseMoveEvent}}(QMouseEvent\ *event)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classEmoteWheel_a8ce13cc0d6cca96174b844877ef07eaf}{mousePressEvent}}(QMouseEvent\ *event)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{struct\ }Emote\ \{\ QString\ name;\ QPixmap\ icon;\ \};}
+\DoxyCodeLine{00023\ \ \ \ \ QVector<Emote>\ m\_emotes;}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_hoveredIndex\ =\ -\/1;}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{int}\ segmentAtAngle(\textcolor{keywordtype}{double}\ angleDeg)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00027\ \};}
+
+\end{DoxyCode}

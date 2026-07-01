@@ -1,0 +1,88 @@
+\chapter{Register\+Hot\+Key }
+\hypertarget{md__2shr_2Github_2WheelTime_2notes_2hotkey-basics}{}\label{md__2shr_2Github_2WheelTime_2notes_2hotkey-basics}\index{RegisterHotKey@{RegisterHotKey}}
+\label{md__2shr_2Github_2WheelTime_2notes_2hotkey-basics_autotoc_md3}%
+\Hypertarget{md__2shr_2Github_2WheelTime_2notes_2hotkey-basics_autotoc_md3}%
+
+
+For hotkeys on Windows, we should use {\ttfamily Register\+Hot\+Key} from {\ttfamily winuser.\+h}.
+
+Syntax:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{BOOL\ RegisterHotKey(}
+\DoxyCodeLine{\ \ [in,\ optional]\ HWND\ hWnd,}
+\DoxyCodeLine{\ \ [in]\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \textcolor{keywordtype}{id},}
+\DoxyCodeLine{\ \ [in]\ \ \ \ \ \ \ \ \ \ \ UINT\ fsModifiers,}
+\DoxyCodeLine{\ \ [in]\ \ \ \ \ \ \ \ \ \ \ UINT\ vk}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+\hypertarget{md__2shr_2Github_2WheelTime_2notes_2hotkey-basics_autotoc_md4}{}\doxysubsection{\texorpdfstring{Params}{Params}}\label{md__2shr_2Github_2WheelTime_2notes_2hotkey-basics_autotoc_md4}
+
+\begin{DoxyItemize}
+\item {\ttfamily h\+Wnd}
+\begin{DoxyItemize}
+\item Window that receives {\ttfamily WM\+\_\+\+HOTKEY}
+\item Can be {\ttfamily NULL} if using global hotkey, so that\textquotesingle{}s what we should do
+\end{DoxyItemize}
+\item {\ttfamily id}
+\begin{DoxyItemize}
+\item Unique identifier for the hotkey
+\item Used to distinguish multiple hotkeys
+\item We can just make this the index of the action on the wheel (so like 1, 2, 3, etc)
+\end{DoxyItemize}
+\item {\ttfamily fs\+Modifiers}
+\begin{DoxyItemize}
+\item Modifier keys bitmask:\+
+\begin{DoxyItemize}
+\item {\ttfamily MOD\+\_\+\+ALT} (alt key)
+\item {\ttfamily MOD\+\_\+\+CONTROL} (ctrl key)
+\item {\ttfamily MOD\+\_\+\+SHIFT} (shift key)
+\item {\ttfamily MOD\+\_\+\+WIN} (win key)
+\end{DoxyItemize}
+\item Using any of these means this key would also have to be pressed for the hotkey to work (kinda limited?)
+\end{DoxyItemize}
+\item {\ttfamily vk}
+\begin{DoxyItemize}
+\item Virtual key code (e.\+g. {\ttfamily VK\+\_\+\+SPACE}, {\ttfamily VK\+\_\+O}, etc)
+\item We would have to collect the keypresses from the user and then convert them to virtual key codes
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__2shr_2Github_2WheelTime_2notes_2hotkey-basics_autotoc_md5}{}\doxysection{\texorpdfstring{Receiving the Hotkey}{Receiving the Hotkey}}\label{md__2shr_2Github_2WheelTime_2notes_2hotkey-basics_autotoc_md5}
+When triggered, Windows sends {\ttfamily WM\+\_\+\+HOTKEY} and we will need a message loop to capture it:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{MSG\ msg;}
+\DoxyCodeLine{\textcolor{keywordflow}{while}\ (GetMessage(\&msg,\ NULL,\ 0,\ 0))\ \{}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{if}\ (msg.message\ ==\ WM\_HOTKEY)\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id}\ =\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(msg.wParam);}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ check\ if\ the\ id\ matches\ the\ id\ of\ any\ of\ our\ registered\ hotkeys}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ it\ does,\ open\ the\ launcher}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ we\ need\ to\ pass\ control\ back\ to\ os\ after\ checking}}
+\DoxyCodeLine{\ \ \ \ TranslateMessage(\&msg);}
+\DoxyCodeLine{\ \ \ \ DispatchMessage(\&msg);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md__2shr_2Github_2WheelTime_2notes_2hotkey-basics_autotoc_md6}{}\doxysection{\texorpdfstring{Unregister}{Unregister}}\label{md__2shr_2Github_2WheelTime_2notes_2hotkey-basics_autotoc_md6}
+Unregistering hotkeys is pretty simple:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{UnregisterHotKey(NULL,\ \textcolor{keywordtype}{id});}
+
+\end{DoxyCode}
+\hypertarget{md__2shr_2Github_2WheelTime_2notes_2hotkey-basics_autotoc_md7}{}\doxysection{\texorpdfstring{Window Focus Info}{Window Focus Info}}\label{md__2shr_2Github_2WheelTime_2notes_2hotkey-basics_autotoc_md7}
+To bring launcher forward we can use:\+
+\begin{DoxyItemize}
+\item {\ttfamily Show\+Window(hwnd, SW\+\_\+\+SHOW)}
+\item {\ttfamily Set\+Foreground\+Window(hwnd)}
+\item {\ttfamily Set\+Focus(hwnd)}
+\end{DoxyItemize}
+
+I don\textquotesingle{}t know yet which one is optimial for our use case. Apparenly Windows blocks focus stealing sometimes, so we may need to use {\ttfamily Attach\+Thread\+Input} or {\ttfamily Allow\+Set\+Foreground\+Window}, but we will see.\hypertarget{md__2shr_2Github_2WheelTime_2notes_2hotkey-basics_autotoc_md8}{}\doxysection{\texorpdfstring{Threading Note}{Threading Note}}\label{md__2shr_2Github_2WheelTime_2notes_2hotkey-basics_autotoc_md8}
+To keep the main thread free, we will probably have to put this loop on a separate thread so it keeps everything else responsive.\hypertarget{md__2shr_2Github_2WheelTime_2notes_2hotkey-basics_autotoc_md9}{}\doxysection{\texorpdfstring{Error Handling}{Error Handling}}\label{md__2shr_2Github_2WheelTime_2notes_2hotkey-basics_autotoc_md9}
+
+\begin{DoxyItemize}
+\item Hotkey fails if already registered by another app
+\item Must check return value of {\ttfamily Register\+Hot\+Key} since it returns a boolean
+\item Some system combos are reserved (Win+L, Ctrl+\+Alt+\+Del)
+\item {\ttfamily Get\+Last\+Error()} will return the error code if the return is false, most common error for us probably will be {\ttfamily ERROR\+\_\+\+HOTKEY\+\_\+\+ALREADY\+\_\+\+REGISTERED}
+\item We should probably have a way to gracefully handle these errors 
+\end{DoxyItemize}

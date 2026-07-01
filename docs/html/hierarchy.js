@@ -1,22 +1,23 @@
 var hierarchy =
 [
-    [ "App::Action", "class_app_1_1_action.html", null ],
-    [ "App::ActionItem", "class_app_1_1_action_item.html", [
-      [ "App::AI_Close", "class_app_1_1_a_i___close.html", null ],
-      [ "App::AI_Close", "class_app_1_1_a_i___close.html", null ],
-      [ "App::AI_Delay", "class_app_1_1_a_i___delay.html", null ],
-      [ "App::AI_Keystroke", "class_app_1_1_a_i___keystroke.html", null ],
-      [ "App::AI_Script", "class_app_1_1_a_i___script.html", null ],
-      [ "App::AI_Submenu", "class_app_1_1_a_i___submenu.html", null ]
+    [ "App::Action", "classApp_1_1Action.html", null ],
+    [ "App::ActionItem", "classApp_1_1ActionItem.html", [
+      [ "App::AI_Close", "classApp_1_1AI__Close.html", null ],
+      [ "App::AI_Close", "classApp_1_1AI__Close.html", null ],
+      [ "App::AI_Delay", "classApp_1_1AI__Delay.html", null ],
+      [ "App::AI_Keystroke", "classApp_1_1AI__Keystroke.html", null ],
+      [ "App::AI_Menu", "classApp_1_1AI__Menu.html", null ],
+      [ "App::AI_Script", "classApp_1_1AI__Script.html", null ]
     ] ],
-    [ "App::App", "class_app_1_1_app.html", null ],
-    [ "Platform::Hotkey", "struct_platform_1_1_hotkey.html", null ],
-    [ "Platform::Window::Impl", "class_window_1_1_impl.html", null ],
-    [ "Platform::InputRcvr", "class_platform_1_1_input_rcvr.html", null ],
-    [ "App::Menu", "class_app_1_1_menu.html", null ],
+    [ "App::App", "classApp_1_1App.html", null ],
+    [ "Platform::Executor", "classPlatform_1_1Executor.html", null ],
+    [ "Platform::Hotkey", "structPlatform_1_1Hotkey.html", null ],
+    [ "Platform::Window::Impl", "classWindow_1_1Impl.html", null ],
+    [ "Platform::InputRcvr", "classPlatform_1_1InputRcvr.html", null ],
+    [ "App::Menu", "classApp_1_1Menu.html", null ],
     [ "QWidget", null, [
-      [ "EmoteWheel", "class_emote_wheel.html", null ]
+      [ "EmoteWheel", "classEmoteWheel.html", null ]
     ] ],
-    [ "Platform::Vec2", "struct_platform_1_1_vec2.html", null ],
-    [ "Platform::Window", "class_platform_1_1_window.html", null ]
+    [ "Platform::Vec2", "structPlatform_1_1Vec2.html", null ],
+    [ "Platform::Window", "classPlatform_1_1Window.html", null ]
 ];

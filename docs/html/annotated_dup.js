@@ -1,21 +1,22 @@
 var annotated_dup =
 [
-    [ "App", "namespace_app.html", [
-      [ "App", "class_app_1_1_app.html", "class_app_1_1_app" ],
-      [ "Menu", "class_app_1_1_menu.html", "class_app_1_1_menu" ],
-      [ "Action", "class_app_1_1_action.html", "class_app_1_1_action" ],
-      [ "ActionItem", "class_app_1_1_action_item.html", "class_app_1_1_action_item" ],
-      [ "AI_Script", "class_app_1_1_a_i___script.html", "class_app_1_1_a_i___script" ],
-      [ "AI_Keystroke", "class_app_1_1_a_i___keystroke.html", "class_app_1_1_a_i___keystroke" ],
-      [ "AI_Delay", "class_app_1_1_a_i___delay.html", "class_app_1_1_a_i___delay" ],
-      [ "AI_Submenu", "class_app_1_1_a_i___submenu.html", "class_app_1_1_a_i___submenu" ],
-      [ "AI_Close", "class_app_1_1_a_i___close.html", "class_app_1_1_a_i___close" ]
+    [ "App", "namespaceApp.html", [
+      [ "App", "classApp_1_1App.html", "classApp_1_1App" ],
+      [ "Menu", "classApp_1_1Menu.html", "classApp_1_1Menu" ],
+      [ "Action", "classApp_1_1Action.html", "classApp_1_1Action" ],
+      [ "ActionItem", "classApp_1_1ActionItem.html", "classApp_1_1ActionItem" ],
+      [ "AI_Script", "classApp_1_1AI__Script.html", "classApp_1_1AI__Script" ],
+      [ "AI_Keystroke", "classApp_1_1AI__Keystroke.html", "classApp_1_1AI__Keystroke" ],
+      [ "AI_Delay", "classApp_1_1AI__Delay.html", "classApp_1_1AI__Delay" ],
+      [ "AI_Menu", "classApp_1_1AI__Menu.html", "classApp_1_1AI__Menu" ],
+      [ "AI_Close", "classApp_1_1AI__Close.html", "classApp_1_1AI__Close" ]
     ] ],
-    [ "Platform", "namespace_platform.html", [
-      [ "Hotkey", "struct_platform_1_1_hotkey.html", "struct_platform_1_1_hotkey" ],
-      [ "InputRcvr", "class_platform_1_1_input_rcvr.html", "class_platform_1_1_input_rcvr" ],
-      [ "Vec2", "struct_platform_1_1_vec2.html", "struct_platform_1_1_vec2" ],
-      [ "Window", "class_platform_1_1_window.html", "class_platform_1_1_window" ]
+    [ "Platform", "namespacePlatform.html", [
+      [ "Executor", "classPlatform_1_1Executor.html", "classPlatform_1_1Executor" ],
+      [ "Hotkey", "structPlatform_1_1Hotkey.html", "structPlatform_1_1Hotkey" ],
+      [ "Vec2", "structPlatform_1_1Vec2.html", "structPlatform_1_1Vec2" ],
+      [ "InputRcvr", "classPlatform_1_1InputRcvr.html", "classPlatform_1_1InputRcvr" ],
+      [ "Window", "classPlatform_1_1Window.html", "classPlatform_1_1Window" ]
     ] ],
-    [ "EmoteWheel", "class_emote_wheel.html", "class_emote_wheel" ]
+    [ "EmoteWheel", "classEmoteWheel.html", "classEmoteWheel" ]
 ];

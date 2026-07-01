@@ -1,0 +1,96 @@
+\doxysection{Platform::\+Input\+Rcvr Class Reference}
+\hypertarget{classPlatform_1_1InputRcvr}{}\label{classPlatform_1_1InputRcvr}\index{Platform::InputRcvr@{Platform::InputRcvr}}
+
+
+OS agnostic input receiver.  
+
+
+
+
+{\ttfamily \+\#include $<$Inputs.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{classPlatform_1_1InputRcvr_ab4515f10ee7adde317ee4d9a1556d399}{Input\+Rcvr}} ()
+\item 
+\doxymbox{\hyperlink{classPlatform_1_1InputRcvr_aa8d43c61b8b55decf1e55c8d34dcfc32}{\texorpdfstring{$\sim$}{\string~}\+Input\+Rcvr}} ()
+\item 
+\doxymbox{\hyperlink{structPlatform_1_1Vec2}{Vec2}} \doxymbox{\hyperlink{classPlatform_1_1InputRcvr_a7876b5f6c8a133340fce671a742873db}{get\+Absolute\+Mouse\+Position}} ()
+\begin{DoxyCompactList}\small\item\em Get mouse position relative to the monitor. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{structPlatform_1_1Vec2}{Vec2}} \doxymbox{\hyperlink{classPlatform_1_1InputRcvr_aeced2a888895a39a85974ab096a01f9a}{get\+Relative\+Mouse\+Position}} ()
+\begin{DoxyCompactList}\small\item\em Get mouse position relative to window,. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{classPlatform_1_1InputRcvr_addbec4b23b0cbb7f8d199943c7f00c7f}{register\+Input\+Binding}} (\doxymbox{\hyperlink{structPlatform_1_1Hotkey}{Hotkey}})
+\begin{DoxyCompactList}\small\item\em Registers an input to be tracked. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{classPlatform_1_1InputRcvr_aaf9f099aad1639c3ef10a6e0ceeec040}{unregister\+Input\+Binding}} (\doxymbox{\hyperlink{structPlatform_1_1Hotkey}{Hotkey}})
+\begin{DoxyCompactList}\small\item\em Unregisters an input being tracked. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+OS agnostic input receiver. 
+
+\label{doc-constructors}
+\Hypertarget{classPlatform_1_1InputRcvr_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classPlatform_1_1InputRcvr_ab4515f10ee7adde317ee4d9a1556d399}\index{Platform::InputRcvr@{Platform::InputRcvr}!InputRcvr@{InputRcvr}}
+\index{InputRcvr@{InputRcvr}!Platform::InputRcvr@{Platform::InputRcvr}}
+\doxysubsubsection{\texorpdfstring{InputRcvr()}{InputRcvr()}}
+{\footnotesize\ttfamily \label{classPlatform_1_1InputRcvr_ab4515f10ee7adde317ee4d9a1556d399} 
+Platform::\+\+Input\+Rcvr::\+\+Input\+Rcvr (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{classPlatform_1_1InputRcvr_aa8d43c61b8b55decf1e55c8d34dcfc32}\index{Platform::InputRcvr@{Platform::InputRcvr}!````~InputRcvr@{\texorpdfstring{$\sim$}{\string~}InputRcvr}}
+\index{````~InputRcvr@{\texorpdfstring{$\sim$}{\string~}InputRcvr}!Platform::InputRcvr@{Platform::InputRcvr}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}InputRcvr()}{\string~InputRcvr()}}
+{\footnotesize\ttfamily \label{classPlatform_1_1InputRcvr_aa8d43c61b8b55decf1e55c8d34dcfc32} 
+Platform::\+\+Input\+Rcvr::\+\texorpdfstring{$\sim$}{\string~}\+Input\+Rcvr (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+\label{doc-func-members}
+\Hypertarget{classPlatform_1_1InputRcvr_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classPlatform_1_1InputRcvr_a7876b5f6c8a133340fce671a742873db}\index{Platform::InputRcvr@{Platform::InputRcvr}!getAbsoluteMousePosition@{getAbsoluteMousePosition}}
+\index{getAbsoluteMousePosition@{getAbsoluteMousePosition}!Platform::InputRcvr@{Platform::InputRcvr}}
+\doxysubsubsection{\texorpdfstring{getAbsoluteMousePosition()}{getAbsoluteMousePosition()}}
+{\footnotesize\ttfamily \label{classPlatform_1_1InputRcvr_a7876b5f6c8a133340fce671a742873db} 
+\doxymbox{\hyperlink{structPlatform_1_1Vec2}{Vec2}} Platform::\+\+Input\+Rcvr::\+get\+Absolute\+Mouse\+Position (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Get mouse position relative to the monitor. 
+
+Note:\+ Position is x:\+ left to right, y:\+ top to bottom \Hypertarget{classPlatform_1_1InputRcvr_aeced2a888895a39a85974ab096a01f9a}\index{Platform::InputRcvr@{Platform::InputRcvr}!getRelativeMousePosition@{getRelativeMousePosition}}
+\index{getRelativeMousePosition@{getRelativeMousePosition}!Platform::InputRcvr@{Platform::InputRcvr}}
+\doxysubsubsection{\texorpdfstring{getRelativeMousePosition()}{getRelativeMousePosition()}}
+{\footnotesize\ttfamily \label{classPlatform_1_1InputRcvr_aeced2a888895a39a85974ab096a01f9a} 
+\doxymbox{\hyperlink{structPlatform_1_1Vec2}{Vec2}} Platform::\+\+Input\+Rcvr::\+get\+Relative\+Mouse\+Position (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Get mouse position relative to window,. 
+
+Note:\+ Position is x:\+ left to right, y:\+ top to bottom \Hypertarget{classPlatform_1_1InputRcvr_addbec4b23b0cbb7f8d199943c7f00c7f}\index{Platform::InputRcvr@{Platform::InputRcvr}!registerInputBinding@{registerInputBinding}}
+\index{registerInputBinding@{registerInputBinding}!Platform::InputRcvr@{Platform::InputRcvr}}
+\doxysubsubsection{\texorpdfstring{registerInputBinding()}{registerInputBinding()}}
+{\footnotesize\ttfamily \label{classPlatform_1_1InputRcvr_addbec4b23b0cbb7f8d199943c7f00c7f} 
+void Platform::\+\+Input\+Rcvr::\+register\+Input\+Binding (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structPlatform_1_1Hotkey}{Hotkey}}}]{}{}\end{DoxyParamCaption})}
+
+
+
+Registers an input to be tracked. 
+
+Currently only aim to support keyboard inputs \Hypertarget{classPlatform_1_1InputRcvr_aaf9f099aad1639c3ef10a6e0ceeec040}\index{Platform::InputRcvr@{Platform::InputRcvr}!unregisterInputBinding@{unregisterInputBinding}}
+\index{unregisterInputBinding@{unregisterInputBinding}!Platform::InputRcvr@{Platform::InputRcvr}}
+\doxysubsubsection{\texorpdfstring{unregisterInputBinding()}{unregisterInputBinding()}}
+{\footnotesize\ttfamily \label{classPlatform_1_1InputRcvr_aaf9f099aad1639c3ef10a6e0ceeec040} 
+void Platform::\+\+Input\+Rcvr::\+unregister\+Input\+Binding (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{structPlatform_1_1Hotkey}{Hotkey}}}]{}{}\end{DoxyParamCaption})}
+
+
+
+Unregisters an input being tracked. 
+
+Currently only aim to support keyboard inputs 
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+/\+shr/\+\+Github/\+\+Wheel\+Time/\+platform/\+include/\+\+Platform/\+\doxymbox{\hyperlink{Inputs_8hpp}{Inputs.\+hpp}}\end{DoxyCompactItemize}

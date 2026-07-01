@@ -1,0 +1,131 @@
+\doxysection{App.\+hpp}
+\hypertarget{App_8hpp_source}{}\label{App_8hpp_source}\index{/shr/Github/WheelTime/app/include/App.hpp@{/shr/Github/WheelTime/app/include/App.hpp}}
+\doxymbox{\hyperlink{App_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ TODO:\ Hotkey\ struct\ that\ contains\ mod\ and\ stuff}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{Inputs_8hpp}{Platform/Inputs.hpp}}>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{Window_8hpp}{Platform/Window.hpp}}>}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespaceApp}{App}}}
+\DoxyCodeLine{00019\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{namespaceApp}{App}}}
+\DoxyCodeLine{00024\ \ \ \ \ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classApp_1_1App_a4ae3379e31cfdeaceca189eed92e507b}{App}}();}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classApp_1_1App_a1d67fe363d8d6a30d1205c7f78d61c3b}{\string~App}}();}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ std::vector<Menu\ *>\ \doxymbox{\hyperlink{classApp_1_1App_a18c6cb7759f2a78f482e45580acabccf}{loadedMenus}};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classApp_1_1Menu}{Menu}}\ *\doxymbox{\hyperlink{classApp_1_1App_a929ff86eb4dd3edad7f9bab285b78ca5}{getActiveMenu}}();}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classApp_1_1App_abf37e59ee3f68d10530783ae42a3484f}{setActiveMenu}}(\doxymbox{\hyperlink{classApp_1_1Menu}{Menu}}\ *menu);}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classApp_1_1App_a444f83f995079ae3fb9b22dacfaa97e8}{exitMenu}}();}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classApp_1_1App_a8953b968ef9a8941cf5f3906020e8af6}{runAction}}(\doxymbox{\hyperlink{classApp_1_1Action}{Action}}\ action);}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classApp_1_1Menu}{Menu}}\ *activeMenu;}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structPlatform_1_1Vec2}{Platform::Vec2}}\ priorMousePos;}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classPlatform_1_1Window}{Platform::Window}}\ window;}
+\DoxyCodeLine{00052\ \ \ \ \ \};}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classApp_1_1Menu}{Menu}}}
+\DoxyCodeLine{00055\ \ \ \ \ \{}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classApp_1_1Menu_aa6c4bb69435768a0483d4cea56a5402e}{addAction}}(\textcolor{keywordtype}{int}\ ind,\ \doxymbox{\hyperlink{classApp_1_1Action}{Action}}\ action);}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classApp_1_1Menu_a67e1668fbe6313c7ec6454929bcc20e0}{remAction}}(\textcolor{keywordtype}{int}\ ind);}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{classApp_1_1Menu_a5e393590ea8c4532d7902c18e1f8c288}{numActions}}();}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classApp_1_1Menu_a9a6f842bd99ba642f35df4562e83752d}{save}}(std::string\ filepath);}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classApp_1_1Menu_a28faeadd36a50e76c16933f0c384feeb}{load}}(std::string\ filepath);}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ Might\ be\ better\ to\ have\ app\ control\ hotkeys}}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{structPlatform_1_1Hotkey}{Platform::Hotkey}}\ *\doxymbox{\hyperlink{classApp_1_1Menu_ae83d0fe94b99fddf2eb5c43474d32625}{hotkey}};}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{classApp_1_1Menu_a4cb894490cb0186651102be0424d531f}{executeOnRelease}};}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{classApp_1_1Menu_aa5024e3875df88283f5853bb40d6fe82}{exitOnAction}};}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ std::vector<Action>\ actions;}
+\DoxyCodeLine{00105\ \ \ \ \ \};}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classApp_1_1Action}{Action}}}
+\DoxyCodeLine{00112\ \ \ \ \ \{}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classApp_1_1Action_a5ab9c6049ae775029bcb269cda7162dc}{addItem}}(\textcolor{keywordtype}{int}\ ind,\ \doxymbox{\hyperlink{classApp_1_1ActionItem}{ActionItem}}\ \&ai);}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classApp_1_1Action_a64fa3ccfc83ccb4a1c78da3fa80022d2}{removeItem}}(\textcolor{keywordtype}{int}\ ind);}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{classApp_1_1Action_a7ca2d026dbb006d6d68aa7957d6c19ea}{len}}();}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classApp_1_1Action_a42a0c65cfce58b21c1618af307e64388}{execute}}();}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ std::vector<ActionItem>\ sequence;}
+\DoxyCodeLine{00144\ \ \ \ \ \};}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classApp_1_1ActionItem_a6c2279061f1a37971ae6233fe2051bc9}{ActionItem}}}
+\DoxyCodeLine{00153\ \ \ \ \ \{}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classApp_1_1ActionItem_a6c2279061f1a37971ae6233fe2051bc9}{ActionItem}}();}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{classApp_1_1ActionItem_ad42e54ded3ee7806918f28ce40711a02}{\string~ActionItem}}();}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classApp_1_1ActionItem_aa85f16cbe35fe877d98db51193bb4bcd}{execute}}()\ =\ 0;}
+\DoxyCodeLine{00162\ \ \ \ \ \};}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00168\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classApp_1_1AI__Script}{AI\_Script}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{classApp_1_1ActionItem_a6c2279061f1a37971ae6233fe2051bc9}{ActionItem}}}
+\DoxyCodeLine{00169\ \ \ \ \ \{}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ std::string\ \doxymbox{\hyperlink{classApp_1_1AI__Script_a828f7e1e9eb5cc3e975d5f099ad33def}{filepath}};}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classApp_1_1AI__Script_abc1d309ebb2b9baae0f53de7cc798386}{execute}}()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00173\ \ \ \ \ \};}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classApp_1_1AI__Keystroke}{AI\_Keystroke}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{classApp_1_1ActionItem_a6c2279061f1a37971ae6233fe2051bc9}{ActionItem}}}
+\DoxyCodeLine{00180\ \ \ \ \ \{}
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{classApp_1_1AI__Keystroke_a4188f169c09be19a5a24eec34604dd0b}{keycode}};}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{classApp_1_1AI__Keystroke_a912d4dd4a34880b49dcb392e3129a724}{modifiers}};}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{classApp_1_1AI__Keystroke_a64df2bfe4df1c38d920985be7702db0c}{holdDuration}};}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ *\ This\ isn't\ needed\ from\ a\ technical\ standpoint\ as\ it\ can\ be\ accomplished\ with\ the\ delay\ AI\ but\ from\ a\ user\ standpoint\ it\ should\ be\ helpful}}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{classApp_1_1AI__Keystroke_a14befe9c5c428f2db0c14b7b4ff60114}{proceed}};}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classApp_1_1AI__Keystroke_a852a5740d4ddc5281371260df6696fd1}{execute}}()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00189\ \ \ \ \ \};}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00195\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classApp_1_1AI__Delay}{AI\_Delay}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{classApp_1_1ActionItem_a6c2279061f1a37971ae6233fe2051bc9}{ActionItem}}}
+\DoxyCodeLine{00196\ \ \ \ \ \{}
+\DoxyCodeLine{00197\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{classApp_1_1AI__Delay_af062a952ae1869c05a1f0a09f4d2a06f}{duration}};}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classApp_1_1AI__Delay_a384c309b804b0f1b2a186a65537b0d60}{execute}}()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00200\ \ \ \ \ \};}
+\DoxyCodeLine{00201\ }
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classApp_1_1AI__Menu}{AI\_Menu}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{classApp_1_1ActionItem_a6c2279061f1a37971ae6233fe2051bc9}{ActionItem}}}
+\DoxyCodeLine{00207\ \ \ \ \ \{}
+\DoxyCodeLine{00208\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ std::string\ \doxymbox{\hyperlink{classApp_1_1AI__Menu_a8e5cce913f91b20088c4d3c589df2dd5}{settingsFilepath}};}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classApp_1_1AI__Menu_af022073eed4965003b31e70a70810cef}{execute}}()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00211\ \ \ \ \ \};}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classApp_1_1AI__Close}{AI\_Close}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{classApp_1_1ActionItem_a6c2279061f1a37971ae6233fe2051bc9}{ActionItem}}}
+\DoxyCodeLine{00218\ \ \ \ \ \{}
+\DoxyCodeLine{00219\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classApp_1_1AI__Close_a5da75d7eae5fb7d1389157d09dd24e50}{execute}}()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00221\ \ \ \ \ \};}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{classApp_1_1AI__Close}{AI\_Close}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{classApp_1_1ActionItem}{ActionItem}}}
+\DoxyCodeLine{00228\ \ \ \ \ \{}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ std::string\ \doxymbox{\hyperlink{classApp_1_1AI__Close_a43659b25a0f61f06c5fca4bf8fca6f7b}{socketMsg}};}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ std::string\ \doxymbox{\hyperlink{classApp_1_1AI__Close_ab67eb52d133444081b8986d94c62d29f}{outputDst}};}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{classApp_1_1AI__Close_a5da75d7eae5fb7d1389157d09dd24e50}{execute}}()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00233\ \ \ \ \ \};}
+\DoxyCodeLine{00234\ \}}
+
+\end{DoxyCode}
