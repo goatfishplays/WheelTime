@@ -21,6 +21,23 @@ namespace Application
     class Menu
     {
     public:
+        /// @brief InputBind to trigger this menu, if not set then this will likely only be being used as a recursive menu
+        // TODO: Might be better to have app control hotkeys
+        Platform::InputBind *inputBind;
+
+        /// @brief On hotkey release will automatically execute the action under the mouse
+        bool executeOnRelease;
+
+        /// @brief Automatically exit the menu on performing an action(as opposed to individual actions requiring exit, allows people to spam buttons easier)
+        // TODO just make it so that it prepends exit if true
+        bool exitOnAction;
+
+        Menu(Platform::InputBind *_inputBind,
+             bool _executeOnRelease,
+             bool _exitOnAction,
+             std::vector<Action> _actions);
+        ~Menu();
+
         /**
          * @brief Add an action to this menu
          *
@@ -48,26 +65,17 @@ namespace Application
          *
          * @param filepath file to save to
          */
-        void save(std::string filepath);
+        void save();
 
         /**
          * @brief Loads menu/settings from a file
          *
          * @param filepath file to load from
          */
-        void load(std::string filepath);
-
-        /// @brief Hotkey to trigger this menu, if not set then this will likely only be being used as a recursive menu
-        // TODO: Might be better to have app control hotkeys
-        Platform::Hotkey *hotkey;
-
-        /// @brief On hotkey release will automatically execute the action under the mouse
-        bool executeOnRelease;
-
-        /// @brief Automatically exit the menu on performing an action(as opposed to individual actions requiring exit, allows people to spam buttons easier)
-        bool exitOnAction;
+        void load();
 
     private:
         std::vector<Action> actions;
+        std::string filepath; // TODO: need to auto delete old on change?
     };
 }

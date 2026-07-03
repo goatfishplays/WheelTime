@@ -24,7 +24,7 @@ namespace Application
          *
          * TODO: Think this needs to be passed the application, discuss this later
          */
-        virtual void execute() = 0;
+        virtual void execute();
     };
 
     /**
@@ -91,7 +91,7 @@ namespace Application
      * @brief Sends a socket message
      *
      */
-    class AI_Close : public ActionItem
+    class AI_Socket : public ActionItem
     {
     public:
         std::string socketMsg;

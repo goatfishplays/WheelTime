@@ -21,7 +21,7 @@ namespace Platform
     public:
         Executor();
         ~Executor();
-        void executeKey(Hotkey key);
+        void executeKey(InputBind key);
         void executeScript(std::string filepath);
 
     private:

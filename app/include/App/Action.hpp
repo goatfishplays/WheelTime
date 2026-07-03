@@ -23,13 +23,16 @@ namespace Application
     class Action
     {
     public:
+        Action(std::vector<ActionItem> _sequence);
+        ~Action();
+
         /**
          * @brief Add an item from the sequence
          *
          * @param ind Index of item to add
          * @param ai Action item to add
          */
-        void addItem(int ind, ActionItem &ai);
+        void addItem(int ind, ActionItem ai);
 
         /**
          * @brief Remove an item from the sequence

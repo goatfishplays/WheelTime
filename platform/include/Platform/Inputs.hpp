@@ -17,7 +17,7 @@
 namespace Platform
 {
     // TODO: Come up with legend for special keys, mouse buttons, midi, etc
-    struct Hotkey
+    struct InputBind
     {
         int input;
         int mod;
@@ -60,7 +60,7 @@ namespace Platform
          * Currently only aim to support keyboard inputs
          *
          */
-        void registerInputBinding(Hotkey);
+        void registerInputBinding(InputBind);
 
         /**
          * @brief Unregisters an input being tracked
@@ -68,7 +68,7 @@ namespace Platform
          * Currently only aim to support keyboard inputs
          *
          */
-        void unregisterInputBinding(Hotkey);
+        void unregisterInputBinding(InputBind);
 
     private:
         /**

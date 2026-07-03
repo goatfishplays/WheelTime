@@ -14,10 +14,11 @@
 #include <QPushButton>
 using namespace Application;
 
+// TODO: Mbe just pass QApp in
 App::App(int &argc, char **argv)
     : activeMenu(nullptr),
       priorMousePos{},
-      window{},
+      priorWindow{},
       app(argc, argv)
 {
     int fake_argc = 1;
@@ -29,3 +30,13 @@ App::App(int &argc, char **argv)
 
     app.exec();
 }
+
+App::~App() {}
+
+Menu *App::getActiveMenu() {}
+
+void App::setActiveMenu(Menu &menu) {}
+
+void App::exitMenu() {}
+
+void App::runAction(Action &action) {}
