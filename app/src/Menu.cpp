@@ -17,10 +17,11 @@
 
 using namespace Application;
 
-Menu::Menu(Platform::InputBind *_inputBind = nullptr,
-           bool _executeOnRelease = false,
-           bool _exitOnAction = false,
-           std::vector<Action> _actions = {}) : inputBind(_inputBind), executeOnRelease(_executeOnRelease), exitOnAction(_exitOnAction), actions(_actions)
+Menu::Menu(Platform::InputBind *_inputBind,
+           bool _executeOnRelease,
+           bool _exitOnAction,
+           std::string _name,
+           std::vector<Action> _actions) : inputBind(_inputBind), executeOnRelease(_executeOnRelease), exitOnAction(_exitOnAction), name(_name), actions(_actions)
 {
 }
 
@@ -35,3 +36,8 @@ int Menu::numActions() { return this->actions.size(); }
 void Menu::save() {}
 
 void Menu::load() {}
+
+std::string Menu::getName() const
+{
+    return name;
+}

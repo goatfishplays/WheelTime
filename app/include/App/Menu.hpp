@@ -32,10 +32,11 @@ namespace Application
         // TODO just make it so that it prepends exit if true
         bool exitOnAction;
 
-        Menu(Platform::InputBind *_inputBind,
-             bool _executeOnRelease,
-             bool _exitOnAction,
-             std::vector<Action> _actions);
+        Menu(Platform::InputBind *_inputBind = nullptr,
+             bool _executeOnRelease = false,
+             bool _exitOnAction = false,
+             std::string name = "Unnamed Menu",
+             std::vector<Action> _actions = {});
         ~Menu();
 
         /**
@@ -74,8 +75,13 @@ namespace Application
          */
         void load();
 
-    private:
+        std::string getName() const;
+
+        /// @brief Generally avoid directly modifying this
         std::vector<Action> actions;
+
+    private:
+        std::string name;
         std::string filepath; // TODO: need to auto delete old on change?
     };
 }

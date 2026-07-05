@@ -15,7 +15,7 @@
 
 using namespace Application;
 
-Action::Action(std::vector<ActionItem> _sequence) : sequence(_sequence)
+Action::Action(std::vector<ActionItem> _sequence, std::string _name, std::string _iconFilepath) : sequence(_sequence), name(_name), iconFilepath(_iconFilepath)
 {
 }
 
@@ -31,3 +31,8 @@ int Action::len()
 }
 
 void Action::execute() {}
+
+std::string Action::getName() const
+{
+    return name;
+}

@@ -4,6 +4,11 @@ add_library(App
     src/Menu.cpp
     src/Action.cpp
     src/ActionItems.cpp
+    include/App/App.hpp
+    include/App/Gui.hpp
+    include/App/Menu.hpp
+    include/App/Action.hpp
+    include/App/ActionItems.hpp
 )
 
 target_include_directories(App 

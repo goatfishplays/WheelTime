@@ -24,7 +24,9 @@ namespace Application
     class Action
     {
     public:
-        Action(std::vector<ActionItem> _sequence);
+        Action(std::vector<ActionItem> sequence = {},
+               std::string name = "Unnamed Action",
+               std::string iconFilepath = "");
         ~Action();
 
         /**
@@ -54,6 +56,8 @@ namespace Application
          *
          */
         void execute();
+
+        std::string getName() const;
 
     private:
         std::vector<ActionItem> sequence;

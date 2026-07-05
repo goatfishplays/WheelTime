@@ -11,6 +11,7 @@
 
 #include "App/ActionItems.hpp"
 #include <string>
+#include <iostream>
 
 using namespace Application;
 
@@ -18,7 +19,14 @@ ActionItem::ActionItem() {}
 
 ActionItem::~ActionItem() {}
 
-void AI_Script::execute() {}
+void ActionItem::execute()
+{
+    std::cerr << "Action Item base class exectued";
+}
+
+void AI_Script::execute()
+{
+}
 
 void AI_Keystroke::execute() {}
 
