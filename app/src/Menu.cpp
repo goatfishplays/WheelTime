@@ -30,7 +30,7 @@ void Menu::addAction(int ind, Action action) {}
 
 void Menu::remAction(int ind) {}
 
-int Menu::numActions() {}
+int Menu::numActions() { return this->actions.size(); }
 
 void Menu::save() {}
 

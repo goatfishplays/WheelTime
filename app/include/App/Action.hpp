@@ -12,6 +12,7 @@
 #pragma once
 #include <vector>
 #include <Platform/Inputs.hpp>
+#include <string>
 #include "App/ActionItems.hpp"
 
 namespace Application
@@ -56,5 +57,7 @@ namespace Application
 
     private:
         std::vector<ActionItem> sequence;
+        std::string name;
+        std::string iconFilepath;
     };
 }

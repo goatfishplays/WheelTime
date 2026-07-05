@@ -14,6 +14,7 @@
 #include <vector>
 #include <Platform/Window.hpp>
 #include "App/Menu.hpp"
+#include "App/Gui.hpp"
 
 namespace Application
 {
@@ -47,10 +48,10 @@ namespace Application
     private:
         /// @brief The currently viewed menu
         Menu *activeMenu;
+        Gui gui;
 
         Platform::Vec2 priorMousePos;
         Platform::Window priorWindow;
-        QApplication app;
     };
 
 }

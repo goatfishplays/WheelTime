@@ -1,6 +1,9 @@
-add_executable(${PROJECT_NAME} 
+qt_add_executable(${PROJECT_NAME} 
     src/main.cpp
 )
+# add_executable(Launcher
+#     src/main.cpp
+# )
 
 # target_include_directories(App 
 #     PUBLIC 
@@ -9,5 +12,7 @@ add_executable(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE 
-        App
-)
+        App 
+        Qt6::Widgets
+        # Qt6::Core
+)  

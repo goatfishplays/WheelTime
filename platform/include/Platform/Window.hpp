@@ -28,6 +28,11 @@ namespace Platform
         ~Window();
 
         /**
+         * @brief Get the currently focused window
+         *
+         */
+        void getActiveWindow();
+        /**
          * @brief Bring the window into active view/focus
          *
          */

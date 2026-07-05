@@ -16,8 +16,8 @@ using namespace Platform;
 class Window::Impl
 {
 public:
-    HWND hwnd{};
-    HINSTANCE instance{};
+    // HWND hwnd{};
+    // HINSTANCE instance{};
 };
 
 Window::Window()
@@ -25,7 +25,9 @@ Window::Window()
 {
 }
 
+Window::~Window() {}
+
 void Window::focus()
 {
-    ShowWindow(m_impl->hwnd, SW_SHOW);
+    // ShowWindow(m_impl->hwnd, SW_SHOW);
 }

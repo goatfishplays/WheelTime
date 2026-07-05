@@ -1,5 +1,9 @@
 add_library(App 
     src/App.cpp
+    src/Gui.cpp
+    src/Menu.cpp
+    src/Action.cpp
+    src/ActionItems.cpp
 )
 
 target_include_directories(App 

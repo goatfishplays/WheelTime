@@ -25,6 +25,9 @@ void Action::addItem(int ind, ActionItem ai) {}
 
 void Action::removeItem(int ind) {}
 
-int Action::len() {}
+int Action::len()
+{
+    return this->sequence.size();
+}
 
 void Action::execute() {}
