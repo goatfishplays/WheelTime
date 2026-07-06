@@ -13,6 +13,7 @@
 #include <QApplication>
 #include <vector>
 #include <Platform/Window.hpp>
+#include <Platform/Inputs.hpp>
 #include "App/Menu.hpp"
 #include "App/Gui.hpp"
 
@@ -45,6 +46,9 @@ namespace Application
         /// @param action
         void runAction(Action &action);
 
+        /// @brief Callback when global hotkey is pressed
+        void onHotkeyTriggered(int hotkeyId);
+
     private:
         /// @brief The currently viewed menu
         Menu *activeMenu;
@@ -52,6 +56,8 @@ namespace Application
 
         Platform::Vec2 priorMousePos;
         Platform::Window priorWindow;
+        Platform::InputRcvr m_inputRcvr;
+        class QAbstractNativeEventFilter* m_hotkeyFilter;
     };
 
 }
