@@ -21,6 +21,7 @@ namespace Platform
     public:
         Executor();
         ~Executor();
+        void setMousePos(int x, int y);
         void executeKey(InputBind key);
         void executeScript(std::string filepath);
 

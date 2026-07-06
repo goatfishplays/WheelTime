@@ -11,6 +11,8 @@
 
 #include "App/App.hpp"
 #include <Platform/Window.hpp>
+#include <Platform/Inputs.hpp>
+#include <Platform/Execute.hpp>
 #include <QApplication>
 #include <QPushButton>
 using namespace Application;
@@ -44,8 +46,20 @@ void App::setActiveMenu(Menu &menu)
 {
 }
 
+void App::gatherPriors()
+{
+    priorMousePos = inputRcvr.getAbsoluteMousePosition();
+    priorWindow.getActiveWindow();
+}
+
+void App::restorePriors()
+{
+}
+
 void App::exitMenu()
 {
+    executor.setMousePos(priorMousePos.x, priorMousePos.y);
+    priorWindow.focus();
 }
 
 void App::runAction(Action &action) {}

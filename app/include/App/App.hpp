@@ -50,8 +50,13 @@ namespace Application
         Menu *activeMenu;
         Gui gui;
 
+        Platform::InputRcvr inputRcvr; // TODO: can mbe make these classes have a lot of static funcs
+        Platform::Executor executor;
         Platform::Vec2 priorMousePos;
         Platform::Window priorWindow;
+
+        void gatherPriors();
+        void restorePriors();
     };
 
 }

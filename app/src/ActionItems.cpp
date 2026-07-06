@@ -24,9 +24,7 @@ void ActionItem::execute()
     std::cerr << "Action Item base class exectued";
 }
 
-void AI_Script::execute()
-{
-}
+void AI_Script::execute() {}
 
 void AI_Keystroke::execute() {}
 
