@@ -5,8 +5,31 @@
 #include <QMouseEvent>
 #include <QStyle>
 #include <QDebug>
+#include <Platform/Execute.hpp>
 
 using namespace Application;
+
+static void runTestAction(int index)
+{
+    Platform::Executor executor;
+
+    switch (index)
+    {
+    case 0:
+        qDebug() << "Running test action: Notepad";
+        executor.executeScript("notepad.exe");
+        break;
+
+    case 1:
+        qDebug() << "Running test action: Calculator";
+        executor.executeScript("calc.exe");
+        break;
+
+    default:
+        qDebug() << "No test action assigned for index:" << index;
+        break;
+    }
+}
 
 // ---------------- HoverButton ----------------
 
@@ -26,6 +49,7 @@ void HoverButton::leaveEvent(QEvent *event)
     QPushButton::leaveEvent(event);
     emit mouseLeft();
 }
+
 
 // ---------------- RadialMenuWidget ----------------
 
@@ -313,11 +337,11 @@ Gui::Gui(QWidget *parent)
     // Example menu setup.
     std::string nameEx = "Example";
     std::vector<Action> actEx = {
-        Action({}, "One"),
-        Action({}, "Two"),
-        Action({}, "Three"),
-        Action({}, "Four"),
-        Action({}, "Five")};
+        Action({}, "Notepad"),
+        Action({}, "Calculator"),
+        Action({}, "Empty"),
+        Action({}, "Empty"),
+        Action({}, "Empty")};
     Menu example(nullptr, false, false, nameEx, actEx);
     // example = "Example Menu";
     // example.actions = {
@@ -334,5 +358,6 @@ Gui::Gui(QWidget *parent)
             { qDebug() << "Selected index changed:" << index; });
 
     connect(m_radialMenu, &RadialMenuWidget::buttonTriggered, this, [](int index)
-            { qDebug() << "Button clicked:" << index; });
+            { qDebug() << "Button clicked:" << index;
+            runTestAction(index); });
 }
