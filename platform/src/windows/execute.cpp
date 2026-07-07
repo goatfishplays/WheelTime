@@ -1,36 +1,51 @@
+#include <Platform/Execute.hpp>
+
 #include <windows.h>
-#include <string>
 #include <iostream>
 
-class AppAction {
-private:
-    std::string applicationPath;
+namespace Platform
+{
+    class Executor::Impl
+    {
+    public:
+        void executeScript(const std::string &filepath)
+        {
+            std::cout << "[Executor] Launching script/app: " << filepath << "\n";
 
-public:
-    AppAction(const std::string& path) : applicationPath(path) {}
+            ShellExecuteA(
+                NULL,
+                "open",
+                filepath.c_str(),
+                NULL,
+                NULL,
+                SW_SHOWNORMAL
+            );
+        }
 
-    void execute() const {
-        std::cout << "[Action] Launching: " << applicationPath << "\n";
-        ShellExecuteA(NULL, "open", applicationPath.c_str(), NULL, NULL, SW_SHOWNORMAL);
+        void executeKey(InputBind key)
+        {
+            std::cout << "[Executor] executeKey called\n";
+
+            // TODO: Implement keystroke execution using Windows SendInput.
+            // This is where Discord deafen / hotkey simulation would eventually go.
+            (void)key;
+        }
+    };
+
+    Executor::Executor()
+        : m_impl(std::make_unique<Impl>())
+    {
     }
-};
 
-void onButtonClickHandler(const AppAction& actionToRun) {
-    std::cout << "[UI] Button was clicked by the user.\n";
-    actionToRun.execute();
-}
+    Executor::~Executor() = default;
 
-int main() {
-    AppAction openNotepad("notepad.exe");
-    AppAction openCalculator("calc.exe");
+    void Executor::executeScript(std::string filepath)
+    {
+        m_impl->executeScript(filepath);
+    }
 
-    std::cout << "--- Application Running ---\n\n";
-
-    onButtonClickHandler(openNotepad);
-
-    std::cout << "\n--- Simulating another button click ---\n\n";
-
-    onButtonClickHandler(openCalculator);
-
-    return 0;
+    void Executor::executeKey(InputBind key)
+    {
+        m_impl->executeKey(key);
+    }
 }
