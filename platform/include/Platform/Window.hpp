@@ -25,6 +25,7 @@ namespace Platform
     {
     public:
         Window();
+        Window(void* nativeHandle);
         ~Window();
 
         /**

@@ -7,8 +7,31 @@
 #include <QStyle>
 #include <QDebug>
 // TODO: segment this into multiple files
+#include <Platform/Execute.hpp>
 
 using namespace Application;
+
+static void runTestAction(int index)
+{
+    Platform::Executor executor;
+
+    switch (index)
+    {
+    case 0:
+        qDebug() << "Running test action: Notepad";
+        executor.executeScript("notepad.exe");
+        break;
+
+    case 1:
+        qDebug() << "Running test action: Calculator";
+        executor.executeScript("calc.exe");
+        break;
+
+    default:
+        qDebug() << "No test action assigned for index:" << index;
+        break;
+    }
+}
 
 // ---------------- HoverButton ----------------
 
@@ -39,9 +62,6 @@ RadialMenuWidget::RadialMenuWidget(QWidget *parent)
 
     m_centerLabel = new QLabel(this);
     m_centerLabel->setAlignment(Qt::AlignCenter);
-
-    // Example styling only; adjust as needed.
-    m_centerLabel->setStyleSheet("font-weight: 600;");
 }
 
 RadialMenuWidget::RadialMenuWidget(const Menu &menu, QWidget *parent)
@@ -353,11 +373,11 @@ Gui::Gui(QWidget *parent)
     // Example menu setup.
     std::string nameEx = "Example";
     std::vector<Action> actEx = {
-        Action({}, "One"),
-        Action({}, "Two"),
-        Action({}, "Three"),
-        Action({}, "Four"),
-        Action({}, "Five")};
+        Action({}, "Notepad"),
+        Action({}, "Calculator"),
+        Action({}, "Empty"),
+        Action({}, "Empty"),
+        Action({}, "Empty")};
     Menu example(nullptr, false, false, nameEx, actEx);
     // example = "Example Menu";
     // example.actions = {
@@ -373,7 +393,8 @@ Gui::Gui(QWidget *parent)
     connect(m_radialMenu, &RadialMenuWidget::selectedIndexChanged, this, &Gui::onSelectChange);
 
     connect(m_radialMenu, &RadialMenuWidget::buttonTriggered, this, [](int index)
-            { qDebug() << "Button clicked:" << index; });
+            { qDebug() << "Button clicked:" << index;
+            runTestAction(index); });
 }
 
 void Gui::onSelectChange(int index)
@@ -392,4 +413,17 @@ bool Gui::eventFilter(QObject *watched, QEvent *event)
     }
 
     return QWidget::eventFilter(watched, event);
+    // this->show();
+}
+
+void Gui::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Escape)
+    {
+        emit escapePressed();
+    }
+    else
+    {
+        QWidget::keyPressEvent(event);
+    }
 }

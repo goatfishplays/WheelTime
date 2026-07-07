@@ -56,6 +56,9 @@ namespace Application
         /// @param action
         void runAction(Action &action);
 
+        /// @brief Callback when global hotkey is pressed
+        void onHotkeyTriggered(int hotkeyId);
+
     private:
         /// @brief The currently viewed menu
         Menu *activeMenu;
@@ -70,6 +73,8 @@ namespace Application
         void restorePriors();
         App();
         ~App();
+        Platform::InputRcvr m_inputRcvr;
+        class QAbstractNativeEventFilter *m_hotkeyFilter;
     };
 
 }

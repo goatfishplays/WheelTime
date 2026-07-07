@@ -15,7 +15,29 @@
 #include <Platform/Execute.hpp>
 #include <QApplication>
 #include <QPushButton>
+#include <QAbstractNativeEventFilter>
+
 using namespace Application;
+
+class HotkeyFilter : public QAbstractNativeEventFilter
+{
+public:
+    HotkeyFilter(App *app) : m_app(app) {}
+
+    bool nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result) override
+    {
+        int hotkeyId = 0;
+        if (Platform::InputRcvr::isHotkeyMessage(message, hotkeyId))
+        {
+            m_app->onHotkeyTriggered(hotkeyId);
+            return true; // Handled
+        }
+        return false;
+    }
+
+private:
+    App *m_app;
+};
 
 // TODO: Mbe just pass QApp in
 App::App()
@@ -24,23 +46,63 @@ App::App()
       priorMousePos{},
       priorWindow{},
       inputRcvr(),
-      executor()
+      executor(),
+      m_hotkeyFilter(nullptr)
 {
-    // int fake_argc = 1;
-    // char *fake_argv[] = {(char *)"WheelTimeApp", nullptr};
-    // QApplication app(fake_argc, fake_argv);
+    // Register global hotkey Alt + Space (mod: 0x0001, vk: 0x20)
+    Platform::InputBind bind;
+    bind.mod = 0x0001; // MOD_ALT
+    bind.input = 0x20; // VK_SPACE
+    m_inputRcvr.registerInputBinding(bind);
 
-    // QPushButton button("Hello world !");
+    // Install native event filter to capture WM_HOTKEY
+    m_hotkeyFilter = new HotkeyFilter(this);
+    qApp->installNativeEventFilter(m_hotkeyFilter);
 
-    // button.setText("My text");
-    // button.setToolTip("A tooltip");
-    // button.show();
+    // Connect escapePressed signal from Gui to hide and return focus
+    QObject::connect(&gui, &Gui::escapePressed, [this]()
+                     {
+        gui.hide();
+        priorWindow.focus(); });
 
-    // app.exec();
     gui.show();
 }
 
-App::~App() {}
+App::~App()
+{
+    if (m_hotkeyFilter)
+    {
+        qApp->removeNativeEventFilter(m_hotkeyFilter);
+        delete m_hotkeyFilter;
+        m_hotkeyFilter = nullptr;
+    }
+
+    // Unregister hotkey Alt + Space (mod: 0x0001, vk: 0x20)
+    Platform::InputBind bind;
+    bind.mod = 0x0001;
+    bind.input = 0x20;
+    m_inputRcvr.unregisterInputBinding(bind);
+}
+
+void App::onHotkeyTriggered(int hotkeyId)
+{
+    if (gui.isVisible() && gui.isActiveWindow())
+    {
+        gui.hide();
+        priorWindow.focus();
+    }
+    else
+    {
+        priorWindow.getActiveWindow();
+
+        gui.showNormal();
+        gui.raise();
+        gui.activateWindow();
+
+        Platform::Window appWindow(reinterpret_cast<void *>(gui.winId()));
+        appWindow.focus();
+    }
+}
 
 Menu *App::getActiveMenu() { return activeMenu; }
 

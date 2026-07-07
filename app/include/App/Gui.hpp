@@ -13,6 +13,7 @@
 #include <QResizeEvent>
 #include <QEnterEvent>
 #include <QMouseEvent>
+#include <QKeyEvent>
 
 #include "App/Menu.hpp"
 #include "App/Action.hpp"
@@ -105,8 +106,12 @@ namespace Application
 
         void onSelectChange(int);
 
+    signals:
+        void escapePressed();
+
     protected:
         bool eventFilter(QObject *watched, QEvent *event) override;
+        void keyPressEvent(QKeyEvent *event) override;
 
     private:
         QLabel *m_titleLabel{nullptr};
