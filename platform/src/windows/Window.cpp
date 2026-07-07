@@ -33,14 +33,6 @@ Window::Window(void *nativeHandle)
 
 Window::~Window() {}
 
-void Window::getActiveWindow()
-{
-    if (m_impl)
-    {
-        m_impl->hwnd = GetForegroundWindow();
-    }
-}
-
 void Window::focus()
 {
     if (!m_impl || !m_impl->hwnd)
@@ -82,9 +74,6 @@ void Window::focus()
 
     SetActiveWindow(hwnd);
 }
-// ShowWindow(m_impl->hwnd, SW_SHOW);
-
-void Window::hide() {}
 
 void Window::getActiveWindow()
 {

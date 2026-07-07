@@ -39,7 +39,6 @@ private:
     App *m_app;
 };
 
-// TODO: Mbe just pass QApp in
 App::App()
     : activeMenu(nullptr),
       gui(0),
@@ -61,9 +60,7 @@ App::App()
 
     // Connect escapePressed signal from Gui to hide and return focus
     QObject::connect(&gui, &Gui::escapePressed, [this]()
-                     {
-        gui.hide();
-        priorWindow.focus(); });
+                     { hideGui(); });
 
     gui.show();
 }
@@ -88,30 +85,23 @@ void App::onHotkeyTriggered(int hotkeyId)
 {
     if (gui.isVisible() && gui.isActiveWindow())
     {
-        gui.hide();
-        priorWindow.focus();
+        hideGui();
     }
     else
     {
-        priorWindow.getActiveWindow();
-
-        gui.showNormal();
-        gui.raise();
-        gui.activateWindow();
-
-        Platform::Window appWindow(reinterpret_cast<void *>(gui.winId()));
-        appWindow.focus();
+        showGui();
     }
 }
 
 Menu *App::getActiveMenu() { return activeMenu; }
 
-void App::setActiveMenu(Menu &menu)
-{
-}
-
 void App::gatherPriors()
 {
+    // Do not gather priors if we are just swapping to a submenu
+    if (gui.isVisible())
+    {
+        return;
+    }
     priorMousePos = inputRcvr.getAbsoluteMousePosition();
     priorWindow.getActiveWindow();
 }
@@ -122,8 +112,24 @@ void App::restorePriors()
     priorWindow.focus();
 }
 
-void App::exitMenu()
+void App::showGui(Menu *menu)
 {
+    gatherPriors();
+    activeMenu = menu;
+    gui.setMenu(*activeMenu);
+
+    // TODO: test make sure this is fine to do
+    gui.showNormal();
+    gui.raise();
+    gui.activateWindow();
+
+    Platform::Window appWindow(reinterpret_cast<void *>(gui.winId()));
+    appWindow.focus();
+}
+
+void App::hideGui()
+{
+    gui.hide();
     restorePriors();
 }
 

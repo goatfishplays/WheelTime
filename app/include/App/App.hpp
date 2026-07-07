@@ -45,12 +45,12 @@ namespace Application
         /// @return Pointer to the active menu
         Menu *getActiveMenu();
 
-        /// @brief Set the active menu
-        /// @param menu
-        void setActiveMenu(Menu &menu);
+        /// @brief Set, display, and focus a menu
+        /// @param menu to be displayed
+        void showGui(Menu *menu);
 
         /// @brief Exits the active menu and returns to previous window (or newly open window? might need to look into this)
-        void exitMenu();
+        void hideGui();
 
         /// @brief Run an action
         /// @param action
@@ -64,7 +64,7 @@ namespace Application
         Menu *activeMenu;
         Gui gui;
 
-        Platform::InputRcvr inputRcvr; // TODO: can mbe make these classes have a lot of static funcs
+        Platform::InputRcvr inputRcvr; // TODO: can mbe make these classes have a lot of static funcs for perf later
         Platform::Executor executor;
         Platform::Vec2 priorMousePos;
         Platform::Window priorWindow;

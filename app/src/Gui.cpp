@@ -427,3 +427,8 @@ void Gui::keyPressEvent(QKeyEvent *event)
         QWidget::keyPressEvent(event);
     }
 }
+
+void Gui::setMenu(const Menu &menu) // TODO: might be better to just make the radial menu public
+{
+    m_radialMenu->setMenu(menu);
+}

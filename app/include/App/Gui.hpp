@@ -105,6 +105,7 @@ namespace Application
         explicit Gui(QWidget *parent = nullptr);
 
         void onSelectChange(int);
+        void setMenu(const Menu &menu);
 
     signals:
         void escapePressed();
