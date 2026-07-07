@@ -70,6 +70,12 @@ namespace Platform
          */
         void unregisterInputBinding(InputBind);
 
+        /**
+         * @brief Check if native message is a hotkey message
+         *
+         */
+        static bool isHotkeyMessage(void* message, int& hotkeyIdOut);
+
     private:
         /**
          * @brief The actual implementation detail

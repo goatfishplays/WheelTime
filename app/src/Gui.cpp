@@ -360,4 +360,15 @@ Gui::Gui(QWidget *parent)
     connect(m_radialMenu, &RadialMenuWidget::buttonTriggered, this, [](int index)
             { qDebug() << "Button clicked:" << index;
             runTestAction(index); });
+            { qDebug() << "Button clicked:" << index; });
+    // this->show();
+}
+
+void Gui::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Escape) {
+        emit escapePressed();
+    } else {
+        QWidget::keyPressEvent(event);
+    }
 }
