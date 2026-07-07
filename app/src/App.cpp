@@ -18,11 +18,13 @@
 using namespace Application;
 
 // TODO: Mbe just pass QApp in
-App::App(int &argc, char **argv)
+App::App()
     : activeMenu(nullptr),
+      gui(0),
       priorMousePos{},
       priorWindow{},
-      gui(0)
+      inputRcvr(),
+      executor()
 {
     // int fake_argc = 1;
     // char *fake_argv[] = {(char *)"WheelTimeApp", nullptr};
@@ -54,12 +56,13 @@ void App::gatherPriors()
 
 void App::restorePriors()
 {
+    executor.setMousePos(priorMousePos.x, priorMousePos.y);
+    priorWindow.focus();
 }
 
 void App::exitMenu()
 {
-    executor.setMousePos(priorMousePos.x, priorMousePos.y);
-    priorWindow.focus();
+    restorePriors();
 }
 
 void App::runAction(Action &action) {}

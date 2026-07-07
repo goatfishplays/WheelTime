@@ -3,8 +3,10 @@
 #include <cmath>
 #include <QCursor>
 #include <QMouseEvent>
+#include <QApplication>
 #include <QStyle>
 #include <QDebug>
+// TODO: segment this into multiple files
 
 using namespace Application;
 
@@ -32,7 +34,7 @@ void HoverButton::leaveEvent(QEvent *event)
 RadialMenuWidget::RadialMenuWidget(QWidget *parent)
     : QWidget(parent)
 {
-    setMouseTracking(true);
+    // setMouseTracking(true);
     setAttribute(Qt::WA_Hover, true);
 
     m_centerLabel = new QLabel(this);
@@ -79,9 +81,32 @@ void RadialMenuWidget::setMaxDistance(double maxDistance)
     m_maxDistance = maxDistance;
 }
 
-int RadialMenuWidget::selectedIndex() const
+int RadialMenuWidget::getSelectedIndex() const
 {
     return m_selectedIndex;
+}
+void RadialMenuWidget::setSelectedIndex(int newVal)
+{
+    HoverButton *button;
+    if (m_selectedIndex >= 0)
+    {
+        button = m_buttons[m_selectedIndex];
+        button->setProperty("selectedAction", false);
+        button->style()->unpolish(button);
+        button->style()->polish(button);
+        button->update();
+    }
+
+    m_selectedIndex = newVal;
+    if (m_selectedIndex >= 0)
+    {
+        button = m_buttons[m_selectedIndex];
+        button->setProperty("selectedAction", true);
+        button->style()->unpolish(button);
+        button->style()->polish(button);
+        button->update();
+    }
+    emit selectedIndexChanged(m_selectedIndex);
 }
 
 void RadialMenuWidget::rebuildButtons()
@@ -105,8 +130,7 @@ void RadialMenuWidget::rebuildButtons()
             {
                 if (m_selectedIndex != i)
                 {
-                    m_selectedIndex = i;
-                    emit selectedIndexChanged(m_selectedIndex);
+                    setSelectedIndex(i);
                 }
             } });
 
@@ -165,13 +189,27 @@ void RadialMenuWidget::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
     repositionButtons();
 }
+// void RadialMenuWidget::mouseMoveEvent(QMouseEvent *event)
+// {
+//     // updateSelectionFromMouse(event->position().toPoint());
+//     m_mousePosition = event->position().toPoint();
+//     updateSelection();
+//     qDebug() << "Mouse pos: " << m_mousePosition;
+
+//     QWidget::mouseMoveEvent(event);
+// }
+
+void RadialMenuWidget::setMousePosFromGlobal(const QPoint &globalPos)
+{
+    m_mousePosition = mapFromGlobal(globalPos);
+    updateSelection();
+}
 
 void RadialMenuWidget::clearSelection()
 {
     if (m_selectedIndex != -1)
     {
-        m_selectedIndex = -1;
-        emit selectedIndexChanged(-1);
+        setSelectedIndex(-1);
     }
 }
 
@@ -186,21 +224,21 @@ int RadialMenuWidget::indexFromAngle(double angleRadians, int count) const
     return idx;
 }
 
-void RadialMenuWidget::updateSelectionFromMouse(const QPoint &globalPos)
+void RadialMenuWidget::updateSelection()
 {
-    const QPointF center = mapToGlobal(rect().center());
-    const double dx = globalPos.x() - center.x();
-    const double dy = globalPos.y() - center.y();
+    const QPointF center = rect().center();
+    const double dx = m_mousePosition.x() - center.x();
+    const double dy = m_mousePosition.y() - center.y();
     const double dist2 = dx * dx + dy * dy;
 
-    if (m_maxDistance >= 0.0 && dist2 > m_maxDistance * m_maxDistance)
+    const int count = static_cast<int>(m_buttons.size());
+    if (count == 0)
     {
         clearSelection();
         return;
     }
 
-    const int count = static_cast<int>(m_buttons.size());
-    if (count == 0)
+    if (m_maxDistance >= 0.0 && dist2 > m_maxDistance * m_maxDistance)
     {
         clearSelection();
         return;
@@ -213,9 +251,9 @@ void RadialMenuWidget::updateSelectionFromMouse(const QPoint &globalPos)
 
         for (int i = 0; i < count; ++i)
         {
-            const QPoint pos = m_buttons[i]->mapToGlobal(QPoint(m_buttons[i]->width() / 2, m_buttons[i]->height() / 2));
-            const double ddx = globalPos.x() - pos.x();
-            const double ddy = globalPos.y() - pos.y();
+            const QPoint c = m_buttons[i]->geometry().center(); // local coords
+            const double ddx = m_mousePosition.x() - c.x();
+            const double ddy = m_mousePosition.y() - c.y();
             const double score = ddx * ddx + ddy * ddy;
 
             if (best == -1 || score < bestScore)
@@ -227,32 +265,32 @@ void RadialMenuWidget::updateSelectionFromMouse(const QPoint &globalPos)
 
         if (m_selectedIndex != best)
         {
-            m_selectedIndex = best;
-            emit selectedIndexChanged(best);
+            setSelectedIndex(best);
         }
         return;
     }
 
     if (m_mode == ActivationMode::Angle)
     {
-        // Normalize to [0, 2pi), with 12:00 at angle 0.
+        // angle 0 = 12:00, then clockwise
         double angle = std::atan2(dy, dx);
         angle += M_PI / 2.0;
+
         while (angle < 0.0)
             angle += 2.0 * M_PI;
         while (angle >= 2.0 * M_PI)
             angle -= 2.0 * M_PI;
 
         const int best = indexFromAngle(angle, count);
+
         if (m_selectedIndex != best)
         {
-            m_selectedIndex = best;
-            emit selectedIndexChanged(best);
+            setSelectedIndex(best);
         }
         return;
     }
 
-    // Exact mode is handled by hover events on each button.
+    // Exact mode is handled by hover events on the buttons.
 }
 
 bool RadialMenuWidget::eventFilter(QObject *watched, QEvent *event)
@@ -276,6 +314,8 @@ Gui::Gui(QWidget *parent)
     //         background: transparent;
     //     }
     // )");
+
+    qApp->installEventFilter(this);
 
     auto *root = new QVBoxLayout(this);
     root->setContentsMargins(12, 12, 12, 12);
@@ -328,11 +368,28 @@ Gui::Gui(QWidget *parent)
 
     m_radialMenu->setMenu(example);
     m_radialMenu->setButtonRadius(100);
-    m_radialMenu->setActivationMode(RadialMenuWidget::ActivationMode::Exact);
+    m_radialMenu->setActivationMode(RadialMenuWidget::ActivationMode::Distance);
 
-    connect(m_radialMenu, &RadialMenuWidget::selectedIndexChanged, this, [](int index)
-            { qDebug() << "Selected index changed:" << index; });
+    connect(m_radialMenu, &RadialMenuWidget::selectedIndexChanged, this, &Gui::onSelectChange);
 
     connect(m_radialMenu, &RadialMenuWidget::buttonTriggered, this, [](int index)
             { qDebug() << "Button clicked:" << index; });
+}
+
+void Gui::onSelectChange(int index)
+{
+    qDebug() << "Selected index changed:" << index;
+    // m_radialMenu->highlightButton(m_radialMenu->getSelectedIndex());
+};
+
+bool Gui::eventFilter(QObject *watched, QEvent *event)
+{
+    if (event->type() == QEvent::MouseMove)
+    {
+        auto *mouseEvent = static_cast<QMouseEvent *>(event);
+        m_radialMenu->setMousePosFromGlobal(mouseEvent->globalPosition().toPoint());
+        // m_radialMenu->updateSelectionFromGlobal(mouseEvent->globalPosition().toPoint());
+    }
+
+    return QWidget::eventFilter(watched, event);
 }

@@ -14,6 +14,9 @@
 #include <QApplication>
 #include <QPushButton>
 #include <App/App.hpp>
+#include <QFile>
+#include <QDebug>
+#include <QDir>
 
 int main(int argc, char *argv[])
 {
@@ -32,7 +35,23 @@ int main(int argc, char *argv[])
     // button.setToolTip("A tooltip");
     // button.show();
 
-    Application::App app = Application::App(argc, argv);
+    Application::App &app = Application::App::getInstance();
+    // QFile file("resources/styles/defaultWheel.qss");
+    QFile file(":/styles/defaultWheel.qss");
+
+    qDebug() << QDir(":/").entryList(QDir::AllEntries);
+    qDebug() << QDir(":/styles").entryList(QDir::AllEntries);
+    qDebug() << QFile::exists(":/styles/defaultWheel.qss");
+
+    if (file.open(QFile::ReadOnly))
+    {
+        qApp->setStyleSheet(file.readAll());
+    }
+    else
+    {
+        qDebug() << "Failed to open resource";
+    }
+    // QApplication::setStyle("Fusion");
 
     return qtApp.exec();
     return 0;

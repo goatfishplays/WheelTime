@@ -13,6 +13,8 @@
 #include <QApplication>
 #include <vector>
 #include <Platform/Window.hpp>
+#include <Platform/Execute.hpp>
+#include <Platform/Inputs.hpp>
 #include "App/Menu.hpp"
 #include "App/Gui.hpp"
 
@@ -27,8 +29,17 @@ namespace Application
         /// @brief All currently cached/loaded menus TODO: likely want to keep a timer/lifetime + lru combo for menus or just load all
         std::vector<Menu *> loadedMenus;
 
-        App(int &argc, char **argv);
-        ~App();
+        // Singleton
+        App(const App &) = delete;
+        App &operator=(const App &) = delete;
+        App(App &&) = delete;
+        App &operator=(App &&) = delete;
+
+        static App &getInstance()
+        {
+            static App instance;
+            return instance;
+        }
 
         /// @brief Gets the active Menu
         /// @return Pointer to the active menu
@@ -57,6 +68,8 @@ namespace Application
 
         void gatherPriors();
         void restorePriors();
+        App();
+        ~App();
     };
 
 }
