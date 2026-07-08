@@ -11,12 +11,14 @@ if(WIN32)
     # add_subdirectory(src/platformWindows)
     target_sources(Platform PRIVATE
         src/windows/Window.cpp 
+        src/windows/Execute.cpp
         src/windows/Inputs.cpp
         src/windows/Execute.cpp
     )
 elseif(UNIX) # for now this is not implemented but just for later reference
     target_sources(Platform PRIVATE
         src/linux/Window.cpp
+        src/linux/Execute.cpp
         src/linux/Inputs.cpp
     )
 endif()

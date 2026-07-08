@@ -32,7 +32,7 @@ static void runTestAction(int index)
         qDebug() << "No test action assigned for index:" << index;
         break;
     }
-}
+}…on seeing what work has been done by other
 
 // ---------------- HoverButton ----------------
 
