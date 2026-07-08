@@ -360,7 +360,6 @@ Gui::Gui(QWidget *parent)
     connect(m_radialMenu, &RadialMenuWidget::buttonTriggered, this, [](int index)
             { qDebug() << "Button clicked:" << index;
             runTestAction(index); });
-            { qDebug() << "Button clicked:" << index; });
     // this->show();
 }
 
