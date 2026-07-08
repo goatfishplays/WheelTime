@@ -14,6 +14,11 @@
 #include <vector>
 #include <Platform/Inputs.hpp>
 #include "App/Action.hpp"
+#include "App/Menu.hpp"
+#include <fstream>
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 namespace Application
 {
@@ -61,19 +66,73 @@ namespace Application
          */
         int numActions();
 
-        /**
-         * @brief Saves menu/settings to a file
-         *
-         * @param filepath file to save to
-         */
-        void save();
+void Menu::save(const std::string &filepath)
+{
+    json j;
+    j["name"] = getName();
+    j["executeOnRelease"] = executeOnRelease;
+    j["exitOnAction"] = exitOnAction;
 
-        /**
-         * @brief Loads menu/settings from a file
-         *
-         * @param filepath file to load from
-         */
-        void load();
+    if (inputBind != nullptr)
+        j["inputBind"] = { {"input", inputBind->input}, {"mod", inputBind->mod} };
+    else
+        j["inputBind"] = nullptr;
+
+    json actionsJson = json::array();
+    for (const auto &action : actions)
+        actionsJson.push_back(action.toJson());
+    j["actions"] = actionsJson;
+
+    std::ofstream file(filepath);
+    if (!file.is_open())
+        return;
+
+    file << j.dump(4);
+    this->filepath = filepath;
+}
+
+
+void Menu::load(const std::string &filepath)
+{
+    std::ifstream file(filepath);
+    if (!file.is_open())
+        return;
+
+    json j;
+    try { file >> j; }
+    catch (const json::parse_error &) { return; } 
+    name = j.value("name", "Unnamed Menu");
+    executeOnRelease = j.value("executeOnRelease", false);
+    exitOnAction = j.value("exitOnAction", false);
+
+    if (j.contains("inputBind") && !j["inputBind"].is_null())
+    {
+        if (inputBind == nullptr)
+            inputBind = new Platform::InputBind();
+        inputBind->input = j["inputBind"].value("input", 0);
+        inputBind->mod   = j["inputBind"].value("mod", 0);
+    }
+    else
+    {
+        delete inputBind;
+        inputBind = nullptr;
+    }
+
+    actions.clear();
+    if (j.contains("actions") && j["actions"].is_array())
+    {
+        for (const auto &actionJson : j["actions"])
+        {
+            Action action;
+            action.fromJson(actionJson);
+            actions.push_back(std::move(action));
+        }
+    }
+
+    this->filepath = filepath;
+}
+
+}
 
         std::string getName() const;
 
