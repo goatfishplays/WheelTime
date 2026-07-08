@@ -62,7 +62,19 @@ App::App()
     QObject::connect(&gui, &Gui::escapePressed, [this]()
                      { hideGui(); });
 
-    gui.show();
+    // Example menu setup. // TODO: laod from files instead
+    std::string nameEx = "Example";
+    std::vector<Action> actEx = {
+        Action({}, "Notepad"),
+        Action({}, "Calculator"),
+        Action({}, "Empty"),
+        Action({}, "Empty"),
+        Action({}, "Empty")};
+    loadedMenus.push_back(new Menu(nullptr, false, false, nameEx, actEx));
+    // Menu example(nullptr, false, false, nameEx, actEx);
+
+    // gui.show();
+    showGui(loadedMenus[0]);
 }
 
 App::~App()
@@ -72,6 +84,12 @@ App::~App()
         qApp->removeNativeEventFilter(m_hotkeyFilter);
         delete m_hotkeyFilter;
         m_hotkeyFilter = nullptr;
+    }
+
+    int numMenus = loadedMenus.size();
+    for (int i = numMenus - 1; i >= 0; i--)
+    {
+        delete loadedMenus[i];
     }
 
     // Unregister hotkey Alt + Space (mod: 0x0001, vk: 0x20)
@@ -89,7 +107,7 @@ void App::onHotkeyTriggered(int hotkeyId)
     }
     else
     {
-        showGui();
+        showGui(activeMenu); // TODO: Replace this with the menu associated with the pressed hotkey
     }
 }
 
@@ -133,4 +151,10 @@ void App::hideGui()
     restorePriors();
 }
 
-void App::runAction(Action &action) {}
+void App::executeAction(int actionInd)
+{
+    if (actionInd >= 0)
+    {
+        activeMenu->actions[actionInd].execute();
+    }
+}

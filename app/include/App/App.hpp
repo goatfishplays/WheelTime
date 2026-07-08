@@ -29,6 +29,10 @@ namespace Application
         /// @brief All currently cached/loaded menus TODO: likely want to keep a timer/lifetime + lru combo for menus or just load all
         std::vector<Menu *> loadedMenus;
 
+        Platform::InputRcvr inputRcvr; // TODO: can mbe make these classes have a lot of static funcs for perf later
+        Platform::Executor executor;
+        Gui gui;
+
         // Singleton
         App(const App &) = delete;
         App &operator=(const App &) = delete;
@@ -52,9 +56,9 @@ namespace Application
         /// @brief Exits the active menu and returns to previous window (or newly open window? might need to look into this)
         void hideGui();
 
-        /// @brief Run an action
-        /// @param action
-        void runAction(Action &action);
+        /// @brief Run an action from current menu
+        /// @param actionInd
+        void executeAction(int actionInd);
 
         /// @brief Callback when global hotkey is pressed
         void onHotkeyTriggered(int hotkeyId);
@@ -62,10 +66,6 @@ namespace Application
     private:
         /// @brief The currently viewed menu
         Menu *activeMenu;
-        Gui gui;
-
-        Platform::InputRcvr inputRcvr; // TODO: can mbe make these classes have a lot of static funcs for perf later
-        Platform::Executor executor;
         Platform::Vec2 priorMousePos;
         Platform::Window priorWindow;
 

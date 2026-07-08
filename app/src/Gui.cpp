@@ -8,6 +8,7 @@
 #include <QDebug>
 // TODO: segment this into multiple files
 #include <Platform/Execute.hpp>
+#include "App/App.hpp"
 
 using namespace Application;
 
@@ -74,6 +75,7 @@ void RadialMenuWidget::setMenu(const Menu &menu)
 {
     m_menu = menu;
     setCenterText(QString::fromStdString(menu.getName()));
+    setSelectedIndex(-1);
     rebuildButtons();
 }
 
@@ -370,15 +372,6 @@ Gui::Gui(QWidget *parent)
 
     root->addLayout(bottomRow);
 
-    // Example menu setup.
-    std::string nameEx = "Example";
-    std::vector<Action> actEx = {
-        Action({}, "Notepad"),
-        Action({}, "Calculator"),
-        Action({}, "Empty"),
-        Action({}, "Empty"),
-        Action({}, "Empty")};
-    Menu example(nullptr, false, false, nameEx, actEx);
     // example = "Example Menu";
     // example.actions = {
     //     {"One"},
@@ -386,7 +379,9 @@ Gui::Gui(QWidget *parent)
     //     {"Three"},
     //     {"Four"}};
 
-    m_radialMenu->setMenu(example);
+    // App::App::getInstance().loadedMenus.push_back(example);
+    // App::App::getInstance().showGui(&App::App::getInstance().loadedMenus[0]);
+    // m_radialMenu->setMenu(example);
     m_radialMenu->setButtonRadius(100);
     m_radialMenu->setActivationMode(RadialMenuWidget::ActivationMode::Distance);
 
@@ -405,11 +400,30 @@ void Gui::onSelectChange(int index)
 
 bool Gui::eventFilter(QObject *watched, QEvent *event)
 {
+    // Only handle events that pertain to this object
+    // if (watched != this)
+    //     return false;
+
     if (event->type() == QEvent::MouseMove)
     {
-        auto *mouseEvent = static_cast<QMouseEvent *>(event);
-        m_radialMenu->setMousePosFromGlobal(mouseEvent->globalPosition().toPoint());
+        auto *mouseMoveEvent = static_cast<QMouseEvent *>(event);
+        m_radialMenu->setMousePosFromGlobal(mouseMoveEvent->globalPosition().toPoint());
         // m_radialMenu->updateSelectionFromGlobal(mouseEvent->globalPosition().toPoint());
+    }
+    if (event->type() == QEvent::MouseButtonPress)
+    {
+        qDebug() << "Event detected, obj: " << watched << " | event: " << event;
+        auto *mouseEvent = static_cast<QMouseEvent *>(event);
+        if (mouseEvent->button() == Qt::LeftButton)
+        {
+            App::App::getInstance().executeAction(m_radialMenu->getSelectedIndex());
+            return true;
+        }
+        if (mouseEvent->button() == Qt::RightButton)
+        {
+            App::App::getInstance().hideGui();
+            return true;
+        }
     }
 
     return QWidget::eventFilter(watched, event);

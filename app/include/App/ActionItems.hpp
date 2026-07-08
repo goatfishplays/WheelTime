@@ -62,7 +62,7 @@ namespace Application
     class AI_Delay : public ActionItem
     {
     public:
-        float duration;
+        int duration;
         void execute() override;
     };
 
@@ -73,7 +73,7 @@ namespace Application
     class AI_Menu : public ActionItem
     {
     public:
-        std::string settingsFilepath;
+        std::string menuName;
         void execute() override;
     };
 
