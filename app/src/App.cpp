@@ -11,6 +11,8 @@
 
 #include "App/App.hpp"
 #include <Platform/Window.hpp>
+#include <Platform/Inputs.hpp>
+#include <Platform/Execute.hpp>
 #include <QApplication>
 #include <QPushButton>
 #include <QAbstractNativeEventFilter>
@@ -20,12 +22,13 @@ using namespace Application;
 class HotkeyFilter : public QAbstractNativeEventFilter
 {
 public:
-    HotkeyFilter(App* app) : m_app(app) {}
-    
+    HotkeyFilter(App *app) : m_app(app) {}
+
     bool nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result) override
     {
         int hotkeyId = 0;
-        if (Platform::InputRcvr::isHotkeyMessage(message, hotkeyId)) {
+        if (Platform::InputRcvr::isHotkeyMessage(message, hotkeyId))
+        {
             m_app->onHotkeyTriggered(hotkeyId);
             return true; // Handled
         }
@@ -33,15 +36,16 @@ public:
     }
 
 private:
-    App* m_app;
+    App *m_app;
 };
 
-// TODO: Mbe just pass QApp in
-App::App(int &argc, char **argv)
+App::App()
     : activeMenu(nullptr),
+      gui(0),
       priorMousePos{},
       priorWindow{},
-      gui(0),
+      inputRcvr(),
+      executor(),
       m_hotkeyFilter(nullptr)
 {
     // Register global hotkey Alt + Space (mod: 0x0001, vk: 0x20)
@@ -55,20 +59,37 @@ App::App(int &argc, char **argv)
     qApp->installNativeEventFilter(m_hotkeyFilter);
 
     // Connect escapePressed signal from Gui to hide and return focus
-    QObject::connect(&gui, &Gui::escapePressed, [this]() {
-        gui.hide();
-        priorWindow.focus();
-    });
+    QObject::connect(&gui, &Gui::escapePressed, [this]()
+                     { hideGui(); });
 
-    gui.show();
+    // Example menu setup. // TODO: laod from files instead
+    std::string nameEx = "Example";
+    std::vector<Action> actEx = {
+        Action({}, "Notepad"),
+        Action({}, "Calculator"),
+        Action({}, "Empty"),
+        Action({}, "Empty"),
+        Action({}, "Empty")};
+    loadedMenus.push_back(new Menu(nullptr, false, false, nameEx, actEx));
+    // Menu example(nullptr, false, false, nameEx, actEx);
+
+    // gui.show();
+    showGui(loadedMenus[0]);
 }
 
 App::~App()
 {
-    if (m_hotkeyFilter) {
+    if (m_hotkeyFilter)
+    {
         qApp->removeNativeEventFilter(m_hotkeyFilter);
         delete m_hotkeyFilter;
         m_hotkeyFilter = nullptr;
+    }
+
+    int numMenus = loadedMenus.size();
+    for (int i = numMenus - 1; i >= 0; i--)
+    {
+        delete loadedMenus[i];
     }
 
     // Unregister hotkey Alt + Space (mod: 0x0001, vk: 0x20)
@@ -80,29 +101,60 @@ App::~App()
 
 void App::onHotkeyTriggered(int hotkeyId)
 {
-    if (gui.isVisible() && gui.isActiveWindow()) {
-        gui.hide();
-        priorWindow.focus();
-    } else {
-        priorWindow.getActiveWindow();
-        
-        gui.showNormal();
-        gui.raise();
-        gui.activateWindow();
-
-        Platform::Window appWindow(reinterpret_cast<void*>(gui.winId()));
-        appWindow.focus();
+    if (gui.isVisible() && gui.isActiveWindow())
+    {
+        hideGui();
+    }
+    else
+    {
+        showGui(activeMenu); // TODO: Replace this with the menu associated with the pressed hotkey
     }
 }
 
 Menu *App::getActiveMenu() { return activeMenu; }
 
-void App::setActiveMenu(Menu &menu)
+void App::gatherPriors()
 {
+    // Do not gather priors if we are just swapping to a submenu
+    if (gui.isVisible())
+    {
+        return;
+    }
+    priorMousePos = inputRcvr.getAbsoluteMousePosition();
+    priorWindow.getActiveWindow();
 }
 
-void App::exitMenu()
+void App::restorePriors()
 {
+    executor.setMousePos(priorMousePos.x, priorMousePos.y);
+    priorWindow.focus();
 }
 
-void App::runAction(Action &action) {}
+void App::showGui(Menu *menu)
+{
+    gatherPriors();
+    activeMenu = menu;
+    gui.setMenu(*activeMenu);
+
+    // TODO: test make sure this is fine to do
+    gui.showNormal();
+    gui.raise();
+    gui.activateWindow();
+
+    Platform::Window appWindow(reinterpret_cast<void *>(gui.winId()));
+    appWindow.focus();
+}
+
+void App::hideGui()
+{
+    gui.hide();
+    restorePriors();
+}
+
+void App::executeAction(int actionInd)
+{
+    if (actionInd >= 0)
+    {
+        activeMenu->actions[actionInd].execute();
+    }
+}

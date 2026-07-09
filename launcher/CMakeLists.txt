@@ -16,3 +16,11 @@ target_link_libraries(${PROJECT_NAME}
         Qt6::Widgets
         # Qt6::Core
 )  
+
+# Leverage modern Qt6 resource compilation
+qt_add_resources(${PROJECT_NAME} "target"
+    PREFIX "/styles"
+    BASE "${CMAKE_SOURCE_DIR}/resources/styles"
+    FILES
+        "${CMAKE_SOURCE_DIR}/resources/styles/defaultWheel.qss"
+)

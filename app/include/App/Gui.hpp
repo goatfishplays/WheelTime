@@ -1,3 +1,13 @@
+/**
+ * @file Gui.hpp
+ * @author your name (you@domain.com)
+ * @brief The main gui interface class
+ * @version 0.1
+ * @date 2026-07-09
+ *
+ * @copyright Copyright (c) 2026
+ *
+ */
 #pragma once
 
 #include <vector>
@@ -6,92 +16,21 @@
 
 #include <QWidget>
 #include <QLabel>
-#include <QPushButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QSpacerItem>
 #include <QResizeEvent>
 #include <QEnterEvent>
+#include <QMouseEvent>
 #include <QKeyEvent>
+#include <QPushButton>
 
 #include "App/Menu.hpp"
 #include "App/Action.hpp"
+#include "App/RadialMenuWidget.hpp"
 
 namespace Application
 {
-    // struct Action
-    // {
-    //     std::string name;
-    // };
-
-    // struct Menu
-    // {
-    //     std::string name;
-    //     std::vector<Action> actions;
-    // };
-
-    class HoverButton : public QPushButton
-    {
-        Q_OBJECT
-    public:
-        explicit HoverButton(QWidget *parent = nullptr);
-
-    signals:
-        void mouseHovered();
-        void mouseLeft();
-
-    protected:
-        void enterEvent(QEnterEvent *event) override;
-        void leaveEvent(QEvent *event) override;
-    };
-
-    class RadialMenuWidget : public QWidget
-    {
-        Q_OBJECT
-
-    public:
-        enum class ActivationMode
-        {
-            Distance,
-            Angle,
-            Exact
-        };
-
-        explicit RadialMenuWidget(QWidget *parent = nullptr);
-        explicit RadialMenuWidget(const Menu &menu, QWidget *parent = nullptr);
-
-        void setMenu(const Menu &menu);
-        void setCenterText(const QString &text);
-        void setButtonRadius(int radius);
-        void setActivationMode(ActivationMode mode);
-        void setMaxDistance(double maxDistance); // negative means "no limit"
-
-        int selectedIndex() const;
-
-    signals:
-        void selectedIndexChanged(int index);
-        void buttonTriggered(int index);
-
-    protected:
-        void resizeEvent(QResizeEvent *event) override;
-        bool eventFilter(QObject *watched, QEvent *event) override;
-
-    private:
-        void rebuildButtons();
-        void repositionButtons();
-        void updateSelectionFromMouse(const QPoint &globalPos);
-        void clearSelection();
-        int indexFromAngle(double angleRadians, int count) const;
-
-        Menu m_menu;
-        QLabel *m_centerLabel{nullptr};
-        std::vector<HoverButton *> m_buttons;
-
-        int m_buttonRadius{110};
-        ActivationMode m_mode{ActivationMode::Exact};
-        double m_maxDistance{-1.0};
-        int m_selectedIndex{-1};
-    };
 
     class Gui : public QWidget
     {
@@ -100,10 +39,30 @@ namespace Application
     public:
         explicit Gui(QWidget *parent = nullptr);
 
+        /**
+         * @brief Called when the selection index for Menu changes
+         *
+         * @param selectionInd The new value of the index, -1 if unset
+         */
+        void onSelectChange(int selectionInd);
+        /**
+         * @brief Updates the GUI to a new menu
+         *
+         * @param menu reference to the new menu
+         */
+        void setMenu(const Menu &menu);
+
     signals:
+        /**
+         * @brief Emits signal on escape key being pressed
+         *
+         * TODO: Pretty sure this only triggers when app open hopefully
+         *
+         */
         void escapePressed();
 
     protected:
+        bool eventFilter(QObject *watched, QEvent *event) override;
         void keyPressEvent(QKeyEvent *event) override;
 
     private:
@@ -111,6 +70,5 @@ namespace Application
         RadialMenuWidget *m_radialMenu{nullptr};
         QPushButton *m_settingsButton{nullptr};
         QPushButton *m_editButton{nullptr};
-
     };
 }
