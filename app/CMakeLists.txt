@@ -1,10 +1,14 @@
 add_library(App 
     src/App.cpp
+    src/HoverButton.cpp
+    src/RadialMenuWidget.cpp
     src/Gui.cpp
     src/Menu.cpp
     src/Action.cpp
     src/ActionItems.cpp
     include/App/App.hpp
+    include/App/HoverButton.hpp
+    include/App/RadialMenuWidget.hpp
     include/App/Gui.hpp
     include/App/Menu.hpp
     include/App/Action.hpp

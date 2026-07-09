@@ -69,7 +69,15 @@ namespace Application
         Platform::Vec2 priorMousePos;
         Platform::Window priorWindow;
 
+        /**
+         * @brief Collects the place to return to after GUI closes
+         *
+         */
         void gatherPriors();
+        /**
+         * @brief Returns to the window and mouse position saved from gatherPrior()
+         *
+         */
         void restorePriors();
         App();
         ~App();
