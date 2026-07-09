@@ -12,6 +12,7 @@
 #include <QSpacerItem>
 #include <QResizeEvent>
 #include <QEnterEvent>
+#include <QKeyEvent>
 
 #include "App/Menu.hpp"
 #include "App/Action.hpp"
@@ -99,10 +100,17 @@ namespace Application
     public:
         explicit Gui(QWidget *parent = nullptr);
 
+    signals:
+        void escapePressed();
+
+    protected:
+        void keyPressEvent(QKeyEvent *event) override;
+
     private:
         QLabel *m_titleLabel{nullptr};
         RadialMenuWidget *m_radialMenu{nullptr};
         QPushButton *m_settingsButton{nullptr};
         QPushButton *m_editButton{nullptr};
+
     };
 }
