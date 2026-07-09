@@ -4,6 +4,7 @@ add_library(App
     src/RadialMenuWidget.cpp
     src/Gui.cpp
     src/Menu.cpp
+    src/MenuConfigLoader.cpp
     src/Action.cpp
     src/ActionItems.cpp
     include/App/App.hpp
@@ -11,6 +12,7 @@ add_library(App
     include/App/RadialMenuWidget.hpp
     include/App/Gui.hpp
     include/App/Menu.hpp
+    include/App/MenuConfigLoader.hpp
     include/App/Action.hpp
     include/App/ActionItems.hpp
 )

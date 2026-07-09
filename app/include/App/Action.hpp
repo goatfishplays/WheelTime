@@ -10,6 +10,7 @@
  */
 
 #pragma once
+#include <memory>
 #include <vector>
 #include <Platform/Inputs.hpp>
 #include <string>
@@ -24,9 +25,13 @@ namespace Application
     class Action
     {
     public:
-        Action(std::vector<ActionItem> sequence = {},
+        Action(std::vector<std::unique_ptr<ActionItem>> sequence = {},
                std::string name = "Unnamed Action",
                std::string iconFilepath = "");
+        Action(const Action &other);
+        Action &operator=(const Action &other);
+        Action(Action &&other) noexcept;
+        Action &operator=(Action &&other) noexcept;
         ~Action();
 
         /**
@@ -35,7 +40,7 @@ namespace Application
          * @param ind Index of item to add
          * @param ai Action item to add
          */
-        void addItem(int ind, ActionItem ai);
+        void addItem(int ind, std::unique_ptr<ActionItem> ai);
 
         /**
          * @brief Remove an item from the sequence
@@ -58,9 +63,13 @@ namespace Application
         void execute();
 
         std::string getName() const;
+        bool isScriptAction() const;
+        std::string getScriptPath() const;
+        void setName(const std::string &newName);
+        void setScriptAction(const std::string &path);
 
     private:
-        std::vector<ActionItem> sequence;
+        std::vector<std::unique_ptr<ActionItem>> sequence;
         std::string name;
         std::string iconFilepath;
     };

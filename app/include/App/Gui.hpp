@@ -24,6 +24,7 @@
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QPushButton>
+#include <QDialog>
 
 #include "App/Menu.hpp"
 #include "App/Action.hpp"
@@ -66,6 +67,7 @@ namespace Application
         void keyPressEvent(QKeyEvent *event) override;
 
     private:
+        void openMacroEditor();
         QLabel *m_titleLabel{nullptr};
         RadialMenuWidget *m_radialMenu{nullptr};
         QPushButton *m_settingsButton{nullptr};

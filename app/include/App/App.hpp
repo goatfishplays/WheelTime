@@ -11,6 +11,7 @@
 // TODO: InputBind struct that contains mod and stuff
 #pragma once
 #include <QApplication>
+#include <QString>
 #include <vector>
 #include <Platform/Window.hpp>
 #include <Platform/Execute.hpp>
@@ -62,6 +63,9 @@ namespace Application
 
         /// @brief Callback when global hotkey is pressed
         void onHotkeyTriggered(int hotkeyId);
+        bool saveMenus();
+        void refreshActiveMenu();
+        QString getConfigPath() const;
 
     private:
         /// @brief The currently viewed menu
@@ -83,6 +87,7 @@ namespace Application
         ~App();
         Platform::InputRcvr m_inputRcvr;
         class QAbstractNativeEventFilter *m_hotkeyFilter;
+        QString m_configPath;
     };
 
 }

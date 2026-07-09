@@ -10,6 +10,7 @@
  */
 
 #include "App/App.hpp"
+#include "App/MenuConfigLoader.hpp"
 #include <Platform/Window.hpp>
 #include <Platform/Inputs.hpp>
 #include <Platform/Execute.hpp>
@@ -46,7 +47,8 @@ App::App()
       priorWindow{},
       inputRcvr(),
       executor(),
-      m_hotkeyFilter(nullptr)
+      m_hotkeyFilter(nullptr),
+      m_configPath(MenuConfigLoader::defaultConfigPath())
 {
     // Register global hotkey Alt + Space (mod: 0x0001, vk: 0x20)
     Platform::InputBind bind;
@@ -62,16 +64,12 @@ App::App()
     QObject::connect(&gui, &Gui::escapePressed, [this]()
                      { hideGui(); });
 
-    // Example menu setup. // TODO: laod from files instead
-    std::string nameEx = "Example";
-    std::vector<Action> actEx = {
-        Action({}, "Notepad"),
-        Action({}, "Calculator"),
-        Action({}, "Empty"),
-        Action({}, "Empty"),
-        Action({}, "Empty")};
-    loadedMenus.push_back(new Menu(nullptr, false, false, nameEx, actEx));
-    // Menu example(nullptr, false, false, nameEx, actEx);
+    if (!MenuConfigLoader::loadMenus(m_configPath, loadedMenus))
+    {
+        std::vector<Action> fallbackActions;
+        fallbackActions.push_back(Action({}, "Config missing"));
+        loadedMenus.push_back(new Menu(nullptr, false, false, "Config Error", fallbackActions));
+    }
 
     // gui.show();
     showGui(loadedMenus[0]);
@@ -132,6 +130,11 @@ void App::restorePriors()
 
 void App::showGui(Menu *menu)
 {
+    if (menu == nullptr)
+    {
+        return;
+    }
+
     gatherPriors();
     activeMenu = menu;
     gui.setMenu(*activeMenu);
@@ -153,8 +156,26 @@ void App::hideGui()
 
 void App::executeAction(int actionInd)
 {
-    if (actionInd >= 0)
+    if (activeMenu != nullptr && actionInd >= 0 && actionInd < static_cast<int>(activeMenu->actions.size()))
     {
         activeMenu->actions[actionInd].execute();
     }
+}
+
+bool App::saveMenus()
+{
+    return MenuConfigLoader::saveMenus(m_configPath, loadedMenus);
+}
+
+void App::refreshActiveMenu()
+{
+    if (activeMenu != nullptr)
+    {
+        gui.setMenu(*activeMenu);
+    }
+}
+
+QString App::getConfigPath() const
+{
+    return m_configPath;
 }

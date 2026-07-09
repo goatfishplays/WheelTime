@@ -1,0 +1,31 @@
+{
+    "menus": [
+        {
+            "actions": [
+                {
+                    "name": "Notepad",
+                    "path": "notepad.exe",
+                    "type": "script"
+                },
+                {
+                    "name": "Calculator",
+                    "path": "calc.exe",
+                    "type": "script"
+                },
+                {
+                    "name": "Paint",
+                    "path": "mspaint.exe",
+                    "type": "script"
+                },
+                {
+                    "name": "calculator",
+                    "path": "calc.exe",
+                    "type": "script"
+                }
+            ],
+            "executeOnRelease": false,
+            "exitOnAction": false,
+            "name": "Example"
+        }
+    ]
+}

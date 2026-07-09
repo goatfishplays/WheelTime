@@ -7,9 +7,10 @@
  */
 
 #pragma once
+#include <memory>
+#include <string>
 #include <vector>
 #include <Platform/Inputs.hpp>
-#include "App/ActionItems.hpp"
 
 namespace Application
 {
@@ -18,7 +19,8 @@ namespace Application
     {
     public:
         ActionItem();
-        ~ActionItem();
+        virtual ~ActionItem();
+        virtual std::unique_ptr<ActionItem> clone() const;
         /**
          * @brief To be overwritten performs the said action
          *
@@ -34,7 +36,9 @@ namespace Application
     class AI_Script : public ActionItem
     {
     public:
+        AI_Script(std::string _filepath = "");
         std::string filepath;
+        std::unique_ptr<ActionItem> clone() const override;
         void execute() override;
     };
 
@@ -52,6 +56,7 @@ namespace Application
         // * This isn't needed from a technical standpoint as it can be accomplished with the delay AI but from a user standpoint it should be helpful
         // * Note that non-global hotkeys will probs be eaten by this window if not preceeded by AI_Close
         bool proceed;
+        std::unique_ptr<ActionItem> clone() const override;
         void execute() override;
     };
 
@@ -63,6 +68,7 @@ namespace Application
     {
     public:
         int duration;
+        std::unique_ptr<ActionItem> clone() const override;
         void execute() override;
     };
 
@@ -74,6 +80,7 @@ namespace Application
     {
     public:
         std::string menuName;
+        std::unique_ptr<ActionItem> clone() const override;
         void execute() override;
     };
 
@@ -84,6 +91,7 @@ namespace Application
     class AI_Close : public ActionItem
     {
     public:
+        std::unique_ptr<ActionItem> clone() const override;
         void execute() override;
     };
 
@@ -96,6 +104,7 @@ namespace Application
     public:
         std::string socketMsg;
         std::string outputDst;
+        std::unique_ptr<ActionItem> clone() const override;
         void execute() override;
     };
 
@@ -107,6 +116,7 @@ namespace Application
     {
     public:
         int n;
+        std::unique_ptr<ActionItem> clone() const override;
         void execute() override;
     };
 
@@ -118,6 +128,7 @@ namespace Application
     {
     public:
         int n;
+        std::unique_ptr<ActionItem> clone() const override;
         void execute() override;
     };
 }
