@@ -29,7 +29,7 @@ namespace Platform
         ~Window();
 
         /**
-         * @brief Get the currently focused window
+         * @brief Sets this window to the currently active one
          *
          */
         void getActiveWindow();

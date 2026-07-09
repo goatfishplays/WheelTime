@@ -12,6 +12,7 @@
 #include <QSpacerItem>
 #include <QResizeEvent>
 #include <QEnterEvent>
+#include <QMouseEvent>
 #include <QKeyEvent>
 
 #include "App/Menu.hpp"
@@ -65,8 +66,9 @@ namespace Application
         void setButtonRadius(int radius);
         void setActivationMode(ActivationMode mode);
         void setMaxDistance(double maxDistance); // negative means "no limit"
-
-        int selectedIndex() const;
+        int getSelectedIndex() const;
+        void setSelectedIndex(int newVal);
+        void setMousePosFromGlobal(const QPoint &globalPos);
 
     signals:
         void selectedIndexChanged(int index);
@@ -75,15 +77,17 @@ namespace Application
     protected:
         void resizeEvent(QResizeEvent *event) override;
         bool eventFilter(QObject *watched, QEvent *event) override;
+        // void mouseMoveEvent(QMouseEvent *event) override;
 
     private:
         void rebuildButtons();
         void repositionButtons();
-        void updateSelectionFromMouse(const QPoint &globalPos);
+        void updateSelection();
         void clearSelection();
         int indexFromAngle(double angleRadians, int count) const;
 
         Menu m_menu;
+        QPoint m_mousePosition;
         QLabel *m_centerLabel{nullptr};
         std::vector<HoverButton *> m_buttons;
 
@@ -100,10 +104,14 @@ namespace Application
     public:
         explicit Gui(QWidget *parent = nullptr);
 
+        void onSelectChange(int);
+        void setMenu(const Menu &menu);
+
     signals:
         void escapePressed();
 
     protected:
+        bool eventFilter(QObject *watched, QEvent *event) override;
         void keyPressEvent(QKeyEvent *event) override;
 
     private:
@@ -111,6 +119,5 @@ namespace Application
         RadialMenuWidget *m_radialMenu{nullptr};
         QPushButton *m_settingsButton{nullptr};
         QPushButton *m_editButton{nullptr};
-
     };
 }
