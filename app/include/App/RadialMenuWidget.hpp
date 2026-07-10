@@ -40,7 +40,7 @@ namespace Application
          *
          * @param menu
          */
-        void setMenu(const Menu &menu);
+        void setMenu(const Menu &menu, const std::vector<std::string> &actionLabels);
         /**
          * @brief Set the Center Text object
          *
@@ -124,6 +124,7 @@ namespace Application
         int indexFromAngle(double angleRadians, int count) const;
 
         Menu m_menu;
+        std::vector<std::string> m_actionLabels;
         QPoint m_mousePosition;
         QLabel *m_centerLabel{nullptr};
         std::vector<HoverButton *> m_buttons;

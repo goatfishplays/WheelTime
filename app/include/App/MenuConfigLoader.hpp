@@ -3,6 +3,7 @@
 #include <QString>
 #include <vector>
 
+#include "App/Action.hpp"
 #include "App/Menu.hpp"
 
 namespace Application
@@ -10,9 +11,8 @@ namespace Application
     class MenuConfigLoader
     {
     public:
-        static bool loadMenus(const QString &filepath, std::vector<Menu *> &menus);
-        static bool loadDefaultMenus(std::vector<Menu *> &menus);
-        static bool saveMenus(const QString &filepath, const std::vector<Menu *> &menus);
+        static bool loadConfig(const QString &filepath, std::vector<Action> &actions, std::vector<Menu *> &menus);
+        static bool saveConfig(const QString &filepath, const std::vector<Action> &actions, const std::vector<Menu *> &menus);
         static QString defaultConfigPath();
     };
 }

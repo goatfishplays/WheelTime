@@ -36,7 +36,8 @@ namespace Application
              bool _executeOnRelease = false,
              bool _exitOnAction = false,
              std::string name = "Unnamed Menu",
-             std::vector<Action> _actions = {});
+             std::vector<std::string> _actionIds = {},
+             std::string id = "");
         ~Menu();
 
         /**
@@ -45,7 +46,7 @@ namespace Application
          * @param ind Index of action to add
          * @param action Action to add
          */
-        void addAction(int ind, Action action);
+        void addActionId(int ind, const std::string &actionId);
 
         /**
          * @brief Remove an action from this menu
@@ -59,29 +60,20 @@ namespace Application
          *
          * @return int
          */
-        int numActions();
+        int numActions() const;
 
-        /**
-         * @brief Saves menu/settings to a file
-         *
-         * @param filepath file to save to
-         */
-        void save();
-
-        /**
-         * @brief Loads menu/settings from a file
-         *
-         * @param filepath file to load from
-         */
-        void load();
-
+        std::string getId() const;
         std::string getName() const;
-
-        /// @brief Generally avoid directly modifying this
-        std::vector<Action> actions;
+        void setId(const std::string &newId);
+        void setName(const std::string &newName);
+        const std::vector<std::string> &getActionIds() const;
+        std::string getActionId(int index) const;
+        void setActionId(int index, const std::string &actionId);
+        void moveActionId(int fromIndex, int toIndex);
 
     private:
         std::string name;
-        std::string filepath; // TODO: need to auto delete old on change?
+        std::string id;
+        std::vector<std::string> actionIds;
     };
 }

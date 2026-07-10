@@ -3,6 +3,7 @@ add_library(App
     src/HoverButton.cpp
     src/RadialMenuWidget.cpp
     src/Gui.cpp
+    src/SettingsWindow.cpp
     src/Menu.cpp
     src/MenuConfigLoader.cpp
     src/Action.cpp
@@ -11,6 +12,7 @@ add_library(App
     include/App/HoverButton.hpp
     include/App/RadialMenuWidget.hpp
     include/App/Gui.hpp
+    include/App/SettingsWindow.hpp
     include/App/Menu.hpp
     include/App/MenuConfigLoader.hpp
     include/App/Action.hpp

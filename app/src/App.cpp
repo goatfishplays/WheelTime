@@ -1,29 +1,22 @@
 /**
  * @file App.cpp
- * @author goatfishplays@gmail.com
  * @brief Contains the implementation of the actual app
- * @version 0.1
- * @date 2026-07-02
- *
- * @copyright Copyright (c) 2026
- *
  */
 
 #include "App/App.hpp"
-#include "App/MenuConfigLoader.hpp"
-#include <Platform/Window.hpp>
-#include <Platform/Inputs.hpp>
-#include <Platform/Execute.hpp>
-#include <QApplication>
-#include <QPushButton>
+
 #include <QAbstractNativeEventFilter>
+#include <QApplication>
+
+#include "App/MenuConfigLoader.hpp"
+#include "App/SettingsWindow.hpp"
 
 using namespace Application;
 
 class HotkeyFilter : public QAbstractNativeEventFilter
 {
 public:
-    HotkeyFilter(App *app) : m_app(app) {}
+    explicit HotkeyFilter(App *app) : m_app(app) {}
 
     bool nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result) override
     {
@@ -31,7 +24,7 @@ public:
         if (Platform::InputRcvr::isHotkeyMessage(message, hotkeyId))
         {
             m_app->onHotkeyTriggered(hotkeyId);
-            return true; // Handled
+            return true;
         }
         return false;
     }
@@ -48,31 +41,32 @@ App::App()
       inputRcvr(),
       executor(),
       m_hotkeyFilter(nullptr),
+      m_settingsWindow(nullptr),
       m_configPath(MenuConfigLoader::defaultConfigPath())
 {
-    // Register global hotkey Alt + Space (mod: 0x0001, vk: 0x20)
     Platform::InputBind bind;
-    bind.mod = 0x0001; // MOD_ALT
-    bind.input = 0x20; // VK_SPACE
+    bind.mod = 0x0001;
+    bind.input = 0x20;
     m_inputRcvr.registerInputBinding(bind);
 
-    // Install native event filter to capture WM_HOTKEY
     m_hotkeyFilter = new HotkeyFilter(this);
     qApp->installNativeEventFilter(m_hotkeyFilter);
 
-    // Connect escapePressed signal from Gui to hide and return focus
     QObject::connect(&gui, &Gui::escapePressed, [this]()
                      { hideGui(); });
 
-    if (!MenuConfigLoader::loadMenus(m_configPath, loadedMenus))
+    if (!MenuConfigLoader::loadConfig(m_configPath, actionLibrary, loadedMenus))
     {
-        std::vector<Action> fallbackActions;
-        fallbackActions.push_back(Action({}, "Config missing"));
-        loadedMenus.push_back(new Menu(nullptr, false, false, "Config Error", fallbackActions));
+        std::vector<std::unique_ptr<ActionItem>> items;
+        items.push_back(std::make_unique<AI_Close>());
+        actionLibrary.push_back(Action(std::move(items), "Config missing", "", "action-config-missing"));
+        loadedMenus.push_back(new Menu(nullptr, false, false, "Config Error", {"action-config-missing"}, "menu-config-error"));
     }
 
-    // gui.show();
-    showGui(loadedMenus[0]);
+    if (!loadedMenus.empty())
+    {
+        showGui(loadedMenus.front());
+    }
 }
 
 App::~App()
@@ -84,17 +78,27 @@ App::~App()
         m_hotkeyFilter = nullptr;
     }
 
-    int numMenus = loadedMenus.size();
-    for (int i = numMenus - 1; i >= 0; i--)
+    if (m_settingsWindow != nullptr)
     {
-        delete loadedMenus[i];
+        delete m_settingsWindow;
+        m_settingsWindow = nullptr;
     }
 
-    // Unregister hotkey Alt + Space (mod: 0x0001, vk: 0x20)
+    clearMenus();
+
     Platform::InputBind bind;
     bind.mod = 0x0001;
     bind.input = 0x20;
     m_inputRcvr.unregisterInputBinding(bind);
+}
+
+void App::clearMenus()
+{
+    for (int i = static_cast<int>(loadedMenus.size()) - 1; i >= 0; --i)
+    {
+        delete loadedMenus[i];
+    }
+    loadedMenus.clear();
 }
 
 void App::onHotkeyTriggered(int hotkeyId)
@@ -105,15 +109,98 @@ void App::onHotkeyTriggered(int hotkeyId)
     }
     else
     {
-        showGui(activeMenu); // TODO: Replace this with the menu associated with the pressed hotkey
+        showGui(activeMenu == nullptr && !loadedMenus.empty() ? loadedMenus.front() : activeMenu);
     }
 }
 
-Menu *App::getActiveMenu() { return activeMenu; }
+Menu *App::getActiveMenu()
+{
+    return activeMenu;
+}
+
+Menu *App::findMenuById(const std::string &menuId)
+{
+    for (Menu *menu : loadedMenus)
+    {
+        if (menu != nullptr && menu->getId() == menuId)
+        {
+            return menu;
+        }
+    }
+    return nullptr;
+}
+
+const Menu *App::findMenuById(const std::string &menuId) const
+{
+    for (const Menu *menu : loadedMenus)
+    {
+        if (menu != nullptr && menu->getId() == menuId)
+        {
+            return menu;
+        }
+    }
+    return nullptr;
+}
+
+Action *App::findActionById(const std::string &actionId)
+{
+    for (Action &action : actionLibrary)
+    {
+        if (action.getId() == actionId)
+        {
+            return &action;
+        }
+    }
+    return nullptr;
+}
+
+const Action *App::findActionById(const std::string &actionId) const
+{
+    for (const Action &action : actionLibrary)
+    {
+        if (action.getId() == actionId)
+        {
+            return &action;
+        }
+    }
+    return nullptr;
+}
+
+std::vector<std::string> App::getActionLabelsForMenu(const Menu &menu) const
+{
+    std::vector<std::string> labels;
+    labels.reserve(menu.numActions());
+
+    for (const std::string &actionId : menu.getActionIds())
+    {
+        const Action *action = findActionById(actionId);
+        labels.push_back(action != nullptr ? action->getName() : "Missing Action");
+    }
+
+    return labels;
+}
+
+std::vector<Menu> App::getMenuCopies() const
+{
+    std::vector<Menu> menus;
+    menus.reserve(loadedMenus.size());
+    for (const Menu *menu : loadedMenus)
+    {
+        if (menu != nullptr)
+        {
+            menus.push_back(*menu);
+        }
+    }
+    return menus;
+}
+
+const std::vector<Action> &App::getActionLibrary() const
+{
+    return actionLibrary;
+}
 
 void App::gatherPriors()
 {
-    // Do not gather priors if we are just swapping to a submenu
     if (gui.isVisible())
     {
         return;
@@ -137,9 +224,7 @@ void App::showGui(Menu *menu)
 
     gatherPriors();
     activeMenu = menu;
-    gui.setMenu(*activeMenu);
-
-    // TODO: test make sure this is fine to do
+    gui.setMenu(*activeMenu, getActionLabelsForMenu(*activeMenu));
     gui.showNormal();
     gui.raise();
     gui.activateWindow();
@@ -156,22 +241,76 @@ void App::hideGui()
 
 void App::executeAction(int actionInd)
 {
-    if (activeMenu != nullptr && actionInd >= 0 && actionInd < static_cast<int>(activeMenu->actions.size()))
+    if (activeMenu == nullptr || actionInd < 0 || actionInd >= activeMenu->numActions())
     {
-        activeMenu->actions[actionInd].execute();
+        return;
+    }
+
+    Action *action = findActionById(activeMenu->getActionId(actionInd));
+    if (action == nullptr)
+    {
+        return;
+    }
+
+    action->execute();
+    if (activeMenu->exitOnAction && gui.isVisible())
+    {
+        hideGui();
     }
 }
 
-bool App::saveMenus()
+void App::showSettingsWindow()
 {
-    return MenuConfigLoader::saveMenus(m_configPath, loadedMenus);
+    if (m_settingsWindow == nullptr)
+    {
+        m_settingsWindow = new SettingsWindow();
+        QObject::connect(m_settingsWindow, &SettingsWindow::saveRequested, [this]()
+                         {
+                             std::vector<Action> newActions;
+                             std::vector<Menu> newMenus;
+                             m_settingsWindow->exportWorkingCopy(newActions, newMenus);
+                             applyConfig(newActions, newMenus); });
+    }
+
+    m_settingsWindow->loadWorkingCopy(actionLibrary, getMenuCopies());
+    m_settingsWindow->show();
+    m_settingsWindow->raise();
+    m_settingsWindow->activateWindow();
+}
+
+bool App::saveConfig()
+{
+    return MenuConfigLoader::saveConfig(m_configPath, actionLibrary, loadedMenus);
+}
+
+bool App::applyConfig(const std::vector<Action> &actions, const std::vector<Menu> &menus)
+{
+    const std::string previousActiveMenuId = activeMenu == nullptr ? "" : activeMenu->getId();
+
+    actionLibrary = actions;
+    clearMenus();
+    loadedMenus.reserve(menus.size());
+    for (const Menu &menu : menus)
+    {
+        loadedMenus.push_back(new Menu(menu));
+    }
+
+    activeMenu = previousActiveMenuId.empty() ? nullptr : findMenuById(previousActiveMenuId);
+    if (activeMenu == nullptr && !loadedMenus.empty())
+    {
+        activeMenu = loadedMenus.front();
+    }
+
+    const bool saved = saveConfig();
+    refreshActiveMenu();
+    return saved;
 }
 
 void App::refreshActiveMenu()
 {
     if (activeMenu != nullptr)
     {
-        gui.setMenu(*activeMenu);
+        gui.setMenu(*activeMenu, getActionLabelsForMenu(*activeMenu));
     }
 }
 

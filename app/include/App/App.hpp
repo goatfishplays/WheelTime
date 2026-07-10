@@ -1,40 +1,35 @@
 /**
  * @file App.hpp
- * @author your name (you@domain.com)
  * @brief Contains `App` class, controls state of app
- * @version 0.1
- * @date 2026-06-29
- *
- * @copyright Copyright (c) 2026
- *
  */
-// TODO: InputBind struct that contains mod and stuff
 #pragma once
+
 #include <QApplication>
 #include <QString>
 #include <vector>
-#include <Platform/Window.hpp>
+
 #include <Platform/Execute.hpp>
 #include <Platform/Inputs.hpp>
-#include "App/Menu.hpp"
+#include <Platform/Window.hpp>
+
+#include "App/Action.hpp"
 #include "App/Gui.hpp"
+#include "App/Menu.hpp"
 
 namespace Application
 {
-    /**
-     * @brief Controls the current state of the application and visible window
-     */
+    class SettingsWindow;
+
     class App
     {
     public:
-        /// @brief All currently cached/loaded menus TODO: likely want to keep a timer/lifetime + lru combo for menus or just load all
         std::vector<Menu *> loadedMenus;
+        std::vector<Action> actionLibrary;
 
-        Platform::InputRcvr inputRcvr; // TODO: can mbe make these classes have a lot of static funcs for perf later
+        Platform::InputRcvr inputRcvr;
         Platform::Executor executor;
         Gui gui;
 
-        // Singleton
         App(const App &) = delete;
         App &operator=(const App &) = delete;
         App(App &&) = delete;
@@ -46,48 +41,39 @@ namespace Application
             return instance;
         }
 
-        /// @brief Gets the active Menu
-        /// @return Pointer to the active menu
         Menu *getActiveMenu();
+        Menu *findMenuById(const std::string &menuId);
+        const Menu *findMenuById(const std::string &menuId) const;
+        Action *findActionById(const std::string &actionId);
+        const Action *findActionById(const std::string &actionId) const;
+        std::vector<std::string> getActionLabelsForMenu(const Menu &menu) const;
+        std::vector<Menu> getMenuCopies() const;
+        const std::vector<Action> &getActionLibrary() const;
 
-        /// @brief Set, display, and focus a menu
-        /// @param menu to be displayed
         void showGui(Menu *menu);
-
-        /// @brief Exits the active menu and returns to previous window (or newly open window? might need to look into this)
         void hideGui();
-
-        /// @brief Run an action from current menu
-        /// @param actionInd
         void executeAction(int actionInd);
-
-        /// @brief Callback when global hotkey is pressed
         void onHotkeyTriggered(int hotkeyId);
-        bool saveMenus();
+        void showSettingsWindow();
+        bool saveConfig();
+        bool applyConfig(const std::vector<Action> &actions, const std::vector<Menu> &menus);
         void refreshActiveMenu();
         QString getConfigPath() const;
 
     private:
-        /// @brief The currently viewed menu
         Menu *activeMenu;
         Platform::Vec2 priorMousePos;
         Platform::Window priorWindow;
 
-        /**
-         * @brief Collects the place to return to after GUI closes
-         *
-         */
         void gatherPriors();
-        /**
-         * @brief Returns to the window and mouse position saved from gatherPrior()
-         *
-         */
         void restorePriors();
+        void clearMenus();
         App();
         ~App();
+
         Platform::InputRcvr m_inputRcvr;
         class QAbstractNativeEventFilter *m_hotkeyFilter;
+        SettingsWindow *m_settingsWindow;
         QString m_configPath;
     };
-
 }

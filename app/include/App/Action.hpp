@@ -27,7 +27,8 @@ namespace Application
     public:
         Action(std::vector<std::unique_ptr<ActionItem>> sequence = {},
                std::string name = "Unnamed Action",
-               std::string iconFilepath = "");
+               std::string iconFilepath = "",
+               std::string id = "");
         Action(const Action &other);
         Action &operator=(const Action &other);
         Action(Action &&other) noexcept;
@@ -54,7 +55,7 @@ namespace Application
          *
          * @return int
          */
-        int len();
+        int len() const;
 
         /**
          * @brief Runs the action items in sequence
@@ -62,15 +63,20 @@ namespace Application
          */
         void execute();
 
+        std::string getId() const;
         std::string getName() const;
-        bool isScriptAction() const;
-        std::string getScriptPath() const;
+        const std::vector<std::unique_ptr<ActionItem>> &getItems() const;
+        ActionItem *getItem(int index);
+        const ActionItem *getItem(int index) const;
         void setName(const std::string &newName);
-        void setScriptAction(const std::string &path);
+        void setId(const std::string &newId);
+        void setItems(std::vector<std::unique_ptr<ActionItem>> newItems);
+        void moveItem(int fromIndex, int toIndex);
 
     private:
         std::vector<std::unique_ptr<ActionItem>> sequence;
         std::string name;
         std::string iconFilepath;
+        std::string id;
     };
 }

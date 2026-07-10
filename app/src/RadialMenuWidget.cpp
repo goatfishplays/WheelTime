@@ -1,14 +1,14 @@
 #include "App/RadialMenuWidget.hpp"
-using namespace Application;
+
+#include <cmath>
 #include <QLabel>
 #include <QStyle>
 
-// ---------------- RadialMenuWidget ----------------
+using namespace Application;
 
 RadialMenuWidget::RadialMenuWidget(QWidget *parent)
     : QWidget(parent)
 {
-    // setMouseTracking(true);
     setAttribute(Qt::WA_Hover, true);
 
     m_centerLabel = new QLabel(this);
@@ -18,12 +18,13 @@ RadialMenuWidget::RadialMenuWidget(QWidget *parent)
 RadialMenuWidget::RadialMenuWidget(const Menu &menu, QWidget *parent)
     : RadialMenuWidget(parent)
 {
-    setMenu(menu);
+    setMenu(menu, {});
 }
 
-void RadialMenuWidget::setMenu(const Menu &menu)
+void RadialMenuWidget::setMenu(const Menu &menu, const std::vector<std::string> &actionLabels)
 {
     m_menu = menu;
+    m_actionLabels = actionLabels;
     setCenterText(QString::fromStdString(menu.getName()));
     setSelectedIndex(-1);
     rebuildButtons();
@@ -57,10 +58,11 @@ int RadialMenuWidget::getSelectedIndex() const
 {
     return m_selectedIndex;
 }
+
 void RadialMenuWidget::setSelectedIndex(int newVal)
 {
-    HoverButton *button;
-    if (m_selectedIndex >= 0)
+    HoverButton *button = nullptr;
+    if (m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(m_buttons.size()))
     {
         button = m_buttons[m_selectedIndex];
         button->setProperty("selectedAction", false);
@@ -70,7 +72,7 @@ void RadialMenuWidget::setSelectedIndex(int newVal)
     }
 
     m_selectedIndex = newVal;
-    if (m_selectedIndex >= 0)
+    if (m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(m_buttons.size()))
     {
         button = m_buttons[m_selectedIndex];
         button->setProperty("selectedAction", true);
@@ -78,6 +80,7 @@ void RadialMenuWidget::setSelectedIndex(int newVal)
         button->style()->polish(button);
         button->update();
     }
+
     emit selectedIndexChanged(m_selectedIndex);
 }
 
@@ -89,29 +92,26 @@ void RadialMenuWidget::rebuildButtons()
     }
     m_buttons.clear();
 
-    for (int i = 0; i < static_cast<int>(m_menu.actions.size()); ++i)
+    for (int i = 0; i < static_cast<int>(m_actionLabels.size()); ++i)
     {
         auto *button = new HoverButton(this);
-        button->setText(QString::fromStdString(m_menu.actions[i].getName()));
+        button->setText(QString::fromStdString(m_actionLabels[i]));
         button->adjustSize();
         button->show();
 
         connect(button, &HoverButton::mouseHovered, this, [this, i]()
                 {
-            if (m_mode == ActivationMode::Exact)
-            {
-                if (m_selectedIndex != i)
-                {
-                    setSelectedIndex(i);
-                }
-            } });
+                    if (m_mode == ActivationMode::Exact && m_selectedIndex != i)
+                    {
+                        setSelectedIndex(i);
+                    } });
 
         connect(button, &HoverButton::mouseLeft, this, [this, i]()
                 {
-            if (m_mode == ActivationMode::Exact && m_selectedIndex == i)
-            {
-                clearSelection();
-            } });
+                    if (m_mode == ActivationMode::Exact && m_selectedIndex == i)
+                    {
+                        clearSelection();
+                    } });
 
         connect(button, &QPushButton::clicked, this, [this, i]()
                 { emit buttonTriggered(i); });
@@ -126,17 +126,17 @@ void RadialMenuWidget::repositionButtons()
 {
     const int count = static_cast<int>(m_buttons.size());
     if (count == 0)
+    {
+        m_centerLabel->adjustSize();
+        m_centerLabel->move(
+            static_cast<int>(width() * 0.5 - m_centerLabel->width() * 0.5),
+            static_cast<int>(height() * 0.5 - m_centerLabel->height() * 0.5));
         return;
+    }
 
     const QPointF center(width() * 0.5, height() * 0.5);
     const double radius = static_cast<double>(m_buttonRadius);
 
-    // Angles are measured from the top and increase clockwise.
-    // 1 button: 12:00
-    // 2 buttons: 12:00, 6:00
-    // 3 buttons: 12:00, 4:00, 8:00
-    // 4 buttons: 12:00, 3:00, 6:00, 9:00
-    // etc.
     for (int i = 0; i < count; ++i)
     {
         const double angle = (-M_PI / 2.0) + (2.0 * M_PI * i / count);
@@ -149,7 +149,6 @@ void RadialMenuWidget::repositionButtons()
         button->move(x, y);
     }
 
-    // Center label stays centered.
     m_centerLabel->adjustSize();
     m_centerLabel->move(
         static_cast<int>(center.x() - m_centerLabel->width() * 0.5),
@@ -161,15 +160,6 @@ void RadialMenuWidget::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
     repositionButtons();
 }
-// void RadialMenuWidget::mouseMoveEvent(QMouseEvent *event)
-// {
-//     // updateSelectionFromMouse(event->position().toPoint());
-//     m_mousePosition = event->position().toPoint();
-//     updateSelection();
-//     qDebug() << "Mouse pos: " << m_mousePosition;
-
-//     QWidget::mouseMoveEvent(event);
-// }
 
 void RadialMenuWidget::updateSelectionFromGlobalMousePosition(const QPoint &globalPos)
 {
@@ -187,12 +177,12 @@ void RadialMenuWidget::clearSelection()
 
 int RadialMenuWidget::indexFromAngle(double angleRadians, int count) const
 {
-    // angleRadians should already be normalized to [0, 2pi).
-    // Buckets the cursor into the nearest menu slice.
     const double slice = 2.0 * M_PI / count;
     int idx = static_cast<int>(std::round(angleRadians / slice)) % count;
     if (idx < 0)
+    {
         idx += count;
+    }
     return idx;
 }
 
@@ -223,9 +213,9 @@ void RadialMenuWidget::updateSelection()
 
         for (int i = 0; i < count; ++i)
         {
-            const QPoint c = m_buttons[i]->geometry().center(); // local coords
-            const double ddx = m_mousePosition.x() - c.x();
-            const double ddy = m_mousePosition.y() - c.y();
+            const QPoint centerPoint = m_buttons[i]->geometry().center();
+            const double ddx = m_mousePosition.x() - centerPoint.x();
+            const double ddy = m_mousePosition.y() - centerPoint.y();
             const double score = ddx * ddx + ddy * ddy;
 
             if (best == -1 || score < bestScore)
@@ -244,25 +234,24 @@ void RadialMenuWidget::updateSelection()
 
     if (m_mode == ActivationMode::Angle)
     {
-        // angle 0 = 12:00, then clockwise
         double angle = std::atan2(dy, dx);
         angle += M_PI / 2.0;
 
         while (angle < 0.0)
+        {
             angle += 2.0 * M_PI;
+        }
         while (angle >= 2.0 * M_PI)
+        {
             angle -= 2.0 * M_PI;
+        }
 
         const int best = indexFromAngle(angle, count);
-
         if (m_selectedIndex != best)
         {
             setSelectedIndex(best);
         }
-        return;
     }
-
-    // Exact mode is handled by hover events on the buttons.
 }
 
 bool RadialMenuWidget::eventFilter(QObject *watched, QEvent *event)

@@ -17,11 +17,12 @@
 
 using namespace Application;
 
-Action::Action(std::vector<std::unique_ptr<ActionItem>> _sequence, std::string _name, std::string _iconFilepath) : sequence(std::move(_sequence)), name(_name), iconFilepath(_iconFilepath)
+Action::Action(std::vector<std::unique_ptr<ActionItem>> _sequence, std::string _name, std::string _iconFilepath, std::string _id)
+    : sequence(std::move(_sequence)), name(std::move(_name)), iconFilepath(std::move(_iconFilepath)), id(std::move(_id))
 {
 }
 
-Action::Action(const Action &other) : name(other.name), iconFilepath(other.iconFilepath)
+Action::Action(const Action &other) : name(other.name), iconFilepath(other.iconFilepath), id(other.id)
 {
     sequence.reserve(other.sequence.size());
     for (const auto &item : other.sequence)
@@ -42,6 +43,7 @@ Action &Action::operator=(const Action &other)
 
     name = other.name;
     iconFilepath = other.iconFilepath;
+    id = other.id;
     sequence.clear();
     sequence.reserve(other.sequence.size());
     for (const auto &item : other.sequence)
@@ -85,7 +87,7 @@ void Action::removeItem(int ind)
     }
 }
 
-int Action::len()
+int Action::len() const
 {
     return this->sequence.size();
 }
@@ -101,29 +103,39 @@ void Action::execute()
     }
 }
 
+std::string Action::getId() const
+{
+    return id;
+}
+
 std::string Action::getName() const
 {
     return name;
 }
 
-bool Action::isScriptAction() const
+const std::vector<std::unique_ptr<ActionItem>> &Action::getItems() const
 {
-    if (sequence.size() != 1 || !sequence.front())
-    {
-        return false;
-    }
-
-    return dynamic_cast<AI_Script *>(sequence.front().get()) != nullptr;
+    return sequence;
 }
 
-std::string Action::getScriptPath() const
+ActionItem *Action::getItem(int index)
 {
-    if (!isScriptAction())
+    if (index < 0 || index >= static_cast<int>(sequence.size()))
     {
-        return "";
+        return nullptr;
     }
 
-    return static_cast<AI_Script *>(sequence.front().get())->filepath;
+    return sequence[index].get();
+}
+
+const ActionItem *Action::getItem(int index) const
+{
+    if (index < 0 || index >= static_cast<int>(sequence.size()))
+    {
+        return nullptr;
+    }
+
+    return sequence[index].get();
 }
 
 void Action::setName(const std::string &newName)
@@ -131,8 +143,24 @@ void Action::setName(const std::string &newName)
     name = newName;
 }
 
-void Action::setScriptAction(const std::string &path)
+void Action::setId(const std::string &newId)
 {
-    sequence.clear();
-    sequence.push_back(std::make_unique<AI_Script>(path));
+    id = newId;
+}
+
+void Action::setItems(std::vector<std::unique_ptr<ActionItem>> newItems)
+{
+    sequence = std::move(newItems);
+}
+
+void Action::moveItem(int fromIndex, int toIndex)
+{
+    if (fromIndex < 0 || toIndex < 0 || fromIndex >= static_cast<int>(sequence.size()) || toIndex >= static_cast<int>(sequence.size()) || fromIndex == toIndex)
+    {
+        return;
+    }
+
+    std::unique_ptr<ActionItem> item = std::move(sequence[fromIndex]);
+    sequence.erase(sequence.begin() + fromIndex);
+    sequence.insert(sequence.begin() + toIndex, std::move(item));
 }
