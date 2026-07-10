@@ -25,7 +25,7 @@ Window::Window()
 {
 }
 
-Window::Window(void* nativeHandle)
+Window::Window(void *nativeHandle)
     : m_impl(std::make_unique<Impl>())
 {
     m_impl->hwnd = static_cast<HWND>(nativeHandle);
@@ -33,50 +33,57 @@ Window::Window(void* nativeHandle)
 
 Window::~Window() {}
 
-void Window::getActiveWindow()
-{
-    if (m_impl) {
-        m_impl->hwnd = GetForegroundWindow();
-    }
-}
-
 void Window::focus()
 {
-    if (!m_impl || !m_impl->hwnd) return;
+    if (!m_impl || !m_impl->hwnd)
+        return;
 
     HWND hwnd = m_impl->hwnd;
 
     // Restore if minimized, otherwise just show
-    if (IsIconic(hwnd)) {
+    if (IsIconic(hwnd))
+    {
         ShowWindow(hwnd, SW_RESTORE);
-    } else {
+    }
+    else
+    {
         ShowWindow(hwnd, SW_SHOW);
     }
 
-    // Attach thread input of current foreground window to our thread 
+    // Attach thread input of current foreground window to our thread
     // to bypass focus restrictions and bring the window to front.
     HWND foreWindow = GetForegroundWindow();
-    if (foreWindow != hwnd) {
+    if (foreWindow != hwnd)
+    {
         DWORD dwForeThread = GetWindowThreadProcessId(foreWindow, NULL);
         DWORD dwCurrentThread = GetCurrentThreadId();
 
-        if (dwForeThread != dwCurrentThread) {
+        if (dwForeThread != dwCurrentThread)
+        {
             AttachThreadInput(dwForeThread, dwCurrentThread, TRUE);
             SetForegroundWindow(hwnd);
             SetFocus(hwnd);
             AttachThreadInput(dwForeThread, dwCurrentThread, FALSE);
-        } else {
+        }
+        else
+        {
             SetForegroundWindow(hwnd);
             SetFocus(hwnd);
         }
     }
-    
+
     SetActiveWindow(hwnd);
+}
+
+void Window::getActiveWindow()
+{
+    m_impl->hwnd = GetForegroundWindow();
 }
 
 void Window::hide()
 {
-    if (m_impl && m_impl->hwnd) {
+    if (m_impl && m_impl->hwnd)
+    {
         ShowWindow(m_impl->hwnd, SW_HIDE);
     }
 }

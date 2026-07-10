@@ -24,7 +24,7 @@ The MVP is complete when:
 ## Tech Stack
 
 - Language: C++
-- Core Libraries: Windows API, QT
+- Core Libraries: Windows API, Qt
 - Build System: CMake
 - Development Tools: VSCode, Cursor, Git/GitHub, Doxygen
 
@@ -42,23 +42,39 @@ Create a basic Windows launcher prototype with a simple interface.
 - Research GUI/window options
 - Create basic launcher window
 
+## Sprint 2 Goal
+
+Allow the launcher to open and close quickly using a hotkey and run basic actions.
+
+## Sprint 2 Tasks
+
+- Research Windows API `RegisterHotKey`
+- Implement global hotkey to open launcher
+- Add Escape key listener to close launcher
+- Research window focus behavior
+- Restore focus to previous app after launcher closes
+- Create placeholder macro/script action
+- Connect GUI buttons to app launching actions
+- Test launching Notepad and Calculator from GUI
+- Add save/load functions for menu actions
+- Improve mouse events for radial wheel selection
+- Test launcher behavior over full-screen apps
+- Log bugs and open issues in GitHub
+- Update README with hotkey usage instructions
+
 ## Build Instructions
 
-To be updated once the CMake project structure is finalized.
+### Requirements
 
-Expected general steps:
+- Windows
+- CMake 4.3+
+- Visual Studio Build Tools 2022 with Desktop development for C++
+- Qt 6 MSVC 2022 64-bit
 
-```bash
-git clone <repo-url>
-cd Wheel-Time
-mkdir build
-cd build
-cmake ..
-cmake --build .
+### Configure and Build
 
-## Document Regeneration
+From the project root:
 
-```bash
-cd docs
-doxygen
-```
+```powershell
+cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_PREFIX_PATH="C:\Qt\6.11.1\msvc2022_64"
+cmake --build build --config Debug

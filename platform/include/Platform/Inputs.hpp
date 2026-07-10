@@ -46,13 +46,13 @@ namespace Platform
          */
         Vec2 getAbsoluteMousePosition();
 
-        /**
-         * @brief Get mouse position relative to window,
-         *
-         * Note: Position is x: left to right, y: top to bottom
-         *
-         */
-        Vec2 getRelativeMousePosition();
+        // /**
+        //  * @brief Get mouse position relative to window,
+        //  *
+        //  * Note: Position is x: left to right, y: top to bottom
+        //  *
+        //  */
+        // Vec2 getRelativeMousePosition();
 
         /**
          * @brief Registers an input to be tracked
@@ -78,7 +78,7 @@ namespace Platform
 
     private:
         /**
-         * @brief The actual implementation detail
+         * @brief Contains additional memnber variables if needed
          *
          */
         class Impl;
