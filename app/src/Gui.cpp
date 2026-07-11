@@ -1,5 +1,5 @@
 #include "App/Gui.hpp"
-
+// TODO: segment this into multiple files
 #include <QApplication>
 #include <QDebug>
 #include <QCursor>
@@ -24,17 +24,30 @@ Gui::Gui(QWidget *parent)
 {
     setFixedSize(600, 400);
 
+    // showFullScreen();
+
+    // setAttribute(Qt::WA_TranslucentBackground);
+    // setWindowFlags(Qt::FramelessWindowHint);
+
+    // setStyleSheet(R"(
+    //     QWidget {
+    //         background: transparent;
+    //     }
+    // )");
+
     qApp->installEventFilter(this);
 
     auto *root = new QVBoxLayout(this);
     root->setContentsMargins(12, 12, 12, 12);
     root->setSpacing(8);
 
+    // Top title
     m_titleLabel = new QLabel("Title", this);
     m_titleLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     m_titleLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     root->addWidget(m_titleLabel);
 
+    // Middle area that holds the radial widget and can expand freely.
     auto *middle = new QWidget(this);
     auto *middleLayout = new QVBoxLayout(middle);
     middleLayout->setContentsMargins(0, 0, 0, 0);
@@ -45,6 +58,7 @@ Gui::Gui(QWidget *parent)
 
     root->addWidget(middle, 1);
 
+    // Bottom row: spacer pushes buttons to the right.
     auto *bottomRow = new QHBoxLayout();
     bottomRow->addStretch();
 

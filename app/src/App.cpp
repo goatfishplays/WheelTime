@@ -1,6 +1,11 @@
 /**
  * @file App.cpp
+* @author goatfishplays@gmail.com
  * @brief Contains the implementation of the actual app
+ * @version 0.1
+ * @date 2026-07-02
+ *
+ * @copyright Copyright (c) 2026
  */
 
 #include "App/App.hpp"
@@ -28,7 +33,7 @@ public:
         if (Platform::InputRcvr::isHotkeyMessage(message, hotkeyId))
         {
             m_app->onHotkeyTriggered(hotkeyId);
-            return true;
+            return true; // Handled
         }
         return false;
     }
@@ -49,13 +54,15 @@ App::App()
       m_configPath(MenuConfigLoader::defaultConfigPath())
 {
     Platform::InputBind bind;
-    bind.mod = 0x0001;
-    bind.input = 0x20;
+    bind.mod = 0x0001; // MOD_ALT
+    bind.input = 0x20; // VK_SPACE
     m_inputRcvr.registerInputBinding(bind);
 
+    // Install native event filter to capture WM_HOTKEY
     m_hotkeyFilter = new HotkeyFilter(this);
     qApp->installNativeEventFilter(m_hotkeyFilter);
 
+    // Connect escapePressed signal from Gui to hide and return focus
     QObject::connect(&gui, &Gui::escapePressed, [this]()
                      { hideGui(); });
 
@@ -92,6 +99,7 @@ App::~App()
 
     clearMenus();
 
+    // Unregister hotkey Alt + Space (mod: 0x0001, vk: 0x20)
     Platform::InputBind bind;
     bind.mod = 0x0001;
     bind.input = 0x20;
