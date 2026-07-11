@@ -24,6 +24,13 @@ namespace Platform
         void setMousePos(int x, int y);
         void executeKey(InputBind key);
         void executeScript(std::string filepath);
+        /**
+         * @brief Launches one of the built-in app presets using platform-specific resolution.
+         *
+         * Example preset IDs currently include `browser`, `explorer`,
+         * `calculator`, `notepad`, `paint`, and `taskmgr`.
+         */
+        void executeLaunchPreset(std::string presetId);
 
     private:
         /**

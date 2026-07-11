@@ -18,26 +18,6 @@
 
 using namespace Application;
 
-namespace
-{
-    std::string resolveLaunchPresetTarget(const std::string &presetId, const std::string &customTarget)
-    {
-        if (presetId == "browser")
-            return "https://www.google.com";
-        if (presetId == "explorer")
-            return "explorer.exe";
-        if (presetId == "calculator")
-            return "calc.exe";
-        if (presetId == "notepad")
-            return "notepad.exe";
-        if (presetId == "paint")
-            return "mspaint.exe";
-        if (presetId == "taskmgr")
-            return "taskmgr.exe";
-        return customTarget;
-    }
-}
-
 ActionItem::ActionItem() {}
 
 ActionItem::~ActionItem() {}
@@ -91,11 +71,16 @@ ActionItemKind AI_LaunchApp::kind() const
 
 void AI_LaunchApp::execute()
 {
-    const std::string target = resolveLaunchPresetTarget(presetId, customTarget);
-    if (!target.empty())
+    if (presetId == "custom")
     {
-        App::App::getInstance().executor.executeScript(target);
+        if (!customTarget.empty())
+        {
+            App::App::getInstance().executor.executeScript(customTarget);
+        }
+        return;
     }
+
+    App::App::getInstance().executor.executeLaunchPreset(presetId);
 }
 
 AI_Keystroke::AI_Keystroke(int _keycode, int _modifiers, float _holdDuration, bool _proceed)

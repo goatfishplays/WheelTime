@@ -34,6 +34,44 @@ namespace Platform
                 SW_SHOWNORMAL);
         }
 
+        void executeLaunchPreset(const std::string &presetId)
+        {
+            // Preset resolution lives in the platform layer so app code does
+            // not need to know how Windows launches default handlers vs apps.
+            if (presetId == "browser")
+            {
+                executeScript("https://www.google.com");
+                return;
+            }
+            if (presetId == "explorer")
+            {
+                executeScript("explorer.exe");
+                return;
+            }
+            if (presetId == "calculator")
+            {
+                executeScript("calc.exe");
+                return;
+            }
+            if (presetId == "notepad")
+            {
+                executeScript("notepad.exe");
+                return;
+            }
+            if (presetId == "paint")
+            {
+                executeScript("mspaint.exe");
+                return;
+            }
+            if (presetId == "taskmgr")
+            {
+                executeScript("taskmgr.exe");
+                return;
+            }
+
+            std::cerr << "Unknown launch preset: " << presetId << "\n";
+        }
+
         void executeKey(InputBind key)
         {
             std::vector<INPUT> inputs;
@@ -60,6 +98,7 @@ namespace Platform
             if (key.mod & 0x0008)
                 pushKeyboardInput(inputs, VK_LWIN, KEYEVENTF_KEYUP);
 
+            // This is where Discord deafen / hotkey simulation would eventually go.
             const UINT sent = SendInput(static_cast<UINT>(inputs.size()), inputs.data(), sizeof(INPUT));
             if (sent != inputs.size())
             {
@@ -78,6 +117,11 @@ namespace Platform
     void Executor::executeScript(std::string filepath)
     {
         m_impl->executeScript(filepath);
+    }
+
+    void Executor::executeLaunchPreset(std::string presetId)
+    {
+        m_impl->executeLaunchPreset(presetId);
     }
 
     void Executor::executeKey(InputBind key)

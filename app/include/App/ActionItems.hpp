@@ -71,7 +71,10 @@ namespace Application
     {
     public:
         AI_LaunchApp(std::string _presetId = "custom", std::string _customTarget = "");
+        /// @brief Curated preset key saved in config, such as `browser` or `calculator`.
+        /// `custom` means this item should launch `customTarget` instead.
         std::string presetId;
+        /// @brief User-browsed fallback target used only when `presetId == "custom"`.
         std::string customTarget;
         std::unique_ptr<ActionItem> clone() const override;
         ActionItemKind kind() const override;
