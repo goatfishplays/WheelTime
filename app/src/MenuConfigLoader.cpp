@@ -92,6 +92,9 @@ namespace
     {
         std::vector<std::unique_ptr<ActionItem>> items;
 
+        // Item parsing is the main schema extension point. Adding editor/runtime
+        // support for a new action item should generally only require a new
+        // branch here plus matching save/summary/editor logic elsewhere.
         for (const QJsonValue &itemValue : itemArray)
         {
             const QJsonObject itemObject = itemValue.toObject();
@@ -187,6 +190,9 @@ namespace
             return false;
         }
 
+        // Older config files stored full action definitions inside each menu.
+        // We lift those actions into the shared library on load so the rest of
+        // the app can operate entirely on the newer reusable-action model.
         std::vector<std::string> actionIds;
         std::vector<std::string> menuIds;
 
@@ -289,6 +295,8 @@ bool MenuConfigLoader::loadConfig(const QString &filepath, std::vector<Action> &
     const QJsonObject rootObject = document.object();
     actions.clear();
 
+    // Newer configs include a top-level action library. If that section is
+    // absent, treat the file as the older menu-owned schema for compatibility.
     if (rootObject.contains("actions"))
     {
         return loadNewSchema(rootObject, actions, menus);

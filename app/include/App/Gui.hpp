@@ -1,6 +1,6 @@
 /**
  * @file Gui.hpp
- * @brief The main gui interface class
+ * @brief Declares the top-level launcher window widget.
  */
 #pragma once
 
@@ -16,16 +16,26 @@
 
 namespace Application
 {
+    /**
+     * @brief Hosts the wheel widget and top-level launcher controls.
+     *
+     * `Gui` is intentionally thin: it shows a menu, forwards selection changes,
+     * and exposes a couple of high-level signals while the heavier editing logic
+     * lives in `SettingsWindow`.
+     */
     class Gui : public QWidget
     {
         Q_OBJECT
 
     public:
         explicit Gui(QWidget *parent = nullptr);
+        /// @brief Updates hover/selection presentation for the active slot.
         void onSelectChange(int selectionInd);
+        /// @brief Displays a menu plus the resolved labels for its action slots.
         void setMenu(const Menu &menu, const std::vector<std::string> &actionLabels);
 
     signals:
+        /// @brief Emitted when the launcher should be dismissed with Escape.
         void escapePressed();
 
     protected:
@@ -36,6 +46,7 @@ namespace Application
         QLabel *m_titleLabel{nullptr};
         RadialMenuWidget *m_radialMenu{nullptr};
         QPushButton *m_settingsButton{nullptr};
+        /// @brief Kept for now so the older UI affordance still exists visually.
         QPushButton *m_editButton{nullptr};
     };
 }

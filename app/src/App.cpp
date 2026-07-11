@@ -55,6 +55,8 @@ App::App()
     QObject::connect(&gui, &Gui::escapePressed, [this]()
                      { hideGui(); });
 
+    // Load the repo-local config on startup. If it is missing or malformed,
+    // keep the app alive with a tiny fallback menu so the GUI still opens.
     if (!MenuConfigLoader::loadConfig(m_configPath, actionLibrary, loadedMenus))
     {
         std::vector<std::unique_ptr<ActionItem>> items;
@@ -268,6 +270,9 @@ void App::showSettingsWindow()
                          {
                              std::vector<Action> newActions;
                              std::vector<Menu> newMenus;
+                             // The settings window edits a detached working copy.
+                             // Pull that copy back into the live runtime only
+                             // after the user explicitly saves.
                              m_settingsWindow->exportWorkingCopy(newActions, newMenus);
                              applyConfig(newActions, newMenus); });
     }
@@ -287,6 +292,8 @@ bool App::applyConfig(const std::vector<Action> &actions, const std::vector<Menu
 {
     const std::string previousActiveMenuId = activeMenu == nullptr ? "" : activeMenu->getId();
 
+    // Swap the full runtime model in one step so menus and the shared action
+    // library stay in sync after settings edits or schema migration.
     actionLibrary = actions;
     clearMenus();
     loadedMenus.reserve(menus.size());

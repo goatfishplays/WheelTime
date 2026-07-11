@@ -1,9 +1,6 @@
-
 /**
- * @brief Represents an individual action to be taken
- *
- * Can be extended via inheritance
- *
+ * @file ActionItems.hpp
+ * @brief Declares the individual building blocks that compose an `Action`.
  */
 
 #pragma once
@@ -14,6 +11,12 @@
 
 namespace Application
 {
+    /**
+     * @brief Runtime/editor-visible discriminator for supported action item types.
+     *
+     * The settings UI uses this to decide which editor to show and how to
+     * summarize items in the action sequence list.
+     */
     enum class ActionItemKind
     {
         Base,
@@ -28,6 +31,9 @@ namespace Application
         NthFrequent
     };
 
+    /**
+     * @brief Base class for one executable step inside an `Action`.
+     */
     class ActionItem
     {
     public:
@@ -43,10 +49,7 @@ namespace Application
         virtual void execute();
     };
 
-    /**
-     * @brief Runs a specified script
-     *
-     */
+    /// @brief Advanced fallback that launches an arbitrary app or script path.
     class AI_Script : public ActionItem
     {
     public:
@@ -58,8 +61,11 @@ namespace Application
     };
 
     /**
-     * @brief Launches a preset app target or a browsed custom app target
+     * @brief Launches either a curated preset target or a custom app target.
      *
+     * This is the non-scripter-friendly launch item surfaced first in the
+     * settings toolbox. Presets keep a friendly display name in config while
+     * still resolving to a concrete launch target at runtime.
      */
     class AI_LaunchApp : public ActionItem
     {
@@ -73,15 +79,17 @@ namespace Application
     };
 
     /**
-     * @brief Runs a specified keystroke
-     *
+     * @brief Simulates a hotkey with optional modifiers and hold behavior.
      */
     class AI_Keystroke : public ActionItem
     {
     public:
         AI_Keystroke(int _keycode = 0, int _modifiers = 0, float _holdDuration = 0.0f, bool _proceed = false);
+        /// @brief Virtual-key code for the main key in the combo.
         int keycode;
+        /// @brief Windows MOD_* bitmask for Ctrl/Alt/Shift/Win.
         int modifiers;
+        /// @brief Optional hold time, in seconds, before considering the item done.
         float holdDuration;
         /// @brief Continue to next `ActionItem` immediately if `true` else, waits till keystroke finished
         // * This isn't needed from a technical standpoint as it can be accomplished with the delay AI but from a user standpoint it should be helpful
@@ -92,10 +100,7 @@ namespace Application
         void execute() override;
     };
 
-    /**
-     * @brief Delays the next action in sequence
-     *
-     */
+    /// @brief Waits before the next action item in the sequence executes.
     class AI_Delay : public ActionItem
     {
     public:
@@ -106,10 +111,7 @@ namespace Application
         void execute() override;
     };
 
-    /**
-     * @brief Opens another menu
-     *
-     */
+    /// @brief Switches the launcher to another menu by stable menu ID.
     class AI_Menu : public ActionItem
     {
     public:
@@ -120,10 +122,7 @@ namespace Application
         void execute() override;
     };
 
-    /**
-     * @brief Closes the menu
-     *
-     */
+    /// @brief Closes the currently visible launcher UI.
     class AI_Close : public ActionItem
     {
     public:

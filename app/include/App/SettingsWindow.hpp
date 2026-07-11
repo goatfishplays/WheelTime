@@ -1,5 +1,10 @@
 #pragma once
 
+/**
+ * @file SettingsWindow.hpp
+ * @brief Declares the two-pane settings editor for menus and actions.
+ */
+
 #include <QCheckBox>
 #include <QComboBox>
 #include <QDoubleSpinBox>
@@ -18,6 +23,13 @@
 
 namespace Application
 {
+    /**
+     * @brief Non-modal editor for the shared action library and wheel menus.
+     *
+     * The window edits a working copy rather than mutating the live runtime
+     * objects directly. On save, the working copy is exported back to `App`,
+     * validated, written to JSON, and then applied to the active launcher state.
+     */
     class SettingsWindow : public QWidget
     {
         Q_OBJECT
@@ -25,13 +37,17 @@ namespace Application
     public:
         explicit SettingsWindow(QWidget *parent = nullptr);
 
+        /// @brief Initializes the editor with a fresh working copy of runtime data.
         void loadWorkingCopy(const std::vector<Action> &actions, const std::vector<Menu> &menus);
+        /// @brief Exports the edited working copy back to the caller.
         void exportWorkingCopy(std::vector<Action> &actions, std::vector<Menu> &menus) const;
 
     signals:
+        /// @brief Emitted after the local working copy passes UI-level validation.
         void saveRequested();
 
     private:
+        /// @brief Tracks which top-level entity is currently shown in the right pane.
         enum class SelectionKind
         {
             None,
@@ -68,7 +84,9 @@ namespace Application
         std::string makeUniqueMenuId(const QString &seed) const;
         bool validateWorkingCopy(QString &errorMessage) const;
 
+        /// @brief Working-copy action library edited by the settings UI.
         std::vector<Action> m_actions;
+        /// @brief Working-copy menus edited by the settings UI.
         std::vector<Menu> m_menus;
         bool m_isRefreshing{false};
         SelectionKind m_selectionKind{SelectionKind::None};

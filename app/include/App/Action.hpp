@@ -1,12 +1,6 @@
 /**
  * @file Action.hpp
- * @author your name (you@domain.com)
- * @brief
- * @version 0.1
- * @date 2026-07-02
- *
- * @copyright Copyright (c) 2026
- *
+ * @brief Declares reusable actions composed from ordered action items.
  */
 
 #pragma once
@@ -19,8 +13,10 @@
 namespace Application
 {
     /**
-     * @brief Contains a sequence of actions to be executed
+     * @brief Represents one reusable macro/action in the shared action library.
      *
+     * Each `Action` owns an ordered sequence of polymorphic `ActionItem`s.
+     * Menus reference actions by stable ID instead of embedding action copies.
      */
     class Action
     {
@@ -63,14 +59,18 @@ namespace Application
          */
         void execute();
 
+        /// @brief Stable config ID used by menus and serialization.
         std::string getId() const;
         std::string getName() const;
+        /// @brief Exposes the item sequence for settings editing/serialization.
         const std::vector<std::unique_ptr<ActionItem>> &getItems() const;
         ActionItem *getItem(int index);
         const ActionItem *getItem(int index) const;
         void setName(const std::string &newName);
         void setId(const std::string &newId);
+        /// @brief Replaces the full item sequence, preserving ownership safety.
         void setItems(std::vector<std::unique_ptr<ActionItem>> newItems);
+        /// @brief Moves an item within the sequence while preserving order.
         void moveItem(int fromIndex, int toIndex);
 
     private:

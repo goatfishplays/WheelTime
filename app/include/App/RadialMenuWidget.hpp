@@ -36,9 +36,14 @@ namespace Application
         explicit RadialMenuWidget(const Menu &menu, QWidget *parent = nullptr);
 
         /**
-         * @brief Set the Menu object and updates radial wheel accordingly
+         * @brief Set the menu model and visible labels, then rebuild the wheel.
          *
-         * @param menu
+         * `menu` still supplies slot count and selection behavior, while
+         * `actionLabels` lets the wheel render names resolved from the shared
+         * action library rather than assuming the menu owns full `Action`s.
+         *
+         * @param menu Active menu model
+         * @param actionLabels Display labels for each slot
          */
         void setMenu(const Menu &menu, const std::vector<std::string> &actionLabels);
         /**
@@ -123,7 +128,9 @@ namespace Application
          */
         int indexFromAngle(double angleRadians, int count) const;
 
+        /// @brief Cached menu model currently rendered by the wheel.
         Menu m_menu;
+        /// @brief Resolved labels for the slot references in `m_menu`.
         std::vector<std::string> m_actionLabels;
         QPoint m_mousePosition;
         QLabel *m_centerLabel{nullptr};

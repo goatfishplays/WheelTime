@@ -1,12 +1,6 @@
 /**
  * @file Menu.hpp
- * @author your name (you@domain.com)
- * @brief
- * @version 0.1
- * @date 2026-07-02
- *
- * @copyright Copyright (c) 2026
- *
+ * @brief Declares the wheel-menu model used by the launcher and settings UI.
  */
 
 #pragma once
@@ -17,7 +11,13 @@
 
 namespace Application
 {
-
+    /**
+     * @brief Represents one radial menu configuration.
+     *
+     * Menus no longer own full `Action` objects. Instead they keep an ordered
+     * list of action IDs so the same action can be reused in multiple menus and
+     * edited centrally from the action library.
+     */
     class Menu
     {
     public:
@@ -41,10 +41,10 @@ namespace Application
         ~Menu();
 
         /**
-         * @brief Add an action to this menu
+         * @brief Inserts an action reference into the slot list.
          *
-         * @param ind Index of action to add
-         * @param action Action to add
+         * @param ind Index to insert at, or append when out of range
+         * @param actionId Stable ID of the action to reference
          */
         void addActionId(int ind, const std::string &actionId);
 
@@ -62,13 +62,16 @@ namespace Application
          */
         int numActions() const;
 
+        /// @brief Stable config ID used by menu references and serialization.
         std::string getId() const;
         std::string getName() const;
         void setId(const std::string &newId);
         void setName(const std::string &newName);
+        /// @brief Ordered action references used as wheel slots.
         const std::vector<std::string> &getActionIds() const;
         std::string getActionId(int index) const;
         void setActionId(int index, const std::string &actionId);
+        /// @brief Reorders a slot reference inside this menu.
         void moveActionId(int fromIndex, int toIndex);
 
     private:
