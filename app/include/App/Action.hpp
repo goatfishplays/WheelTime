@@ -1,6 +1,12 @@
 /**
  * @file Action.hpp
- * @brief Declares reusable actions composed from ordered action items.
+ * @author your name (you@domain.com)
+ * @brief
+ * @version 0.1
+ * @date 2026-07-02
+ *
+ * @copyright Copyright (c) 2026
+ *
  */
 
 #pragma once

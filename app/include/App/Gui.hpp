@@ -1,6 +1,12 @@
 /**
  * @file Gui.hpp
- * @brief Declares the top-level launcher window widget.
+ * @author your name (you@domain.com)
+ * @brief The main gui interface class
+ * @version 0.1
+ * @date 2026-07-09
+ *
+ * @copyright Copyright (c) 2026
+ *
  */
 #pragma once
 

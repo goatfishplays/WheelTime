@@ -1,6 +1,12 @@
 /**
  * @file App.hpp
- * @brief Declares the main application singleton and runtime state.
+ * @author your name (you@domain.com)
+ * @brief Contains `App` class, controls state of app
+ * @version 0.1
+ * @date 2026-06-29
+ *
+ * @copyright Copyright (c) 2026
+ *
  */
 #pragma once
 

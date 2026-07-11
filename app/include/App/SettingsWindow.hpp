@@ -1,9 +1,15 @@
-#pragma once
-
 /**
  * @file SettingsWindow.hpp
- * @brief Declares the two-pane settings editor for menus and actions.
+ * @author your name (you@domain.com)
+ * @brief The settings editor window for menus and reusable actions
+ * @version 0.1
+ * @date 2026-07-10
+ *
+ * @copyright Copyright (c) 2026
+ *
  */
+
+#pragma once
 
 #include <QCheckBox>
 #include <QComboBox>

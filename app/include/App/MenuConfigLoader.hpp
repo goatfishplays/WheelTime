@@ -1,9 +1,15 @@
-#pragma once
-
 /**
  * @file MenuConfigLoader.hpp
- * @brief Declares JSON load/save helpers for WheelTime config files.
+ * @author your name (you@domain.com)
+ * @brief
+ * @version 0.1
+ * @date 2026-07-10
+ *
+ * @copyright Copyright (c) 2026
+ *
  */
+
+#pragma once
 
 #include <QString>
 #include <vector>
