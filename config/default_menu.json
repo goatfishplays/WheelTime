@@ -1,0 +1,47 @@
+{
+    "actions": [
+        {
+            "id": "action-menu-example-calculator",
+            "items": [
+                {
+                    "path": "calculator.exe",
+                    "type": "script"
+                }
+            ],
+            "name": "calculator"
+        },
+        {
+            "id": "action-menu-example-paint",
+            "items": [
+                {
+                    "path": "paint.exe",
+                    "type": "script"
+                }
+            ],
+            "name": "paint"
+        },
+        {
+            "id": "action-menu-example-notepad",
+            "items": [
+                {
+                    "path": "notepad.exe",
+                    "type": "script"
+                }
+            ],
+            "name": "notepad"
+        }
+    ],
+    "menus": [
+        {
+            "actionIds": [
+                "action-menu-example-calculator",
+                "action-menu-example-paint",
+                "action-menu-example-notepad"
+            ],
+            "executeOnRelease": false,
+            "exitOnAction": false,
+            "id": "menu-example",
+            "name": "GAMBLING"
+        }
+    ]
+}

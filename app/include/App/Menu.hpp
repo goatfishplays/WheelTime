@@ -17,7 +17,13 @@
 
 namespace Application
 {
-
+    /**
+     * @brief Represents one radial menu configuration.
+     *
+     * Menus no longer own full `Action` objects. Instead they keep an ordered
+     * list of action IDs so the same action can be reused in multiple menus and
+     * edited centrally from the action library.
+     */
     class Menu
     {
     public:
@@ -36,16 +42,17 @@ namespace Application
              bool _executeOnRelease = false,
              bool _exitOnAction = false,
              std::string name = "Unnamed Menu",
-             std::vector<Action> _actions = {});
+             std::vector<std::string> _actionIds = {},
+             std::string id = "");
         ~Menu();
 
         /**
-         * @brief Add an action to this menu
+         * @brief Inserts an action reference into the slot list.
          *
-         * @param ind Index of action to add
-         * @param action Action to add
+         * @param ind Index to insert at, or append when out of range
+         * @param actionId Stable ID of the action to reference
          */
-        void addAction(int ind, Action action);
+        void addActionId(int ind, const std::string &actionId);
 
         /**
          * @brief Remove an action from this menu
@@ -59,29 +66,23 @@ namespace Application
          *
          * @return int
          */
-        int numActions();
+        int numActions() const;
 
-        /**
-         * @brief Saves menu/settings to a file
-         *
-         * @param filepath file to save to
-         */
-        void save();
-
-        /**
-         * @brief Loads menu/settings from a file
-         *
-         * @param filepath file to load from
-         */
-        void load();
-
+        /// @brief Stable config ID used by menu references and serialization.
+        std::string getId() const;
         std::string getName() const;
-
-        /// @brief Generally avoid directly modifying this
-        std::vector<Action> actions;
+        void setId(const std::string &newId);
+        void setName(const std::string &newName);
+        /// @brief Ordered action references used as wheel slots.
+        const std::vector<std::string> &getActionIds() const;
+        std::string getActionId(int index) const;
+        void setActionId(int index, const std::string &actionId);
+        /// @brief Reorders a slot reference inside this menu.
+        void moveActionId(int fromIndex, int toIndex);
 
     private:
         std::string name;
-        std::string filepath; // TODO: need to auto delete old on change?
+        std::string id;
+        std::vector<std::string> actionIds;
     };
 }

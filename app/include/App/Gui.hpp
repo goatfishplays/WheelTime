@@ -15,6 +15,7 @@
 #include <memory>
 
 #include <QWidget>
+#include <QKeyEvent>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -22,8 +23,8 @@
 #include <QResizeEvent>
 #include <QEnterEvent>
 #include <QMouseEvent>
-#include <QKeyEvent>
 #include <QPushButton>
+#include <QDialog>
 
 #include "App/Menu.hpp"
 #include "App/Action.hpp"
@@ -31,34 +32,26 @@
 
 namespace Application
 {
-
+    /**
+     * @brief Hosts the wheel widget and top-level launcher controls.
+     *
+     * `Gui` is intentionally thin: it shows a menu, forwards selection changes,
+     * and exposes a couple of high-level signals while the heavier editing logic
+     * lives in `SettingsWindow`.
+     */
     class Gui : public QWidget
     {
         Q_OBJECT
 
     public:
         explicit Gui(QWidget *parent = nullptr);
-
-        /**
-         * @brief Called when the selection index for Menu changes
-         *
-         * @param selectionInd The new value of the index, -1 if unset
-         */
+        /// @brief Updates hover/selection presentation for the active slot.
         void onSelectChange(int selectionInd);
-        /**
-         * @brief Updates the GUI to a new menu
-         *
-         * @param menu reference to the new menu
-         */
-        void setMenu(const Menu &menu);
+        /// @brief Displays a menu plus the resolved labels for its action slots.
+        void setMenu(const Menu &menu, const std::vector<std::string> &actionLabels);
 
     signals:
-        /**
-         * @brief Emits signal on escape key being pressed
-         *
-         * TODO: Pretty sure this only triggers when app open hopefully
-         *
-         */
+        /// @brief Emitted when the launcher should be dismissed with Escape.
         void escapePressed();
 
     protected:
@@ -69,6 +62,7 @@ namespace Application
         QLabel *m_titleLabel{nullptr};
         RadialMenuWidget *m_radialMenu{nullptr};
         QPushButton *m_settingsButton{nullptr};
+        /// @brief Kept for now so the older UI affordance still exists visually.
         QPushButton *m_editButton{nullptr};
     };
 }
