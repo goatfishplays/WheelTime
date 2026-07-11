@@ -1,44 +1,29 @@
 #include "App/Gui.hpp"
-
-#include <cmath>
-#include <QCursor>
-#include <QMouseEvent>
+// TODO: segment this into multiple files
 #include <QApplication>
 #include <QDebug>
-// TODO: segment this into multiple files
-#include <Platform/Execute.hpp>
+#include <QCursor>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QFormLayout>
+#include <QHeaderView>
+#include <QMessageBox>
+#include <QMouseEvent>
+#include <QTableWidget>
+#include <QTableWidgetItem>
+#include <QVBoxLayout>
+#include <cmath>
+
 #include "App/App.hpp"
+#include "App/Action.hpp"
 
 using namespace Application;
-
-static void runTestAction(int index)
-{
-    Platform::Executor executor;
-
-    switch (index)
-    {
-    case 0:
-        qDebug() << "Running test action: Notepad";
-        executor.executeScript("notepad.exe");
-        break;
-
-    case 1:
-        qDebug() << "Running test action: Calculator";
-        executor.executeScript("calc.exe");
-        break;
-
-    default:
-        qDebug() << "No test action assigned for index:" << index;
-        break;
-    }
-}
-
-// ---------------- Gui ----------------
 
 Gui::Gui(QWidget *parent)
     : QWidget(parent)
 {
     setFixedSize(600, 400);
+
     // showFullScreen();
 
     // setAttribute(Qt::WA_TranslucentBackground);
@@ -79,68 +64,65 @@ Gui::Gui(QWidget *parent)
 
     m_settingsButton = new QPushButton("Settings", this);
     m_editButton = new QPushButton("Edit", this);
-
     bottomRow->addWidget(m_settingsButton);
     bottomRow->addWidget(m_editButton);
-
     root->addLayout(bottomRow);
 
-    // example = "Example Menu";
-    // example.actions = {
-    //     {"One"},
-    //     {"Two"},
-    //     {"Three"},
-    //     {"Four"}};
-
-    // App::App::getInstance().loadedMenus.push_back(example);
-    // App::App::getInstance().showGui(&App::App::getInstance().loadedMenus[0]);
-    // m_radialMenu->setMenu(example);
     m_radialMenu->setButtonRadius(100);
     m_radialMenu->setActivationMode(RadialMenuWidget::ActivationMode::Distance);
 
     connect(m_radialMenu, &RadialMenuWidget::selectedIndexChanged, this, &Gui::onSelectChange);
-
+    connect(m_settingsButton, &QPushButton::clicked, []()
+            { App::getInstance().showSettingsWindow(); });
+    connect(m_editButton, &QPushButton::clicked, []()
+            { App::getInstance().showSettingsWindow(); });
     connect(m_radialMenu, &RadialMenuWidget::buttonTriggered, this, [](int index)
-            { qDebug() << "Button clicked:" << index;
-            runTestAction(index); });
+            { App::getInstance().executeAction(index); });
 }
 
 void Gui::onSelectChange(int index)
 {
     qDebug() << "Selected index changed:" << index;
-    // m_radialMenu->highlightButton(m_radialMenu->getSelectedIndex());
-};
+}
 
 bool Gui::eventFilter(QObject *watched, QEvent *event)
 {
-    // Only handle events that pertain to this object
-    // if (watched != this)
-    //     return false;
-
     if (event->type() == QEvent::MouseMove)
     {
         auto *mouseMoveEvent = static_cast<QMouseEvent *>(event);
         m_radialMenu->updateSelectionFromGlobalMousePosition(mouseMoveEvent->globalPosition().toPoint());
-        // m_radialMenu->updateSelectionFromGlobal(mouseEvent->globalPosition().toPoint());
     }
+
     if (event->type() == QEvent::MouseButtonPress)
     {
-        qDebug() << "Event detected, obj: " << watched << " | event: " << event;
         auto *mouseEvent = static_cast<QMouseEvent *>(event);
+        const QPoint localPos = mapFromGlobal(mouseEvent->globalPosition().toPoint());
+        QWidget *clickedChild = childAt(localPos);
+
         if (mouseEvent->button() == Qt::LeftButton)
         {
-            App::App::getInstance().executeAction(m_radialMenu->getSelectedIndex());
-            return true;
+            if (qobject_cast<QPushButton *>(watched) != nullptr || qobject_cast<QPushButton *>(clickedChild) != nullptr)
+            {
+                return QWidget::eventFilter(watched, event);
+            }
+
+            if (m_radialMenu->geometry().contains(localPos))
+            {
+                App::getInstance().executeAction(m_radialMenu->getSelectedIndex());
+                return true;
+            }
+
+            return QWidget::eventFilter(watched, event);
         }
-        if (mouseEvent->button() == Qt::RightButton)
+
+        if (mouseEvent->button() == Qt::RightButton && m_radialMenu->geometry().contains(localPos))
         {
-            App::App::getInstance().hideGui();
+            App::getInstance().hideGui();
             return true;
         }
     }
 
     return QWidget::eventFilter(watched, event);
-    // this->show();
 }
 
 void Gui::keyPressEvent(QKeyEvent *event)
@@ -155,7 +137,8 @@ void Gui::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void Gui::setMenu(const Menu &menu) // TODO: might be better to just make the radial menu public
+void Gui::setMenu(const Menu &menu, const std::vector<std::string> &actionLabels)
 {
-    m_radialMenu->setMenu(menu);
+    m_titleLabel->setText(QString::fromStdString(menu.getName()));
+    m_radialMenu->setMenu(menu, actionLabels);
 }
