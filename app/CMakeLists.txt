@@ -1,18 +1,22 @@
 add_library(App 
     src/App.cpp
-    src/HoverButton.cpp
-    src/RadialMenuWidget.cpp
-    src/Gui.cpp
-    src/Menu.cpp
-    src/Action.cpp
-    src/ActionItems.cpp
     include/App/App.hpp
+    src/HoverButton.cpp
     include/App/HoverButton.hpp
+    src/RadialMenuWidget.cpp
     include/App/RadialMenuWidget.hpp
+    src/Gui.cpp
     include/App/Gui.hpp
+    src/Menu.cpp
     include/App/Menu.hpp
+    src/Action.cpp
     include/App/Action.hpp
+    src/ActionItems.cpp
     include/App/ActionItems.hpp
+    src/ActionExecutionContext.cpp
+    include/App/ActionExecutionContext.hpp
+    src/ExecuteResult.hpp
+    include/App/ExecuteResult.cpp
 )
 
 target_include_directories(App 

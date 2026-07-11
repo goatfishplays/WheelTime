@@ -15,7 +15,7 @@
 
 using namespace Application;
 
-Action::Action(std::vector<ActionItem> _sequence, std::string _name, std::string _iconFilepath) : sequence(_sequence), name(_name), iconFilepath(_iconFilepath)
+Action::Action(std::vector<std::unique_ptr<ActionItem>> _sequence, std::string _name, std::string _iconFilepath, uint32_t channel) : sequence(_sequence), name(_name), iconFilepath(_iconFilepath), m_channel(channel)
 {
 }
 
@@ -35,4 +35,14 @@ void Action::execute() {}
 std::string Action::getName() const
 {
     return name;
+}
+
+uint32_t Action::channel() const
+{
+    return m_channel;
+}
+
+const std::vector<std::unique_ptr<ActionItem>> &Action::items() const
+{
+    return sequence;
 }

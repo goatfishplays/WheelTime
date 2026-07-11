@@ -11,8 +11,9 @@
 
 #pragma once
 #include <vector>
-#include <Platform/Inputs.hpp>
 #include <string>
+#include <memory>
+#include <Platform/Inputs.hpp>
 #include "App/ActionItems.hpp"
 
 namespace Application
@@ -24,9 +25,9 @@ namespace Application
     class Action
     {
     public:
-        Action(std::vector<ActionItem> sequence = {},
+        Action(std::vector<std::unique_ptr<ActionItem>> sequence = {},
                std::string name = "Unnamed Action",
-               std::string iconFilepath = "");
+               std::string iconFilepath = "", uint32_t channel = 0);
         ~Action();
 
         /**
@@ -59,9 +60,25 @@ namespace Application
 
         std::string getName() const;
 
+        /**
+         * @brief Returns the channel this action will run on
+         *
+         * @return uint32_t
+         */
+        uint32_t channel() const;
+
+        /**
+         * @brief Returns a constant reference to the actionItems
+         *
+         * @return const std::vector<std::unique_ptr<ActionItem>>&
+         */
+        const std::vector<std::unique_ptr<ActionItem>> &items() const;
+
     private:
-        std::vector<ActionItem> sequence;
+        std::vector<std::unique_ptr<ActionItem>> sequence;
         std::string name;
         std::string iconFilepath;
+
+        uint32_t m_channel;
     };
 }

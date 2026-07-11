@@ -10,6 +10,7 @@
 #include <vector>
 #include <Platform/Inputs.hpp>
 #include "App/ActionItems.hpp"
+#include "App/ActionExecutionContext.hpp"
 
 namespace Application
 {
@@ -19,12 +20,14 @@ namespace Application
     public:
         ActionItem();
         ~ActionItem();
+        int m_curStage = 0;
+        int m_numStages = 1;
         /**
          * @brief To be overwritten performs the said action
          *
          * TODO: Think this needs to be passed the application, discuss this later
          */
-        virtual void execute();
+        virtual void execute(ActionExecutionContext &context);
     };
 
     /**
@@ -35,7 +38,7 @@ namespace Application
     {
     public:
         std::string filepath;
-        void execute() override;
+        void execute(ActionExecutionContext &context) override;
     };
 
     /**
@@ -52,7 +55,7 @@ namespace Application
         // * This isn't needed from a technical standpoint as it can be accomplished with the delay AI but from a user standpoint it should be helpful
         // * Note that non-global hotkeys will probs be eaten by this window if not preceeded by AI_Close
         bool proceed;
-        void execute() override;
+        void execute(ActionExecutionContext &context) override;
     };
 
     /**
@@ -63,7 +66,7 @@ namespace Application
     {
     public:
         int duration;
-        void execute() override;
+        void execute(ActionExecutionContext &context) override;
     };
 
     /**
@@ -74,7 +77,7 @@ namespace Application
     {
     public:
         std::string menuName;
-        void execute() override;
+        void execute(ActionExecutionContext &context) override;
     };
 
     /**
@@ -84,7 +87,7 @@ namespace Application
     class AI_Close : public ActionItem
     {
     public:
-        void execute() override;
+        void execute(ActionExecutionContext &context) override;
     };
 
     /**
@@ -96,7 +99,7 @@ namespace Application
     public:
         std::string socketMsg;
         std::string outputDst;
-        void execute() override;
+        void execute(ActionExecutionContext &context) override;
     };
 
     /**
@@ -107,7 +110,7 @@ namespace Application
     {
     public:
         int n;
-        void execute() override;
+        void execute(ActionExecutionContext &context) override;
     };
 
     /**
@@ -118,6 +121,6 @@ namespace Application
     {
     public:
         int n;
-        void execute() override;
+        void execute(ActionExecutionContext &context) override;
     };
 }
