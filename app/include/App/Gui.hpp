@@ -10,14 +10,24 @@
  */
 #pragma once
 
+#include <vector>
+#include <string>
+#include <memory>
+
+#include <QWidget>
 #include <QKeyEvent>
 #include <QLabel>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QSpacerItem>
+#include <QResizeEvent>
+#include <QEnterEvent>
 #include <QMouseEvent>
 #include <QPushButton>
-#include <QWidget>
-#include <vector>
+#include <QDialog>
 
 #include "App/Menu.hpp"
+#include "App/Action.hpp"
 #include "App/RadialMenuWidget.hpp"
 
 namespace Application

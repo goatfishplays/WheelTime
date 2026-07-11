@@ -1,8 +1,18 @@
 #include "App/RadialMenuWidget.hpp"
 
 #include <cmath>
+#include <QCursor>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QFormLayout>
+#include <QHeaderView>
 #include <QLabel>
+#include <QMessageBox>
+#include <QMouseEvent>
+#include <QTableWidget>
+#include <QTableWidgetItem>
 #include <QStyle>
+#include <QVBoxLayout>
 
 using namespace Application;
 

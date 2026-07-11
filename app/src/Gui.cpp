@@ -2,9 +2,20 @@
 
 #include <QApplication>
 #include <QDebug>
+#include <QCursor>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QFormLayout>
+#include <QHeaderView>
+#include <QMessageBox>
 #include <QMouseEvent>
+#include <QTableWidget>
+#include <QTableWidgetItem>
+#include <QVBoxLayout>
+#include <cmath>
 
 #include "App/App.hpp"
+#include "App/Action.hpp"
 
 using namespace Application;
 

@@ -8,12 +8,14 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonParseError>
+#include <QJsonValue>
 #include <QRegularExpression>
 #include <QDebug>
 
 #include <algorithm>
 #include <memory>
 
+#include "App/Action.hpp"
 #include "App/ActionItems.hpp"
 
 using namespace Application;

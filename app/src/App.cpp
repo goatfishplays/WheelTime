@@ -5,8 +5,12 @@
 
 #include "App/App.hpp"
 
+#include <Platform/Window.hpp>
+#include <Platform/Inputs.hpp>
+#include <Platform/Execute.hpp>
 #include <QAbstractNativeEventFilter>
 #include <QApplication>
+#include <QPushButton>
 
 #include "App/MenuConfigLoader.hpp"
 #include "App/SettingsWindow.hpp"
