@@ -85,7 +85,7 @@ void WorkerPool::stop()
     m_outbound.stop();
 }
 
-void WorkerPool::emit(WorkerResult result)
+void WorkerPool::deliverResult(WorkerResult result)
 {
     if (m_resultHandler)
     {
@@ -152,7 +152,7 @@ void WorkerPool::workerMain()
             if (!urgentJob && m_paused.load(std::memory_order_acquire))
             {
                 result.status = WorkerResult::Status::Continue;
-                emit(std::move(result));
+                deliverResult(std::move(result));
                 goto next_job;
             }
 
@@ -169,7 +169,7 @@ void WorkerPool::workerMain()
                 result.context->advance();
                 result.status = WorkerResult::Status::Delayed;
                 result.wakeTime = executeResult.wakeTime();
-                emit(std::move(result));
+                deliverResult(std::move(result));
                 goto next_job;
             }
 
@@ -190,7 +190,7 @@ void WorkerPool::workerMain()
                 {
                     result.status = WorkerResult::Status::Continue;
                 }
-                emit(std::move(result));
+                deliverResult(std::move(result));
                 goto next_job;
             }
         }
@@ -198,7 +198,7 @@ void WorkerPool::workerMain()
         result.status = result.context->isCancelled()
                             ? WorkerResult::Status::Cancelled
                             : WorkerResult::Status::Completed;
-        emit(std::move(result));
+        deliverResult(std::move(result));
 
     next_job:
         continue;

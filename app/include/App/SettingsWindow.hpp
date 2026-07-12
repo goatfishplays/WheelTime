@@ -12,6 +12,7 @@
 #pragma once
 
 #include <QCheckBox>
+#include <QCloseEvent>
 #include <QComboBox>
 #include <QDoubleSpinBox>
 #include <QLabel>
@@ -51,6 +52,11 @@ namespace Application
     signals:
         /// @brief Emitted after the local working copy passes UI-level validation.
         void saveRequested();
+        /// @brief Emitted when the settings window is closed (pause/resume hook).
+        void windowClosed();
+
+    protected:
+        void closeEvent(QCloseEvent *event) override;
 
     private:
         /// @brief Tracks which top-level entity is currently shown in the right pane.

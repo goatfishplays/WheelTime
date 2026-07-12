@@ -119,7 +119,7 @@ private:
     void workerMain();
 
     /// @brief Delivers to the result handler if set, otherwise to @ref m_outbound.
-    void emit(WorkerResult result);
+    void deliverResult(WorkerResult result);
 
     ThreadSafeQueue<std::unique_ptr<ActionExecutionContext>> m_inbound;
     ThreadSafeQueue<std::unique_ptr<ActionExecutionContext>> m_urgent;

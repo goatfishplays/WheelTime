@@ -785,6 +785,12 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_itemDetailStack->setCurrentWidget(m_itemNonePage);
 }
 
+void SettingsWindow::closeEvent(QCloseEvent *event)
+{
+    QWidget::closeEvent(event);
+    emit windowClosed();
+}
+
 void SettingsWindow::loadWorkingCopy(const std::vector<Action> &actions, const std::vector<Menu> &menus)
 {
     m_actions = actions;

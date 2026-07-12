@@ -560,6 +560,9 @@ The architecture should remain flexible enough to support future additions such 
 - Resource management
 - Background-safe execution policies
 
+The live app uses `Scheduler` for launcher macros (`App::executeAction` submits
+a copy). Settings opens with `pause()` and closes with `resume()`.
+
 # Development Rules
 
 When implementing this project:
