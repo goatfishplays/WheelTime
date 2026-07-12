@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <chrono>
 #include <condition_variable>
 #include <mutex>
 #include <queue>
@@ -14,10 +15,25 @@ namespace Application
 {
 
 /**
+ * @brief Result of a timed pop on ThreadSafeQueue.
+ */
+enum class QueueWaitStatus
+{
+    Item,    ///< An element was written to the out-parameter.
+    Timeout, ///< Deadline passed with an empty queue.
+    Stopped  ///< Queue is stopped and empty.
+};
+
+/**
  * @brief Multi-producer / multi-consumer FIFO queue.
  *
- * pop() blocks until an item is available or the queue has been stopped and
- * drained. stop() is permanent for the lifetime of the instance.
+ * Suitable for worker inbound/outbound queues and the scheduler mailbox.
+ *
+ * Lifecycle:
+ * - push / pop while running.
+ * - stop() is permanent; further pushes are ignored.
+ * - After stop(), consumers drain remaining items; then pop returns false /
+ *   Stopped.
  */
 template <typename T>
 class ThreadSafeQueue
@@ -55,6 +71,7 @@ public:
 
     /**
      * @brief Blocks until an item is available, or the queue is stopped and empty.
+     * @param[out] out Receives the popped value on success.
      * @return true if @p out received an item; false if stopped and drained.
      */
     [[nodiscard]] bool pop(T &out)
@@ -72,7 +89,42 @@ public:
         return true;
     }
 
-    /// @brief Discards all queued items. In-flight pops are unaffected.
+    /**
+     * @brief Waits until an item is available, @p deadline passes, or the queue stops.
+     * @param[out] out Receives the popped value when status is Item.
+     * @param deadline Steady-clock time to wake if still empty.
+     */
+    [[nodiscard]] QueueWaitStatus popWaitUntil(
+        T &out,
+        std::chrono::steady_clock::time_point deadline)
+    {
+        std::unique_lock lock{m_mutex};
+        while (m_queue.empty() && !m_stopped)
+        {
+            if (m_cv.wait_until(lock, deadline) == std::cv_status::timeout)
+            {
+                if (!m_queue.empty())
+                {
+                    break;
+                }
+                return QueueWaitStatus::Timeout;
+            }
+        }
+
+        if (m_queue.empty())
+        {
+            return QueueWaitStatus::Stopped;
+        }
+
+        out = std::move(m_queue.front());
+        m_queue.pop();
+        return QueueWaitStatus::Item;
+    }
+
+    /**
+     * @brief Discards all queued items.
+     * In-flight pop waiters are not given discarded elements.
+     */
     void clear()
     {
         std::lock_guard lock{m_mutex};
@@ -93,6 +145,7 @@ public:
         m_cv.notify_all();
     }
 
+    /// @brief Whether stop() has been called.
     [[nodiscard]] bool stopped() const
     {
         std::lock_guard lock{m_mutex};

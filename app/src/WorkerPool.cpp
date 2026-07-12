@@ -14,6 +14,12 @@ namespace Application
 {
 
 WorkerPool::WorkerPool(std::size_t workerCount)
+    : WorkerPool(workerCount, nullptr)
+{
+}
+
+WorkerPool::WorkerPool(std::size_t workerCount, std::function<void(WorkerResult)> resultHandler)
+    : m_resultHandler{std::move(resultHandler)}
 {
     if (workerCount == 0)
     {
@@ -51,6 +57,16 @@ void WorkerPool::stop()
     m_inbound.stop();
     m_workers.clear(); // joins all jthreads
     m_outbound.stop();
+}
+
+void WorkerPool::emit(WorkerResult result)
+{
+    if (m_resultHandler)
+    {
+        m_resultHandler(std::move(result));
+        return;
+    }
+    m_outbound.push(std::move(result));
 }
 
 void WorkerPool::workerMain()
@@ -95,7 +111,7 @@ void WorkerPool::workerMain()
                                 : WorkerResult::Status::Completed;
         }
 
-        m_outbound.push(std::move(result));
+        emit(std::move(result));
     }
 }
 

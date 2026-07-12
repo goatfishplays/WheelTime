@@ -13,19 +13,29 @@ namespace Application
 /**
  * @brief Small result telling the scheduler whether to continue or delay.
  *
- * Describes only the current Action. Future variants may be added as needed.
+ * Describes only the fate of the **current** Action after one ActionItem
+ * returns. Nested work is requested via ActionExecutionContext::scheduleAction,
+ * not via ExecuteResult.
+ *
+ * Workers: on DelayUntil, return the context to the scheduler (do not sleep).
+ * Scheduler: park the context until wakeTime while holding its channel.
  */
 class ExecuteResult
 {
 public:
     enum class Type
     {
-        Continue,
-        DelayUntil
+        Continue,  ///< Keep running the next item on a worker (or finish if none remain).
+        DelayUntil ///< Pause this Action until @ref wakeTime().
     };
 
+    /// @brief Proceed with the current Action (advance / finish as appropriate).
     [[nodiscard]] static ExecuteResult Continue();
 
+    /**
+     * @brief Pause the current Action until @p wakeTime.
+     * The item that returned this has already completed its work.
+     */
     [[nodiscard]] static ExecuteResult DelayUntil(
         std::chrono::steady_clock::time_point wakeTime);
 

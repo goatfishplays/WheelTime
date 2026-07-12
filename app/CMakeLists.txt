@@ -22,6 +22,8 @@ add_library(App
     include/App/ThreadSafeQueue.hpp
     src/WorkerPool.cpp
     include/App/WorkerPool.hpp
+    src/Scheduler.cpp
+    include/App/Scheduler.hpp
     src/MenuConfigLoader.cpp
     include/App/MenuConfigLoader.hpp
     src/SettingsWindow.cpp
@@ -63,6 +65,19 @@ target_link_libraries(phase3_worker_smoke
         App
 )
 target_compile_features(phase3_worker_smoke
+    PRIVATE
+        cxx_std_20
+)
+
+# Disposable Phase 4 smoke test.
+add_executable(phase4_scheduler_smoke
+    tests/phase4_scheduler_smoke.cpp
+)
+target_link_libraries(phase4_scheduler_smoke
+    PRIVATE
+        App
+)
+target_compile_features(phase4_scheduler_smoke
     PRIVATE
         cxx_std_20
 )
