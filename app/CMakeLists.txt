@@ -26,6 +26,8 @@ add_library(App
     include/App/Scheduler.hpp
     src/DelayQueue.cpp
     include/App/DelayQueue.hpp
+    src/ChannelManager.cpp
+    include/App/ChannelManager.hpp
     src/MenuConfigLoader.cpp
     include/App/MenuConfigLoader.hpp
     src/SettingsWindow.cpp
@@ -93,6 +95,19 @@ target_link_libraries(phase5_delay_queue_smoke
         App
 )
 target_compile_features(phase5_delay_queue_smoke
+    PRIVATE
+        cxx_std_20
+)
+
+# Disposable Phase 6 smoke test.
+add_executable(phase6_channel_smoke
+    tests/phase6_channel_smoke.cpp
+)
+target_link_libraries(phase6_channel_smoke
+    PRIVATE
+        App
+)
+target_compile_features(phase6_channel_smoke
     PRIVATE
         cxx_std_20
 )

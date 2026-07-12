@@ -99,6 +99,27 @@ void Scheduler::threadMain()
     }
 }
 
+void Scheduler::applyDispatch(ChannelDispatch dispatch)
+{
+    switch (dispatch.type)
+    {
+    case ChannelDispatch::Type::None:
+        break;
+    case ChannelDispatch::Type::RunNow:
+        if (dispatch.context)
+        {
+            m_workers.submit(std::move(dispatch.context));
+        }
+        break;
+    case ChannelDispatch::Type::ParkUntil:
+        if (dispatch.context)
+        {
+            m_delayQueue.push(dispatch.wakeTime, std::move(dispatch.context));
+        }
+        break;
+    }
+}
+
 void Scheduler::handleSubmit(SubmitRequest request)
 {
     if (!request.action)
@@ -107,50 +128,10 @@ void Scheduler::handleSubmit(SubmitRequest request)
     }
 
     auto context = std::make_unique<ActionExecutionContext>(std::move(request.action));
-    const uint32_t channelKey = resolveChannelKey(context->action());
-    m_channelByActionId[context->actionId()] = channelKey;
-
-    ChannelState &channel = m_channels[channelKey];
-    const auto now = std::chrono::steady_clock::now();
-
-    if (channel.busy)
-    {
-        channel.waiting.push(std::move(context));
-        return;
-    }
-
-    channel.busy = true;
-
-    if (request.earliestStart > now)
-    {
-        m_delayQueue.push(request.earliestStart, std::move(context));
-        return;
-    }
-
-    m_workers.submit(std::move(context));
-}
-
-void Scheduler::tryDispatch(uint32_t channelKey)
-{
-    ChannelState &channel = m_channels[channelKey];
-    if (channel.busy || channel.waiting.empty())
-    {
-        return;
-    }
-
-    channel.busy = true;
-    auto context = std::move(channel.waiting.front());
-    channel.waiting.pop();
-    m_workers.submit(std::move(context));
-}
-
-uint32_t Scheduler::resolveChannelKey(const Action &action)
-{
-    if (action.channel() == 0)
-    {
-        return m_nextPrivateChannel++;
-    }
-    return action.channel();
+    applyDispatch(m_channels.admit(
+        std::move(context),
+        request.earliestStart,
+        std::chrono::steady_clock::now()));
 }
 
 void Scheduler::ingestScheduledActions(ActionExecutionContext &context)
@@ -179,27 +160,27 @@ void Scheduler::handleResult(WorkerResult result)
     ingestScheduledActions(*result.context);
 
     const uint64_t actionId = result.context->actionId();
-    const auto channelIt = m_channelByActionId.find(actionId);
-    if (channelIt == m_channelByActionId.end())
+    const auto channelKey = m_channels.channelFor(actionId);
+    if (!channelKey.has_value())
     {
         return;
     }
-    const uint32_t channelKey = channelIt->second;
 
     switch (result.status)
     {
     case WorkerResult::Status::Delayed:
     {
-        // Hold channel until wake — park on DelayQueue; do not dispatch waiters.
+        // Hold channel until wake — park on DelayQueue; do not release the channel.
         m_delayQueue.push(result.wakeTime, std::move(result.context));
         break;
     }
     case WorkerResult::Status::Completed:
     case WorkerResult::Status::Cancelled:
     {
-        m_channelByActionId.erase(channelIt);
-        m_channels[channelKey].busy = false;
-        tryDispatch(channelKey);
+        m_channels.unbind(actionId);
+        applyDispatch(m_channels.releaseAndTakeNext(
+            *channelKey,
+            std::chrono::steady_clock::now()));
         break;
     }
     }

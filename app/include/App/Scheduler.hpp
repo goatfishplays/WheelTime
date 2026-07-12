@@ -9,16 +9,13 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <optional>
-#include <queue>
 #include <thread>
-#include <unordered_map>
 #include <utility>
 #include <variant>
-#include <vector>
 
 #include "App/Action.hpp"
 #include "App/ActionExecutionContext.hpp"
+#include "App/ChannelManager.hpp"
 #include "App/DelayQueue.hpp"
 #include "App/ThreadSafeQueue.hpp"
 #include "App/WorkerPool.hpp"
@@ -41,12 +38,13 @@ enum class SchedulerRequestType
  *
  * The scheduler is the only component that makes scheduling decisions. Callers
  * submit work from any thread; a dedicated scheduler thread owns every
- * ActionExecutionContext, enforces channel FIFO, parks Delayed contexts on a
- * DelayQueue, and dispatches runnable work to WorkerPool.
+ * ActionExecutionContext, enforces channel FIFO via ChannelManager, parks
+ * Delayed contexts on DelayQueue, and dispatches runnable work to WorkerPool.
  *
- * Channel rules:
+ * Channel rules (Phase 6):
  * - At most one Action in-flight per channel key.
  * - Delayed Actions **hold** their channel until wake (strict sequentialness).
+ * - Waiting Actions preserve earliestStart (nested future schedules stay correct).
  * - Channel 0 assigns a private key per Action so those Actions never block
  *   one another.
  *
@@ -110,16 +108,6 @@ private:
     /// @brief Unified mailbox: external submits and worker outcomes.
     using SchedulerEvent = std::variant<SubmitRequest, WorkerResult>;
 
-    /**
-     * @brief Per-channel gate: one in-flight context, FIFO waiters.
-     */
-    struct ChannelState
-    {
-        /// @brief True while an Action occupies this channel (including Delayed).
-        bool busy = false;
-        std::queue<std::unique_ptr<ActionExecutionContext>> waiting;
-    };
-
     /// @brief Scheduler-thread loop: due delays, mailbox wait, event handling.
     void threadMain();
 
@@ -131,15 +119,8 @@ private:
      */
     void handleResult(WorkerResult result);
 
-    /**
-     * @brief Starts the next waiting context on @p channelKey if the channel is free.
-     */
-    void tryDispatch(uint32_t channelKey);
-
-    /**
-     * @brief Maps Action::channel() to an internal key (private id for channel 0).
-     */
-    [[nodiscard]] uint32_t resolveChannelKey(const Action &action);
+    /// @brief Applies a ChannelDispatch (run now vs park on DelayQueue).
+    void applyDispatch(ChannelDispatch dispatch);
 
     /// @brief Dispatches any DelayQueue contexts whose wake time has been reached.
     void processDueDelays();
@@ -154,10 +135,8 @@ private:
     std::jthread m_thread;
 
     // Touched only by the scheduler thread:
-    std::unordered_map<uint32_t, ChannelState> m_channels;
-    std::unordered_map<uint64_t, uint32_t> m_channelByActionId;
+    ChannelManager m_channels;
     DelayQueue m_delayQueue;
-    uint32_t m_nextPrivateChannel = 0x80000000u;
 };
 
 } // namespace Application
