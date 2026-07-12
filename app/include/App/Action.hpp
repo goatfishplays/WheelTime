@@ -84,11 +84,21 @@ namespace Application
          */
         const std::vector<std::unique_ptr<ActionItem>> &items() const;
 
+        /**
+         * @brief Whether cancelAction/Channel/All may stop this Action.
+         *
+         * Default true. Cleanup Actions (e.g. delayed KeyUp) should be false so
+         * they survive cancelAll and cannot leave hardware in a bad state.
+         */
+        [[nodiscard]] bool cancelable() const noexcept;
+        void setCancelable(bool cancelable) noexcept;
+
     private:
         std::vector<std::unique_ptr<ActionItem>> sequence;
         std::string name;
         std::string iconFilepath;
         std::string id;
         uint32_t m_channel;
+        bool m_cancelable = true;
     };
 }

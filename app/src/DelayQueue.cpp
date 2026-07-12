@@ -20,6 +20,11 @@ bool DelayQueue::EarliestFirst::operator()(const Entry &a, const Entry &b) const
     return a.sequence > b.sequence;
 }
 
+void DelayQueue::rebuildHeap()
+{
+    std::make_heap(m_heap.begin(), m_heap.end(), EarliestFirst{});
+}
+
 void DelayQueue::push(std::chrono::steady_clock::time_point wakeTime,
                       std::unique_ptr<ActionExecutionContext> context)
 {
@@ -48,6 +53,30 @@ std::vector<std::unique_ptr<ActionExecutionContext>> DelayQueue::popDue(
         due.push_back(std::move(entry.context));
     }
     return due;
+}
+
+std::vector<std::unique_ptr<ActionExecutionContext>> DelayQueue::removeIf(
+    const std::function<bool(const ActionExecutionContext &)> &predicate)
+{
+    std::vector<std::unique_ptr<ActionExecutionContext>> removed;
+    std::vector<Entry> kept;
+    kept.reserve(m_heap.size());
+
+    for (Entry &entry : m_heap)
+    {
+        if (entry.context && predicate(*entry.context))
+        {
+            removed.push_back(std::move(entry.context));
+        }
+        else
+        {
+            kept.push_back(std::move(entry));
+        }
+    }
+
+    m_heap = std::move(kept);
+    rebuildHeap();
+    return removed;
 }
 
 std::optional<std::chrono::steady_clock::time_point> DelayQueue::nextWakeTime() const

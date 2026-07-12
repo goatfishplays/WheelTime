@@ -21,18 +21,19 @@ namespace Application
 /**
  * @brief Outcome of a worker's run over an ActionExecutionContext.
  *
- * Produced when the worker can no longer proceed without a scheduling decision:
- * the Action finished, was cancelled between items, or an item returned
- * DelayUntil. Nested scheduleAction requests remain on @ref context for the
- * scheduler to drain — workers never process them.
+ * Produced when the worker needs the scheduler: the Action finished, was
+ * cancelled between items, an item returned DelayUntil, or an item recorded
+ * scheduleAction / setCancelFlush side effects (Continue). Nested requests
+ * remain on @ref context for the scheduler to drain — workers never process them.
  */
 struct WorkerResult
 {
     enum class Status
     {
         Completed, ///< All items ran (or none remained).
+        Continue,  ///< Finished one item with pending scheduler requests; resume after ingest.
         Delayed,   ///< Stopped after DelayUntil; @ref wakeTime is set; channel should be held.
-        Cancelled  ///< Stopped because the context was cancelled between items.
+        Cancelled  ///< Stopped because the context was cancelled between ActionItems.
     };
 
     std::unique_ptr<ActionExecutionContext> context;
@@ -46,7 +47,8 @@ struct WorkerResult
  *
  * Workers:
  * - Wait for ActionExecutionContexts on an inbound queue.
- * - Execute ActionItems until finish, cancel, or DelayUntil.
+ * - Execute ActionItems until finish, cancel, DelayUntil, or pending
+ *   scheduleAction / setCancelFlush side effects (then yield Continue).
  * - Never sleep for delays and never decide channels / ordering.
  * - Return a WorkerResult via @ref waitResult or an optional result handler.
  */

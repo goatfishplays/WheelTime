@@ -18,7 +18,7 @@
 using namespace Application;
 
 Action::Action(std::vector<std::unique_ptr<ActionItem>> _sequence, std::string _name, std::string _iconFilepath, std::string _id, uint32_t _channel)
-    : sequence(std::move(_sequence)), name(std::move(_name)), iconFilepath(std::move(_iconFilepath)), id(std::move(_id)), m_channel(_channel)
+    : sequence(std::move(_sequence)), name(std::move(_name)), iconFilepath(std::move(_iconFilepath)), id(std::move(_id)), m_channel(_channel), m_cancelable(true)
 {
 }
 
@@ -27,6 +27,7 @@ Action::Action(const Action &other)
     , iconFilepath(other.iconFilepath)
     , id(other.id)
     , m_channel(other.m_channel)
+    , m_cancelable(other.m_cancelable)
 {
     sequence.reserve(other.sequence.size());
     for (const auto &item : other.sequence)
@@ -49,6 +50,7 @@ Action &Action::operator=(const Action &other)
     iconFilepath = other.iconFilepath;
     id = other.id;
     m_channel = other.m_channel;
+    m_cancelable = other.m_cancelable;
     sequence.clear();
     sequence.reserve(other.sequence.size());
     for (const auto &item : other.sequence)
@@ -167,4 +169,14 @@ uint32_t Action::channel() const
 const std::vector<std::unique_ptr<ActionItem>> &Action::items() const
 {
     return sequence;
+}
+
+bool Action::cancelable() const noexcept
+{
+    return m_cancelable;
+}
+
+void Action::setCancelable(bool cancelable) noexcept
+{
+    m_cancelable = cancelable;
 }

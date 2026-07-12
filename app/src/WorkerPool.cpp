@@ -55,7 +55,7 @@ bool WorkerPool::waitResult(WorkerResult &out)
 void WorkerPool::stop()
 {
     m_inbound.stop();
-    m_workers.clear(); // joins all jthreads
+    m_workers.clear();
     m_outbound.stop();
 }
 
@@ -76,9 +76,7 @@ void WorkerPool::workerMain()
     {
         WorkerResult result;
         result.context = std::move(context);
-        result.status = WorkerResult::Status::Completed;
 
-        bool returnedEarly = false;
         while (!result.context->finished() && !result.context->isCancelled())
         {
             ActionItem *item = result.context->currentItem();
@@ -89,29 +87,44 @@ void WorkerPool::workerMain()
 
             const ExecuteResult executeResult = item->execute(*result.context);
 
-            // Nested scheduleAction requests stay on the context for the scheduler.
-
             if (executeResult.type() == ExecuteResult::Type::DelayUntil)
             {
-                // Item already ran; advance so resume does not re-execute it.
                 result.context->advance();
                 result.status = WorkerResult::Status::Delayed;
                 result.wakeTime = executeResult.wakeTime();
-                returnedEarly = true;
-                break;
+                emit(std::move(result));
+                goto next_job;
             }
 
             result.context->advance();
+
+            // Yield so the scheduler can ingest scheduleAction / setCancelFlush.
+            if (result.context->hasPendingSchedulerRequests())
+            {
+                if (result.context->isCancelled())
+                {
+                    result.status = WorkerResult::Status::Cancelled;
+                }
+                else if (result.context->finished())
+                {
+                    result.status = WorkerResult::Status::Completed;
+                }
+                else
+                {
+                    result.status = WorkerResult::Status::Continue;
+                }
+                emit(std::move(result));
+                goto next_job;
+            }
         }
 
-        if (!returnedEarly)
-        {
-            result.status = result.context->isCancelled()
-                                ? WorkerResult::Status::Cancelled
-                                : WorkerResult::Status::Completed;
-        }
-
+        result.status = result.context->isCancelled()
+                            ? WorkerResult::Status::Cancelled
+                            : WorkerResult::Status::Completed;
         emit(std::move(result));
+
+    next_job:
+        continue;
     }
 }
 

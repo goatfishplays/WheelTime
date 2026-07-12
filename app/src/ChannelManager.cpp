@@ -120,4 +120,32 @@ ChannelDispatch ChannelManager::releaseAndTakeNext(
     return takeNextLocked(channel, now);
 }
 
+std::vector<std::unique_ptr<ActionExecutionContext>> ChannelManager::removeWaitingIf(
+    const std::function<bool(const ActionExecutionContext &)> &predicate)
+{
+    std::vector<std::unique_ptr<ActionExecutionContext>> removed;
+
+    for (auto &[key, channel] : m_channels)
+    {
+        (void)key;
+        std::queue<WaitingEntry> kept;
+        while (!channel.waiting.empty())
+        {
+            WaitingEntry entry = std::move(channel.waiting.front());
+            channel.waiting.pop();
+            if (entry.context && predicate(*entry.context))
+            {
+                removed.push_back(std::move(entry.context));
+            }
+            else
+            {
+                kept.push(std::move(entry));
+            }
+        }
+        channel.waiting = std::move(kept);
+    }
+
+    return removed;
+}
+
 } // namespace Application

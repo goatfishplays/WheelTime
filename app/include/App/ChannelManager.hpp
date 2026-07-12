@@ -7,6 +7,7 @@
 
 #include <chrono>
 #include <cstdint>
+#include <functional>
 #include <memory>
 #include <optional>
 #include <queue>
@@ -85,6 +86,13 @@ public:
     [[nodiscard]] ChannelDispatch releaseAndTakeNext(
         uint32_t channelKey,
         std::chrono::steady_clock::time_point now);
+
+    /**
+     * @brief Removes waiting contexts for which @p predicate returns true.
+     * Does not change busy state of channels.
+     */
+    [[nodiscard]] std::vector<std::unique_ptr<ActionExecutionContext>> removeWaitingIf(
+        const std::function<bool(const ActionExecutionContext &)> &predicate);
 
     [[nodiscard]] bool isBusy(uint32_t channelKey) const;
 

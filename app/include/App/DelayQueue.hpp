@@ -8,6 +8,7 @@
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
+#include <functional>
 #include <memory>
 #include <optional>
 #include <vector>
@@ -51,6 +52,12 @@ public:
     [[nodiscard]] std::vector<std::unique_ptr<ActionExecutionContext>> popDue(
         std::chrono::steady_clock::time_point now);
 
+    /**
+     * @brief Removes every parked context for which @p predicate returns true.
+     */
+    [[nodiscard]] std::vector<std::unique_ptr<ActionExecutionContext>> removeIf(
+        const std::function<bool(const ActionExecutionContext &)> &predicate);
+
     /// @brief Earliest pending wake time, if the queue is non-empty.
     [[nodiscard]] std::optional<std::chrono::steady_clock::time_point> nextWakeTime() const;
 
@@ -72,6 +79,8 @@ private:
     {
         bool operator()(const Entry &a, const Entry &b) const noexcept;
     };
+
+    void rebuildHeap();
 
     std::vector<Entry> m_heap;
     std::uint64_t m_nextSequence = 0;
