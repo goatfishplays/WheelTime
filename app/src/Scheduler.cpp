@@ -60,11 +60,12 @@ void Scheduler::threadMain()
     {
         processDueDelays();
 
-        const auto wake = nextWakeTime();
+        const auto wake = m_delayQueue.nextWakeTime();
         QueueWaitStatus status = QueueWaitStatus::Stopped;
 
         if (wake.has_value())
         {
+            // Sleep until: new mailbox event, earliest delay wake, or stop.
             status = m_mailbox.popWaitUntil(event, *wake);
             if (status == QueueWaitStatus::Timeout)
             {
@@ -122,10 +123,7 @@ void Scheduler::handleSubmit(SubmitRequest request)
 
     if (request.earliestStart > now)
     {
-        DelayedEntry entry;
-        entry.wakeTime = request.earliestStart;
-        entry.context = std::move(context);
-        m_delayed.push(std::move(entry));
+        m_delayQueue.push(request.earliestStart, std::move(context));
         return;
     }
 
@@ -192,11 +190,8 @@ void Scheduler::handleResult(WorkerResult result)
     {
     case WorkerResult::Status::Delayed:
     {
-        // Hold channel until wake — do not dispatch waiters on this channel.
-        DelayedEntry entry;
-        entry.wakeTime = result.wakeTime;
-        entry.context = std::move(result.context);
-        m_delayed.push(std::move(entry));
+        // Hold channel until wake — park on DelayQueue; do not dispatch waiters.
+        m_delayQueue.push(result.wakeTime, std::move(result.context));
         break;
     }
     case WorkerResult::Status::Completed:
@@ -212,25 +207,14 @@ void Scheduler::handleResult(WorkerResult result)
 
 void Scheduler::processDueDelays()
 {
-    const auto now = std::chrono::steady_clock::now();
-    while (!m_delayed.empty() && m_delayed.top().wakeTime <= now)
+    for (std::unique_ptr<ActionExecutionContext> &context :
+         m_delayQueue.popDue(std::chrono::steady_clock::now()))
     {
-        DelayedEntry entry{std::move(const_cast<DelayedEntry &>(m_delayed.top()))};
-        m_delayed.pop();
-        if (entry.context)
+        if (context)
         {
-            m_workers.submit(std::move(entry.context));
+            m_workers.submit(std::move(context));
         }
     }
-}
-
-std::optional<std::chrono::steady_clock::time_point> Scheduler::nextWakeTime() const
-{
-    if (m_delayed.empty())
-    {
-        return std::nullopt;
-    }
-    return m_delayed.top().wakeTime;
 }
 
 } // namespace Application

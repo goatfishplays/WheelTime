@@ -19,6 +19,7 @@
 
 #include "App/Action.hpp"
 #include "App/ActionExecutionContext.hpp"
+#include "App/DelayQueue.hpp"
 #include "App/ThreadSafeQueue.hpp"
 #include "App/WorkerPool.hpp"
 
@@ -40,14 +41,19 @@ enum class SchedulerRequestType
  *
  * The scheduler is the only component that makes scheduling decisions. Callers
  * submit work from any thread; a dedicated scheduler thread owns every
- * ActionExecutionContext, enforces channel FIFO, parks Delayed contexts, and
- * dispatches runnable work to WorkerPool.
+ * ActionExecutionContext, enforces channel FIFO, parks Delayed contexts on a
+ * DelayQueue, and dispatches runnable work to WorkerPool.
  *
- * Channel rules (Phase 4):
+ * Channel rules:
  * - At most one Action in-flight per channel key.
  * - Delayed Actions **hold** their channel until wake (strict sequentialness).
  * - Channel 0 assigns a private key per Action so those Actions never block
  *   one another.
+ *
+ * Delay rules (Phase 5):
+ * - Workers never sleep; DelayUntil returns the context to the scheduler.
+ * - The scheduler thread waits on its mailbox until a new event, the earliest
+ *   DelayQueue wake time, or stop.
  *
  * Cancellation and pause are not implemented yet (later phases).
  */
@@ -114,25 +120,7 @@ private:
         std::queue<std::unique_ptr<ActionExecutionContext>> waiting;
     };
 
-    /**
-     * @brief Context parked until @ref wakeTime (channel remains busy).
-     */
-    struct DelayedEntry
-    {
-        std::chrono::steady_clock::time_point wakeTime;
-        std::unique_ptr<ActionExecutionContext> context;
-    };
-
-    /// @brief Min-heap ordering for @ref m_delayed (earliest wake first).
-    struct DelayedCompare
-    {
-        bool operator()(const DelayedEntry &a, const DelayedEntry &b) const
-        {
-            return a.wakeTime > b.wakeTime;
-        }
-    };
-
-    /// @brief Scheduler-thread loop: delays, mailbox wait, event handling.
+    /// @brief Scheduler-thread loop: due delays, mailbox wait, event handling.
     void threadMain();
 
     /// @brief Admits a submitted Action onto its channel (or parks until earliestStart).
@@ -153,11 +141,8 @@ private:
      */
     [[nodiscard]] uint32_t resolveChannelKey(const Action &action);
 
-    /// @brief Dispatches any delayed contexts whose wake time has been reached.
+    /// @brief Dispatches any DelayQueue contexts whose wake time has been reached.
     void processDueDelays();
-
-    /// @brief Earliest pending delay wake, if any.
-    [[nodiscard]] std::optional<std::chrono::steady_clock::time_point> nextWakeTime() const;
 
     /**
      * @brief Turns context.scheduleAction(...) requests into SubmitRequests.
@@ -171,7 +156,7 @@ private:
     // Touched only by the scheduler thread:
     std::unordered_map<uint32_t, ChannelState> m_channels;
     std::unordered_map<uint64_t, uint32_t> m_channelByActionId;
-    std::priority_queue<DelayedEntry, std::vector<DelayedEntry>, DelayedCompare> m_delayed;
+    DelayQueue m_delayQueue;
     uint32_t m_nextPrivateChannel = 0x80000000u;
 };
 

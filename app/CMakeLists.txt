@@ -24,6 +24,8 @@ add_library(App
     include/App/WorkerPool.hpp
     src/Scheduler.cpp
     include/App/Scheduler.hpp
+    src/DelayQueue.cpp
+    include/App/DelayQueue.hpp
     src/MenuConfigLoader.cpp
     include/App/MenuConfigLoader.hpp
     src/SettingsWindow.cpp
@@ -78,6 +80,19 @@ target_link_libraries(phase4_scheduler_smoke
         App
 )
 target_compile_features(phase4_scheduler_smoke
+    PRIVATE
+        cxx_std_20
+)
+
+# Disposable Phase 5 smoke test.
+add_executable(phase5_delay_queue_smoke
+    tests/phase5_delay_queue_smoke.cpp
+)
+target_link_libraries(phase5_delay_queue_smoke
+    PRIVATE
+        App
+)
+target_compile_features(phase5_delay_queue_smoke
     PRIVATE
         cxx_std_20
 )
