@@ -13,6 +13,7 @@
 #include <memory>
 #include <vector>
 #include <string>
+#include <cstdint>
 #include <Platform/Inputs.hpp>
 #include "App/ActionItems.hpp"
 

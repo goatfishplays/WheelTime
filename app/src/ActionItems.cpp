@@ -32,7 +32,7 @@ ActionItemKind ActionItem::kind() const
     return ActionItemKind::Base;
 }
 
-void ActionItem::execute()
+ExecuteResult ActionItem::execute(ActionExecutionContext &context)
 {
     std::cerr << "Action Item base class exectued";
 }
@@ -49,7 +49,7 @@ ActionItemKind AI_Script::kind() const
     return ActionItemKind::Script;
 }
 
-void AI_Script::execute()
+ExecuteResult AI_Script::execute(ActionExecutionContext &context)
 {
     App::App::getInstance().executor.executeScript(filepath);
 }
@@ -69,7 +69,7 @@ ActionItemKind AI_LaunchApp::kind() const
     return ActionItemKind::LaunchApp;
 }
 
-void AI_LaunchApp::execute()
+ExecuteResult AI_LaunchApp::execute(ActionExecutionContext &context)
 {
     if (presetId == "custom")
     {
@@ -98,8 +98,22 @@ ActionItemKind AI_Keystroke::kind() const
     return ActionItemKind::Keystroke;
 }
 
-void AI_Keystroke::execute()
+ExecuteResult AI_Keystroke::execute(ActionExecutionContext &context)
 {
+
+    // m_platform.keyDown(m_key); // TODO: final should be of this form
+
+    // auto release = std::make_unique<Action>(0);
+
+    // release->addItem(
+    //     std::make_unique<KeyReleaseItem>(m_key));
+
+    // context.scheduleAction(
+    //     std::move(release),
+    //     std::chrono::steady_clock::now() + m_holdTime);
+
+    // return ExecuteResult::Continue();
+
     Platform::InputBind bind{keycode, modifiers};
     App::App::getInstance().executor.executeKey(bind);
 
@@ -121,9 +135,10 @@ ActionItemKind AI_Delay::kind() const
     return ActionItemKind::Delay;
 }
 
-void AI_Delay::execute()
+ExecuteResult AI_Delay::execute(ActionExecutionContext &context)
 {
-    std::this_thread::sleep_for(std::chrono::milliseconds(duration));
+    return ExecuteResult::DelayUntil(
+        std::chrono::steady_clock::now() + m_duration);
 }
 
 AI_Menu::AI_Menu(std::string _menuId) : menuId(std::move(_menuId)) {}
@@ -138,7 +153,7 @@ ActionItemKind AI_Menu::kind() const
     return ActionItemKind::Menu;
 }
 
-void AI_Menu::execute()
+ExecuteResult AI_Menu::execute(ActionExecutionContext &context)
 {
     App &app = App::App::getInstance();
     Menu *targetMenu = app.findMenuById(menuId);
@@ -150,7 +165,7 @@ void AI_Menu::execute()
     std::cerr << "Failed to find menu with id: '" << menuId << "'\n";
 }
 
-void AI_Close::execute() { App::App::getInstance().hideGui(); }
+ExecuteResult AI_Close::execute(ActionExecutionContext &context) { App::App::getInstance().hideGui(); }
 
 std::unique_ptr<ActionItem> AI_Close::clone() const
 {
@@ -172,7 +187,7 @@ ActionItemKind AI_Socket::kind() const
     return ActionItemKind::Socket;
 }
 
-void AI_Socket::execute() {}
+ExecuteResult AI_Socket::execute(ActionExecutionContext &context) {}
 
 std::unique_ptr<ActionItem> AI_nthRecent::clone() const
 {
@@ -184,7 +199,7 @@ ActionItemKind AI_nthRecent::kind() const
     return ActionItemKind::NthRecent;
 }
 
-void AI_nthRecent::execute() {}
+ExecuteResult AI_nthRecent::execute(ActionExecutionContext &context) {}
 
 std::unique_ptr<ActionItem> AI_nthFrequent::clone() const
 {
@@ -196,4 +211,4 @@ ActionItemKind AI_nthFrequent::kind() const
     return ActionItemKind::NthFrequent;
 }
 
-void AI_nthFrequent::execute() {}
+ExecuteResult AI_nthFrequent::execute(ActionExecutionContext &context) {}

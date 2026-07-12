@@ -4,17 +4,18 @@
 #include "App/Action.hpp"
 namespace Application
 {
-    struct ScheduledItem
+    // TODO: none of this does naything yet
+    enum class SchedulerRequestType
     {
+        ScheduleAction,
+        CancelAction,
+        CancelChannel
+    };
 
-        std::chrono::steady_clock::time_point executeAt;
-        Action
+    struct ScheduledAction
+    {
+        std::unique_ptr<Action> action;
 
-            bool
-            operator<(const ScheduledTask &other) const
-        {
-            // Reverse comparison because std::priority_queue is a max heap.
-            return executeAt > other.executeAt;
-        }
+        std::chrono::steady_clock::time_point wakeTime;
     };
 }

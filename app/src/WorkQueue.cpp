@@ -26,6 +26,25 @@ WorkQueue::WorkQueue()
             }
 
             std::cout << "Worker " << i << " exiting\n"; });
+
+        // while (!context.finished()) // TODO: final form something like this
+        // {
+        //     auto result =
+        //         context.currentItem()->execute(context);
+
+        //     if (result.type() == DelayUntil)
+        //     {
+        //         scheduler.returnContext(
+        //             std::move(context),
+        //             result);
+
+        //         return;
+        //     }
+
+        //     context.advance();
+        // }
+
+        // scheduler.actionFinished(std::move(context));
     }
 
     // Add some work

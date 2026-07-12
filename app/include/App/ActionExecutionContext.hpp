@@ -11,6 +11,8 @@
 #pragma once
 
 #include <memory>
+#include "App/Scheduler.hpp"
+
 namespace Application
 {
 
@@ -25,6 +27,11 @@ namespace Application
     {
     public:
         explicit ActionExecutionContext(std::unique_ptr<Action> action);
+
+        uint64_t actionId() const;
+        uint32_t channel() const;
+
+        bool isCancelled() const;
 
         /**
          * @brief Returns reference to the action
@@ -54,9 +61,20 @@ namespace Application
          */
         bool finished() const;
 
+        void scheduleAction(
+            std::unique_ptr<Action> action,
+            std::chrono::steady_clock::time_point wakeTime);
+
+        const std::vector<ScheduledAction> &
+        scheduledActions() const;
+
+        void clearScheduledActions();
+
     private:
         std::unique_ptr<Action> m_action;
 
         size_t m_currentIndex = 0;
+
+        std::vector<ScheduledAction> m_scheduledActions;
     };
 }

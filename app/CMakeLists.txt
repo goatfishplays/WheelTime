@@ -15,8 +15,8 @@ add_library(App
     include/App/ActionItems.hpp
     src/ActionExecutionContext.cpp
     include/App/ActionExecutionContext.hpp
-    src/ExecuteResult.hpp
-    include/App/ExecuteResult.cpp
+    src/ExecuteResult.cpp
+    include/App/ExecuteResult.hpp
     src/MenuConfigLoader.cpp
     include/App/MenuConfigLoader.hpp
     src/SettingsWindow.cpp

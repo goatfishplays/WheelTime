@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <Platform/Inputs.hpp>
+#include "App/ExecuteResult.hpp"
 
 namespace Application
 {
@@ -46,7 +47,7 @@ namespace Application
          *
          * TODO: Think this needs to be passed the application, discuss this later
          */
-        virtual void execute();
+        virtual ExecuteResult execute(ActionExecutionContext &context);
     };
 
     /// @brief Advanced fallback that launches an arbitrary app or script path.
@@ -57,7 +58,7 @@ namespace Application
         std::string filepath;
         std::unique_ptr<ActionItem> clone() const override;
         ActionItemKind kind() const override;
-        void execute() override;
+        ExecuteResult execute(ActionExecutionContext &context) override;
     };
 
     /**
@@ -78,7 +79,7 @@ namespace Application
         std::string customTarget;
         std::unique_ptr<ActionItem> clone() const override;
         ActionItemKind kind() const override;
-        void execute() override;
+        ExecuteResult execute(ActionExecutionContext &context) override;
     };
 
     /**
@@ -100,7 +101,7 @@ namespace Application
         bool proceed;
         std::unique_ptr<ActionItem> clone() const override;
         ActionItemKind kind() const override;
-        void execute() override;
+        ExecuteResult execute(ActionExecutionContext &context) override;
     };
 
     /// @brief Waits before the next action item in the sequence executes.
@@ -111,7 +112,7 @@ namespace Application
         int duration;
         std::unique_ptr<ActionItem> clone() const override;
         ActionItemKind kind() const override;
-        void execute() override;
+        ExecuteResult execute(ActionExecutionContext &context) override;
     };
 
     /// @brief Switches the launcher to another menu by stable menu ID.
@@ -122,7 +123,7 @@ namespace Application
         std::string menuId;
         std::unique_ptr<ActionItem> clone() const override;
         ActionItemKind kind() const override;
-        void execute() override;
+        ExecuteResult execute(ActionExecutionContext &context) override;
     };
 
     /// @brief Closes the currently visible launcher UI.
@@ -131,7 +132,7 @@ namespace Application
     public:
         std::unique_ptr<ActionItem> clone() const override;
         ActionItemKind kind() const override;
-        void execute() override;
+        ExecuteResult execute(ActionExecutionContext &context) override;
     };
 
     /**
@@ -145,7 +146,7 @@ namespace Application
         std::string outputDst;
         std::unique_ptr<ActionItem> clone() const override;
         ActionItemKind kind() const override;
-        void execute() override;
+        ExecuteResult execute(ActionExecutionContext &context) override;
     };
 
     /**
@@ -158,7 +159,7 @@ namespace Application
         int n;
         std::unique_ptr<ActionItem> clone() const override;
         ActionItemKind kind() const override;
-        void execute() override;
+        ExecuteResult execute(ActionExecutionContext &context) override;
     };
 
     /**
@@ -171,6 +172,6 @@ namespace Application
         int n;
         std::unique_ptr<ActionItem> clone() const override;
         ActionItemKind kind() const override;
-        void execute() override;
+        ExecuteResult execute(ActionExecutionContext &context) override;
     };
 }

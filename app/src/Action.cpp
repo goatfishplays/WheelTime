@@ -17,8 +17,8 @@
 
 using namespace Application;
 
-Action::Action(std::vector<std::unique_ptr<ActionItem>> _sequence, std::string _name, std::string _iconFilepath, std::string _id)
-    : sequence(std::move(_sequence)), name(std::move(_name)), iconFilepath(std::move(_iconFilepath)), id(std::move(_id))
+Action::Action(std::vector<std::unique_ptr<ActionItem>> _sequence, std::string _name, std::string _iconFilepath, std::string _id, uint32_t _channel)
+    : sequence(std::move(_sequence)), name(std::move(_name)), iconFilepath(std::move(_iconFilepath)), id(std::move(_id)), m_channel(_channel)
 {
 }
 
@@ -163,4 +163,14 @@ void Action::moveItem(int fromIndex, int toIndex)
     std::unique_ptr<ActionItem> item = std::move(sequence[fromIndex]);
     sequence.erase(sequence.begin() + fromIndex);
     sequence.insert(sequence.begin() + toIndex, std::move(item));
+}
+
+uint32_t Action::channel() const
+{
+    return m_channel;
+}
+
+const std::vector<std::unique_ptr<ActionItem>> &Action::items() const
+{
+    return sequence;
 }
