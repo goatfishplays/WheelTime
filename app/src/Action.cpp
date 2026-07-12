@@ -22,7 +22,11 @@ Action::Action(std::vector<std::unique_ptr<ActionItem>> _sequence, std::string _
 {
 }
 
-Action::Action(const Action &other) : name(other.name), iconFilepath(other.iconFilepath), id(other.id)
+Action::Action(const Action &other)
+    : name(other.name)
+    , iconFilepath(other.iconFilepath)
+    , id(other.id)
+    , m_channel(other.m_channel)
 {
     sequence.reserve(other.sequence.size());
     for (const auto &item : other.sequence)
@@ -44,6 +48,7 @@ Action &Action::operator=(const Action &other)
     name = other.name;
     iconFilepath = other.iconFilepath;
     id = other.id;
+    m_channel = other.m_channel;
     sequence.clear();
     sequence.reserve(other.sequence.size());
     for (const auto &item : other.sequence)
@@ -90,17 +95,6 @@ void Action::removeItem(int ind)
 int Action::len() const
 {
     return this->sequence.size();
-}
-
-void Action::execute()
-{
-    for (const auto &item : sequence)
-    {
-        if (item)
-        {
-            item->execute();
-        }
-    }
 }
 
 std::string Action::getId() const

@@ -56,12 +56,6 @@ namespace Application
          */
         int len() const;
 
-        /**
-         * @brief Runs the action items in sequence
-         *
-         */
-        void execute();
-
         /// @brief Stable config ID used by menus and serialization.
         std::string getId() const;
         std::string getName() const;

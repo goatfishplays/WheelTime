@@ -19,6 +19,7 @@
 
 #include "App/MenuConfigLoader.hpp"
 #include "App/SettingsWindow.hpp"
+#include "App/SynchronousActionRunner.hpp"
 
 using namespace Application;
 
@@ -266,7 +267,7 @@ void App::executeAction(int actionInd)
         return;
     }
 
-    action->execute();
+    SynchronousActionRunner{}.run(*action);
     if (activeMenu->exitOnAction && gui.isVisible())
     {
         hideGui();

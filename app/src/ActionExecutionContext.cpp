@@ -104,6 +104,13 @@ const std::vector<ScheduledAction> &ActionExecutionContext::scheduledActions() c
     return m_scheduledActions;
 }
 
+std::vector<ScheduledAction> ActionExecutionContext::takeScheduledActions() noexcept
+{
+    std::vector<ScheduledAction> pending;
+    pending.swap(m_scheduledActions);
+    return pending;
+}
+
 void ActionExecutionContext::clearScheduledActions() noexcept
 {
     m_scheduledActions.clear();

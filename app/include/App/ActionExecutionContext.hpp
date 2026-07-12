@@ -75,6 +75,9 @@ public:
 
     [[nodiscard]] const std::vector<ScheduledAction> &scheduledActions() const noexcept;
 
+    /// @brief Moves out all pending schedule requests and clears the list.
+    [[nodiscard]] std::vector<ScheduledAction> takeScheduledActions() noexcept;
+
     void clearScheduledActions() noexcept;
 
 private:

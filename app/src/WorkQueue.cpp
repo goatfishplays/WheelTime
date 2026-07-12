@@ -1,4 +1,5 @@
 #include "App/WorkQueue.hpp"
+#include "App/SynchronousActionRunner.hpp"
 
 using namespace Application;
 
@@ -22,7 +23,7 @@ WorkQueue::WorkQueue()
             while (queue.pop(action))
             {
                 std::cout << "Worker " << i << " executing job\n";
-                action.execute();
+                SynchronousActionRunner{}.run(std::make_unique<Action>(std::move(action)));
             }
 
             std::cout << "Worker " << i << " exiting\n"; });

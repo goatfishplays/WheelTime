@@ -4,8 +4,18 @@
             "id": "action-menu-example-calculator",
             "items": [
                 {
-                    "path": "calculator.exe",
-                    "type": "script"
+                    "customTarget": "",
+                    "presetId": "calculator",
+                    "type": "launch_app"
+                },
+                {
+                    "duration": 5000,
+                    "type": "delay"
+                },
+                {
+                    "customTarget": "explorer.exe",
+                    "presetId": "explorer",
+                    "type": "launch_app"
                 }
             ],
             "name": "calculator"
