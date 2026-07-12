@@ -1,21 +1,19 @@
+/**
+ * @file Scheduler.hpp
+ * @brief Scheduler stubs (Phase 4+). Request recording types live on ActionExecutionContext.
+ */
+
 #pragma once
-#include <chrono>
-#include <memory>
-#include "App/Action.hpp"
+
 namespace Application
 {
-    // TODO: none of this does naything yet
-    enum class SchedulerRequestType
-    {
-        ScheduleAction,
-        CancelAction,
-        CancelChannel
-    };
 
-    struct ScheduledAction
-    {
-        std::unique_ptr<Action> action;
+// TODO: Scheduler itself is not implemented yet (Phase 4).
+enum class SchedulerRequestType
+{
+    ScheduleAction,
+    CancelAction,
+    CancelChannel
+};
 
-        std::chrono::steady_clock::time_point wakeTime;
-    };
-}
+} // namespace Application

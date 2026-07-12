@@ -1,16 +1,20 @@
 /**
  * @file ExecuteResult.hpp
- * @author your name (you@domain.com)
- * @brief Contains the result from after an action item executes, requeue or continue forth
- * @version 0.1
- * @date 2026-07-10
- *
- * @copyright Copyright (c) 2026
- *
+ * @brief Fate of the current Action after an ActionItem executes.
  */
+
 #pragma once
+
 #include <chrono>
 
+namespace Application
+{
+
+/**
+ * @brief Small result telling the scheduler whether to continue or delay.
+ *
+ * Describes only the current Action. Future variants may be added as needed.
+ */
 class ExecuteResult
 {
 public:
@@ -20,21 +24,23 @@ public:
         DelayUntil
     };
 
-    static ExecuteResult Continue();
+    [[nodiscard]] static ExecuteResult Continue();
 
-    static ExecuteResult DelayUntil(
+    [[nodiscard]] static ExecuteResult DelayUntil(
         std::chrono::steady_clock::time_point wakeTime);
 
-    Type type() const;
+    [[nodiscard]] Type type() const noexcept;
 
-    std::chrono::steady_clock::time_point wakeTime() const;
+    /**
+     * @brief Wake time for DelayUntil. Meaningless when type() is Continue.
+     */
+    [[nodiscard]] std::chrono::steady_clock::time_point wakeTime() const noexcept;
 
 private:
-    ExecuteResult(
-        Type type,
-        std::chrono::steady_clock::time_point wakeTime);
+    ExecuteResult(Type type, std::chrono::steady_clock::time_point wakeTime) noexcept;
 
     Type m_type;
-
     std::chrono::steady_clock::time_point m_wakeTime;
 };
+
+} // namespace Application

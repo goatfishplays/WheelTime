@@ -1,177 +1,174 @@
 /**
  * @file ActionItems.hpp
- * @brief Declares the individual building blocks that compose an `Action`.
+ * @brief Building blocks that compose an Action.
  */
 
 #pragma once
+
 #include <memory>
 #include <string>
-#include <vector>
-#include <Platform/Inputs.hpp>
+
 #include "App/ExecuteResult.hpp"
 
 namespace Application
 {
-    /**
-     * @brief Runtime/editor-visible discriminator for supported action item types.
-     *
-     * The settings UI uses this to decide which editor to show and how to
-     * summarize items in the action sequence list.
-     */
-    enum class ActionItemKind
-    {
-        Base,
-        LaunchApp,
-        Script,
-        Delay,
-        Menu,
-        Close,
-        Keystroke,
-        Socket,
-        NthRecent,
-        NthFrequent
-    };
 
-    /**
-     * @brief Base class for one executable step inside an `Action`.
-     */
-    class ActionItem
-    {
-    public:
-        ActionItem();
-        virtual ~ActionItem();
-        virtual std::unique_ptr<ActionItem> clone() const;
-        virtual ActionItemKind kind() const;
-        /**
-         * @brief To be overwritten performs the said action
-         *
-         * TODO: Think this needs to be passed the application, discuss this later
-         */
-        virtual ExecuteResult execute(ActionExecutionContext &context);
-    };
+class ActionExecutionContext;
 
-    /// @brief Advanced fallback that launches an arbitrary app or script path.
-    class AI_Script : public ActionItem
-    {
-    public:
-        AI_Script(std::string _filepath = "");
-        std::string filepath;
-        std::unique_ptr<ActionItem> clone() const override;
-        ActionItemKind kind() const override;
-        ExecuteResult execute(ActionExecutionContext &context) override;
-    };
+/**
+ * @brief Runtime/editor discriminator for supported action item types.
+ */
+enum class ActionItemKind
+{
+    Base,
+    LaunchApp,
+    Script,
+    Delay,
+    Menu,
+    Close,
+    Keystroke,
+    Socket,
+    NthRecent,
+    NthFrequent
+};
 
-    /**
-     * @brief Launches either a curated preset target or a custom app target.
-     *
-     * This is the non-scripter-friendly launch item surfaced first in the
-     * settings toolbox. Presets keep a friendly display name in config while
-     * still resolving to a concrete launch target at runtime.
-     */
-    class AI_LaunchApp : public ActionItem
-    {
-    public:
-        AI_LaunchApp(std::string _presetId = "custom", std::string _customTarget = "");
-        /// @brief Curated preset key saved in config, such as `browser` or `calculator`.
-        /// `custom` means this item should launch `customTarget` instead.
-        std::string presetId;
-        /// @brief User-browsed fallback target used only when `presetId == "custom"`.
-        std::string customTarget;
-        std::unique_ptr<ActionItem> clone() const override;
-        ActionItemKind kind() const override;
-        ExecuteResult execute(ActionExecutionContext &context) override;
-    };
+/**
+ * @brief One executable step inside an Action.
+ *
+ * ActionItems never talk to the scheduler directly. They perform work and/or
+ * record requests on ActionExecutionContext, then return an ExecuteResult.
+ */
+class ActionItem
+{
+public:
+    ActionItem() = default;
+    virtual ~ActionItem() = default;
 
-    /**
-     * @brief Simulates a hotkey with optional modifiers and hold behavior.
-     */
-    class AI_Keystroke : public ActionItem
-    {
-    public:
-        AI_Keystroke(int _keycode = 0, int _modifiers = 0, float _holdDuration = 0.0f, bool _proceed = false);
-        /// @brief Virtual-key code for the main key in the combo.
-        int keycode;
-        /// @brief Windows MOD_* bitmask for Ctrl/Alt/Shift/Win.
-        int modifiers;
-        /// @brief Optional hold time, in seconds, before considering the item done.
-        float holdDuration;
-        /// @brief Continue to next `ActionItem` immediately if `true` else, waits till keystroke finished
-        // * This isn't needed from a technical standpoint as it can be accomplished with the delay AI but from a user standpoint it should be helpful
-        // * Note that non-global hotkeys will probs be eaten by this window if not preceeded by AI_Close
-        bool proceed;
-        std::unique_ptr<ActionItem> clone() const override;
-        ActionItemKind kind() const override;
-        ExecuteResult execute(ActionExecutionContext &context) override;
-    };
+    virtual std::unique_ptr<ActionItem> clone() const;
+    virtual ActionItemKind kind() const;
 
-    /// @brief Waits before the next action item in the sequence executes.
-    class AI_Delay : public ActionItem
-    {
-    public:
-        AI_Delay(int _duration = 0);
-        int duration;
-        std::unique_ptr<ActionItem> clone() const override;
-        ActionItemKind kind() const override;
-        ExecuteResult execute(ActionExecutionContext &context) override;
-    };
+    [[nodiscard]] virtual ExecuteResult execute(ActionExecutionContext &context);
+};
 
-    /// @brief Switches the launcher to another menu by stable menu ID.
-    class AI_Menu : public ActionItem
-    {
-    public:
-        AI_Menu(std::string _menuId = "");
-        std::string menuId;
-        std::unique_ptr<ActionItem> clone() const override;
-        ActionItemKind kind() const override;
-        ExecuteResult execute(ActionExecutionContext &context) override;
-    };
+/// @brief Launches an arbitrary app or script path.
+class AI_Script : public ActionItem
+{
+public:
+    explicit AI_Script(std::string filepath = {});
 
-    /// @brief Closes the currently visible launcher UI.
-    class AI_Close : public ActionItem
-    {
-    public:
-        std::unique_ptr<ActionItem> clone() const override;
-        ActionItemKind kind() const override;
-        ExecuteResult execute(ActionExecutionContext &context) override;
-    };
+    std::string filepath;
 
-    /**
-     * @brief Sends a socket message
-     *
-     */
-    class AI_Socket : public ActionItem
-    {
-    public:
-        std::string socketMsg;
-        std::string outputDst;
-        std::unique_ptr<ActionItem> clone() const override;
-        ActionItemKind kind() const override;
-        ExecuteResult execute(ActionExecutionContext &context) override;
-    };
+    std::unique_ptr<ActionItem> clone() const override;
+    ActionItemKind kind() const override;
+    [[nodiscard]] ExecuteResult execute(ActionExecutionContext &context) override;
+};
 
-    /**
-     * @brief Executes the `n`th most recent unique action
-     *
-     */
-    class AI_nthRecent : public ActionItem
-    {
-    public:
-        int n;
-        std::unique_ptr<ActionItem> clone() const override;
-        ActionItemKind kind() const override;
-        ExecuteResult execute(ActionExecutionContext &context) override;
-    };
+/**
+ * @brief Launches a curated preset or a custom app target.
+ *
+ * `presetId == "custom"` means launch `customTarget` instead.
+ */
+class AI_LaunchApp : public ActionItem
+{
+public:
+    explicit AI_LaunchApp(std::string presetId = "custom", std::string customTarget = {});
 
-    /**
-     * @brief Executes the `n`th most frequently used action
-     *
-     */
-    class AI_nthFrequent : public ActionItem
-    {
-    public:
-        int n;
-        std::unique_ptr<ActionItem> clone() const override;
-        ActionItemKind kind() const override;
-        ExecuteResult execute(ActionExecutionContext &context) override;
-    };
-}
+    std::string presetId;
+    std::string customTarget;
+
+    std::unique_ptr<ActionItem> clone() const override;
+    ActionItemKind kind() const override;
+    [[nodiscard]] ExecuteResult execute(ActionExecutionContext &context) override;
+};
+
+/**
+ * @brief Simulates a hotkey with optional modifiers and hold behavior.
+ *
+ * When `proceed` is false and `holdDuration` is positive, the current Action
+ * delays before the next item (workers never sleep).
+ */
+class AI_Keystroke : public ActionItem
+{
+public:
+    AI_Keystroke(int keycode = 0, int modifiers = 0, float holdDuration = 0.0f, bool proceed = false);
+
+    int keycode = 0;
+    int modifiers = 0;
+    float holdDuration = 0.0f; ///< Hold time in seconds.
+    bool proceed = false;
+
+    std::unique_ptr<ActionItem> clone() const override;
+    ActionItemKind kind() const override;
+    [[nodiscard]] ExecuteResult execute(ActionExecutionContext &context) override;
+};
+
+/// @brief Delays the current Action before the next item runs.
+class AI_Delay : public ActionItem
+{
+public:
+    explicit AI_Delay(int durationMs = 0);
+
+    int duration = 0; ///< Delay in milliseconds.
+
+    std::unique_ptr<ActionItem> clone() const override;
+    ActionItemKind kind() const override;
+    [[nodiscard]] ExecuteResult execute(ActionExecutionContext &context) override;
+};
+
+/// @brief Switches the launcher to another menu by stable menu ID.
+class AI_Menu : public ActionItem
+{
+public:
+    explicit AI_Menu(std::string menuId = {});
+
+    std::string menuId;
+
+    std::unique_ptr<ActionItem> clone() const override;
+    ActionItemKind kind() const override;
+    [[nodiscard]] ExecuteResult execute(ActionExecutionContext &context) override;
+};
+
+/// @brief Closes the currently visible launcher UI.
+class AI_Close : public ActionItem
+{
+public:
+    std::unique_ptr<ActionItem> clone() const override;
+    ActionItemKind kind() const override;
+    [[nodiscard]] ExecuteResult execute(ActionExecutionContext &context) override;
+};
+
+/// @brief Sends a socket message (platform support pending).
+class AI_Socket : public ActionItem
+{
+public:
+    std::string socketMsg;
+    std::string outputDst;
+
+    std::unique_ptr<ActionItem> clone() const override;
+    ActionItemKind kind() const override;
+    [[nodiscard]] ExecuteResult execute(ActionExecutionContext &context) override;
+};
+
+/// @brief Executes the nth most recent unique action (history support pending).
+class AI_nthRecent : public ActionItem
+{
+public:
+    int n = 0;
+
+    std::unique_ptr<ActionItem> clone() const override;
+    ActionItemKind kind() const override;
+    [[nodiscard]] ExecuteResult execute(ActionExecutionContext &context) override;
+};
+
+/// @brief Executes the nth most frequently used action (history support pending).
+class AI_nthFrequent : public ActionItem
+{
+public:
+    int n = 0;
+
+    std::unique_ptr<ActionItem> clone() const override;
+    ActionItemKind kind() const override;
+    [[nodiscard]] ExecuteResult execute(ActionExecutionContext &context) override;
+};
+
+} // namespace Application

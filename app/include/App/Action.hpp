@@ -1,16 +1,11 @@
 /**
  * @file Action.hpp
- * @author your name (you@domain.com)
- * @brief
- * @version 0.1
- * @date 2026-07-02
- *
- * @copyright Copyright (c) 2026
- *
+ * @brief Describes a unit of scheduled work: a channel and an ordered item sequence.
  */
 
 #pragma once
 #include <memory>
+#include <utility>
 #include <vector>
 #include <string>
 #include <cstdint>

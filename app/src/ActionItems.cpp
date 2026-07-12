@@ -1,26 +1,19 @@
 /**
  * @file ActionItems.cpp
- * @author your name (you@domain.com)
- * @brief
- * @version 0.1
- * @date 2026-07-02
- *
- * @copyright Copyright (c) 2026
- *
+ * @brief ActionItem execute implementations.
  */
 
 #include "App/ActionItems.hpp"
+
 #include "App/App.hpp"
-#include <string>
-#include <iostream>
+
+#include <Platform/Inputs.hpp>
+
 #include <chrono>
-#include <thread>
+#include <iostream>
 
-using namespace Application;
-
-ActionItem::ActionItem() {}
-
-ActionItem::~ActionItem() {}
+namespace Application
+{
 
 std::unique_ptr<ActionItem> ActionItem::clone() const
 {
@@ -32,12 +25,16 @@ ActionItemKind ActionItem::kind() const
     return ActionItemKind::Base;
 }
 
-ExecuteResult ActionItem::execute(ActionExecutionContext &context)
+ExecuteResult ActionItem::execute(ActionExecutionContext & /*context*/)
 {
-    std::cerr << "Action Item base class exectued";
+    std::cerr << "ActionItem base execute() called; nothing to do.\n";
+    return ExecuteResult::Continue();
 }
 
-AI_Script::AI_Script(std::string _filepath) : filepath(_filepath) {}
+AI_Script::AI_Script(std::string filepath)
+    : filepath{std::move(filepath)}
+{
+}
 
 std::unique_ptr<ActionItem> AI_Script::clone() const
 {
@@ -49,13 +46,15 @@ ActionItemKind AI_Script::kind() const
     return ActionItemKind::Script;
 }
 
-ExecuteResult AI_Script::execute(ActionExecutionContext &context)
+ExecuteResult AI_Script::execute(ActionExecutionContext & /*context*/)
 {
-    App::App::getInstance().executor.executeScript(filepath);
+    App::getInstance().executor.executeScript(filepath);
+    return ExecuteResult::Continue();
 }
 
-AI_LaunchApp::AI_LaunchApp(std::string _presetId, std::string _customTarget)
-    : presetId(std::move(_presetId)), customTarget(std::move(_customTarget))
+AI_LaunchApp::AI_LaunchApp(std::string presetId, std::string customTarget)
+    : presetId{std::move(presetId)}
+    , customTarget{std::move(customTarget)}
 {
 }
 
@@ -69,22 +68,26 @@ ActionItemKind AI_LaunchApp::kind() const
     return ActionItemKind::LaunchApp;
 }
 
-ExecuteResult AI_LaunchApp::execute(ActionExecutionContext &context)
+ExecuteResult AI_LaunchApp::execute(ActionExecutionContext & /*context*/)
 {
     if (presetId == "custom")
     {
         if (!customTarget.empty())
         {
-            App::App::getInstance().executor.executeScript(customTarget);
+            App::getInstance().executor.executeScript(customTarget);
         }
-        return;
+        return ExecuteResult::Continue();
     }
 
-    App::App::getInstance().executor.executeLaunchPreset(presetId);
+    App::getInstance().executor.executeLaunchPreset(presetId);
+    return ExecuteResult::Continue();
 }
 
-AI_Keystroke::AI_Keystroke(int _keycode, int _modifiers, float _holdDuration, bool _proceed)
-    : keycode(_keycode), modifiers(_modifiers), holdDuration(_holdDuration), proceed(_proceed)
+AI_Keystroke::AI_Keystroke(int keycode, int modifiers, float holdDuration, bool proceed)
+    : keycode{keycode}
+    , modifiers{modifiers}
+    , holdDuration{holdDuration}
+    , proceed{proceed}
 {
 }
 
@@ -98,32 +101,43 @@ ActionItemKind AI_Keystroke::kind() const
     return ActionItemKind::Keystroke;
 }
 
-ExecuteResult AI_Keystroke::execute(ActionExecutionContext &context)
+ExecuteResult AI_Keystroke::execute(ActionExecutionContext & /*context*/)
 {
-
-    // m_platform.keyDown(m_key); // TODO: final should be of this form
-
-    // auto release = std::make_unique<Action>(0);
-
-    // release->addItem(
-    //     std::make_unique<KeyReleaseItem>(m_key));
-
-    // context.scheduleAction(
-    //     std::move(release),
-    //     std::chrono::steady_clock::now() + m_holdTime);
-
-    // return ExecuteResult::Continue();
+    // Ideal hold path once Platform exposes keyDown/keyUp:
+    //
+    //   platform.keyDown(bind);
+    //   if (holdDuration > 0.0f && !proceed) {
+    //       auto release = std::make_unique<Action>(/*channel*/ 0);
+    //       release->addItem(std::make_unique<AI_KeyRelease>(bind));
+    //       context.scheduleAction(
+    //           std::move(release),
+    //           std::chrono::steady_clock::now()
+    //               + std::chrono::duration_cast<std::chrono::steady_clock::duration>(
+    //                     std::chrono::duration<float>(holdDuration)));
+    //       return ExecuteResult::Continue();
+    //   }
+    //   platform.keyUp(bind);
+    //   return ExecuteResult::Continue();
 
     Platform::InputBind bind{keycode, modifiers};
-    App::App::getInstance().executor.executeKey(bind);
+    App::getInstance().executor.executeKey(bind);
 
+    // Until keyDown/keyUp exist, a full tap is sent above. If the Action should
+    // wait before the next item, delay via the scheduler instead of sleeping.
     if (holdDuration > 0.0f && !proceed)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(holdDuration * 1000.0f)));
+        const auto hold = std::chrono::duration_cast<std::chrono::steady_clock::duration>(
+            std::chrono::duration<float>(holdDuration));
+        return ExecuteResult::DelayUntil(std::chrono::steady_clock::now() + hold);
     }
+
+    return ExecuteResult::Continue();
 }
 
-AI_Delay::AI_Delay(int _duration) : duration(_duration) {}
+AI_Delay::AI_Delay(int durationMs)
+    : duration{durationMs}
+{
+}
 
 std::unique_ptr<ActionItem> AI_Delay::clone() const
 {
@@ -135,13 +149,16 @@ ActionItemKind AI_Delay::kind() const
     return ActionItemKind::Delay;
 }
 
-ExecuteResult AI_Delay::execute(ActionExecutionContext &context)
+ExecuteResult AI_Delay::execute(ActionExecutionContext & /*context*/)
 {
     return ExecuteResult::DelayUntil(
-        std::chrono::steady_clock::now() + m_duration);
+        std::chrono::steady_clock::now() + std::chrono::milliseconds(duration));
 }
 
-AI_Menu::AI_Menu(std::string _menuId) : menuId(std::move(_menuId)) {}
+AI_Menu::AI_Menu(std::string menuId)
+    : menuId{std::move(menuId)}
+{
+}
 
 std::unique_ptr<ActionItem> AI_Menu::clone() const
 {
@@ -153,19 +170,20 @@ ActionItemKind AI_Menu::kind() const
     return ActionItemKind::Menu;
 }
 
-ExecuteResult AI_Menu::execute(ActionExecutionContext &context)
+ExecuteResult AI_Menu::execute(ActionExecutionContext & /*context*/)
 {
-    App &app = App::App::getInstance();
+    App &app = App::getInstance();
     Menu *targetMenu = app.findMenuById(menuId);
     if (targetMenu != nullptr)
     {
         app.showGui(targetMenu);
-        return;
     }
-    std::cerr << "Failed to find menu with id: '" << menuId << "'\n";
+    else
+    {
+        std::cerr << "Failed to find menu with id: '" << menuId << "'\n";
+    }
+    return ExecuteResult::Continue();
 }
-
-ExecuteResult AI_Close::execute(ActionExecutionContext &context) { App::App::getInstance().hideGui(); }
 
 std::unique_ptr<ActionItem> AI_Close::clone() const
 {
@@ -175,6 +193,12 @@ std::unique_ptr<ActionItem> AI_Close::clone() const
 ActionItemKind AI_Close::kind() const
 {
     return ActionItemKind::Close;
+}
+
+ExecuteResult AI_Close::execute(ActionExecutionContext & /*context*/)
+{
+    App::getInstance().hideGui();
+    return ExecuteResult::Continue();
 }
 
 std::unique_ptr<ActionItem> AI_Socket::clone() const
@@ -187,7 +211,17 @@ ActionItemKind AI_Socket::kind() const
     return ActionItemKind::Socket;
 }
 
-ExecuteResult AI_Socket::execute(ActionExecutionContext &context) {}
+ExecuteResult AI_Socket::execute(ActionExecutionContext & /*context*/)
+{
+    // Predicted once Platform gains a socket/send API:
+    //
+    //   App::getInstance().executor.sendSocket(outputDst, socketMsg);
+    //   return ExecuteResult::Continue();
+
+    std::cerr << "AI_Socket not implemented yet (msg='" << socketMsg
+              << "', dst='" << outputDst << "').\n";
+    return ExecuteResult::Continue();
+}
 
 std::unique_ptr<ActionItem> AI_nthRecent::clone() const
 {
@@ -199,7 +233,21 @@ ActionItemKind AI_nthRecent::kind() const
     return ActionItemKind::NthRecent;
 }
 
-ExecuteResult AI_nthRecent::execute(ActionExecutionContext &context) {}
+ExecuteResult AI_nthRecent::execute(ActionExecutionContext & /*context*/)
+{
+    // Predicted once action-history tracking exists:
+    //
+    //   Action* recent = App::getInstance().nthRecentAction(n);
+    //   if (recent != nullptr) {
+    //       context.scheduleAction(
+    //           std::make_unique<Action>(*recent),  // or a dedicated clone helper
+    //           std::chrono::steady_clock::now());
+    //   }
+    //   return ExecuteResult::Continue();
+
+    std::cerr << "AI_nthRecent not implemented yet (n=" << n << ").\n";
+    return ExecuteResult::Continue();
+}
 
 std::unique_ptr<ActionItem> AI_nthFrequent::clone() const
 {
@@ -211,4 +259,20 @@ ActionItemKind AI_nthFrequent::kind() const
     return ActionItemKind::NthFrequent;
 }
 
-ExecuteResult AI_nthFrequent::execute(ActionExecutionContext &context) {}
+ExecuteResult AI_nthFrequent::execute(ActionExecutionContext & /*context*/)
+{
+    // Predicted once usage-frequency tracking exists:
+    //
+    //   Action* frequent = App::getInstance().nthFrequentAction(n);
+    //   if (frequent != nullptr) {
+    //       context.scheduleAction(
+    //           std::make_unique<Action>(*frequent),
+    //           std::chrono::steady_clock::now());
+    //   }
+    //   return ExecuteResult::Continue();
+
+    std::cerr << "AI_nthFrequent not implemented yet (n=" << n << ").\n";
+    return ExecuteResult::Continue();
+}
+
+} // namespace Application
