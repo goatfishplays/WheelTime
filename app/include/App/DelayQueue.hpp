@@ -67,6 +67,11 @@ public:
     /// @brief Drops all parked contexts.
     void clear() noexcept;
 
+    /**
+     * @brief Adds @p delta to every parked wake time (used when resuming from pause).
+     */
+    void shiftAll(std::chrono::steady_clock::duration delta);
+
 private:
     struct Entry
     {

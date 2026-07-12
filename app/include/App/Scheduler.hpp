@@ -1,6 +1,6 @@
 /**
  * @file Scheduler.hpp
- * @brief Scheduler thread: owns contexts, channels, delays, cancel, and worker dispatch.
+ * @brief Scheduler thread: owns contexts, channels, delays, cancel, pause, and worker dispatch.
  */
 
 #pragma once
@@ -55,6 +55,8 @@ enum class SchedulerRequestType
  * - Workers never sleep; DelayUntil returns the context to the scheduler.
  * - The scheduler thread waits on its mailbox until a new event, the earliest
  *   DelayQueue wake time, or stop.
+ * - While paused, due delays are not dispatched; on resume, pending wake times
+ *   are shifted forward by the pause duration so remaining delay is preserved.
  *
  * Cancellation:
  * - cancelAction / cancelChannel / cancelAll (thread-safe).
@@ -63,8 +65,12 @@ enum class SchedulerRequestType
  * - setCancelFlush Actions run immediately on cancel (e.g. KeyUp).
  * - scheduleAction(..., removeIfParentCancelled=true) links delayed cleanup
  *   that is discarded when the parent is cancelled (after flush).
+ * - Cancel-flush bypasses pause so hardware cleanup can still run.
  *
- * Pause/resume is not implemented yet (later phase).
+ * Pause/resume:
+ * - pause() stops dispatch of new work; submits are still admitted.
+ * - Delayed Actions stop progressing (virtual clock).
+ * - Workers finish the current ActionItem then sleep until resume.
  */
 class Scheduler
 {
@@ -87,7 +93,8 @@ public:
      * @brief Enqueues @p action for scheduling (thread-safe).
      *
      * Takes ownership. The Action is wrapped in an ActionExecutionContext on
-     * the scheduler thread.
+     * the scheduler thread. While paused, the Action is admitted but will not
+     * start until resume().
      *
      * @return Runtime action id used with cancelAction().
      */
@@ -107,6 +114,7 @@ public:
      *
      * No-op if unknown or uncancelable. Queued work is dropped; delayed work is
      * discarded (channel freed); executing work finishes the current item then stops.
+     * Works while paused. Cancel-flush cleanups still run immediately.
      */
     void cancelAction(uint64_t actionId);
 
@@ -124,6 +132,24 @@ public:
      * Uncancelable Actions (e.g. delayed KeyUp safety nets) are not cancelled.
      */
     void cancelAll();
+
+    /**
+     * @brief Stops dispatching new work; freezes delay progress (thread-safe).
+     *
+     * In-flight ActionItems finish; workers then sleep. Submits are still
+     * admitted but do not start until resume(). Idempotent.
+     */
+    void pause();
+
+    /**
+     * @brief Resumes dispatch and delay progress after pause() (thread-safe).
+     *
+     * Idempotent if not paused.
+     */
+    void resume();
+
+    /// @brief Whether pause() is in effect (approximate; safe from any thread).
+    [[nodiscard]] bool isPaused() const noexcept;
 
     /**
      * @brief Stops accepting new worker results, drains the mailbox, and joins.
@@ -147,6 +173,8 @@ private:
         uint64_t parentActionId = 0;
         /// @brief If true, record this id under the parent for cancel-linked discard.
         bool removeIfParentCancelled = false;
+        /// @brief If true, RunNow bypasses pause (cancel-flush cleanups).
+        bool forceDispatch = false;
     };
 
     /// @brief Mailbox payload for cancelAction().
@@ -166,13 +194,25 @@ private:
     {
     };
 
-    /// @brief Unified mailbox: submits, worker outcomes, and cancel requests.
+    /// @brief Mailbox payload for pause().
+    struct PauseRequest
+    {
+    };
+
+    /// @brief Mailbox payload for resume().
+    struct ResumeRequest
+    {
+    };
+
+    /// @brief Unified mailbox: submits, worker outcomes, cancel, and pause.
     using SchedulerEvent = std::variant<
         SubmitRequest,
         WorkerResult,
         CancelActionRequest,
         CancelChannelRequest,
-        CancelAllRequest>;
+        CancelAllRequest,
+        PauseRequest,
+        ResumeRequest>;
 
     /// @brief Scheduler-thread loop: due delays, mailbox wait, event handling.
     void threadMain();
@@ -194,8 +234,23 @@ private:
     /// @brief Implements cancelAll on the scheduler thread.
     void handleCancelAll();
 
-    /// @brief Applies a ChannelDispatch (run now vs park on DelayQueue).
-    void applyDispatch(ChannelDispatch dispatch);
+    /// @brief Implements pause on the scheduler thread.
+    void handlePause();
+
+    /// @brief Implements resume on the scheduler thread.
+    void handleResume();
+
+    /**
+     * @brief Applies a ChannelDispatch (run now vs park on DelayQueue).
+     * @param forceDispatch If true, RunNow ignores pause (cancel-flush).
+     */
+    void applyDispatch(ChannelDispatch dispatch, bool forceDispatch = false);
+
+    /**
+     * @brief Hands @p context to WorkerPool, or holds it while paused.
+     * @param force If true, submit even while the scheduler is paused.
+     */
+    void dispatchToWorker(std::unique_ptr<ActionExecutionContext> context, bool force = false);
 
     /// @brief Dispatches any DelayQueue contexts whose wake time has been reached.
     void processDueDelays();
@@ -224,6 +279,9 @@ private:
      */
     void discardContext(std::unique_ptr<ActionExecutionContext> context, bool releaseChannel);
 
+    /// @brief Removes a held ready context if cancel targets it while paused.
+    void discardPausedReady(uint64_t actionId);
+
     /// @brief Looks up whether @p actionId may be cancelled (default true if unknown).
     [[nodiscard]] bool isCancelableAction(uint64_t actionId) const;
 
@@ -234,10 +292,15 @@ private:
     WorkerPool m_workers;
     std::jthread m_thread;
     std::atomic<uint64_t> m_nextActionId{1};
+    std::atomic<bool> m_pausedFlag{false};
 
     // Touched only by the scheduler thread:
     ChannelManager m_channels;
     DelayQueue m_delayQueue;
+    bool m_paused = false;
+    std::chrono::steady_clock::time_point m_pausedAt{};
+    /// @brief RunNow contexts held while paused; drained on resume.
+    std::vector<std::unique_ptr<ActionExecutionContext>> m_pausedReady;
     /// @brief Shared cancel flags for in-flight contexts (worker-visible).
     std::unordered_map<uint64_t, std::shared_ptr<std::atomic<bool>>> m_cancelFlags;
     /// @brief Whether each known Action may be cancelled.

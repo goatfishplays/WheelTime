@@ -103,4 +103,18 @@ void DelayQueue::clear() noexcept
     m_heap.clear();
 }
 
+void DelayQueue::shiftAll(std::chrono::steady_clock::duration delta)
+{
+    if (delta == std::chrono::steady_clock::duration::zero() || m_heap.empty())
+    {
+        return;
+    }
+
+    for (Entry &entry : m_heap)
+    {
+        entry.wakeTime += delta;
+    }
+    rebuildHeap();
+}
+
 } // namespace Application

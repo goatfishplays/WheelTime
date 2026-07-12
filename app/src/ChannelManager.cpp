@@ -148,4 +148,29 @@ std::vector<std::unique_ptr<ActionExecutionContext>> ChannelManager::removeWaiti
     return removed;
 }
 
+void ChannelManager::shiftWaitingStarts(std::chrono::steady_clock::duration delta)
+{
+    if (delta == std::chrono::steady_clock::duration::zero())
+    {
+        return;
+    }
+
+    for (auto &[key, channel] : m_channels)
+    {
+        (void)key;
+        std::queue<WaitingEntry> shifted;
+        while (!channel.waiting.empty())
+        {
+            WaitingEntry entry = std::move(channel.waiting.front());
+            channel.waiting.pop();
+            if (entry.earliestStart.time_since_epoch().count() != 0)
+            {
+                entry.earliestStart += delta;
+            }
+            shifted.push(std::move(entry));
+        }
+        channel.waiting = std::move(shifted);
+    }
+}
+
 } // namespace Application

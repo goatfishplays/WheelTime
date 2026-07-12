@@ -94,6 +94,11 @@ public:
     [[nodiscard]] std::vector<std::unique_ptr<ActionExecutionContext>> removeWaitingIf(
         const std::function<bool(const ActionExecutionContext &)> &predicate);
 
+    /**
+     * @brief Adds @p delta to every waiter's earliestStart (used when resuming from pause).
+     */
+    void shiftWaitingStarts(std::chrono::steady_clock::duration delta);
+
     [[nodiscard]] bool isBusy(uint32_t channelKey) const;
 
 private:

@@ -73,6 +73,21 @@ void Scheduler::cancelAll()
     m_mailbox.push(SchedulerEvent{CancelAllRequest{}});
 }
 
+void Scheduler::pause()
+{
+    m_mailbox.push(SchedulerEvent{PauseRequest{}});
+}
+
+void Scheduler::resume()
+{
+    m_mailbox.push(SchedulerEvent{ResumeRequest{}});
+}
+
+bool Scheduler::isPaused() const noexcept
+{
+    return m_pausedFlag.load(std::memory_order_acquire);
+}
+
 void Scheduler::stop()
 {
     m_workers.stop();
@@ -85,12 +100,21 @@ void Scheduler::threadMain()
     SchedulerEvent event;
     for (;;)
     {
-        processDueDelays();
+        if (!m_paused)
+        {
+            processDueDelays();
+        }
 
-        const auto wake = m_delayQueue.nextWakeTime();
         QueueWaitStatus status = QueueWaitStatus::Stopped;
 
-        if (wake.has_value())
+        if (m_paused)
+        {
+            if (m_mailbox.pop(event))
+            {
+                status = QueueWaitStatus::Item;
+            }
+        }
+        else if (const auto wake = m_delayQueue.nextWakeTime(); wake.has_value())
         {
             status = m_mailbox.popWaitUntil(event, *wake);
             if (status == QueueWaitStatus::Timeout)
@@ -132,9 +156,57 @@ void Scheduler::threadMain()
                 {
                     handleCancelAll();
                 }
+                else if constexpr (std::is_same_v<T, PauseRequest>)
+                {
+                    handlePause();
+                }
+                else if constexpr (std::is_same_v<T, ResumeRequest>)
+                {
+                    handleResume();
+                }
             },
             event);
     }
+}
+
+void Scheduler::handlePause()
+{
+    if (m_paused)
+    {
+        return;
+    }
+
+    m_pausedAt = std::chrono::steady_clock::now();
+    m_paused = true;
+    m_pausedFlag.store(true, std::memory_order_release);
+    m_workers.setPaused(true);
+}
+
+void Scheduler::handleResume()
+{
+    if (!m_paused)
+    {
+        return;
+    }
+
+    const auto pausedFor = std::chrono::steady_clock::now() - m_pausedAt;
+    m_delayQueue.shiftAll(pausedFor);
+    m_channels.shiftWaitingStarts(pausedFor);
+
+    m_paused = false;
+    m_pausedFlag.store(false, std::memory_order_release);
+    m_workers.setPaused(false);
+
+    for (std::unique_ptr<ActionExecutionContext> &context : m_pausedReady)
+    {
+        if (context)
+        {
+            m_workers.submit(std::move(context));
+        }
+    }
+    m_pausedReady.clear();
+
+    processDueDelays();
 }
 
 void Scheduler::registerContext(const ActionExecutionContext &context)
@@ -169,17 +241,36 @@ bool Scheduler::isCancelableAction(uint64_t actionId) const
     return it->second;
 }
 
-void Scheduler::applyDispatch(ChannelDispatch dispatch)
+void Scheduler::dispatchToWorker(std::unique_ptr<ActionExecutionContext> context, bool force)
+{
+    if (!context)
+    {
+        return;
+    }
+
+    if (force)
+    {
+        m_workers.submitUrgent(std::move(context));
+        return;
+    }
+
+    if (m_paused)
+    {
+        m_pausedReady.push_back(std::move(context));
+        return;
+    }
+
+    m_workers.submit(std::move(context));
+}
+
+void Scheduler::applyDispatch(ChannelDispatch dispatch, bool forceDispatch)
 {
     switch (dispatch.type)
     {
     case ChannelDispatch::Type::None:
         break;
     case ChannelDispatch::Type::RunNow:
-        if (dispatch.context)
-        {
-            m_workers.submit(std::move(dispatch.context));
-        }
+        dispatchToWorker(std::move(dispatch.context), forceDispatch);
         break;
     case ChannelDispatch::Type::ParkUntil:
         if (dispatch.context)
@@ -207,10 +298,13 @@ void Scheduler::handleSubmit(SubmitRequest request)
 
     auto context = std::make_unique<ActionExecutionContext>(std::move(request.action), actionId);
     registerContext(*context);
-    applyDispatch(m_channels.admit(
-        std::move(context),
-        request.earliestStart,
-        std::chrono::steady_clock::now()));
+
+    applyDispatch(
+        m_channels.admit(
+            std::move(context),
+            request.earliestStart,
+            std::chrono::steady_clock::now()),
+        request.forceDispatch);
 }
 
 void Scheduler::ingestCancelFlushes(ActionExecutionContext &context)
@@ -271,7 +365,31 @@ void Scheduler::flushCleanups(uint64_t actionId)
         request.action = std::move(flush);
         request.earliestStart = now;
         request.actionId = allocateActionId();
+        request.forceDispatch = true;
         handleSubmit(std::move(request));
+    }
+}
+
+void Scheduler::discardPausedReady(uint64_t actionId)
+{
+    for (auto it = m_pausedReady.begin(); it != m_pausedReady.end();)
+    {
+        if (*it && (*it)->actionId() == actionId)
+        {
+            const auto channelKey = m_channels.channelFor(actionId);
+            m_channels.unbind(actionId);
+            unregisterContext(actionId);
+            it = m_pausedReady.erase(it);
+            if (channelKey.has_value())
+            {
+                applyDispatch(m_channels.releaseAndTakeNext(
+                    *channelKey, std::chrono::steady_clock::now()));
+            }
+        }
+        else
+        {
+            ++it;
+        }
     }
 }
 
@@ -312,6 +430,8 @@ void Scheduler::handleCancelAction(uint64_t actionId)
     }
     for (uint64_t childId : linked)
     {
+        discardPausedReady(childId);
+
         auto waiting = m_channels.removeWaitingIf(
             [childId](const ActionExecutionContext &ctx) { return ctx.actionId() == childId; });
         for (auto &ctx : waiting)
@@ -330,6 +450,35 @@ void Scheduler::handleCancelAction(uint64_t actionId)
         // linked cleanups are normally delayed/queued.
         unregisterContext(childId);
         m_channels.unbind(childId);
+    }
+
+    // Held ready while paused.
+    {
+        bool found = false;
+        for (auto it = m_pausedReady.begin(); it != m_pausedReady.end();)
+        {
+            if (*it && (*it)->actionId() == actionId)
+            {
+                const auto channelKey = m_channels.channelFor(actionId);
+                m_channels.unbind(actionId);
+                unregisterContext(actionId);
+                it = m_pausedReady.erase(it);
+                found = true;
+                if (channelKey.has_value())
+                {
+                    applyDispatch(m_channels.releaseAndTakeNext(
+                        *channelKey, std::chrono::steady_clock::now()));
+                }
+            }
+            else
+            {
+                ++it;
+            }
+        }
+        if (found)
+        {
+            return;
+        }
     }
 
     auto waiting = m_channels.removeWaitingIf(
@@ -413,8 +562,8 @@ void Scheduler::handleResult(WorkerResult result)
         {
             return;
         }
-        // Channel stays busy; resume the same Action on a worker.
-        m_workers.submit(std::move(result.context));
+        // Channel stays busy; resume the same Action on a worker (or hold if paused).
+        dispatchToWorker(std::move(result.context));
         break;
     }
     case WorkerResult::Status::Delayed:
@@ -471,7 +620,7 @@ void Scheduler::processDueDelays()
     {
         if (context)
         {
-            m_workers.submit(std::move(context));
+            dispatchToWorker(std::move(context));
         }
     }
 }

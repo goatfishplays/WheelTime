@@ -5,10 +5,13 @@
 
 #pragma once
 
+#include <atomic>
 #include <chrono>
+#include <condition_variable>
 #include <cstddef>
 #include <functional>
 #include <memory>
+#include <mutex>
 #include <thread>
 #include <vector>
 
@@ -51,6 +54,8 @@ struct WorkerResult
  *   scheduleAction / setCancelFlush side effects (then yield Continue).
  * - Never sleep for delays and never decide channels / ordering.
  * - Return a WorkerResult via @ref waitResult or an optional result handler.
+ * - When paused, finish the current ActionItem then do not take new inbound work.
+ * - Cancel-flush cleanups may still run via submitUrgent().
  */
 class WorkerPool
 {
@@ -81,6 +86,24 @@ public:
     void submit(std::unique_ptr<ActionExecutionContext> context);
 
     /**
+     * @brief Queues @p context that may run even while the pool is paused.
+     *
+     * Used for cancel-flush cleanups so KeyUp-style work can run during pause.
+     */
+    void submitUrgent(std::unique_ptr<ActionExecutionContext> context);
+
+    /**
+     * @brief When paused, workers finish the current item then stop taking inbound work.
+     *
+     * Thread-safe. Idempotent. Used by Scheduler pause/resume; cancel-flush may
+     * still run via submitUrgent().
+     */
+    void setPaused(bool paused);
+
+    /// @brief Whether setPaused(true) is in effect.
+    [[nodiscard]] bool isPaused() const noexcept;
+
+    /**
      * @brief Blocks until a worker posts a result, or the pool has stopped and drained.
      * @return false if stopped and no results remain (only when no result handler is set).
      */
@@ -99,9 +122,14 @@ private:
     void emit(WorkerResult result);
 
     ThreadSafeQueue<std::unique_ptr<ActionExecutionContext>> m_inbound;
+    ThreadSafeQueue<std::unique_ptr<ActionExecutionContext>> m_urgent;
     ThreadSafeQueue<WorkerResult> m_outbound;
     std::function<void(WorkerResult)> m_resultHandler;
     std::vector<std::jthread> m_workers;
+
+    mutable std::mutex m_pauseMutex;
+    std::condition_variable m_pauseCv;
+    std::atomic<bool> m_paused{false};
 };
 
 } // namespace Application

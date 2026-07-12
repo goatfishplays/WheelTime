@@ -47,6 +47,30 @@ void WorkerPool::submit(std::unique_ptr<ActionExecutionContext> context)
     m_inbound.push(std::move(context));
 }
 
+void WorkerPool::submitUrgent(std::unique_ptr<ActionExecutionContext> context)
+{
+    if (!context)
+    {
+        return;
+    }
+    m_urgent.push(std::move(context));
+    m_pauseCv.notify_all();
+}
+
+void WorkerPool::setPaused(bool paused)
+{
+    {
+        std::lock_guard lock{m_pauseMutex};
+        m_paused.store(paused, std::memory_order_release);
+    }
+    m_pauseCv.notify_all();
+}
+
+bool WorkerPool::isPaused() const noexcept
+{
+    return m_paused.load(std::memory_order_acquire);
+}
+
 bool WorkerPool::waitResult(WorkerResult &out)
 {
     return m_outbound.pop(out);
@@ -54,6 +78,8 @@ bool WorkerPool::waitResult(WorkerResult &out)
 
 void WorkerPool::stop()
 {
+    setPaused(false);
+    m_urgent.stop();
     m_inbound.stop();
     m_workers.clear();
     m_outbound.stop();
@@ -72,13 +98,64 @@ void WorkerPool::emit(WorkerResult result)
 void WorkerPool::workerMain()
 {
     std::unique_ptr<ActionExecutionContext> context;
-    while (m_inbound.pop(context))
+    for (;;)
     {
+        bool urgentJob = false;
+
+        // Cancel-flush and other urgent work bypass the pause gate.
+        if (m_urgent.tryPop(context))
+        {
+            urgentJob = true;
+        }
+        else if (m_paused.load(std::memory_order_acquire))
+        {
+            std::unique_lock lock{m_pauseMutex};
+            m_pauseCv.wait(lock, [this] {
+                return !m_paused.load(std::memory_order_acquire) || !m_urgent.empty() ||
+                       m_inbound.stopped();
+            });
+            if (m_inbound.stopped() && m_urgent.empty())
+            {
+                break;
+            }
+            continue;
+        }
+        else
+        {
+            // Timed pop so urgent work can be noticed without a dedicated waiter.
+            const auto status = m_inbound.popWaitUntil(
+                context, std::chrono::steady_clock::now() + std::chrono::milliseconds(25));
+            if (status == QueueWaitStatus::Timeout)
+            {
+                continue;
+            }
+            if (status == QueueWaitStatus::Stopped)
+            {
+                if (m_urgent.tryPop(context))
+                {
+                    urgentJob = true;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
         WorkerResult result;
         result.context = std::move(context);
 
         while (!result.context->finished() && !result.context->isCancelled())
         {
+            // Pause takes effect between ActionItems (current item always finishes).
+            // Urgent cleanups run to completion even while the pool is paused.
+            if (!urgentJob && m_paused.load(std::memory_order_acquire))
+            {
+                result.status = WorkerResult::Status::Continue;
+                emit(std::move(result));
+                goto next_job;
+            }
+
             ActionItem *item = result.context->currentItem();
             if (item == nullptr)
             {

@@ -122,6 +122,29 @@ public:
     }
 
     /**
+     * @brief Tries to pop without blocking.
+     * @return true if @p out received an item.
+     */
+    [[nodiscard]] bool tryPop(T &out)
+    {
+        std::lock_guard lock{m_mutex};
+        if (m_queue.empty())
+        {
+            return false;
+        }
+        out = std::move(m_queue.front());
+        m_queue.pop();
+        return true;
+    }
+
+    /// @brief Whether the queue currently holds no items.
+    [[nodiscard]] bool empty() const
+    {
+        std::lock_guard lock{m_mutex};
+        return m_queue.empty();
+    }
+
+    /**
      * @brief Discards all queued items.
      * In-flight pop waiters are not given discarded elements.
      */

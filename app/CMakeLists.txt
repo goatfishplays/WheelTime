@@ -124,3 +124,16 @@ target_compile_features(phase7_cancel_smoke
     PRIVATE
         cxx_std_20
 )
+
+# Disposable Phase 8 smoke test.
+add_executable(phase8_pause_smoke
+    tests/phase8_pause_smoke.cpp
+)
+target_link_libraries(phase8_pause_smoke
+    PRIVATE
+        App
+)
+target_compile_features(phase8_pause_smoke
+    PRIVATE
+        cxx_std_20
+)
