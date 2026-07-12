@@ -511,20 +511,20 @@ Requirements:
 
 ---
 
-## Phase 9 - Built-in ActionItems
+## Phase 9 - Built-in ActionItems — Done
 
-Implement common ActionItems.
+Implement common ActionItems (split under `App/ActionItems/`).
 
-Examples:
+Types:
 
-- DelayItem
-- ScriptItem
-- LaunchProcessItem
-- KeyPressItem
-- MouseMoveItem
-- MouseButtonItem
+- AI_Delay, AI_Script, AI_LaunchApp, AI_Menu, AI_Close
+- AI_Keystroke / AI_KeyRelease (hold uses cancel-flush + scheduled release;
+  Platform keyDown/keyUp stubbed with logs until available)
+- AI_MouseMove (`setMousePos`)
+- AI_MouseButton (Platform stub + log)
+- AI_Socket, AI_nthRecent, AI_nthFrequent (stubs + logs)
 
-These should use the existing Platform library.
+Settings/JSON support mouse_move and mouse_button.
 
 ---
 

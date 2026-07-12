@@ -11,8 +11,31 @@ add_library(App
     include/App/Menu.hpp
     src/Action.cpp
     include/App/Action.hpp
-    src/ActionItems.cpp
+    src/ActionItems/ActionItem.cpp
+    src/ActionItems/Delay.cpp
+    src/ActionItems/Script.cpp
+    src/ActionItems/LaunchApp.cpp
+    src/ActionItems/Keystroke.cpp
+    src/ActionItems/Menu.cpp
+    src/ActionItems/Close.cpp
+    src/ActionItems/Socket.cpp
+    src/ActionItems/NthRecent.cpp
+    src/ActionItems/NthFrequent.cpp
+    src/ActionItems/MouseMove.cpp
+    src/ActionItems/MouseButton.cpp
     include/App/ActionItems.hpp
+    include/App/ActionItems/ActionItem.hpp
+    include/App/ActionItems/Delay.hpp
+    include/App/ActionItems/Script.hpp
+    include/App/ActionItems/LaunchApp.hpp
+    include/App/ActionItems/Keystroke.hpp
+    include/App/ActionItems/Menu.hpp
+    include/App/ActionItems/Close.hpp
+    include/App/ActionItems/Socket.hpp
+    include/App/ActionItems/NthRecent.hpp
+    include/App/ActionItems/NthFrequent.hpp
+    include/App/ActionItems/MouseMove.hpp
+    include/App/ActionItems/MouseButton.hpp
     src/ActionExecutionContext.cpp
     include/App/ActionExecutionContext.hpp
     src/ExecuteResult.cpp
@@ -134,6 +157,19 @@ target_link_libraries(phase8_pause_smoke
         App
 )
 target_compile_features(phase8_pause_smoke
+    PRIVATE
+        cxx_std_20
+)
+
+# Disposable Phase 9 smoke test.
+add_executable(phase9_actionitems_smoke
+    tests/phase9_actionitems_smoke.cpp
+)
+target_link_libraries(phase9_actionitems_smoke
+    PRIVATE
+        App
+)
+target_compile_features(phase9_actionitems_smoke
     PRIVATE
         cxx_std_20
 )

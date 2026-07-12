@@ -122,6 +122,8 @@ namespace Application
         QWidget *m_itemClosePage{nullptr};
         QWidget *m_itemMenuPage{nullptr};
         QWidget *m_itemHotkeyPage{nullptr};
+        QWidget *m_itemMouseMovePage{nullptr};
+        QWidget *m_itemMouseButtonPage{nullptr};
         QComboBox *m_launchPresetCombo{nullptr};
         QLineEdit *m_launchCustomPathEdit{nullptr};
         QPushButton *m_browseLaunchAppButton{nullptr};
@@ -136,6 +138,10 @@ namespace Application
         QComboBox *m_hotkeyKeyCombo{nullptr};
         QDoubleSpinBox *m_hotkeyHoldSpin{nullptr};
         QCheckBox *m_hotkeyProceedCheck{nullptr};
+        QSpinBox *m_mouseMoveXSpin{nullptr};
+        QSpinBox *m_mouseMoveYSpin{nullptr};
+        QComboBox *m_mouseButtonCombo{nullptr};
+        QComboBox *m_mouseButtonActionCombo{nullptr};
         QLabel *m_actionSequenceLabel{nullptr};
     };
 }

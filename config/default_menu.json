@@ -16,6 +16,11 @@
                     "customTarget": "explorer.exe",
                     "presetId": "explorer",
                     "type": "launch_app"
+                },
+                {
+                    "type": "mouse_move",
+                    "x": 0,
+                    "y": 0
                 }
             ],
             "name": "calculator"
@@ -26,6 +31,13 @@
                 {
                     "path": "paint.exe",
                     "type": "script"
+                },
+                {
+                    "holdDuration": 2.4000000953674316,
+                    "keycode": 74,
+                    "modifiers": 2,
+                    "proceed": false,
+                    "type": "hotkey"
                 }
             ],
             "name": "paint"
@@ -39,6 +51,17 @@
                 }
             ],
             "name": "notepad"
+        },
+        {
+            "id": "action-new-action",
+            "items": [
+                {
+                    "type": "mouse_move",
+                    "x": 0,
+                    "y": 0
+                }
+            ],
+            "name": "New Action a"
         }
     ],
     "menus": [
@@ -46,7 +69,8 @@
             "actionIds": [
                 "action-menu-example-calculator",
                 "action-menu-example-paint",
-                "action-menu-example-notepad"
+                "action-menu-example-notepad",
+                "action-new-action"
             ],
             "executeOnRelease": false,
             "exitOnAction": false,
