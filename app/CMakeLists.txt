@@ -19,6 +19,7 @@ add_library(App
     include/App/ExecuteResult.hpp
     src/SynchronousActionRunner.cpp
     include/App/SynchronousActionRunner.hpp
+    include/App/ThreadSafeQueue.hpp
     src/MenuConfigLoader.cpp
     include/App/MenuConfigLoader.hpp
     src/SettingsWindow.cpp
@@ -38,7 +39,15 @@ target_link_libraries(App
         Qt6::Gui
 )
 
-# set_target_properties(helloworld PROPERTIES
-#     WIN32_EXECUTABLE ON
-#     MACOSX_BUNDLE ON
-# )
+# Disposable Phase 2 smoke test (header-only queue; no Qt / App runtime).
+add_executable(phase2_queue_smoke
+    tests/phase2_queue_smoke.cpp
+)
+target_include_directories(phase2_queue_smoke
+    PRIVATE
+        include
+)
+target_compile_features(phase2_queue_smoke
+    PRIVATE
+        cxx_std_20
+)
