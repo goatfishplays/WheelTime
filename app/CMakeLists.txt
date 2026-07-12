@@ -20,6 +20,8 @@ add_library(App
     src/SynchronousActionRunner.cpp
     include/App/SynchronousActionRunner.hpp
     include/App/ThreadSafeQueue.hpp
+    src/WorkerPool.cpp
+    include/App/WorkerPool.hpp
     src/MenuConfigLoader.cpp
     include/App/MenuConfigLoader.hpp
     src/SettingsWindow.cpp
@@ -48,6 +50,19 @@ target_include_directories(phase2_queue_smoke
         include
 )
 target_compile_features(phase2_queue_smoke
+    PRIVATE
+        cxx_std_20
+)
+
+# Disposable Phase 3 smoke test (needs App for Action / context / WorkerPool).
+add_executable(phase3_worker_smoke
+    tests/phase3_worker_smoke.cpp
+)
+target_link_libraries(phase3_worker_smoke
+    PRIVATE
+        App
+)
+target_compile_features(phase3_worker_smoke
     PRIVATE
         cxx_std_20
 )
