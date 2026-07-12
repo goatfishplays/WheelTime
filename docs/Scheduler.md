@@ -528,7 +528,7 @@ Settings/JSON support mouse_move and mouse_button.
 
 ---
 
-## Phase 10 - Testing
+## Phase 10 - Testing — Done
 
 Create comprehensive tests.
 
@@ -544,6 +544,8 @@ Include:
 - Randomized scheduling
 
 The scheduler should remain deadlock-free and preserve ordering guarantees.
+
+Runnable as `phase10_scheduler_tests` (`app/tests/phase10_scheduler_tests.cpp`).
 
 ---
 

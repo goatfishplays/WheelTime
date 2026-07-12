@@ -173,3 +173,16 @@ target_compile_features(phase9_actionitems_smoke
     PRIVATE
         cxx_std_20
 )
+
+# Phase 10 comprehensive scheduler tests.
+add_executable(phase10_scheduler_tests
+    tests/phase10_scheduler_tests.cpp
+)
+target_link_libraries(phase10_scheduler_tests
+    PRIVATE
+        App
+)
+target_compile_features(phase10_scheduler_tests
+    PRIVATE
+        cxx_std_20
+)
