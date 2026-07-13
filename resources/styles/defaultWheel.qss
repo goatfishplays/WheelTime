@@ -5,13 +5,32 @@ QWidget {
 }
 
 QWidget#launcherOverlay {
-    background: transparent;
+    /* Alpha 1/255 keeps the dimmer invisible while still receiving clicks
+       across the full monitor (fully transparent pixels are not hit-tested). */
+    background-color: rgba(0, 0, 0, 1);
 }
 
 QWidget#launcherPanel {
-    background-color: #dfe4ea;
-    border: 1px solid #aac4de;
-    border-radius: 12px;
+    /* Black tint so desktop shows through behind the wheel panel. */
+    background-color: rgba(0, 0, 0, 140);
+    border: none;
+    border-radius: 0px;
+}
+
+QWidget#launcherPanelBody,
+RadialMenuWidget {
+    background-color: transparent;
+}
+
+QLabel#launcherTitle {
+    background: transparent;
+    color: #f2f6fa;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+QWidget#launcherPanel QLabel {
+    color: #e8eef4;
 }
 
 QWidget#settingsWindow {

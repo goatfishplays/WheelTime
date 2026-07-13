@@ -20,7 +20,8 @@ using namespace Application;
 RadialMenuWidget::RadialMenuWidget(QWidget *parent)
     : QWidget(parent)
 {
-    // setMouseTracking(true);
+    // Distance mode relies on MouseMove while no button is held.
+    setMouseTracking(true);
     setAttribute(Qt::WA_Hover, true);
 
     m_centerLabel = new QLabel(this);
@@ -46,6 +47,9 @@ void RadialMenuWidget::setCenterText(const QString &text)
 {
     m_centerLabel->setText(text);
     m_centerLabel->adjustSize();
+    m_centerLabel->move(
+        static_cast<int>(width() * 0.5 - m_centerLabel->width() * 0.5),
+        static_cast<int>(height() * 0.5 - m_centerLabel->height() * 0.5));
     update();
 }
 
@@ -93,6 +97,15 @@ void RadialMenuWidget::setSelectedIndex(int newVal)
         button->update();
     }
 
+    if (m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(m_actionLabels.size()))
+    {
+        setCenterText(QString::fromStdString(m_actionLabels[m_selectedIndex]));
+    }
+    else
+    {
+        setCenterText(QString::fromStdString(m_menu.getName()));
+    }
+
     emit selectedIndexChanged(m_selectedIndex);
 }
 
@@ -108,6 +121,9 @@ void RadialMenuWidget::rebuildButtons()
     {
         auto *button = new HoverButton(this);
         button->setText(QString::fromStdString(m_actionLabels[i]));
+        // Child widgets need their own tracking; parent tracking does not apply
+        // while the cursor is over a button.
+        button->setMouseTracking(true);
         button->adjustSize();
         button->show();
 
