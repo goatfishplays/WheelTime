@@ -90,8 +90,11 @@ App::App()
 
     if (!loadedMenus.empty())
     {
-        showGui(loadedMenus.front());
+        activeMenu = loadedMenus.front();
+        gui.setMenu(*activeMenu, getActionLabelsForMenu(*activeMenu));
     }
+
+    initializeOverlay();
 }
 
 App::~App()
@@ -134,7 +137,7 @@ void App::clearMenus()
 
 void App::onHotkeyTriggered(int hotkeyId)
 {
-    if (gui.isVisible() && gui.isActiveWindow())
+    if (gui.isLauncherVisible())
     {
         hideGui();
     }
@@ -232,18 +235,55 @@ const std::vector<Action> &App::getActionLibrary() const
 
 void App::gatherPriors()
 {
-    if (gui.isVisible())
-    {
-        return;
-    }
     priorMousePos = inputRcvr.getAbsoluteMousePosition();
     priorWindow.getActiveWindow();
 }
 
 void App::restorePriors()
 {
-    executor.setMousePos(priorMousePos.x, priorMousePos.y);
-    priorWindow.focus();
+    // The non-activating overlay should leave keyboard focus where it already
+    // is, so we intentionally avoid restoring focus here. Mouse restore can be
+    // revisited later if users want the cursor snapped back after overlay use.
+}
+
+void App::initializeOverlay()
+{
+    if (m_overlayInitialized)
+    {
+        return;
+    }
+
+    // Give Qt the same initial fullscreen bounds the native overlay window
+    // will use so layered painting has a valid backing-store size from the
+    // beginning instead of the default tiny top-level widget size.
+    const Platform::Vec2 cursorPos = inputRcvr.getAbsoluteMousePosition();
+    Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
+    const Platform::WindowRect bounds = overlayWindow.monitorBoundsForPoint(cursorPos.x, cursorPos.y);
+    gui.setGeometry(bounds.x, bounds.y, bounds.width, bounds.height);
+    gui.show();
+    overlayWindow.setTransparentOverlay(true);
+    overlayWindow.setNonActivating(true);
+    overlayWindow.setTopmost(true);
+    overlayWindow.setBounds(bounds);
+    overlayWindow.showNoActivate();
+    gui.enterDormantOverlay();
+    overlayWindow.setClickThrough(true);
+    m_overlayInitialized = true;
+}
+
+void App::configureOverlayForCursor()
+{
+    const Platform::Vec2 cursorPos = inputRcvr.getAbsoluteMousePosition();
+    Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
+    const Platform::WindowRect bounds = overlayWindow.monitorBoundsForPoint(cursorPos.x, cursorPos.y);
+    // Keep Qt's widget geometry in sync with the native overlay bounds. The
+    // shell widget owns the centered panel layout, so it must know its actual
+    // monitor-sized rect for rendering and hit-testing to behave correctly.
+    gui.setGeometry(bounds.x, bounds.y, bounds.width, bounds.height);
+    overlayWindow.setBounds(bounds);
+    overlayWindow.setTransparentOverlay(true);
+    overlayWindow.setNonActivating(true);
+    overlayWindow.setTopmost(true);
 }
 
 void App::showGui(Menu *menu)
@@ -253,20 +293,25 @@ void App::showGui(Menu *menu)
         return;
     }
 
+    initializeOverlay();
     gatherPriors();
     activeMenu = menu;
     gui.setMenu(*activeMenu, getActionLabelsForMenu(*activeMenu));
-    gui.showNormal();
-    gui.raise();
-    gui.activateWindow();
+    configureOverlayForCursor();
 
-    Platform::Window appWindow(reinterpret_cast<void *>(gui.winId()));
-    appWindow.focus();
+    Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
+    overlayWindow.setClickThrough(false);
+    overlayWindow.showNoActivate();
+    gui.enterInteractiveOverlay();
 }
 
 void App::hideGui()
 {
-    gui.hide();
+    initializeOverlay();
+    gui.enterDormantOverlay();
+    Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
+    overlayWindow.setClickThrough(true);
+    overlayWindow.showNoActivate();
     restorePriors();
 }
 
@@ -304,6 +349,11 @@ const Scheduler &App::scheduler() const noexcept
 
 void App::showSettingsWindow()
 {
+    if (gui.isLauncherVisible())
+    {
+        hideGui();
+    }
+
     if (m_settingsWindow == nullptr)
     {
         m_settingsWindow = new SettingsWindow();

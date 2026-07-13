@@ -9,6 +9,7 @@
 #include <QHeaderView>
 #include <QMessageBox>
 #include <QMouseEvent>
+#include <QSizePolicy>
 #include <QTableWidget>
 #include <QTableWidgetItem>
 #include <QVBoxLayout>
@@ -22,33 +23,47 @@ using namespace Application;
 Gui::Gui(QWidget *parent)
     : QWidget(parent)
 {
-    setFixedSize(600, 400);
-
-    // showFullScreen();
-
-    // setAttribute(Qt::WA_TranslucentBackground);
-    // setWindowFlags(Qt::FramelessWindowHint);
-
-    // setStyleSheet(R"(
-    //     QWidget {
-    //         background: transparent;
-    //     }
-    // )");
+    // The overlay shell stays alive for the app lifetime. Native window styles
+    // later make it non-activating/topmost/click-through when dormant.
+    setObjectName("launcherOverlay");
+    setAttribute(Qt::WA_TranslucentBackground, true);
+    setAttribute(Qt::WA_ShowWithoutActivating, true);
+    setWindowFlags(Qt::FramelessWindowHint | Qt::Tool);
+    setFocusPolicy(Qt::NoFocus);
 
     qApp->installEventFilter(this);
 
     auto *root = new QVBoxLayout(this);
-    root->setContentsMargins(12, 12, 12, 12);
-    root->setSpacing(8);
+    root->setContentsMargins(0, 0, 0, 0);
+    root->setSpacing(0);
+
+    root->addStretch();
+    auto *centerRow = new QHBoxLayout();
+    centerRow->addStretch();
+
+    // This centered panel contains the existing wheel UI while the top-level
+    // widget stretches fullscreen across the active monitor.
+    m_overlayPanel = new QWidget(this);
+    m_overlayPanel->setObjectName("launcherPanel");
+    m_overlayPanel->setFixedSize(600, 400);
+    m_overlayPanel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    centerRow->addWidget(m_overlayPanel);
+    centerRow->addStretch();
+    root->addLayout(centerRow);
+    root->addStretch();
+
+    auto *panelLayout = new QVBoxLayout(m_overlayPanel);
+    panelLayout->setContentsMargins(12, 12, 12, 12);
+    panelLayout->setSpacing(8);
 
     // Top title
-    m_titleLabel = new QLabel("Title", this);
+    m_titleLabel = new QLabel("Title", m_overlayPanel);
     m_titleLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     m_titleLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    root->addWidget(m_titleLabel);
+    panelLayout->addWidget(m_titleLabel);
 
     // Middle area that holds the radial widget and can expand freely.
-    auto *middle = new QWidget(this);
+    auto *middle = new QWidget(m_overlayPanel);
     auto *middleLayout = new QVBoxLayout(middle);
     middleLayout->setContentsMargins(0, 0, 0, 0);
 
@@ -56,17 +71,17 @@ Gui::Gui(QWidget *parent)
     m_radialMenu->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     middleLayout->addWidget(m_radialMenu);
 
-    root->addWidget(middle, 1);
+    panelLayout->addWidget(middle, 1);
 
     // Bottom row: spacer pushes buttons to the right.
     auto *bottomRow = new QHBoxLayout();
     bottomRow->addStretch();
 
-    m_settingsButton = new QPushButton("Settings", this);
-    m_editButton = new QPushButton("Edit", this);
+    m_settingsButton = new QPushButton("Settings", m_overlayPanel);
+    m_editButton = new QPushButton("Edit", m_overlayPanel);
     bottomRow->addWidget(m_settingsButton);
     bottomRow->addWidget(m_editButton);
-    root->addLayout(bottomRow);
+    panelLayout->addLayout(bottomRow);
 
     m_radialMenu->setButtonRadius(100);
     m_radialMenu->setActivationMode(RadialMenuWidget::ActivationMode::Distance);
@@ -78,6 +93,8 @@ Gui::Gui(QWidget *parent)
             { App::getInstance().showSettingsWindow(); });
     connect(m_radialMenu, &RadialMenuWidget::buttonTriggered, this, [](int index)
             { App::getInstance().executeAction(index); });
+
+    enterDormantOverlay();
 }
 
 void Gui::onSelectChange(int index)
@@ -87,6 +104,11 @@ void Gui::onSelectChange(int index)
 
 bool Gui::eventFilter(QObject *watched, QEvent *event)
 {
+    if (!m_launcherVisible)
+    {
+        return QWidget::eventFilter(watched, event);
+    }
+
     if (event->type() == QEvent::MouseMove)
     {
         auto *mouseMoveEvent = static_cast<QMouseEvent *>(event);
@@ -101,6 +123,11 @@ bool Gui::eventFilter(QObject *watched, QEvent *event)
 
         if (mouseEvent->button() == Qt::LeftButton)
         {
+            if (clickedChild == m_settingsButton || clickedChild == m_editButton)
+            {
+                return QWidget::eventFilter(watched, event);
+            }
+
             if (qobject_cast<QPushButton *>(watched) != nullptr || qobject_cast<QPushButton *>(clickedChild) != nullptr)
             {
                 return QWidget::eventFilter(watched, event);
@@ -115,7 +142,7 @@ bool Gui::eventFilter(QObject *watched, QEvent *event)
             return QWidget::eventFilter(watched, event);
         }
 
-        if (mouseEvent->button() == Qt::RightButton && m_radialMenu->geometry().contains(localPos))
+        if (mouseEvent->button() == Qt::RightButton)
         {
             App::getInstance().hideGui();
             return true;
@@ -141,4 +168,27 @@ void Gui::setMenu(const Menu &menu, const std::vector<std::string> &actionLabels
 {
     m_titleLabel->setText(QString::fromStdString(menu.getName()));
     m_radialMenu->setMenu(menu, actionLabels);
+}
+
+void Gui::enterInteractiveOverlay()
+{
+    m_launcherVisible = true;
+    if (m_overlayPanel != nullptr)
+    {
+        m_overlayPanel->show();
+    }
+}
+
+void Gui::enterDormantOverlay()
+{
+    m_launcherVisible = false;
+    if (m_overlayPanel != nullptr)
+    {
+        m_overlayPanel->hide();
+    }
+}
+
+bool Gui::isLauncherVisible() const
+{
+    return m_launcherVisible;
 }
