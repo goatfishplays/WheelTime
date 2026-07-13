@@ -4,6 +4,16 @@ QWidget {
     font-size: 13px;
 }
 
+QWidget#launcherOverlay {
+    background: transparent;
+}
+
+QWidget#launcherPanel {
+    background-color: #dfe4ea;
+    border: 1px solid #aac4de;
+    border-radius: 12px;
+}
+
 QWidget#settingsWindow {
     background-color: #d7dde5;
 }
