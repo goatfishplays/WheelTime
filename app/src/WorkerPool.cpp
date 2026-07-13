@@ -8,6 +8,7 @@
 #include "App/ActionItems.hpp"
 #include "App/ExecuteResult.hpp"
 
+#include <iostream>
 #include <utility>
 
 namespace Application
@@ -161,6 +162,22 @@ void WorkerPool::workerMain()
             {
                 break;
             }
+
+            const Action &action = result.context->action();
+            const bool flush = result.context->isCancelFlush();
+            const char *actionTag = flush ? "[Action] flush-run" : "[Action] run";
+            const char *itemTag = flush ? "[ActionItem] flush-execute" : "[ActionItem] execute";
+            if (result.context->currentIndex() == 0)
+            {
+                std::cerr << actionTag << " runtimeId=" << result.context->actionId()
+                          << " id=" << action.getId() << " name=" << action.getName()
+                          << " channel=" << action.channel()
+                          << " cancelable=" << (action.cancelable() ? "true" : "false") << '\n';
+            }
+            std::cerr << itemTag << " kind=" << actionItemKindName(item->kind())
+                      << " index=" << result.context->currentIndex()
+                      << " actionId=" << action.getId()
+                      << " runtimeId=" << result.context->actionId() << '\n';
 
             const ExecuteResult executeResult = item->execute(*result.context);
 

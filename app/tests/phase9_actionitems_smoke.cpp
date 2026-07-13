@@ -142,6 +142,100 @@ bool testKeyRelease()
     return true;
 }
 
+bool testCancelItemsRecordRequests()
+{
+    ActionExecutionContext ctx{std::make_unique<Action>(
+        std::vector<std::unique_ptr<ActionItem>>{}, "t", "", "t", 3)};
+
+    AI_Cancel cancelLatest{CancelLevel::Latest, 0};
+    if (cancelLatest.execute(ctx).type() != ExecuteResult::Type::Continue)
+    {
+        std::cerr << "cancel_latest: expected Continue\n";
+        return false;
+    }
+    {
+        auto requests = ctx.takeCancelRequests();
+        if (requests.size() != 1 || requests[0].level != PendingCancelRequest::Level::MostRecent
+            || requests[0].excludeActionId != ctx.actionId() || requests[0].channel != 0)
+        {
+            std::cerr << "cancel_latest: bad pending request\n";
+            return false;
+        }
+    }
+
+    AI_Cancel cancelChannel{CancelLevel::Channel, 7};
+    if (cancelChannel.execute(ctx).type() != ExecuteResult::Type::Continue)
+    {
+        std::cerr << "cancel_channel: expected Continue\n";
+        return false;
+    }
+    {
+        auto requests = ctx.takeCancelRequests();
+        if (requests.size() != 1 || requests[0].level != PendingCancelRequest::Level::Channel
+            || requests[0].channel != 7)
+        {
+            std::cerr << "cancel_channel: bad pending request\n";
+            return false;
+        }
+    }
+
+    AI_Cancel cancelAll{CancelLevel::All};
+    if (cancelAll.kind() != ActionItemKind::Cancel || cancelAll.clone()->kind() != ActionItemKind::Cancel)
+    {
+        std::cerr << "cancel_all: wrong kind/clone\n";
+        return false;
+    }
+    if (cancelAll.execute(ctx).type() != ExecuteResult::Type::Continue)
+    {
+        std::cerr << "cancel_all: expected Continue\n";
+        return false;
+    }
+    {
+        auto requests = ctx.takeCancelRequests();
+        if (requests.size() != 1 || requests[0].level != PendingCancelRequest::Level::All)
+        {
+            std::cerr << "cancel_all: bad pending request\n";
+            return false;
+        }
+    }
+
+    AI_Cancel cancelLatestCh{CancelLevel::Latest, 4};
+    (void)cancelLatestCh.execute(ctx);
+    {
+        auto requests = ctx.takeCancelRequests();
+        if (requests.size() != 1 || requests[0].channel != 4
+            || requests[0].level != PendingCancelRequest::Level::MostRecent)
+        {
+            std::cerr << "cancel_latest_ch: bad channel filter\n";
+            return false;
+        }
+    }
+    return true;
+}
+
+bool testNthItemDefaults()
+{
+    AI_nthRecent recent;
+    AI_nthFrequent frequent;
+    if (recent.n != 1 || frequent.n != 1)
+    {
+        std::cerr << "nth: expected default n=1\n";
+        return false;
+    }
+    if (recent.kind() != ActionItemKind::NthRecent || frequent.kind() != ActionItemKind::NthFrequent)
+    {
+        std::cerr << "nth: wrong kind\n";
+        return false;
+    }
+    if (recent.clone()->kind() != ActionItemKind::NthRecent
+        || frequent.clone()->kind() != ActionItemKind::NthFrequent)
+    {
+        std::cerr << "nth: clone kind mismatch\n";
+        return false;
+    }
+    return true;
+}
+
 } // namespace
 
 int main()
@@ -153,6 +247,8 @@ int main()
         {"keystroke_hold_blocks", testKeystrokeHoldBlocksWhenNotProceed},
         {"mouse_move_button", testMouseMoveAndButton},
         {"key_release", testKeyRelease},
+        {"cancel_items", testCancelItemsRecordRequests},
+        {"nth_item_defaults", testNthItemDefaults},
     };
 
     int failed = 0;

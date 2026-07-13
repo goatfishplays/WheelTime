@@ -68,6 +68,9 @@ vcpkg_installed/
 Testing/
 .cache/
 
+# Local usage history next to menu config
+config/action_history.json
+
 # vscode settings
 .vscode/settings.json
 .vs

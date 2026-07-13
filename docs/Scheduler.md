@@ -184,6 +184,9 @@ Examples:
 context.scheduleAction(action, wakeTime);
 context.scheduleAction(action, wakeTime, /*removeIfParentCancelled=*/true);
 context.setCancelFlush(cleanupAction);
+context.requestCancelMostRecent(channel);
+context.requestCancelChannel(channel);
+context.requestCancelAll();
 ```
 
 The scheduler consumes those requests after execute() returns (or when the
@@ -522,9 +525,11 @@ Types:
   Platform keyDown/keyUp stubbed with logs until available)
 - AI_MouseMove (`setMousePos`)
 - AI_MouseButton (Platform stub + log)
-- AI_Socket, AI_nthRecent, AI_nthFrequent (stubs + logs)
+- AI_Cancel (Cancel Latest by channel/0, Cancel Channel, Cancel All via context → scheduler)
+- AI_nthRecent / AI_nthFrequent (1-based; wheel-launch history in `action_history.json`)
+- AI_Socket (stub + log)
 
-Settings/JSON support mouse_move and mouse_button.
+Settings/JSON support mouse_move, mouse_button, cancel, nth_recent, and nth_frequent.
 
 ---
 

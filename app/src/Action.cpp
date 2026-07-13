@@ -166,6 +166,11 @@ uint32_t Action::channel() const
     return m_channel;
 }
 
+void Action::setChannel(uint32_t channel) noexcept
+{
+    m_channel = channel;
+}
+
 const std::vector<std::unique_ptr<ActionItem>> &Action::items() const
 {
     return sequence;

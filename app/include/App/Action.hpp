@@ -78,6 +78,14 @@ namespace Application
         uint32_t channel() const;
 
         /**
+         * @brief Sets the logical run channel.
+         *
+         * 0 = independent (scheduler assigns a private key; does not block peers).
+         * >0 = shared FIFO with other Actions on the same channel.
+         */
+        void setChannel(uint32_t channel) noexcept;
+
+        /**
          * @brief Returns a constant reference to the actionItems
          *
          * @return const std::vector<std::unique_ptr<ActionItem>>&

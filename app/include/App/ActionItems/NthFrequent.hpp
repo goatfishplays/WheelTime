@@ -1,6 +1,6 @@
 /**
  * @file NthFrequent.hpp
- * @brief nth-frequent history ActionItem (App history pending).
+ * @brief nth-frequent history ActionItem.
  */
 
 #pragma once
@@ -10,11 +10,13 @@
 namespace Application
 {
 
-/// @brief Executes the nth most frequently used action (history support pending).
+/// @brief Schedules a copy of the nth most frequently wheel-launched Action (1-based).
 class AI_nthFrequent : public ActionItem
 {
 public:
-    int n = 0;
+    explicit AI_nthFrequent(int n = 1);
+
+    int n = 1; ///< 1 = most frequent.
 
     std::unique_ptr<ActionItem> clone() const override;
     ActionItemKind kind() const override;

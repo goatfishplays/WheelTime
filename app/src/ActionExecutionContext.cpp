@@ -100,6 +100,11 @@ const ActionItem *ActionExecutionContext::currentItem() const noexcept
     return m_action->items()[m_currentIndex].get();
 }
 
+size_t ActionExecutionContext::currentIndex() const noexcept
+{
+    return m_currentIndex;
+}
+
 void ActionExecutionContext::advance() noexcept
 {
     if (!finished())
@@ -138,6 +143,26 @@ void ActionExecutionContext::setCancelFlush(std::unique_ptr<Action> action)
     m_cancelFlushes.push_back(std::move(action));
 }
 
+void ActionExecutionContext::requestCancelMostRecent(uint32_t channel)
+{
+    m_cancelRequests.push_back(PendingCancelRequest{
+        PendingCancelRequest::Level::MostRecent,
+        m_actionId,
+        channel});
+}
+
+void ActionExecutionContext::requestCancelChannel(uint32_t channel)
+{
+    m_cancelRequests.push_back(
+        PendingCancelRequest{PendingCancelRequest::Level::Channel, 0, channel});
+}
+
+void ActionExecutionContext::requestCancelAll()
+{
+    m_cancelRequests.push_back(
+        PendingCancelRequest{PendingCancelRequest::Level::All, 0, 0});
+}
+
 const std::vector<ScheduledAction> &ActionExecutionContext::scheduledActions() const noexcept
 {
     return m_scheduledActions;
@@ -162,9 +187,26 @@ std::vector<std::unique_ptr<Action>> ActionExecutionContext::takeCancelFlushes()
     return pending;
 }
 
+std::vector<PendingCancelRequest> ActionExecutionContext::takeCancelRequests() noexcept
+{
+    std::vector<PendingCancelRequest> pending;
+    pending.swap(m_cancelRequests);
+    return pending;
+}
+
 bool ActionExecutionContext::hasPendingSchedulerRequests() const noexcept
 {
-    return !m_scheduledActions.empty() || !m_cancelFlushes.empty();
+    return !m_scheduledActions.empty() || !m_cancelFlushes.empty() || !m_cancelRequests.empty();
+}
+
+void ActionExecutionContext::markCancelFlush() noexcept
+{
+    m_isCancelFlush = true;
+}
+
+bool ActionExecutionContext::isCancelFlush() const noexcept
+{
+    return m_isCancelFlush;
 }
 
 } // namespace Application

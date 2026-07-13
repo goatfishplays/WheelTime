@@ -118,6 +118,8 @@ namespace Application
         QComboBox *m_slotActionCombo{nullptr};
 
         QLineEdit *m_actionNameEdit{nullptr};
+        QSpinBox *m_actionChannelSpin{nullptr};
+        QLabel *m_actionChannelHelpLabel{nullptr};
         QListWidget *m_actionItemList{nullptr};
         QComboBox *m_newItemTypeCombo{nullptr};
         QStackedWidget *m_itemDetailStack{nullptr};
@@ -130,6 +132,8 @@ namespace Application
         QWidget *m_itemHotkeyPage{nullptr};
         QWidget *m_itemMouseMovePage{nullptr};
         QWidget *m_itemMouseButtonPage{nullptr};
+        QWidget *m_itemCancelPage{nullptr};
+        QWidget *m_itemNthPage{nullptr};
         QComboBox *m_launchPresetCombo{nullptr};
         QLineEdit *m_launchCustomPathEdit{nullptr};
         QPushButton *m_browseLaunchAppButton{nullptr};
@@ -148,6 +152,11 @@ namespace Application
         QSpinBox *m_mouseMoveYSpin{nullptr};
         QComboBox *m_mouseButtonCombo{nullptr};
         QComboBox *m_mouseButtonActionCombo{nullptr};
+        QComboBox *m_cancelLevelCombo{nullptr};
+        QSpinBox *m_cancelChannelSpin{nullptr};
+        QLabel *m_cancelHelpLabel{nullptr};
+        QSpinBox *m_nthSpin{nullptr};
+        QLabel *m_nthHelpLabel{nullptr};
         QLabel *m_actionSequenceLabel{nullptr};
     };
 }

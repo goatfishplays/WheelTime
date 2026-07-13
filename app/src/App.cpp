@@ -21,10 +21,41 @@
 #include "App/SettingsWindow.hpp"
 #include "App/ActionItems.hpp"
 
+#include <QDir>
+#include <QFileInfo>
+
 #include <algorithm>
 #include <thread>
+#include <vector>
 
 using namespace Application;
+
+namespace
+{
+
+/// @brief True if @p action is a history/cancel helper that must not enter MRU/MFU.
+///
+/// Recording nth-recent/nth-frequent (or cancel) would make "Most Recent" the most
+/// recent launch, so resolving n=1 schedules itself forever.
+bool isHistoryMetaAction(const Action &action)
+{
+    for (const auto &item : action.getItems())
+    {
+        if (!item)
+        {
+            continue;
+        }
+        const ActionItemKind kind = item->kind();
+        if (kind == ActionItemKind::NthRecent || kind == ActionItemKind::NthFrequent
+            || kind == ActionItemKind::Cancel)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+} // namespace
 
 class HotkeyFilter : public QAbstractNativeEventFilter
 {
@@ -86,6 +117,9 @@ App::App()
         loadedMenus.push_back(new Menu(nullptr, false, false, "Config Error", {"action-config-missing"}, "menu-config-error"));
     }
 
+    m_actionHistory.load(historyPath());
+    pruneActionHistory();
+
     if (!loadedMenus.empty())
     {
         showGui(loadedMenus.front());
@@ -94,6 +128,8 @@ App::App()
 
 App::~App()
 {
+    saveActionHistory();
+
     if (m_scheduler)
     {
         m_scheduler->stop();
@@ -281,6 +317,14 @@ void App::executeAction(int actionInd)
         return;
     }
 
+    // Wheel launches own usage history (not nested scheduleAction / nth-* re-runs).
+    // Skip history/cancel helpers so "Most Recent" cannot become most recent.
+    if (!isHistoryMetaAction(*action))
+    {
+        m_actionHistory.recordUse(action->getId());
+        saveActionHistory();
+    }
+
     // Copy into the scheduler so the library Action stays editable/reusable.
     m_scheduler->submit(*action);
 
@@ -288,6 +332,87 @@ void App::executeAction(int actionInd)
     {
         hideGui();
     }
+}
+
+Action *App::nthRecentAction(int n)
+{
+    if (n < 1)
+    {
+        return nullptr;
+    }
+
+    // Walk raw MRU ranks, skipping helpers / missing ids, until the Nth real Action.
+    int found = 0;
+    for (int rank = 1;; ++rank)
+    {
+        const std::string id = m_actionHistory.nthRecentId(rank);
+        if (id.empty())
+        {
+            return nullptr;
+        }
+        Action *candidate = findActionById(id);
+        if (candidate == nullptr || isHistoryMetaAction(*candidate))
+        {
+            continue;
+        }
+        if (++found == n)
+        {
+            return candidate;
+        }
+    }
+}
+
+Action *App::nthFrequentAction(int n)
+{
+    if (n < 1)
+    {
+        return nullptr;
+    }
+
+    // Walk frequency ranks the same way so meta Actions never win MFU either.
+    int found = 0;
+    for (int rank = 1;; ++rank)
+    {
+        const std::string id = m_actionHistory.nthFrequentId(rank);
+        if (id.empty())
+        {
+            return nullptr;
+        }
+        Action *candidate = findActionById(id);
+        if (candidate == nullptr || isHistoryMetaAction(*candidate))
+        {
+            continue;
+        }
+        if (++found == n)
+        {
+            return candidate;
+        }
+    }
+}
+
+QString App::historyPath() const
+{
+    const QFileInfo configInfo(m_configPath);
+    return configInfo.dir().filePath("action_history.json");
+}
+
+void App::pruneActionHistory()
+{
+    std::vector<std::string> ids;
+    ids.reserve(actionLibrary.size());
+    for (const Action &action : actionLibrary)
+    {
+        if (!action.getId().empty())
+        {
+            ids.push_back(action.getId());
+        }
+    }
+    m_actionHistory.pruneToLibrary(ids);
+}
+
+void App::saveActionHistory()
+{
+    m_actionHistory.save(historyPath());
 }
 
 Scheduler &App::scheduler() noexcept
@@ -362,6 +487,8 @@ bool App::applyConfig(const std::vector<Action> &actions, const std::vector<Menu
     }
 
     const bool saved = saveConfig();
+    pruneActionHistory();
+    saveActionHistory();
     refreshActiveMenu();
     return saved;
 }

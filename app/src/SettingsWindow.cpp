@@ -187,6 +187,16 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     auto *actionForm = new QFormLayout(actionSettingsGroup);
     m_actionNameEdit = new QLineEdit(actionSettingsGroup);
     actionForm->addRow("Action Name", m_actionNameEdit);
+    m_actionChannelSpin = new QSpinBox(actionSettingsGroup);
+    m_actionChannelSpin->setRange(0, 1000000);
+    m_actionChannelSpin->setToolTip(
+        "0 = independent (does not block other channel-0 actions).\n"
+        ">0 = shared FIFO with other actions on the same channel.");
+    actionForm->addRow("Run Channel", m_actionChannelSpin);
+    m_actionChannelHelpLabel = new QLabel(actionSettingsGroup);
+    m_actionChannelHelpLabel->setWordWrap(true);
+    m_actionChannelHelpLabel->setStyleSheet("color: #666;");
+    actionForm->addRow("", m_actionChannelHelpLabel);
     m_actionSequenceLabel = new QLabel(actionSettingsGroup);
     m_actionSequenceLabel->setWordWrap(true);
     actionForm->addRow("Sequence", m_actionSequenceLabel);
@@ -208,7 +218,12 @@ SettingsWindow::SettingsWindow(QWidget *parent)
          "Close Launcher",
          "Custom Script/App (Advanced)",
          "Mouse Move",
-         "Mouse Button"});
+         "Mouse Button",
+         "Cancel Latest",
+         "Cancel Channel",
+         "Cancel All",
+         "Nth Recent",
+         "Nth Frequent"});
     auto *addItemButton = new QPushButton("Add Item", itemsGroup);
     auto *removeItemButton = new QPushButton("Remove Item", itemsGroup);
     auto *moveItemUpButton = new QPushButton("Move Up", itemsGroup);
@@ -310,6 +325,29 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     mouseButtonForm->addRow("Button", m_mouseButtonCombo);
     mouseButtonForm->addRow("Action", m_mouseButtonActionCombo);
 
+    m_itemCancelPage = new QWidget(m_itemDetailStack);
+    auto *cancelForm = new QFormLayout(m_itemCancelPage);
+    m_cancelLevelCombo = new QComboBox(m_itemCancelPage);
+    m_cancelLevelCombo->addItem("Latest on Channel", static_cast<int>(CancelLevel::Latest));
+    m_cancelLevelCombo->addItem("Entire Channel", static_cast<int>(CancelLevel::Channel));
+    m_cancelLevelCombo->addItem("All Actions", static_cast<int>(CancelLevel::All));
+    m_cancelChannelSpin = new QSpinBox(m_itemCancelPage);
+    m_cancelChannelSpin->setRange(0, 1000000);
+    m_cancelHelpLabel = new QLabel(m_itemCancelPage);
+    m_cancelHelpLabel->setWordWrap(true);
+    cancelForm->addRow("Level", m_cancelLevelCombo);
+    cancelForm->addRow("Channel", m_cancelChannelSpin);
+    cancelForm->addRow(m_cancelHelpLabel);
+
+    m_itemNthPage = new QWidget(m_itemDetailStack);
+    auto *nthForm = new QFormLayout(m_itemNthPage);
+    m_nthSpin = new QSpinBox(m_itemNthPage);
+    m_nthSpin->setRange(1, 1000);
+    m_nthHelpLabel = new QLabel(m_itemNthPage);
+    m_nthHelpLabel->setWordWrap(true);
+    nthForm->addRow("N (1 = top)", m_nthSpin);
+    nthForm->addRow(m_nthHelpLabel);
+
     m_itemDetailStack->addWidget(m_itemNonePage);
     m_itemDetailStack->addWidget(m_itemLaunchAppPage);
     m_itemDetailStack->addWidget(m_itemScriptPage);
@@ -319,6 +357,8 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_itemDetailStack->addWidget(m_itemHotkeyPage);
     m_itemDetailStack->addWidget(m_itemMouseMovePage);
     m_itemDetailStack->addWidget(m_itemMouseButtonPage);
+    m_itemDetailStack->addWidget(m_itemCancelPage);
+    m_itemDetailStack->addWidget(m_itemNthPage);
     auto *detailGroup = new QGroupBox("Item Details", m_actionEditor);
     auto *detailLayout = new QVBoxLayout(detailGroup);
     detailLayout->addWidget(m_itemDetailStack);
@@ -503,6 +543,26 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                     m_actions[index].setName(text.toStdString());
                     refreshActionList();
                 } });
+    connect(m_actionChannelSpin, qOverload<int>(&QSpinBox::valueChanged), this, [this](int value)
+            {
+                const int index = currentActionIndex();
+                if (index < 0)
+                {
+                    return;
+                }
+                m_actions[index].setChannel(static_cast<uint32_t>(value));
+                if (value == 0)
+                {
+                    m_actionChannelHelpLabel->setText(
+                        "Independent: runs without blocking other channel-0 actions.");
+                }
+                else
+                {
+                    m_actionChannelHelpLabel->setText(
+                        QString("Shared FIFO: only one action on channel %1 runs at a time.").arg(value));
+                }
+                refreshActionList();
+            });
     connect(addItemButton, &QPushButton::clicked, this, [this]()
             {
                 const int actionIndex = currentActionIndex();
@@ -537,6 +597,21 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                     break;
                 case 7:
                     item = std::make_unique<AI_MouseButton>(0, true);
+                    break;
+                case 8:
+                    item = std::make_unique<AI_Cancel>(CancelLevel::Latest, 0);
+                    break;
+                case 9:
+                    item = std::make_unique<AI_Cancel>(CancelLevel::Channel, 0);
+                    break;
+                case 10:
+                    item = std::make_unique<AI_Cancel>(CancelLevel::All);
+                    break;
+                case 11:
+                    item = std::make_unique<AI_nthRecent>(1);
+                    break;
+                case 12:
+                    item = std::make_unique<AI_nthFrequent>(1);
                     break;
                 default:
                     return;
@@ -754,6 +829,71 @@ SettingsWindow::SettingsWindow(QWidget *parent)
             { mouseButtonEditorChanged(); });
     connect(m_mouseButtonActionCombo, qOverload<int>(&QComboBox::currentIndexChanged), this, [mouseButtonEditorChanged](int)
             { mouseButtonEditorChanged(); });
+    auto cancelEditorChanged = [this]()
+    {
+        if (m_isRefreshing)
+        {
+            return;
+        }
+        const int actionIndex = currentActionIndex();
+        const int itemIndex = currentActionItemIndex();
+        auto *item = actionIndex >= 0 ? dynamic_cast<AI_Cancel *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+        if (item == nullptr)
+        {
+            return;
+        }
+        item->level = static_cast<CancelLevel>(m_cancelLevelCombo->currentData().toInt());
+        item->channel = static_cast<uint32_t>(m_cancelChannelSpin->value());
+        const bool needsChannel = item->level == CancelLevel::Latest || item->level == CancelLevel::Channel;
+        m_cancelChannelSpin->setEnabled(needsChannel);
+        if (item->level == CancelLevel::Latest)
+        {
+            m_cancelHelpLabel->setText(
+                "Cancels the most recently submitted action on the chosen channel. "
+                "Use channel 0 for the most recent action on any channel. "
+                "Never cancels the action that contains this item.");
+        }
+        else if (item->level == CancelLevel::Channel)
+        {
+            m_cancelHelpLabel->setText("Cancels every cancelable action on the chosen channel.");
+        }
+        else
+        {
+            m_cancelHelpLabel->setText("Cancels every cancelable action.");
+        }
+        refreshActionItemList();
+        refreshActionSummary();
+    };
+    connect(m_cancelLevelCombo, qOverload<int>(&QComboBox::currentIndexChanged), this, [cancelEditorChanged](int)
+            { cancelEditorChanged(); });
+    connect(m_cancelChannelSpin, qOverload<int>(&QSpinBox::valueChanged), this, [cancelEditorChanged](int)
+            { cancelEditorChanged(); });
+    connect(m_nthSpin, qOverload<int>(&QSpinBox::valueChanged), this, [this](int value)
+            {
+                if (m_isRefreshing)
+                {
+                    return;
+                }
+                const int actionIndex = currentActionIndex();
+                const int itemIndex = currentActionItemIndex();
+                if (actionIndex < 0 || itemIndex < 0)
+                {
+                    return;
+                }
+                if (auto *recent = dynamic_cast<AI_nthRecent *>(m_actions[actionIndex].getItem(itemIndex)))
+                {
+                    recent->n = value;
+                }
+                else if (auto *frequent = dynamic_cast<AI_nthFrequent *>(m_actions[actionIndex].getItem(itemIndex)))
+                {
+                    frequent->n = value;
+                }
+                else
+                {
+                    return;
+                }
+                refreshActionItemList();
+                refreshActionSummary(); });
     connect(m_delaySpin, qOverload<int>(&QSpinBox::valueChanged), this, [this](int value)
             {
                 const int actionIndex = currentActionIndex();
@@ -846,7 +986,12 @@ void SettingsWindow::refreshActionList()
     m_actionList->clear();
     for (const Action &action : m_actions)
     {
-        m_actionList->addItem(QString::fromStdString(action.getName()));
+        QString label = QString::fromStdString(action.getName());
+        if (action.channel() != 0)
+        {
+            label += QString(" · ch %1").arg(action.channel());
+        }
+        m_actionList->addItem(label);
     }
     if (selected >= 0 && selected < m_actionList->count())
     {
@@ -900,8 +1045,21 @@ void SettingsWindow::refreshActionEditor()
         return;
     }
 
-    const QSignalBlocker blocker(m_actionNameEdit);
+    const QSignalBlocker nameBlocker(m_actionNameEdit);
+    const QSignalBlocker channelBlocker(m_actionChannelSpin);
     m_actionNameEdit->setText(QString::fromStdString(m_actions[index].getName()));
+    const int channel = static_cast<int>(m_actions[index].channel());
+    m_actionChannelSpin->setValue(channel);
+    if (channel == 0)
+    {
+        m_actionChannelHelpLabel->setText(
+            "Independent: runs without blocking other channel-0 actions.");
+    }
+    else
+    {
+        m_actionChannelHelpLabel->setText(
+            QString("Shared FIFO: only one action on channel %1 runs at a time.").arg(channel));
+    }
     refreshActionItemList();
     refreshActionSummary();
     refreshItemDetail();
@@ -1141,6 +1299,52 @@ void SettingsWindow::refreshItemDetail()
         return;
     }
 
+    if (auto *cancel = dynamic_cast<AI_Cancel *>(item))
+    {
+        const QSignalBlocker levelBlocker(m_cancelLevelCombo);
+        const QSignalBlocker channelBlocker(m_cancelChannelSpin);
+        const int levelIndex = m_cancelLevelCombo->findData(static_cast<int>(cancel->level));
+        m_cancelLevelCombo->setCurrentIndex(levelIndex >= 0 ? levelIndex : 0);
+        m_cancelChannelSpin->setValue(static_cast<int>(cancel->channel));
+        const bool needsChannel = cancel->level == CancelLevel::Latest || cancel->level == CancelLevel::Channel;
+        m_cancelChannelSpin->setEnabled(needsChannel);
+        if (cancel->level == CancelLevel::Latest)
+        {
+            m_cancelHelpLabel->setText(
+                "Cancels the most recently submitted action on the chosen channel. "
+                "Use channel 0 for the most recent action on any channel. "
+                "Never cancels the action that contains this item.");
+        }
+        else if (cancel->level == CancelLevel::Channel)
+        {
+            m_cancelHelpLabel->setText("Cancels every cancelable action on the chosen channel.");
+        }
+        else
+        {
+            m_cancelHelpLabel->setText("Cancels every cancelable action.");
+        }
+        m_itemDetailStack->setCurrentWidget(m_itemCancelPage);
+        return;
+    }
+
+    if (auto *recent = dynamic_cast<AI_nthRecent *>(item))
+    {
+        const QSignalBlocker blocker(m_nthSpin);
+        m_nthSpin->setValue(std::max(1, recent->n));
+        m_nthHelpLabel->setText("Runs the Nth most recently launched action from the wheel (1 = most recent).");
+        m_itemDetailStack->setCurrentWidget(m_itemNthPage);
+        return;
+    }
+
+    if (auto *frequent = dynamic_cast<AI_nthFrequent *>(item))
+    {
+        const QSignalBlocker blocker(m_nthSpin);
+        m_nthSpin->setValue(std::max(1, frequent->n));
+        m_nthHelpLabel->setText("Runs the Nth most frequently launched action from the wheel (1 = most used).");
+        m_itemDetailStack->setCurrentWidget(m_itemNthPage);
+        return;
+    }
+
     m_itemDetailStack->setCurrentWidget(m_itemNonePage);
 }
 
@@ -1232,6 +1436,28 @@ QString SettingsWindow::describeActionItem(const ActionItem *item) const
             .arg(name)
             .arg(button->down ? "Press" : "Release");
     }
+    case ActionItemKind::Cancel:
+    {
+        const auto *cancel = static_cast<const AI_Cancel *>(item);
+        switch (cancel->level)
+        {
+        case CancelLevel::Channel:
+            return QString("Cancel Channel: %1").arg(cancel->channel);
+        case CancelLevel::All:
+            return "Cancel All";
+        case CancelLevel::Latest:
+        default:
+            if (cancel->channel == 0)
+            {
+                return "Cancel Latest (any channel)";
+            }
+            return QString("Cancel Latest: channel %1").arg(cancel->channel);
+        }
+    }
+    case ActionItemKind::NthRecent:
+        return QString("Nth Recent: %1").arg(static_cast<const AI_nthRecent *>(item)->n);
+    case ActionItemKind::NthFrequent:
+        return QString("Nth Frequent: %1").arg(static_cast<const AI_nthFrequent *>(item)->n);
     case ActionItemKind::KeyRelease:
     {
         const auto *release = static_cast<const AI_KeyRelease *>(item);
@@ -1577,6 +1803,22 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
                 if (button->button < 0 || button->button > 2)
                 {
                     errorMessage = QString("Mouse Button item in '%1' has an invalid button.").arg(QString::fromStdString(action.getName()));
+                    return false;
+                }
+            }
+            else if (itemPtr->kind() == ActionItemKind::NthRecent)
+            {
+                if (static_cast<const AI_nthRecent *>(itemPtr.get())->n < 1)
+                {
+                    errorMessage = QString("Nth Recent item in '%1' must be >= 1.").arg(QString::fromStdString(action.getName()));
+                    return false;
+                }
+            }
+            else if (itemPtr->kind() == ActionItemKind::NthFrequent)
+            {
+                if (static_cast<const AI_nthFrequent *>(itemPtr.get())->n < 1)
+                {
+                    errorMessage = QString("Nth Frequent item in '%1' must be >= 1.").arg(QString::fromStdString(action.getName()));
                     return false;
                 }
             }

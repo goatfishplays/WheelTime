@@ -150,6 +150,35 @@ namespace
                     itemObject.value("keycode").toInt(0),
                     itemObject.value("modifiers").toInt(0)));
             }
+            else if (type == "cancel")
+            {
+                const QString level = itemObject.value("level").toString("latest");
+                CancelLevel cancelLevel = CancelLevel::Latest;
+                if (level == "channel")
+                {
+                    cancelLevel = CancelLevel::Channel;
+                }
+                else if (level == "all")
+                {
+                    cancelLevel = CancelLevel::All;
+                }
+                else
+                {
+                    // "latest" or legacy "action"
+                    cancelLevel = CancelLevel::Latest;
+                }
+                items.push_back(std::make_unique<AI_Cancel>(
+                    cancelLevel,
+                    static_cast<uint32_t>(itemObject.value("channel").toInt(0))));
+            }
+            else if (type == "nth_recent")
+            {
+                items.push_back(std::make_unique<AI_nthRecent>(itemObject.value("n").toInt(1)));
+            }
+            else if (type == "nth_frequent")
+            {
+                items.push_back(std::make_unique<AI_nthFrequent>(itemObject.value("n").toInt(1)));
+            }
             else
             {
                 qWarning() << "Unsupported action item type:" << type;
@@ -163,7 +192,8 @@ namespace
     {
         const std::string id = actionObject.value("id").toString().toStdString();
         const std::string name = actionObject.value("name").toString("Unnamed Action").toStdString();
-        return Action(parseItems(actionObject.value("items").toArray()), name, "", id);
+        const uint32_t channel = static_cast<uint32_t>(actionObject.value("channel").toInt(0));
+        return Action(parseItems(actionObject.value("items").toArray()), name, "", id, channel);
     }
 
     bool loadNewSchema(const QJsonObject &rootObject, std::vector<Action> &actions, std::vector<Menu *> &menus)
@@ -298,6 +328,35 @@ namespace
             itemObject.insert("keycode", static_cast<const AI_KeyRelease &>(item).keycode);
             itemObject.insert("modifiers", static_cast<const AI_KeyRelease &>(item).modifiers);
             break;
+        case ActionItemKind::Cancel:
+        {
+            const auto &cancel = static_cast<const AI_Cancel &>(item);
+            itemObject.insert("type", "cancel");
+            switch (cancel.level)
+            {
+            case CancelLevel::Channel:
+                itemObject.insert("level", "channel");
+                itemObject.insert("channel", static_cast<int>(cancel.channel));
+                break;
+            case CancelLevel::All:
+                itemObject.insert("level", "all");
+                break;
+            case CancelLevel::Latest:
+            default:
+                itemObject.insert("level", "latest");
+                itemObject.insert("channel", static_cast<int>(cancel.channel));
+                break;
+            }
+            break;
+        }
+        case ActionItemKind::NthRecent:
+            itemObject.insert("type", "nth_recent");
+            itemObject.insert("n", static_cast<const AI_nthRecent &>(item).n);
+            break;
+        case ActionItemKind::NthFrequent:
+            itemObject.insert("type", "nth_frequent");
+            itemObject.insert("n", static_cast<const AI_nthFrequent &>(item).n);
+            break;
         default:
             itemObject.insert("type", "unsupported");
             break;
@@ -348,6 +407,7 @@ bool MenuConfigLoader::saveConfig(const QString &filepath, const std::vector<Act
         QJsonObject actionObject;
         actionObject.insert("id", QString::fromStdString(action.getId()));
         actionObject.insert("name", QString::fromStdString(action.getName()));
+        actionObject.insert("channel", static_cast<int>(action.channel()));
 
         QJsonArray itemsArray;
         for (const auto &itemPtr : action.getItems())

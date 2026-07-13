@@ -31,8 +31,12 @@ enum class ActionItemKind
     NthRecent,
     NthFrequent,
     MouseMove,
-    MouseButton
+    MouseButton,
+    Cancel
 };
+
+/// @brief Short console label for @p kind (e.g. "cancel", "hotkey").
+[[nodiscard]] const char *actionItemKindName(ActionItemKind kind) noexcept;
 
 /**
  * @brief One executable step inside an Action.

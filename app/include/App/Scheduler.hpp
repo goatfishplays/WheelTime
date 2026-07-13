@@ -27,13 +27,14 @@ namespace Application
 {
 
 /**
- * @brief Kinds of requests ActionItems may record for the scheduler (future use).
+ * @brief Kinds of requests ActionItems may record for the scheduler.
  */
 enum class SchedulerRequestType
 {
     ScheduleAction,
-    CancelAction,
-    CancelChannel
+    CancelMostRecent,
+    CancelChannel,
+    CancelAll
 };
 
 /**
@@ -175,6 +176,8 @@ private:
         bool removeIfParentCancelled = false;
         /// @brief If true, RunNow bypasses pause (cancel-flush cleanups).
         bool forceDispatch = false;
+        /// @brief If true, this submit is cancel-flush cleanup (for logging / marking).
+        bool isCancelFlush = false;
     };
 
     /// @brief Mailbox payload for cancelAction().
@@ -234,6 +237,13 @@ private:
     /// @brief Implements cancelAll on the scheduler thread.
     void handleCancelAll();
 
+    /**
+     * @brief Cancels the most recently submitted cancelable Action.
+     * @param channel If non-zero, only consider Actions on that logical channel.
+     * @param excludeActionId Never cancel this id (the requesting Action).
+     */
+    void handleCancelMostRecent(uint32_t channel, uint64_t excludeActionId);
+
     /// @brief Implements pause on the scheduler thread.
     void handlePause();
 
@@ -265,11 +275,22 @@ private:
      */
     void ingestCancelFlushes(ActionExecutionContext &context);
 
+    /**
+     * @brief Applies context.requestCancel*(...) via handleCancel*.
+     */
+    void ingestCancelRequests(ActionExecutionContext &context);
+
     /// @brief Tracks cancel flag / cancelable / logical channel for a live context.
     void registerContext(const ActionExecutionContext &context);
 
     /// @brief Drops tracking tables for a finished or discarded Action.
     void unregisterContext(uint64_t actionId);
+
+    /// @brief Records @p actionId as the newest live submission (scheduler thread).
+    void noteSubmitOrder(uint64_t actionId);
+
+    /// @brief Removes @p actionId from the live submission order.
+    void forgetSubmitOrder(uint64_t actionId);
 
     /// @brief Submits registered cancel-flush Actions immediately (forced uncancelable).
     void flushCleanups(uint64_t actionId);
@@ -307,6 +328,8 @@ private:
     std::unordered_map<uint64_t, bool> m_cancelableById;
     /// @brief Action::channel() for cancelChannel matching (including channel 0).
     std::unordered_map<uint64_t, uint32_t> m_logicalChannelById;
+    /// @brief Live Action ids in submit order (oldest → newest).
+    std::vector<uint64_t> m_submitOrder;
     /// @brief Immediate cleanup Actions keyed by parent action id.
     std::unordered_map<uint64_t, std::vector<std::unique_ptr<Action>>> m_flushActions;
     /// @brief Delayed cleanup action ids to discard when a parent is cancelled.
