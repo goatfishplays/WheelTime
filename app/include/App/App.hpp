@@ -97,9 +97,12 @@ namespace Application
         Menu *activeMenu;
         Platform::Vec2 priorMousePos;
         Platform::Window priorWindow;
+        bool m_overlayInitialized{false};
 
         void gatherPriors();
         void restorePriors();
+        void initializeOverlay();
+        void configureOverlayForCursor();
         /// @brief Deletes and clears the currently loaded heap-allocated menus.
         void clearMenus();
         App();

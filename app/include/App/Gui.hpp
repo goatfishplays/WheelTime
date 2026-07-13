@@ -49,6 +49,12 @@ namespace Application
         void onSelectChange(int selectionInd);
         /// @brief Displays a menu plus the resolved labels for its action slots.
         void setMenu(const Menu &menu, const std::vector<std::string> &actionLabels);
+        /// @brief Puts the overlay into visible, mouse-interactive mode.
+        void enterInteractiveOverlay();
+        /// @brief Hides launcher visuals and leaves the shell alive for click-through mode.
+        void enterDormantOverlay();
+        /// @brief Whether the launcher visuals are currently visible.
+        bool isLauncherVisible() const;
 
     signals:
         /// @brief Emitted when the launcher should be dismissed with Escape.
@@ -59,10 +65,12 @@ namespace Application
         void keyPressEvent(QKeyEvent *event) override;
 
     private:
+        QWidget *m_overlayPanel{nullptr};
         QLabel *m_titleLabel{nullptr};
         RadialMenuWidget *m_radialMenu{nullptr};
         QPushButton *m_settingsButton{nullptr};
         /// @brief Kept for now so the older UI affordance still exists visually.
         QPushButton *m_editButton{nullptr};
+        bool m_launcherVisible{false};
     };
 }
