@@ -14,6 +14,7 @@
 #include <QSignalBlocker>
 #include <QSplitter>
 #include <QVBoxLayout>
+#include <QKeyEvent>
 
 #include "App/ActionItems.hpp"
 
@@ -98,6 +99,14 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     auto *leftLayout = new QVBoxLayout(leftPane);
     leftLayout->setContentsMargins(12, 12, 12, 12);
     leftLayout->setSpacing(12);
+
+    m_globalGroup = new QGroupBox("Global Settings", leftPane);
+    auto *globalLayout = new QHBoxLayout(m_globalGroup);
+    globalLayout->addWidget(new QLabel("Launcher Hotkey:"));
+    m_hotkeyRecordButton = new QPushButton("Alt + Space", m_globalGroup);
+    m_hotkeyRecordButton->installEventFilter(this);
+    globalLayout->addWidget(m_hotkeyRecordButton);
+    leftLayout->addWidget(m_globalGroup);
 
     auto *menusGroup = new QGroupBox("Menus", leftPane);
     auto *menusLayout = new QVBoxLayout(menusGroup);
@@ -316,6 +325,14 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                     return;
                 }
                 emit saveRequested(); });
+
+    connect(m_hotkeyRecordButton, &QPushButton::clicked, this, [this]()
+            {
+                if (!m_isRecordingHotkey) {
+                    m_isRecordingHotkey = true;
+                    m_hotkeyRecordButton->setText("Press any key combination...");
+                    m_hotkeyRecordButton->grabKeyboard();
+                } });
 
     connect(m_menuList, &QListWidget::currentRowChanged, this, [this](int row)
             {
@@ -696,11 +713,58 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_itemDetailStack->setCurrentWidget(m_itemNonePage);
 }
 
-void SettingsWindow::loadWorkingCopy(const std::vector<Action> &actions, const std::vector<Menu> &menus)
+void SettingsWindow::updateHotkeyButtonText()
 {
+    QString mods;
+    if (m_appConfig.globalHotkeyMod & 0x0002) mods += "Ctrl + ";
+    if (m_appConfig.globalHotkeyMod & 0x0008) mods += "Win + ";
+    if (m_appConfig.globalHotkeyMod & 0x0001) mods += "Alt + ";
+    if (m_appConfig.globalHotkeyMod & 0x0004) mods += "Shift + ";
+    
+    m_hotkeyRecordButton->setText(mods + keyDisplayName(m_appConfig.globalHotkeyVk));
+}
+
+bool SettingsWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    if (m_isRecordingHotkey && event->type() == QEvent::KeyPress)
+    {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        int key = keyEvent->key();
+        
+        // Ignore modifier-only presses until they press a main key
+        if (key == Qt::Key_Control || key == Qt::Key_Shift || key == Qt::Key_Alt || key == Qt::Key_Meta || 
+            key == Qt::Key_Super_L || key == Qt::Key_Super_R || 
+            key == Qt::Key_AltGr || key == Qt::Key_Menu)
+        {
+            return true;
+        }
+
+        m_appConfig.globalHotkeyVk = keyEvent->nativeVirtualKey();
+        m_appConfig.globalHotkeyMod = 0;
+        
+        Qt::KeyboardModifiers modifiers = keyEvent->modifiers();
+        if (modifiers & Qt::ControlModifier) m_appConfig.globalHotkeyMod |= 0x0002;
+        if (modifiers & Qt::AltModifier)     m_appConfig.globalHotkeyMod |= 0x0001;
+        if (modifiers & Qt::ShiftModifier)   m_appConfig.globalHotkeyMod |= 0x0004;
+        if (modifiers & Qt::MetaModifier)    m_appConfig.globalHotkeyMod |= 0x0008;
+
+        m_isRecordingHotkey = false;
+        m_hotkeyRecordButton->releaseKeyboard();
+        updateHotkeyButtonText();
+        return true;
+    }
+    return QWidget::eventFilter(obj, event);
+}
+
+void SettingsWindow::loadWorkingCopy(const AppConfig &appConfig, const std::vector<Action> &actions, const std::vector<Menu> &menus)
+{
+    m_appConfig = appConfig;
     m_actions = actions;
     m_menus = menus;
     m_selectionKind = SelectionKind::None;
+    
+    updateHotkeyButtonText();
+    
     refreshLists();
 
     if (!m_menus.empty())
@@ -717,8 +781,9 @@ void SettingsWindow::loadWorkingCopy(const std::vector<Action> &actions, const s
     }
 }
 
-void SettingsWindow::exportWorkingCopy(std::vector<Action> &actions, std::vector<Menu> &menus) const
+void SettingsWindow::exportWorkingCopy(AppConfig &appConfig, std::vector<Action> &actions, std::vector<Menu> &menus) const
 {
+    appConfig = m_appConfig;
     actions = m_actions;
     menus = m_menus;
 }

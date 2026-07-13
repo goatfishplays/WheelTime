@@ -27,6 +27,12 @@ namespace Application
     /// @brief Forward declaration for the non-modal settings editor window.
     class SettingsWindow;
 
+    struct AppConfig
+    {
+        int globalHotkeyMod = 0x0001; // MOD_ALT
+        int globalHotkeyVk = 0x20;    // VK_SPACE
+    };
+
     /**
      * @brief Owns the long-lived runtime state for WheelTime.
      *
@@ -88,7 +94,7 @@ namespace Application
         /// @brief Persists the current runtime config to disk.
         bool saveConfig();
         /// @brief Replaces the live runtime config with an edited working copy.
-        bool applyConfig(const std::vector<Action> &actions, const std::vector<Menu> &menus);
+        bool applyConfig(const AppConfig &appConfig, const std::vector<Action> &actions, const std::vector<Menu> &menus);
         /// @brief Re-renders the active menu after config changes.
         void refreshActiveMenu();
         QString getConfigPath() const;
@@ -110,5 +116,7 @@ namespace Application
         SettingsWindow *m_settingsWindow;
         /// @brief Absolute path to the JSON config file used for load/save.
         QString m_configPath;
+        /// @brief Application level configuration like global hotkey.
+        AppConfig m_appConfig;
     };
 }

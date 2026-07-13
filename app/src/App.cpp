@@ -53,9 +53,19 @@ App::App()
       m_settingsWindow(nullptr),
       m_configPath(MenuConfigLoader::defaultConfigPath())
 {
+    // Load the repo-local config on startup. If it is missing or malformed,
+    // keep the app alive with a tiny fallback menu so the GUI still opens.
+    if (!MenuConfigLoader::loadConfig(m_configPath, m_appConfig, actionLibrary, loadedMenus))
+    {
+        std::vector<std::unique_ptr<ActionItem>> items;
+        items.push_back(std::make_unique<AI_Close>());
+        actionLibrary.push_back(Action(std::move(items), "Config missing", "", "action-config-missing"));
+        loadedMenus.push_back(new Menu(nullptr, false, false, "Config Error", {"action-config-missing"}, "menu-config-error"));
+    }
+
     Platform::InputBind bind;
-    bind.mod = 0x0001; // MOD_ALT
-    bind.input = 0x20; // VK_SPACE
+    bind.mod = m_appConfig.globalHotkeyMod;
+    bind.input = m_appConfig.globalHotkeyVk;
     m_inputRcvr.registerInputBinding(bind);
 
     // Install native event filter to capture WM_HOTKEY
@@ -66,15 +76,7 @@ App::App()
     QObject::connect(&gui, &Gui::escapePressed, [this]()
                      { hideGui(); });
 
-    // Load the repo-local config on startup. If it is missing or malformed,
-    // keep the app alive with a tiny fallback menu so the GUI still opens.
-    if (!MenuConfigLoader::loadConfig(m_configPath, actionLibrary, loadedMenus))
-    {
-        std::vector<std::unique_ptr<ActionItem>> items;
-        items.push_back(std::make_unique<AI_Close>());
-        actionLibrary.push_back(Action(std::move(items), "Config missing", "", "action-config-missing"));
-        loadedMenus.push_back(new Menu(nullptr, false, false, "Config Error", {"action-config-missing"}, "menu-config-error"));
-    }
+    // Move the old loadConfig block up above so it is loaded before inputRcvr registration
 
     if (!loadedMenus.empty())
     {
@@ -99,10 +101,10 @@ App::~App()
 
     clearMenus();
 
-    // Unregister hotkey Alt + Space (mod: 0x0001, vk: 0x20)
+    // Unregister hotkey
     Platform::InputBind bind;
-    bind.mod = 0x0001;
-    bind.input = 0x20;
+    bind.mod = m_appConfig.globalHotkeyMod;
+    bind.input = m_appConfig.globalHotkeyVk;
     m_inputRcvr.unregisterInputBinding(bind);
 }
 
@@ -280,16 +282,16 @@ void App::showSettingsWindow()
         m_settingsWindow = new SettingsWindow();
         QObject::connect(m_settingsWindow, &SettingsWindow::saveRequested, [this]()
                          {
+                             // The settings window edits a detached working copy.
+                             // after the user explicitly saves.
+                             AppConfig newConfig;
                              std::vector<Action> newActions;
                              std::vector<Menu> newMenus;
-                             // The settings window edits a detached working copy.
-                             // Pull that copy back into the live runtime only
-                             // after the user explicitly saves.
-                             m_settingsWindow->exportWorkingCopy(newActions, newMenus);
-                             applyConfig(newActions, newMenus); });
+                             m_settingsWindow->exportWorkingCopy(newConfig, newActions, newMenus);
+                             applyConfig(newConfig, newActions, newMenus); });
     }
 
-    m_settingsWindow->loadWorkingCopy(actionLibrary, getMenuCopies());
+    m_settingsWindow->loadWorkingCopy(m_appConfig, actionLibrary, getMenuCopies());
     m_settingsWindow->show();
     m_settingsWindow->raise();
     m_settingsWindow->activateWindow();
@@ -297,11 +299,24 @@ void App::showSettingsWindow()
 
 bool App::saveConfig()
 {
-    return MenuConfigLoader::saveConfig(m_configPath, actionLibrary, loadedMenus);
+    return MenuConfigLoader::saveConfig(m_configPath, m_appConfig, actionLibrary, loadedMenus);
 }
 
-bool App::applyConfig(const std::vector<Action> &actions, const std::vector<Menu> &menus)
+bool App::applyConfig(const AppConfig &appConfig, const std::vector<Action> &actions, const std::vector<Menu> &menus)
 {
+    // Unregister old hotkey
+    Platform::InputBind oldBind;
+    oldBind.mod = m_appConfig.globalHotkeyMod;
+    oldBind.input = m_appConfig.globalHotkeyVk;
+    m_inputRcvr.unregisterInputBinding(oldBind);
+
+    m_appConfig = appConfig;
+
+    // Register new hotkey
+    Platform::InputBind newBind;
+    newBind.mod = m_appConfig.globalHotkeyMod;
+    newBind.input = m_appConfig.globalHotkeyVk;
+    m_inputRcvr.registerInputBinding(newBind);
     const std::string previousActiveMenuId = activeMenu == nullptr ? "" : activeMenu->getId();
 
     // Swap the full runtime model in one step so menus and the shared action

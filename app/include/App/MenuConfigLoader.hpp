@@ -14,6 +14,7 @@
 #include <QString>
 #include <vector>
 
+#include "App/App.hpp"
 #include "App/Action.hpp"
 #include "App/Menu.hpp"
 
@@ -30,9 +31,9 @@ namespace Application
     {
     public:
         /// @brief Loads actions and menus from disk into runtime objects.
-        static bool loadConfig(const QString &filepath, std::vector<Action> &actions, std::vector<Menu *> &menus);
+        static bool loadConfig(const QString &filepath, AppConfig &appConfig, std::vector<Action> &actions, std::vector<Menu *> &menus);
         /// @brief Saves the current shared action library and menu references.
-        static bool saveConfig(const QString &filepath, const std::vector<Action> &actions, const std::vector<Menu *> &menus);
+        static bool saveConfig(const QString &filepath, const AppConfig &appConfig, const std::vector<Action> &actions, const std::vector<Menu *> &menus);
         /// @brief Finds the default repo-local config path using common run dirs.
         static QString defaultConfigPath();
     };
