@@ -1,0 +1,20 @@
+---
+alwaysApply: true
+---
+This repository uses modern C++20.
+
+General guidelines:
+
+- Prefer RAII.
+- Use std::unique_ptr for ownership.
+- Do not use raw owning pointers.
+- Prefer std::jthread over std::thread.
+- Avoid global state.
+- Keep headers lightweight.
+- Separate interface and implementation.
+- Minimize lock contention.
+- Every class should have a single responsibility.
+- Workers never make scheduling decisions.
+- Scheduler owns every Action.
+- Preserve strict FIFO ordering within channels.
+- Do not implement future phases until requested.

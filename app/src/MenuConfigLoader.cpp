@@ -132,6 +132,24 @@ namespace
             {
                 items.push_back(std::make_unique<AI_Menu>(itemObject.value("menuId").toString().toStdString()));
             }
+            else if (type == "mouse_move")
+            {
+                items.push_back(std::make_unique<AI_MouseMove>(
+                    itemObject.value("x").toInt(0),
+                    itemObject.value("y").toInt(0)));
+            }
+            else if (type == "mouse_button")
+            {
+                items.push_back(std::make_unique<AI_MouseButton>(
+                    itemObject.value("button").toInt(0),
+                    itemObject.value("down").toBool(true)));
+            }
+            else if (type == "key_release")
+            {
+                items.push_back(std::make_unique<AI_KeyRelease>(
+                    itemObject.value("keycode").toInt(0),
+                    itemObject.value("modifiers").toInt(0)));
+            }
             else
             {
                 qWarning() << "Unsupported action item type:" << type;
@@ -264,6 +282,21 @@ namespace
         case ActionItemKind::Menu:
             itemObject.insert("type", "menu");
             itemObject.insert("menuId", QString::fromStdString(static_cast<const AI_Menu &>(item).menuId));
+            break;
+        case ActionItemKind::MouseMove:
+            itemObject.insert("type", "mouse_move");
+            itemObject.insert("x", static_cast<const AI_MouseMove &>(item).x);
+            itemObject.insert("y", static_cast<const AI_MouseMove &>(item).y);
+            break;
+        case ActionItemKind::MouseButton:
+            itemObject.insert("type", "mouse_button");
+            itemObject.insert("button", static_cast<const AI_MouseButton &>(item).button);
+            itemObject.insert("down", static_cast<const AI_MouseButton &>(item).down);
+            break;
+        case ActionItemKind::KeyRelease:
+            itemObject.insert("type", "key_release");
+            itemObject.insert("keycode", static_cast<const AI_KeyRelease &>(item).keycode);
+            itemObject.insert("modifiers", static_cast<const AI_KeyRelease &>(item).modifiers);
             break;
         default:
             itemObject.insert("type", "unsupported");

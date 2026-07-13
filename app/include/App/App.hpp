@@ -21,6 +21,9 @@
 #include "App/Action.hpp"
 #include "App/Gui.hpp"
 #include "App/Menu.hpp"
+#include "App/Scheduler.hpp"
+
+#include <memory>
 
 namespace Application
 {
@@ -99,6 +102,10 @@ namespace Application
         void refreshActiveMenu();
         QString getConfigPath() const;
 
+        /// @brief The multithreaded Action scheduler used for all launcher macros.
+        [[nodiscard]] Scheduler &scheduler() noexcept;
+        [[nodiscard]] const Scheduler &scheduler() const noexcept;
+
     private:
         Menu *activeMenu;
         Platform::Vec2 priorMousePos;
@@ -116,7 +123,10 @@ namespace Application
         SettingsWindow *m_settingsWindow;
         /// @brief Absolute path to the JSON config file used for load/save.
         QString m_configPath;
-        /// @brief Application level configuration like global hotkey.
-        AppConfig m_appConfig;
+    /// @brief Application level configuration like global hotkey.
+    AppConfig m_appConfig;
+
+    /// @brief Owns worker + scheduler threads for Action execution.
+    std::unique_ptr<Scheduler> m_scheduler;
     };
 }

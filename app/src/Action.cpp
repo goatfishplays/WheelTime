@@ -17,12 +17,17 @@
 
 using namespace Application;
 
-Action::Action(std::vector<std::unique_ptr<ActionItem>> _sequence, std::string _name, std::string _iconFilepath, std::string _id)
-    : sequence(std::move(_sequence)), name(std::move(_name)), iconFilepath(std::move(_iconFilepath)), id(std::move(_id))
+Action::Action(std::vector<std::unique_ptr<ActionItem>> _sequence, std::string _name, std::string _iconFilepath, std::string _id, uint32_t _channel)
+    : sequence(std::move(_sequence)), name(std::move(_name)), iconFilepath(std::move(_iconFilepath)), id(std::move(_id)), m_channel(_channel), m_cancelable(true)
 {
 }
 
-Action::Action(const Action &other) : name(other.name), iconFilepath(other.iconFilepath), id(other.id)
+Action::Action(const Action &other)
+    : name(other.name)
+    , iconFilepath(other.iconFilepath)
+    , id(other.id)
+    , m_channel(other.m_channel)
+    , m_cancelable(other.m_cancelable)
 {
     sequence.reserve(other.sequence.size());
     for (const auto &item : other.sequence)
@@ -44,6 +49,8 @@ Action &Action::operator=(const Action &other)
     name = other.name;
     iconFilepath = other.iconFilepath;
     id = other.id;
+    m_channel = other.m_channel;
+    m_cancelable = other.m_cancelable;
     sequence.clear();
     sequence.reserve(other.sequence.size());
     for (const auto &item : other.sequence)
@@ -90,17 +97,6 @@ void Action::removeItem(int ind)
 int Action::len() const
 {
     return this->sequence.size();
-}
-
-void Action::execute()
-{
-    for (const auto &item : sequence)
-    {
-        if (item)
-        {
-            item->execute();
-        }
-    }
 }
 
 std::string Action::getId() const
@@ -163,4 +159,24 @@ void Action::moveItem(int fromIndex, int toIndex)
     std::unique_ptr<ActionItem> item = std::move(sequence[fromIndex]);
     sequence.erase(sequence.begin() + fromIndex);
     sequence.insert(sequence.begin() + toIndex, std::move(item));
+}
+
+uint32_t Action::channel() const
+{
+    return m_channel;
+}
+
+const std::vector<std::unique_ptr<ActionItem>> &Action::items() const
+{
+    return sequence;
+}
+
+bool Action::cancelable() const noexcept
+{
+    return m_cancelable;
+}
+
+void Action::setCancelable(bool cancelable) noexcept
+{
+    m_cancelable = cancelable;
 }

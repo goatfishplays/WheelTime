@@ -1,6 +1,6 @@
 /**
  * @file App.cpp
-* @author goatfishplays@gmail.com
+ * @author goatfishplays@gmail.com
  * @brief Contains the implementation of the actual app
  * @version 0.1
  * @date 2026-07-02
@@ -19,6 +19,10 @@
 
 #include "App/MenuConfigLoader.hpp"
 #include "App/SettingsWindow.hpp"
+#include "App/ActionItems.hpp"
+
+#include <algorithm>
+#include <thread>
 
 using namespace Application;
 
@@ -51,7 +55,13 @@ App::App()
       executor(),
       m_hotkeyFilter(nullptr),
       m_settingsWindow(nullptr),
-      m_configPath(MenuConfigLoader::defaultConfigPath())
+      m_configPath(MenuConfigLoader::defaultConfigPath()),
+      m_scheduler(std::make_unique<Scheduler>(
+          []
+          {
+              const unsigned hc = std::thread::hardware_concurrency();
+              return hc == 0 ? std::size_t{2} : static_cast<std::size_t>(std::max(2u, std::min(hc, 8u)));
+          }()))
 {
     // Load the repo-local config on startup. If it is missing or malformed,
     // keep the app alive with a tiny fallback menu so the GUI still opens.
@@ -86,6 +96,11 @@ App::App()
 
 App::~App()
 {
+    if (m_scheduler)
+    {
+        m_scheduler->stop();
+    }
+
     if (m_hotkeyFilter)
     {
         qApp->removeNativeEventFilter(m_hotkeyFilter);
@@ -268,11 +283,23 @@ void App::executeAction(int actionInd)
         return;
     }
 
-    action->execute();
+    // Copy into the scheduler so the library Action stays editable/reusable.
+    m_scheduler->submit(*action);
+
     if (activeMenu->exitOnAction && gui.isVisible())
     {
         hideGui();
     }
+}
+
+Scheduler &App::scheduler() noexcept
+{
+    return *m_scheduler;
+}
+
+const Scheduler &App::scheduler() const noexcept
+{
+    return *m_scheduler;
 }
 
 void App::showSettingsWindow()
@@ -289,8 +316,17 @@ void App::showSettingsWindow()
                              std::vector<Menu> newMenus;
                              m_settingsWindow->exportWorkingCopy(newConfig, newActions, newMenus);
                              applyConfig(newConfig, newActions, newMenus); });
+
+        QObject::connect(m_settingsWindow, &SettingsWindow::windowClosed, [this]()
+                         {
+                             if (m_scheduler)
+                             {
+                                 m_scheduler->resume();
+                             } });
     }
 
+    // Pause macros while editing; resume when the window closes.
+    m_scheduler->pause();
     m_settingsWindow->loadWorkingCopy(m_appConfig, actionLibrary, getMenuCopies());
     m_settingsWindow->show();
     m_settingsWindow->raise();
@@ -317,6 +353,12 @@ bool App::applyConfig(const AppConfig &appConfig, const std::vector<Action> &act
     newBind.mod = m_appConfig.globalHotkeyMod;
     newBind.input = m_appConfig.globalHotkeyVk;
     m_inputRcvr.registerInputBinding(newBind);
+
+    // Drop in-flight macros that may reference old library Actions / menus.
+    if (m_scheduler)
+    {
+        m_scheduler->cancelAll();
+    }
     const std::string previousActiveMenuId = activeMenu == nullptr ? "" : activeMenu->getId();
 
     // Swap the full runtime model in one step so menus and the shared action
