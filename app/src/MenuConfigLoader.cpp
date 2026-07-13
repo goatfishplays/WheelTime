@@ -132,6 +132,24 @@ namespace
             {
                 items.push_back(std::make_unique<AI_Menu>(itemObject.value("menuId").toString().toStdString()));
             }
+            else if (type == "mouse_move")
+            {
+                items.push_back(std::make_unique<AI_MouseMove>(
+                    itemObject.value("x").toInt(0),
+                    itemObject.value("y").toInt(0)));
+            }
+            else if (type == "mouse_button")
+            {
+                items.push_back(std::make_unique<AI_MouseButton>(
+                    itemObject.value("button").toInt(0),
+                    itemObject.value("down").toBool(true)));
+            }
+            else if (type == "key_release")
+            {
+                items.push_back(std::make_unique<AI_KeyRelease>(
+                    itemObject.value("keycode").toInt(0),
+                    itemObject.value("modifiers").toInt(0)));
+            }
             else
             {
                 qWarning() << "Unsupported action item type:" << type;
@@ -265,6 +283,21 @@ namespace
             itemObject.insert("type", "menu");
             itemObject.insert("menuId", QString::fromStdString(static_cast<const AI_Menu &>(item).menuId));
             break;
+        case ActionItemKind::MouseMove:
+            itemObject.insert("type", "mouse_move");
+            itemObject.insert("x", static_cast<const AI_MouseMove &>(item).x);
+            itemObject.insert("y", static_cast<const AI_MouseMove &>(item).y);
+            break;
+        case ActionItemKind::MouseButton:
+            itemObject.insert("type", "mouse_button");
+            itemObject.insert("button", static_cast<const AI_MouseButton &>(item).button);
+            itemObject.insert("down", static_cast<const AI_MouseButton &>(item).down);
+            break;
+        case ActionItemKind::KeyRelease:
+            itemObject.insert("type", "key_release");
+            itemObject.insert("keycode", static_cast<const AI_KeyRelease &>(item).keycode);
+            itemObject.insert("modifiers", static_cast<const AI_KeyRelease &>(item).modifiers);
+            break;
         default:
             itemObject.insert("type", "unsupported");
             break;
@@ -286,7 +319,7 @@ QString MenuConfigLoader::defaultConfigPath()
     return QFileInfo(QDir::current().filePath("config/default_menu.json")).absoluteFilePath();
 }
 
-bool MenuConfigLoader::loadConfig(const QString &filepath, std::vector<Action> &actions, std::vector<Menu *> &menus)
+bool MenuConfigLoader::loadConfig(const QString &filepath, AppConfig &appConfig, std::vector<Action> &actions, std::vector<Menu *> &menus)
 {
     QJsonDocument document;
     if (!readJsonFile(filepath, document))
@@ -296,6 +329,13 @@ bool MenuConfigLoader::loadConfig(const QString &filepath, std::vector<Action> &
 
     const QJsonObject rootObject = document.object();
     actions.clear();
+
+    if (rootObject.contains("globalHotkey"))
+    {
+        QJsonObject hk = rootObject.value("globalHotkey").toObject();
+        appConfig.globalHotkeyMod = hk.value("mod").toInt(0x0001);
+        appConfig.globalHotkeyVk = hk.value("vk").toInt(0x20);
+    }
 
     // Newer configs include a top-level action library. If that section is
     // absent, treat the file as the older menu-owned schema for compatibility.
@@ -307,7 +347,7 @@ bool MenuConfigLoader::loadConfig(const QString &filepath, std::vector<Action> &
     return loadLegacySchema(rootObject, actions, menus);
 }
 
-bool MenuConfigLoader::saveConfig(const QString &filepath, const std::vector<Action> &actions, const std::vector<Menu *> &menus)
+bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appConfig, const std::vector<Action> &actions, const std::vector<Menu *> &menus)
 {
     QJsonArray actionsArray;
     for (const Action &action : actions)
@@ -354,6 +394,11 @@ bool MenuConfigLoader::saveConfig(const QString &filepath, const std::vector<Act
     QJsonObject rootObject;
     rootObject.insert("actions", actionsArray);
     rootObject.insert("menus", menusArray);
+
+    QJsonObject hkObject;
+    hkObject.insert("mod", appConfig.globalHotkeyMod);
+    hkObject.insert("vk", appConfig.globalHotkeyVk);
+    rootObject.insert("globalHotkey", hkObject);
 
     QFileInfo fileInfo(filepath);
     QDir().mkpath(fileInfo.absolutePath());

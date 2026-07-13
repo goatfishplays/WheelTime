@@ -14,6 +14,7 @@
 #include <QSignalBlocker>
 #include <QSplitter>
 #include <QVBoxLayout>
+#include <QKeyEvent>
 
 #include "App/ActionItems.hpp"
 
@@ -98,6 +99,14 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     auto *leftLayout = new QVBoxLayout(leftPane);
     leftLayout->setContentsMargins(12, 12, 12, 12);
     leftLayout->setSpacing(12);
+
+    m_globalGroup = new QGroupBox("Global Settings", leftPane);
+    auto *globalLayout = new QHBoxLayout(m_globalGroup);
+    globalLayout->addWidget(new QLabel("Launcher Hotkey:"));
+    m_hotkeyRecordButton = new QPushButton("Alt + Space", m_globalGroup);
+    m_hotkeyRecordButton->installEventFilter(this);
+    globalLayout->addWidget(m_hotkeyRecordButton);
+    leftLayout->addWidget(m_globalGroup);
 
     auto *menusGroup = new QGroupBox("Menus", leftPane);
     auto *menusLayout = new QVBoxLayout(menusGroup);
@@ -200,7 +209,15 @@ SettingsWindow::SettingsWindow(QWidget *parent)
 
     auto *itemButtons = new QHBoxLayout();
     m_newItemTypeCombo = new QComboBox(itemsGroup);
-    m_newItemTypeCombo->addItems({"Launch App", "Delay", "Press Hotkey", "Open Menu", "Close Launcher", "Custom Script/App (Advanced)"});
+    m_newItemTypeCombo->addItems(
+        {"Launch App",
+         "Delay",
+         "Press Hotkey",
+         "Open Menu",
+         "Close Launcher",
+         "Custom Script/App (Advanced)",
+         "Mouse Move",
+         "Mouse Button"});
     auto *addItemButton = new QPushButton("Add Item", itemsGroup);
     auto *removeItemButton = new QPushButton("Remove Item", itemsGroup);
     auto *moveItemUpButton = new QPushButton("Move Up", itemsGroup);
@@ -281,6 +298,27 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     hotkeyForm->addRow("Hold Time", m_hotkeyHoldSpin);
     hotkeyForm->addRow("", m_hotkeyProceedCheck);
 
+    m_itemMouseMovePage = new QWidget(m_itemDetailStack);
+    auto *mouseMoveForm = new QFormLayout(m_itemMouseMovePage);
+    m_mouseMoveXSpin = new QSpinBox(m_itemMouseMovePage);
+    m_mouseMoveYSpin = new QSpinBox(m_itemMouseMovePage);
+    m_mouseMoveXSpin->setRange(-100000, 100000);
+    m_mouseMoveYSpin->setRange(-100000, 100000);
+    mouseMoveForm->addRow("X", m_mouseMoveXSpin);
+    mouseMoveForm->addRow("Y", m_mouseMoveYSpin);
+
+    m_itemMouseButtonPage = new QWidget(m_itemDetailStack);
+    auto *mouseButtonForm = new QFormLayout(m_itemMouseButtonPage);
+    m_mouseButtonCombo = new QComboBox(m_itemMouseButtonPage);
+    m_mouseButtonCombo->addItem("Left", 0);
+    m_mouseButtonCombo->addItem("Right", 1);
+    m_mouseButtonCombo->addItem("Middle", 2);
+    m_mouseButtonActionCombo = new QComboBox(m_itemMouseButtonPage);
+    m_mouseButtonActionCombo->addItem("Press", true);
+    m_mouseButtonActionCombo->addItem("Release", false);
+    mouseButtonForm->addRow("Button", m_mouseButtonCombo);
+    mouseButtonForm->addRow("Action", m_mouseButtonActionCombo);
+
     m_itemDetailStack->addWidget(m_itemNonePage);
     m_itemDetailStack->addWidget(m_itemLaunchAppPage);
     m_itemDetailStack->addWidget(m_itemScriptPage);
@@ -288,6 +326,8 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_itemDetailStack->addWidget(m_itemClosePage);
     m_itemDetailStack->addWidget(m_itemMenuPage);
     m_itemDetailStack->addWidget(m_itemHotkeyPage);
+    m_itemDetailStack->addWidget(m_itemMouseMovePage);
+    m_itemDetailStack->addWidget(m_itemMouseButtonPage);
     auto *detailGroup = new QGroupBox("Item Details", m_actionEditor);
     auto *detailLayout = new QVBoxLayout(detailGroup);
     detailLayout->addWidget(m_itemDetailStack);
@@ -316,6 +356,14 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                     return;
                 }
                 emit saveRequested(); });
+
+    connect(m_hotkeyRecordButton, &QPushButton::clicked, this, [this]()
+            {
+                if (!m_isRecordingHotkey) {
+                    m_isRecordingHotkey = true;
+                    m_hotkeyRecordButton->setText("Press any key combination...");
+                    m_hotkeyRecordButton->grabKeyboard();
+                } });
 
     connect(m_menuList, &QListWidget::currentRowChanged, this, [this](int row)
             {
@@ -501,6 +549,12 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 case 5:
                     item = std::make_unique<AI_Script>("");
                     break;
+                case 6:
+                    item = std::make_unique<AI_MouseMove>(0, 0);
+                    break;
+                case 7:
+                    item = std::make_unique<AI_MouseButton>(0, true);
+                    break;
                 default:
                     return;
                 }
@@ -665,6 +719,58 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 } });
     connect(m_hotkeyHoldSpin, qOverload<double>(&QDoubleSpinBox::valueChanged), this, [hotkeyEditorChanged](double) { hotkeyEditorChanged(); });
     connect(m_hotkeyProceedCheck, &QCheckBox::toggled, this, [hotkeyEditorChanged](bool) { hotkeyEditorChanged(); });
+    connect(m_mouseMoveXSpin, qOverload<int>(&QSpinBox::valueChanged), this, [this](int value)
+            {
+                if (m_isRefreshing)
+                {
+                    return;
+                }
+                const int actionIndex = currentActionIndex();
+                const int itemIndex = currentActionItemIndex();
+                auto *item = actionIndex >= 0 ? dynamic_cast<AI_MouseMove *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+                if (item != nullptr)
+                {
+                    item->x = value;
+                    refreshActionItemList();
+                    refreshActionSummary();
+                } });
+    connect(m_mouseMoveYSpin, qOverload<int>(&QSpinBox::valueChanged), this, [this](int value)
+            {
+                if (m_isRefreshing)
+                {
+                    return;
+                }
+                const int actionIndex = currentActionIndex();
+                const int itemIndex = currentActionItemIndex();
+                auto *item = actionIndex >= 0 ? dynamic_cast<AI_MouseMove *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+                if (item != nullptr)
+                {
+                    item->y = value;
+                    refreshActionItemList();
+                    refreshActionSummary();
+                } });
+    auto mouseButtonEditorChanged = [this]()
+    {
+        if (m_isRefreshing)
+        {
+            return;
+        }
+        const int actionIndex = currentActionIndex();
+        const int itemIndex = currentActionItemIndex();
+        auto *item = actionIndex >= 0 ? dynamic_cast<AI_MouseButton *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+        if (item == nullptr)
+        {
+            return;
+        }
+        item->button = m_mouseButtonCombo->currentData().toInt();
+        item->down = m_mouseButtonActionCombo->currentData().toBool();
+        refreshActionItemList();
+        refreshActionSummary();
+    };
+    connect(m_mouseButtonCombo, qOverload<int>(&QComboBox::currentIndexChanged), this, [mouseButtonEditorChanged](int)
+            { mouseButtonEditorChanged(); });
+    connect(m_mouseButtonActionCombo, qOverload<int>(&QComboBox::currentIndexChanged), this, [mouseButtonEditorChanged](int)
+            { mouseButtonEditorChanged(); });
     connect(m_delaySpin, qOverload<int>(&QSpinBox::valueChanged), this, [this](int value)
             {
                 const int actionIndex = currentActionIndex();
@@ -696,11 +802,64 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_itemDetailStack->setCurrentWidget(m_itemNonePage);
 }
 
-void SettingsWindow::loadWorkingCopy(const std::vector<Action> &actions, const std::vector<Menu> &menus)
+void SettingsWindow::updateHotkeyButtonText()
 {
+    QString mods;
+    if (m_appConfig.globalHotkeyMod & 0x0002) mods += "Ctrl + ";
+    if (m_appConfig.globalHotkeyMod & 0x0008) mods += "Win + ";
+    if (m_appConfig.globalHotkeyMod & 0x0001) mods += "Alt + ";
+    if (m_appConfig.globalHotkeyMod & 0x0004) mods += "Shift + ";
+    
+    m_hotkeyRecordButton->setText(mods + keyDisplayName(m_appConfig.globalHotkeyVk));
+}
+
+bool SettingsWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    if (m_isRecordingHotkey && event->type() == QEvent::KeyPress)
+    {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        int key = keyEvent->key();
+        
+        // Ignore modifier-only presses until they press a main key
+        if (key == Qt::Key_Control || key == Qt::Key_Shift || key == Qt::Key_Alt || key == Qt::Key_Meta || 
+            key == Qt::Key_Super_L || key == Qt::Key_Super_R || 
+            key == Qt::Key_AltGr || key == Qt::Key_Menu)
+        {
+            return true;
+        }
+
+        m_appConfig.globalHotkeyVk = keyEvent->nativeVirtualKey();
+        m_appConfig.globalHotkeyMod = 0;
+        
+        Qt::KeyboardModifiers modifiers = keyEvent->modifiers();
+        if (modifiers & Qt::ControlModifier) m_appConfig.globalHotkeyMod |= 0x0002;
+        if (modifiers & Qt::AltModifier)     m_appConfig.globalHotkeyMod |= 0x0001;
+        if (modifiers & Qt::ShiftModifier)   m_appConfig.globalHotkeyMod |= 0x0004;
+        if (modifiers & Qt::MetaModifier)    m_appConfig.globalHotkeyMod |= 0x0008;
+
+        m_isRecordingHotkey = false;
+        m_hotkeyRecordButton->releaseKeyboard();
+        updateHotkeyButtonText();
+        return true;
+    }
+    return QWidget::eventFilter(obj, event);
+}
+
+void SettingsWindow::closeEvent(QCloseEvent *event)
+{
+    QWidget::closeEvent(event);
+    emit windowClosed();
+}
+
+void SettingsWindow::loadWorkingCopy(const AppConfig &appConfig, const std::vector<Action> &actions, const std::vector<Menu> &menus)
+{
+    m_appConfig = appConfig;
     m_actions = actions;
     m_menus = menus;
     m_selectionKind = SelectionKind::None;
+    
+    updateHotkeyButtonText();
+    
     refreshLists();
 
     if (!m_menus.empty())
@@ -717,8 +876,9 @@ void SettingsWindow::loadWorkingCopy(const std::vector<Action> &actions, const s
     }
 }
 
-void SettingsWindow::exportWorkingCopy(std::vector<Action> &actions, std::vector<Menu> &menus) const
+void SettingsWindow::exportWorkingCopy(AppConfig &appConfig, std::vector<Action> &actions, std::vector<Menu> &menus) const
 {
+    appConfig = m_appConfig;
     actions = m_actions;
     menus = m_menus;
 }
@@ -1024,6 +1184,28 @@ void SettingsWindow::refreshItemDetail()
         return;
     }
 
+    if (auto *mouseMove = dynamic_cast<AI_MouseMove *>(item))
+    {
+        const QSignalBlocker xBlocker(m_mouseMoveXSpin);
+        const QSignalBlocker yBlocker(m_mouseMoveYSpin);
+        m_mouseMoveXSpin->setValue(mouseMove->x);
+        m_mouseMoveYSpin->setValue(mouseMove->y);
+        m_itemDetailStack->setCurrentWidget(m_itemMouseMovePage);
+        return;
+    }
+
+    if (auto *mouseButton = dynamic_cast<AI_MouseButton *>(item))
+    {
+        const QSignalBlocker buttonBlocker(m_mouseButtonCombo);
+        const QSignalBlocker actionBlocker(m_mouseButtonActionCombo);
+        const int buttonIndex = m_mouseButtonCombo->findData(mouseButton->button);
+        m_mouseButtonCombo->setCurrentIndex(buttonIndex >= 0 ? buttonIndex : 0);
+        const int actionIndexCombo = m_mouseButtonActionCombo->findData(mouseButton->down);
+        m_mouseButtonActionCombo->setCurrentIndex(actionIndexCombo >= 0 ? actionIndexCombo : 0);
+        m_itemDetailStack->setCurrentWidget(m_itemMouseButtonPage);
+        return;
+    }
+
     m_itemDetailStack->setCurrentWidget(m_itemNonePage);
 }
 
@@ -1094,6 +1276,32 @@ QString SettingsWindow::describeActionItem(const ActionItem *item) const
     }
     case ActionItemKind::Close:
         return "Close launcher";
+    case ActionItemKind::MouseMove:
+    {
+        const auto *move = static_cast<const AI_MouseMove *>(item);
+        return QString("Mouse Move: (%1, %2)").arg(move->x).arg(move->y);
+    }
+    case ActionItemKind::MouseButton:
+    {
+        const auto *button = static_cast<const AI_MouseButton *>(item);
+        const char *name = "Left";
+        if (button->button == 1)
+        {
+            name = "Right";
+        }
+        else if (button->button == 2)
+        {
+            name = "Middle";
+        }
+        return QString("Mouse Button: %1 %2")
+            .arg(name)
+            .arg(button->down ? "Press" : "Release");
+    }
+    case ActionItemKind::KeyRelease:
+    {
+        const auto *release = static_cast<const AI_KeyRelease *>(item);
+        return QString("Key Release: %1").arg(keyDisplayName(release->keycode));
+    }
     default:
         return "Unsupported";
     }
@@ -1425,6 +1633,15 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
                 if (!foundMenu)
                 {
                     errorMessage = QString("Menu action '%1' targets a missing menu.").arg(QString::fromStdString(action.getName()));
+                    return false;
+                }
+            }
+            else if (itemPtr->kind() == ActionItemKind::MouseButton)
+            {
+                const auto *button = static_cast<const AI_MouseButton *>(itemPtr.get());
+                if (button->button < 0 || button->button > 2)
+                {
+                    errorMessage = QString("Mouse Button item in '%1' has an invalid button.").arg(QString::fromStdString(action.getName()));
                     return false;
                 }
             }

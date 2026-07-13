@@ -1,19 +1,15 @@
 /**
  * @file Action.hpp
- * @author your name (you@domain.com)
- * @brief
- * @version 0.1
- * @date 2026-07-02
- *
- * @copyright Copyright (c) 2026
- *
+ * @brief Describes a unit of scheduled work: a channel and an ordered item sequence.
  */
 
 #pragma once
 #include <memory>
+#include <utility>
 #include <vector>
-#include <Platform/Inputs.hpp>
 #include <string>
+#include <cstdint>
+#include <Platform/Inputs.hpp>
 #include "App/ActionItems.hpp"
 
 namespace Application
@@ -30,7 +26,8 @@ namespace Application
         Action(std::vector<std::unique_ptr<ActionItem>> sequence = {},
                std::string name = "Unnamed Action",
                std::string iconFilepath = "",
-               std::string id = "");
+               std::string id = "",
+               uint32_t channel = 0);
         Action(const Action &other);
         Action &operator=(const Action &other);
         Action(Action &&other) noexcept;
@@ -59,12 +56,6 @@ namespace Application
          */
         int len() const;
 
-        /**
-         * @brief Runs the action items in sequence
-         *
-         */
-        void execute();
-
         /// @brief Stable config ID used by menus and serialization.
         std::string getId() const;
         std::string getName() const;
@@ -79,10 +70,35 @@ namespace Application
         /// @brief Moves an item within the sequence while preserving order.
         void moveItem(int fromIndex, int toIndex);
 
+        /**
+         * @brief Returns the channel this action will run on
+         *
+         * @return uint32_t
+         */
+        uint32_t channel() const;
+
+        /**
+         * @brief Returns a constant reference to the actionItems
+         *
+         * @return const std::vector<std::unique_ptr<ActionItem>>&
+         */
+        const std::vector<std::unique_ptr<ActionItem>> &items() const;
+
+        /**
+         * @brief Whether cancelAction/Channel/All may stop this Action.
+         *
+         * Default true. Cleanup Actions (e.g. delayed KeyUp) should be false so
+         * they survive cancelAll and cannot leave hardware in a bad state.
+         */
+        [[nodiscard]] bool cancelable() const noexcept;
+        void setCancelable(bool cancelable) noexcept;
+
     private:
         std::vector<std::unique_ptr<ActionItem>> sequence;
         std::string name;
         std::string iconFilepath;
         std::string id;
+        uint32_t m_channel;
+        bool m_cancelable = true;
     };
 }

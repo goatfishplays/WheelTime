@@ -4,8 +4,23 @@
             "id": "action-menu-example-calculator",
             "items": [
                 {
-                    "path": "calculator.exe",
-                    "type": "script"
+                    "customTarget": "",
+                    "presetId": "calculator",
+                    "type": "launch_app"
+                },
+                {
+                    "duration": 5000,
+                    "type": "delay"
+                },
+                {
+                    "customTarget": "explorer.exe",
+                    "presetId": "explorer",
+                    "type": "launch_app"
+                },
+                {
+                    "type": "mouse_move",
+                    "x": 0,
+                    "y": 0
                 }
             ],
             "name": "calculator"
@@ -16,6 +31,13 @@
                 {
                     "path": "paint.exe",
                     "type": "script"
+                },
+                {
+                    "holdDuration": 2.4000000953674316,
+                    "keycode": 74,
+                    "modifiers": 2,
+                    "proceed": false,
+                    "type": "hotkey"
                 }
             ],
             "name": "paint"
@@ -29,19 +51,45 @@
                 }
             ],
             "name": "notepad"
+        },
+        {
+            "id": "action-new-action",
+            "items": [
+                {
+                    "type": "mouse_move",
+                    "x": 0,
+                    "y": 0
+                }
+            ],
+            "name": "New Action a"
         }
     ],
+    "globalHotkey": {
+        "mod": 2,
+        "vk": 87
+    },
     "menus": [
         {
             "actionIds": [
                 "action-menu-example-calculator",
                 "action-menu-example-paint",
-                "action-menu-example-notepad"
+                "action-menu-example-notepad",
+                "action-new-action"
             ],
             "executeOnRelease": false,
             "exitOnAction": false,
             "id": "menu-example",
             "name": "GAMBLING"
+        },
+        {
+            "actionIds": [
+                "action-menu-example-calculator",
+                "action-menu-example-calculator"
+            ],
+            "executeOnRelease": false,
+            "exitOnAction": false,
+            "id": "menu-new-menu",
+            "name": "test 1"
         }
     ]
 }
