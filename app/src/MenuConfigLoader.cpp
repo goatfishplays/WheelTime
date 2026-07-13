@@ -319,7 +319,7 @@ QString MenuConfigLoader::defaultConfigPath()
     return QFileInfo(QDir::current().filePath("config/default_menu.json")).absoluteFilePath();
 }
 
-bool MenuConfigLoader::loadConfig(const QString &filepath, std::vector<Action> &actions, std::vector<Menu *> &menus)
+bool MenuConfigLoader::loadConfig(const QString &filepath, AppConfig &appConfig, std::vector<Action> &actions, std::vector<Menu *> &menus)
 {
     QJsonDocument document;
     if (!readJsonFile(filepath, document))
@@ -329,6 +329,13 @@ bool MenuConfigLoader::loadConfig(const QString &filepath, std::vector<Action> &
 
     const QJsonObject rootObject = document.object();
     actions.clear();
+
+    if (rootObject.contains("globalHotkey"))
+    {
+        QJsonObject hk = rootObject.value("globalHotkey").toObject();
+        appConfig.globalHotkeyMod = hk.value("mod").toInt(0x0001);
+        appConfig.globalHotkeyVk = hk.value("vk").toInt(0x20);
+    }
 
     // Newer configs include a top-level action library. If that section is
     // absent, treat the file as the older menu-owned schema for compatibility.
@@ -340,7 +347,7 @@ bool MenuConfigLoader::loadConfig(const QString &filepath, std::vector<Action> &
     return loadLegacySchema(rootObject, actions, menus);
 }
 
-bool MenuConfigLoader::saveConfig(const QString &filepath, const std::vector<Action> &actions, const std::vector<Menu *> &menus)
+bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appConfig, const std::vector<Action> &actions, const std::vector<Menu *> &menus)
 {
     QJsonArray actionsArray;
     for (const Action &action : actions)
@@ -387,6 +394,11 @@ bool MenuConfigLoader::saveConfig(const QString &filepath, const std::vector<Act
     QJsonObject rootObject;
     rootObject.insert("actions", actionsArray);
     rootObject.insert("menus", menusArray);
+
+    QJsonObject hkObject;
+    hkObject.insert("mod", appConfig.globalHotkeyMod);
+    hkObject.insert("vk", appConfig.globalHotkeyVk);
+    rootObject.insert("globalHotkey", hkObject);
 
     QFileInfo fileInfo(filepath);
     QDir().mkpath(fileInfo.absolutePath());

@@ -15,6 +15,7 @@
 #include <QCloseEvent>
 #include <QComboBox>
 #include <QDoubleSpinBox>
+#include <QGroupBox>
 #include <QLabel>
 #include <QLineEdit>
 #include <QListWidget>
@@ -25,6 +26,7 @@
 
 #include <vector>
 
+#include "App/App.hpp"
 #include "App/Action.hpp"
 #include "App/Menu.hpp"
 
@@ -41,13 +43,16 @@ namespace Application
     {
         Q_OBJECT
 
+    protected:
+        bool eventFilter(QObject *obj, QEvent *event) override;
+
     public:
         explicit SettingsWindow(QWidget *parent = nullptr);
 
         /// @brief Initializes the editor with a fresh working copy of runtime data.
-        void loadWorkingCopy(const std::vector<Action> &actions, const std::vector<Menu> &menus);
+        void loadWorkingCopy(const AppConfig &appConfig, const std::vector<Action> &actions, const std::vector<Menu> &menus);
         /// @brief Exports the edited working copy back to the caller.
-        void exportWorkingCopy(std::vector<Action> &actions, std::vector<Menu> &menus) const;
+        void exportWorkingCopy(AppConfig &appConfig, std::vector<Action> &actions, std::vector<Menu> &menus) const;
 
     signals:
         /// @brief Emitted after the local working copy passes UI-level validation.
@@ -79,6 +84,7 @@ namespace Application
         void refreshSlotActionCombo();
         void refreshMenuTargetCombo();
         void refreshItemDetail();
+        void updateHotkeyButtonText();
         QString describeActionItem(const ActionItem *item) const;
         QString launchPresetDisplayName(const std::string &presetId) const;
         QString launchPresetTarget(const std::string &presetId) const;
@@ -96,12 +102,14 @@ namespace Application
         std::string makeUniqueMenuId(const QString &seed) const;
         bool validateWorkingCopy(QString &errorMessage) const;
 
+        AppConfig m_appConfig;
         /// @brief Working-copy action library edited by the settings UI.
         std::vector<Action> m_actions;
         /// @brief Working-copy menus edited by the settings UI.
         std::vector<Menu> m_menus;
         bool m_isRefreshing{false};
         SelectionKind m_selectionKind{SelectionKind::None};
+        bool m_isRecordingHotkey{false};
 
         QListWidget *m_menuList{nullptr};
         QListWidget *m_actionList{nullptr};
@@ -110,6 +118,9 @@ namespace Application
         QWidget *m_emptyEditor{nullptr};
         QWidget *m_menuEditor{nullptr};
         QWidget *m_actionEditor{nullptr};
+
+        QGroupBox *m_globalGroup{nullptr};
+        QPushButton *m_hotkeyRecordButton{nullptr};
 
         QLineEdit *m_menuNameEdit{nullptr};
         QCheckBox *m_executeOnReleaseCheck{nullptr};

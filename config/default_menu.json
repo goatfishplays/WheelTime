@@ -64,6 +64,10 @@
             "name": "New Action a"
         }
     ],
+    "globalHotkey": {
+        "mod": 2,
+        "vk": 87
+    },
     "menus": [
         {
             "actionIds": [
@@ -76,6 +80,16 @@
             "exitOnAction": false,
             "id": "menu-example",
             "name": "GAMBLING"
+        },
+        {
+            "actionIds": [
+                "action-menu-example-calculator",
+                "action-menu-example-calculator"
+            ],
+            "executeOnRelease": false,
+            "exitOnAction": false,
+            "id": "menu-new-menu",
+            "name": "test 1"
         }
     ]
 }
