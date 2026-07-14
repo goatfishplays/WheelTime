@@ -29,6 +29,13 @@ QLabel#launcherTitle {
     font-weight: bold;
 }
 
+QLabel#radialCenterLabel {
+    background: transparent;
+    color: #f2f6fa;
+    font-size: 18px;
+    font-weight: bold;
+}
+
 QWidget#launcherPanel QLabel {
     color: #e8eef4;
 }
@@ -160,6 +167,48 @@ QPushButton#primaryButton:pressed {
     background-color: #6798c4;
 }
 
+QToolButton#wheelActionButton {
+    background-color: #edf3f9;
+    /* Keep border width constant across hover/selected — changing it
+       reshapes the box and makes the button appear to shrink. */
+    border: 2px solid #9db9d6;
+    border-radius: 8px;
+    color: #23405d;
+    padding: 8px 10px;
+    min-width: 96px;
+    min-height: 72px;
+    qproperty-iconSize: 40px 40px;
+}
+
+QToolButton#wheelActionButton:hover {
+    background-color: #dcebfa;
+    border-color: #75a7d6;
+}
+
+QToolButton#wheelActionButton:pressed {
+    background-color: #c9ddf2;
+    border-color: #5b91c3;
+}
+
+QToolButton#wheelActionButton[selectedAction="true"] {
+    background-color: #bad8f4;
+    border-color: #6d9fcd;
+    color: #14324c;
+    padding: 10px 12px;
+    min-width: 112px;
+    min-height: 88px;
+    qproperty-iconSize: 48px 48px;
+}
+
+QToolButton#wheelActionButton[selectedAction="false"] {
+    background-color: #edf3f9;
+    border-color: #9db9d6;
+    padding: 8px 10px;
+    min-width: 96px;
+    min-height: 72px;
+    qproperty-iconSize: 40px 40px;
+}
+
 QCheckBox {
     spacing: 8px;
     color: #284055;
@@ -186,14 +235,4 @@ QCheckBox::indicator:checked {
 QSplitter::handle {
     background-color: #bfd0df;
     width: 6px;
-}
-
-*[selectedAction=true] {
-    background-color: #bad8f4;
-    border: 2px solid #6d9fcd;
-    color: #14324c;
-}
-
-*[selectedAction=false] {
-    background-color: #edf3f9;
 }

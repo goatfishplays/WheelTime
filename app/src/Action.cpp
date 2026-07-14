@@ -109,6 +109,11 @@ std::string Action::getName() const
     return name;
 }
 
+std::string Action::getIconFilepath() const
+{
+    return iconFilepath;
+}
+
 const std::vector<std::unique_ptr<ActionItem>> &Action::getItems() const
 {
     return sequence;
@@ -142,6 +147,11 @@ void Action::setName(const std::string &newName)
 void Action::setId(const std::string &newId)
 {
     id = newId;
+}
+
+void Action::setIconFilepath(const std::string &newIconFilepath)
+{
+    iconFilepath = newIconFilepath;
 }
 
 void Action::setItems(std::vector<std::unique_ptr<ActionItem>> newItems)

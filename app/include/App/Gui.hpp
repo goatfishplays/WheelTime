@@ -47,8 +47,8 @@ namespace Application
         explicit Gui(QWidget *parent = nullptr);
         /// @brief Updates hover/selection presentation for the active slot.
         void onSelectChange(int selectionInd);
-        /// @brief Displays a menu plus the resolved labels for its action slots.
-        void setMenu(const Menu &menu, const std::vector<std::string> &actionLabels);
+        /// @brief Displays a menu plus the resolved labels/icons for its action slots.
+        void setMenu(const Menu &menu, const std::vector<ActionSlotVisual> &slotVisuals);
         /// @brief Puts the overlay into visible, mouse-interactive mode.
         void enterInteractiveOverlay();
         /// @brief Hides launcher visuals and leaves the shell alive for click-through mode.

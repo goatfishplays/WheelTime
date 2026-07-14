@@ -128,7 +128,7 @@ App::App()
     if (!loadedMenus.empty())
     {
         activeMenu = loadedMenus.front();
-        gui.setMenu(*activeMenu, getActionLabelsForMenu(*activeMenu));
+        gui.setMenu(*activeMenu, getActionSlotVisualsForMenu(*activeMenu));
     }
 
     initializeOverlay();
@@ -247,18 +247,36 @@ const Action *App::findActionById(const std::string &actionId) const
     return nullptr;
 }
 
-std::vector<std::string> App::getActionLabelsForMenu(const Menu &menu) const
+std::vector<ActionSlotVisual> App::getActionSlotVisualsForMenu(const Menu &menu) const
 {
-    std::vector<std::string> labels;
-    labels.reserve(menu.numActions());
+    std::vector<ActionSlotVisual> visuals;
+    visuals.reserve(menu.numActions());
+
+    const QFileInfo configInfo(m_configPath);
+    const QDir configDir = configInfo.absoluteDir();
 
     for (const std::string &actionId : menu.getActionIds())
     {
         const Action *action = findActionById(actionId);
-        labels.push_back(action != nullptr ? action->getName() : "Missing Action");
+        ActionSlotVisual visual;
+        visual.label = action != nullptr ? action->getName() : "Missing Action";
+        if (action != nullptr && !action->getIconFilepath().empty())
+        {
+            const QString iconPath = QString::fromStdString(action->getIconFilepath());
+            const QFileInfo iconInfo(iconPath);
+            if (iconInfo.isAbsolute())
+            {
+                visual.iconPath = iconPath.toStdString();
+            }
+            else
+            {
+                visual.iconPath = configDir.filePath(iconPath).toStdString();
+            }
+        }
+        visuals.push_back(std::move(visual));
     }
 
-    return labels;
+    return visuals;
 }
 
 std::vector<Menu> App::getMenuCopies() const
@@ -359,8 +377,9 @@ void App::showGui(Menu *menu)
     initializeOverlay();
     gatherPriors();
     activeMenu = menu;
-    gui.setMenu(*activeMenu, getActionLabelsForMenu(*activeMenu));
+    // Size the overlay to the current monitor first so radius/layout use final dims.
     configureOverlayForCursor();
+    gui.setMenu(*activeMenu, getActionSlotVisualsForMenu(*activeMenu));
 
     Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
     overlayWindow.setClickThrough(false);
@@ -415,7 +434,7 @@ void App::executeAction(int actionInd)
     // Copy into the scheduler so the library Action stays editable/reusable.
     m_scheduler->submit(*action);
 
-    if (activeMenu->exitOnAction && gui.isVisible())
+    if (activeMenu->exitOnAction && gui.isLauncherVisible())
     {
         hideGui();
     }
@@ -632,7 +651,7 @@ void App::refreshActiveMenu()
 {
     if (activeMenu != nullptr)
     {
-        gui.setMenu(*activeMenu, getActionLabelsForMenu(*activeMenu));
+        gui.setMenu(*activeMenu, getActionSlotVisualsForMenu(*activeMenu));
     }
 }
 

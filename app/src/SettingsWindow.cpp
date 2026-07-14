@@ -9,6 +9,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QMessageBox>
+#include <QPixmap>
 #include <QRegularExpression>
 #include <QPushButton>
 #include <QSignalBlocker>
@@ -199,6 +200,25 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     auto *actionForm = new QFormLayout(actionSettingsGroup);
     m_actionNameEdit = new QLineEdit(actionSettingsGroup);
     actionForm->addRow("Action Name", m_actionNameEdit);
+
+    auto *iconRow = new QWidget(actionSettingsGroup);
+    auto *iconRowLayout = new QHBoxLayout(iconRow);
+    iconRowLayout->setContentsMargins(0, 0, 0, 0);
+    m_actionIconEdit = new QLineEdit(iconRow);
+    m_actionIconEdit->setPlaceholderText("Optional path to PNG/SVG/ICO...");
+    m_browseActionIconButton = new QPushButton("Browse...", iconRow);
+    m_clearActionIconButton = new QPushButton("Clear", iconRow);
+    iconRowLayout->addWidget(m_actionIconEdit, 1);
+    iconRowLayout->addWidget(m_browseActionIconButton);
+    iconRowLayout->addWidget(m_clearActionIconButton);
+    actionForm->addRow("Icon", iconRow);
+
+    m_actionIconPreview = new QLabel(actionSettingsGroup);
+    m_actionIconPreview->setFixedSize(48, 48);
+    m_actionIconPreview->setAlignment(Qt::AlignCenter);
+    m_actionIconPreview->setStyleSheet("border: 1px solid #adc3d8; border-radius: 6px; background: #ffffff;");
+    actionForm->addRow("Preview", m_actionIconPreview);
+
     m_actionChannelSpin = new QSpinBox(actionSettingsGroup);
     m_actionChannelSpin->setRange(0, 1000000);
     m_actionChannelSpin->setToolTip(
@@ -600,6 +620,45 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                     m_actions[index].setName(text.toStdString());
                     refreshActionList();
                 } });
+    connect(m_actionIconEdit, &QLineEdit::textEdited, this, [this](const QString &text)
+            {
+                const int index = currentActionIndex();
+                if (index >= 0)
+                {
+                    m_actions[index].setIconFilepath(text.toStdString());
+                    refreshActionIconPreview();
+                } });
+    connect(m_browseActionIconButton, &QPushButton::clicked, this, [this]()
+            {
+                const int index = currentActionIndex();
+                if (index < 0)
+                {
+                    return;
+                }
+
+                const QString selectedPath = QFileDialog::getOpenFileName(
+                    this,
+                    "Choose Action Icon",
+                    QString::fromStdString(m_actions[index].getIconFilepath()),
+                    "Images (*.png *.jpg *.jpeg *.bmp *.gif *.svg *.ico);;All Files (*.*)");
+                if (selectedPath.isEmpty())
+                {
+                    return;
+                }
+
+                m_actions[index].setIconFilepath(selectedPath.toStdString());
+                m_actionIconEdit->setText(selectedPath);
+                refreshActionIconPreview(); });
+    connect(m_clearActionIconButton, &QPushButton::clicked, this, [this]()
+            {
+                const int index = currentActionIndex();
+                if (index < 0)
+                {
+                    return;
+                }
+                m_actions[index].setIconFilepath("");
+                m_actionIconEdit->clear();
+                refreshActionIconPreview(); });
     connect(m_actionChannelSpin, qOverload<int>(&QSpinBox::valueChanged), this, [this](int value)
             {
                 const int index = currentActionIndex();
@@ -1202,8 +1261,11 @@ void SettingsWindow::refreshActionEditor()
     }
 
     const QSignalBlocker nameBlocker(m_actionNameEdit);
+    const QSignalBlocker iconBlocker(m_actionIconEdit);
     const QSignalBlocker channelBlocker(m_actionChannelSpin);
     m_actionNameEdit->setText(QString::fromStdString(m_actions[index].getName()));
+    m_actionIconEdit->setText(QString::fromStdString(m_actions[index].getIconFilepath()));
+    refreshActionIconPreview();
     const int channel = static_cast<int>(m_actions[index].channel());
     m_actionChannelSpin->setValue(channel);
     if (channel == 0)
@@ -1303,6 +1365,34 @@ void SettingsWindow::refreshActionSummary()
     }
 
     m_actionSequenceLabel->setText(parts.join("  ->  "));
+}
+
+void SettingsWindow::refreshActionIconPreview()
+{
+    if (m_actionIconPreview == nullptr)
+    {
+        return;
+    }
+
+    const int index = currentActionIndex();
+    if (index < 0 || m_actions[index].getIconFilepath().empty())
+    {
+        m_actionIconPreview->setPixmap(QPixmap());
+        m_actionIconPreview->setText("—");
+        return;
+    }
+
+    const QPixmap pixmap(QString::fromStdString(m_actions[index].getIconFilepath()));
+    if (pixmap.isNull())
+    {
+        m_actionIconPreview->setPixmap(QPixmap());
+        m_actionIconPreview->setText("?");
+        return;
+    }
+
+    m_actionIconPreview->setText(QString());
+    m_actionIconPreview->setPixmap(
+        pixmap.scaled(m_actionIconPreview->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 void SettingsWindow::refreshSlotActionCombo()

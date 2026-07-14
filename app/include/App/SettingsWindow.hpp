@@ -81,6 +81,7 @@ namespace Application
         void refreshSlotList();
         void refreshActionItemList();
         void refreshActionSummary();
+        void refreshActionIconPreview();
         void refreshSlotActionCombo();
         void refreshMenuTargetCombo();
         void refreshItemDetail();
@@ -129,6 +130,10 @@ namespace Application
         QComboBox *m_slotActionCombo{nullptr};
 
         QLineEdit *m_actionNameEdit{nullptr};
+        QLineEdit *m_actionIconEdit{nullptr};
+        QPushButton *m_browseActionIconButton{nullptr};
+        QPushButton *m_clearActionIconButton{nullptr};
+        QLabel *m_actionIconPreview{nullptr};
         QSpinBox *m_actionChannelSpin{nullptr};
         QLabel *m_actionChannelHelpLabel{nullptr};
         QListWidget *m_actionItemList{nullptr};

@@ -78,8 +78,8 @@ namespace Application
         /// @brief Look up a reusable action by its stable config ID.
         Action *findActionById(const std::string &actionId);
         const Action *findActionById(const std::string &actionId) const;
-        /// @brief Resolve user-facing labels for the action IDs in a menu.
-        std::vector<std::string> getActionLabelsForMenu(const Menu &menu) const;
+        /// @brief Resolve user-facing labels/icons for the action IDs in a menu.
+        std::vector<ActionSlotVisual> getActionSlotVisualsForMenu(const Menu &menu) const;
         /// @brief Build value copies of menus for the settings working copy.
         std::vector<Menu> getMenuCopies() const;
         /// @brief Exposes the shared action library for editor initialization.

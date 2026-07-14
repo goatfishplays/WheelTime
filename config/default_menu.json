@@ -23,6 +23,7 @@
         },
         {
             "channel": 0,
+            "icon": "E:/Media/Images/Wallpapers/brad.png",
             "id": "action-menu-example-paint",
             "items": [
                 {
@@ -98,6 +99,7 @@
         },
         {
             "channel": 0,
+            "icon": "E:/Media/Images/Wallpapers/brad.png",
             "id": "action-new-action-2",
             "items": [
                 {
@@ -113,8 +115,8 @@
                 },
                 {
                     "holdDuration": 5,
-                    "keycode": 67,
-                    "modifiers": 2,
+                    "keycode": 66,
+                    "modifiers": 0,
                     "proceed": true,
                     "type": "hotkey"
                 },
@@ -152,6 +154,7 @@
         },
         {
             "channel": 0,
+            "icon": "E:/Media/Images/PixelArt/torpinFastFetch.png",
             "id": "action-new-action-4",
             "items": [
                 {
@@ -208,10 +211,13 @@
                 "action-cancel-latest",
                 "action-nth-recent-1",
                 "action-new-action-3",
-                "action-new-action-4"
+                "action-new-action-4",
+                "action-menu-example-calculator",
+                "action-menu-example-calculator",
+                "action-menu-example-calculator"
             ],
             "executeOnRelease": false,
-            "exitOnAction": false,
+            "exitOnAction": true,
             "id": "menu-example",
             "name": "GAMBLING"
         },

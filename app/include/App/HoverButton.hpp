@@ -1,34 +1,17 @@
 /**
  * @file HoverButton.hpp
- * @author your name (you@domain.com)
- * @brief Push button extended to add hover signals
- * @version 0.1
- * @date 2026-07-09
- *
- * @copyright Copyright (c) 2026
- *
+ * @brief Tool button with hover signals for radial-menu slots.
  */
 #pragma once
 
-#include <vector>
-#include <string>
-#include <memory>
-
-#include <QWidget>
-#include <QLabel>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QSpacerItem>
-#include <QResizeEvent>
 #include <QEnterEvent>
-#include <QMouseEvent>
-#include <QKeyEvent>
-#include <QPushButton>
+#include <QEvent>
+#include <QToolButton>
 
 namespace Application
 {
 
-    class HoverButton : public QPushButton
+    class HoverButton : public QToolButton
     {
         Q_OBJECT
     public:

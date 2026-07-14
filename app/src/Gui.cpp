@@ -1,5 +1,6 @@
 #include "App/Gui.hpp"
 // TODO: segment this into multiple files
+#include <QAbstractButton>
 #include <QApplication>
 #include <QDebug>
 #include <QCursor>
@@ -80,7 +81,8 @@ Gui::Gui(QWidget *parent)
     bottomRow->addWidget(m_editButton);
     panelLayout->addLayout(bottomRow);
 
-    m_radialMenu->setButtonRadius(220);
+    // Ring radius tracks the radial panel size (monitor body after chrome).
+    m_radialMenu->setButtonRadiusFraction(0.32);
     m_radialMenu->setActivationMode(RadialMenuWidget::ActivationMode::Distance);
 
     connect(m_radialMenu, &RadialMenuWidget::selectedIndexChanged, this, &Gui::onSelectChange);
@@ -125,7 +127,8 @@ bool Gui::eventFilter(QObject *watched, QEvent *event)
                 return QWidget::eventFilter(watched, event);
             }
 
-            if (qobject_cast<QPushButton *>(watched) != nullptr || qobject_cast<QPushButton *>(clickedChild) != nullptr)
+            if (qobject_cast<QAbstractButton *>(watched) != nullptr
+                || qobject_cast<QAbstractButton *>(clickedChild) != nullptr)
             {
                 return QWidget::eventFilter(watched, event);
             }
@@ -158,10 +161,10 @@ void Gui::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void Gui::setMenu(const Menu &menu, const std::vector<std::string> &actionLabels)
+void Gui::setMenu(const Menu &menu, const std::vector<ActionSlotVisual> &slotVisuals)
 {
     m_titleLabel->setText(QString::fromStdString(menu.getName()));
-    m_radialMenu->setMenu(menu, actionLabels);
+    m_radialMenu->setMenu(menu, slotVisuals);
 }
 
 void Gui::enterInteractiveOverlay()

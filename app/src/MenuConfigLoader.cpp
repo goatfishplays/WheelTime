@@ -241,8 +241,9 @@ namespace
     {
         const std::string id = actionObject.value("id").toString().toStdString();
         const std::string name = actionObject.value("name").toString("Unnamed Action").toStdString();
+        const std::string icon = actionObject.value("icon").toString().toStdString();
         const uint32_t channel = static_cast<uint32_t>(actionObject.value("channel").toInt(0));
-        return Action(parseItems(actionObject.value("items").toArray()), name, "", id, channel);
+        return Action(parseItems(actionObject.value("items").toArray()), name, icon, id, channel);
     }
 
     bool loadNewSchema(const QJsonObject &rootObject, std::vector<Action> &actions, std::vector<Menu *> &menus)
@@ -496,6 +497,10 @@ bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appC
         QJsonObject actionObject;
         actionObject.insert("id", QString::fromStdString(action.getId()));
         actionObject.insert("name", QString::fromStdString(action.getName()));
+        if (!action.getIconFilepath().empty())
+        {
+            actionObject.insert("icon", QString::fromStdString(action.getIconFilepath()));
+        }
         actionObject.insert("channel", static_cast<int>(action.channel()));
 
         QJsonArray itemsArray;
