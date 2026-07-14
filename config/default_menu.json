@@ -200,10 +200,6 @@
             "name": "SpeedClicks"
         }
     ],
-    "globalHotkey": {
-        "mod": 2,
-        "vk": 87
-    },
     "menus": [
         {
             "actionIds": [
@@ -219,17 +215,21 @@
             "executeOnRelease": false,
             "exitOnAction": true,
             "id": "menu-example",
-            "name": "GAMBLING"
+            "name": "GAMBLING",
+            "triggerMod": 0,
+            "triggerVk": 0
         },
         {
             "actionIds": [
-                "action-menu-example-calculator",
+                "action-menu-example-notepad",
                 "action-menu-example-calculator"
             ],
             "executeOnRelease": false,
             "exitOnAction": false,
             "id": "menu-new-menu",
-            "name": "test 1"
+            "name": "test 1",
+            "triggerMod": 2,
+            "triggerVk": 67
         },
         {
             "actionIds": [
@@ -237,7 +237,9 @@
             "executeOnRelease": false,
             "exitOnAction": false,
             "id": "menu-new-menu-2",
-            "name": "New Menu"
+            "name": "New Menu",
+            "triggerMod": 0,
+            "triggerVk": 0
         }
     ]
 }

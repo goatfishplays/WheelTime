@@ -15,7 +15,9 @@
 #include <Platform/Execute.hpp>
 #include <QAbstractNativeEventFilter>
 #include <QApplication>
-#include <QMetaObject>
+#include <QString>
+#include <vector>
+#include <QTimer>
 #include <QPushButton>
 #include <QThread>
 
@@ -104,13 +106,18 @@ App::App()
         std::vector<std::unique_ptr<ActionItem>> items;
         items.push_back(std::make_unique<AI_Close>());
         actionLibrary.push_back(Action(std::move(items), "Config missing", "", "action-config-missing"));
-        loadedMenus.push_back(new Menu(nullptr, false, false, "Config Error", {"action-config-missing"}, "menu-config-error"));
+        loadedMenus.push_back(new Menu(0, 0, false, false, "Config Error", {"action-config-missing"}, "menu-config-error"));
     }
 
-    Platform::InputBind bind;
-    bind.mod = m_appConfig.globalHotkeyMod;
-    bind.input = m_appConfig.globalHotkeyVk;
-    m_inputRcvr.registerInputBinding(bind);
+    bool anyHotkey = false;
+    for (Menu* m : loadedMenus) {
+        if (m->triggerMod == 0 && m->triggerVk == 0) continue;
+        anyHotkey = true;
+        Platform::InputBind bind;
+        bind.mod = m->triggerMod;
+        bind.input = m->triggerVk;
+        m_inputRcvr.registerInputBinding(bind);
+    }
 
     // Install native event filter to capture WM_HOTKEY
     m_hotkeyFilter = new HotkeyFilter(this);
@@ -132,6 +139,8 @@ App::App()
     }
 
     initializeOverlay();
+
+    QTimer::singleShot(0, [this]() { showSettingsWindow(); });
 }
 
 App::~App()
@@ -159,10 +168,13 @@ App::~App()
     clearMenus();
 
     // Unregister hotkey
-    Platform::InputBind bind;
-    bind.mod = m_appConfig.globalHotkeyMod;
-    bind.input = m_appConfig.globalHotkeyVk;
-    m_inputRcvr.unregisterInputBinding(bind);
+    for (Menu* m : loadedMenus) {
+        if (m->triggerMod == 0 && m->triggerVk == 0) continue;
+        Platform::InputBind bind;
+        bind.mod = m->triggerMod;
+        bind.input = m->triggerVk;
+        m_inputRcvr.unregisterInputBinding(bind);
+    }
 }
 
 void App::clearMenus()
@@ -184,13 +196,33 @@ void App::onHotkeyTriggered(int hotkeyId)
         return;
     }
 
+    int mod = (hotkeyId >> 16) & 0xFFFF;
+    int vk = hotkeyId & 0xFFFF;
+    Menu* targetMenu = nullptr;
+    for (Menu* m : loadedMenus) {
+        if (m->triggerMod == mod && m->triggerVk == vk) {
+            targetMenu = m;
+            break;
+        }
+    }
+
     if (gui.isLauncherVisible())
     {
         hideGui();
     }
-    else
+    else if (targetMenu != nullptr)
     {
-        showGui(activeMenu == nullptr && !loadedMenus.empty() ? loadedMenus.front() : activeMenu);
+        activeMenu = targetMenu;
+        showGui(activeMenu);
+    }
+    else if (activeMenu == nullptr && !loadedMenus.empty())
+    {
+        activeMenu = loadedMenus.front();
+        showGui(activeMenu);
+    }
+    else if (activeMenu != nullptr)
+    {
+        showGui(activeMenu);
     }
 }
 
@@ -604,18 +636,15 @@ bool App::saveConfig()
 bool App::applyConfig(const AppConfig &appConfig, const std::vector<Action> &actions, const std::vector<Menu> &menus)
 {
     // Unregister old hotkey
-    Platform::InputBind oldBind;
-    oldBind.mod = m_appConfig.globalHotkeyMod;
-    oldBind.input = m_appConfig.globalHotkeyVk;
-    m_inputRcvr.unregisterInputBinding(oldBind);
+    for (Menu* m : loadedMenus) {
+        if (m->triggerMod == 0 && m->triggerVk == 0) continue;
+        Platform::InputBind oldBind;
+        oldBind.mod = m->triggerMod;
+        oldBind.input = m->triggerVk;
+        m_inputRcvr.unregisterInputBinding(oldBind);
+    }
 
     m_appConfig = appConfig;
-
-    // Register new hotkey
-    Platform::InputBind newBind;
-    newBind.mod = m_appConfig.globalHotkeyMod;
-    newBind.input = m_appConfig.globalHotkeyVk;
-    m_inputRcvr.registerInputBinding(newBind);
 
     // Drop in-flight macros that may reference old library Actions / menus.
     if (m_scheduler)
@@ -632,6 +661,14 @@ bool App::applyConfig(const AppConfig &appConfig, const std::vector<Action> &act
     for (const Menu &menu : menus)
     {
         loadedMenus.push_back(new Menu(menu));
+    }
+
+    for (Menu* m : loadedMenus) {
+        if (m->triggerMod == 0 && m->triggerVk == 0) continue;
+        Platform::InputBind newBind;
+        newBind.mod = m->triggerMod;
+        newBind.input = m->triggerVk;
+        m_inputRcvr.registerInputBinding(newBind);
     }
 
     activeMenu = previousActiveMenuId.empty() ? nullptr : findMenuById(previousActiveMenuId);

@@ -104,14 +104,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     leftLayout->setContentsMargins(12, 12, 12, 12);
     leftLayout->setSpacing(12);
 
-    m_globalGroup = new QGroupBox("Global Settings", leftPane);
-    auto *globalLayout = new QHBoxLayout(m_globalGroup);
-    globalLayout->addWidget(new QLabel("Launcher Hotkey:"));
-    m_hotkeyRecordButton = new QPushButton("Alt + Space", m_globalGroup);
-    m_hotkeyRecordButton->installEventFilter(this);
-    globalLayout->addWidget(m_hotkeyRecordButton);
-    leftLayout->addWidget(m_globalGroup);
-
+    // global settings group removed
     auto *menusGroup = new QGroupBox("Menus", leftPane);
     auto *menusLayout = new QVBoxLayout(menusGroup);
     m_menuList = new QListWidget(menusGroup);
@@ -161,9 +154,12 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     auto *menuSettingsGroup = new QGroupBox("Menu Settings", m_menuEditor);
     auto *menuForm = new QFormLayout(menuSettingsGroup);
     m_menuNameEdit = new QLineEdit(menuSettingsGroup);
+    m_hotkeyRecordButton = new QPushButton("Unassigned", menuSettingsGroup);
+    m_hotkeyRecordButton->installEventFilter(this);
     m_executeOnReleaseCheck = new QCheckBox("Execute on release", menuSettingsGroup);
     m_exitOnActionCheck = new QCheckBox("Exit on action", menuSettingsGroup);
     menuForm->addRow("Menu Name", m_menuNameEdit);
+    menuForm->addRow("Trigger Hotkey", m_hotkeyRecordButton);
     menuForm->addRow("", m_executeOnReleaseCheck);
     menuForm->addRow("", m_exitOnActionCheck);
     menuEditorLayout->addWidget(menuSettingsGroup);
@@ -492,7 +488,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
 
     connect(addMenuButton, &QPushButton::clicked, this, [this]()
             {
-                Menu menu(nullptr, false, false, "New Menu", {}, makeUniqueMenuId("New Menu"));
+                Menu menu(0, 0, false, false, "New Menu", {}, makeUniqueMenuId("New Menu"));
                 m_menus.push_back(menu);
                 refreshLists();
                 setSelectedMenu(static_cast<int>(m_menus.size()) - 1); });
@@ -1084,13 +1080,22 @@ SettingsWindow::SettingsWindow(QWidget *parent)
 
 void SettingsWindow::updateHotkeyButtonText()
 {
+    int idx = currentMenuIndex();
+    if (idx < 0) return;
+    int mod = m_menus[idx].triggerMod;
+    int vk = m_menus[idx].triggerVk;
+
     QString mods;
-    if (m_appConfig.globalHotkeyMod & 0x0002) mods += "Ctrl + ";
-    if (m_appConfig.globalHotkeyMod & 0x0008) mods += "Win + ";
-    if (m_appConfig.globalHotkeyMod & 0x0001) mods += "Alt + ";
-    if (m_appConfig.globalHotkeyMod & 0x0004) mods += "Shift + ";
+    if (mod & 0x0002) mods += "Ctrl + ";
+    if (mod & 0x0008) mods += "Win + ";
+    if (mod & 0x0001) mods += "Alt + ";
+    if (mod & 0x0004) mods += "Shift + ";
     
-    m_hotkeyRecordButton->setText(mods + keyDisplayName(m_appConfig.globalHotkeyVk));
+    if (mod == 0 && vk == 0) {
+        m_hotkeyRecordButton->setText("Unassigned");
+    } else {
+        m_hotkeyRecordButton->setText(mods + keyDisplayName(vk));
+    }
 }
 
 bool SettingsWindow::eventFilter(QObject *obj, QEvent *event)
@@ -1108,14 +1113,18 @@ bool SettingsWindow::eventFilter(QObject *obj, QEvent *event)
             return true;
         }
 
-        m_appConfig.globalHotkeyVk = keyEvent->nativeVirtualKey();
-        m_appConfig.globalHotkeyMod = 0;
-        
-        Qt::KeyboardModifiers modifiers = keyEvent->modifiers();
-        if (modifiers & Qt::ControlModifier) m_appConfig.globalHotkeyMod |= 0x0002;
-        if (modifiers & Qt::AltModifier)     m_appConfig.globalHotkeyMod |= 0x0001;
-        if (modifiers & Qt::ShiftModifier)   m_appConfig.globalHotkeyMod |= 0x0004;
-        if (modifiers & Qt::MetaModifier)    m_appConfig.globalHotkeyMod |= 0x0008;
+        int idx = currentMenuIndex();
+        if (idx >= 0)
+        {
+            m_menus[idx].triggerVk = keyEvent->nativeVirtualKey();
+            m_menus[idx].triggerMod = 0;
+            
+            Qt::KeyboardModifiers modifiers = keyEvent->modifiers();
+            if (modifiers & Qt::ControlModifier) m_menus[idx].triggerMod |= 0x0002;
+            if (modifiers & Qt::AltModifier)     m_menus[idx].triggerMod |= 0x0001;
+            if (modifiers & Qt::ShiftModifier)   m_menus[idx].triggerMod |= 0x0004;
+            if (modifiers & Qt::MetaModifier)    m_menus[idx].triggerMod |= 0x0008;
+        }
 
         m_isRecordingHotkey = false;
         m_hotkeyRecordButton->releaseKeyboard();
@@ -1248,6 +1257,7 @@ void SettingsWindow::refreshMenuEditor()
     m_executeOnReleaseCheck->setChecked(m_menus[index].executeOnRelease);
     m_exitOnActionCheck->setChecked(m_menus[index].exitOnAction);
 
+    updateHotkeyButtonText();
     refreshSlotList();
     refreshSlotActionCombo();
 }
@@ -1984,7 +1994,7 @@ void SettingsWindow::deleteActionReferences(const std::string &actionId)
             }
         }
 
-        Menu replacement(nullptr, menu.executeOnRelease, menu.exitOnAction, menu.getName(), keptIds, menu.getId());
+        Menu replacement(menu.triggerMod, menu.triggerVk, menu.executeOnRelease, menu.exitOnAction, menu.getName(), keptIds, menu.getId());
         menu = replacement;
     }
 }
