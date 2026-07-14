@@ -1,6 +1,6 @@
 /**
  * @file NthRecent.hpp
- * @brief nth-recent history ActionItem (App history pending).
+ * @brief nth-recent history ActionItem.
  */
 
 #pragma once
@@ -10,11 +10,13 @@
 namespace Application
 {
 
-/// @brief Executes the nth most recent unique action (history support pending).
+/// @brief Schedules a copy of the nth most recently wheel-launched Action (1-based).
 class AI_nthRecent : public ActionItem
 {
 public:
-    int n = 0;
+    explicit AI_nthRecent(int n = 1);
+
+    int n = 1; ///< 1 = most recent.
 
     std::unique_ptr<ActionItem> clone() const override;
     ActionItemKind kind() const override;

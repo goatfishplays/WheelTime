@@ -109,6 +109,11 @@ std::string Action::getName() const
     return name;
 }
 
+std::string Action::getIconFilepath() const
+{
+    return iconFilepath;
+}
+
 const std::vector<std::unique_ptr<ActionItem>> &Action::getItems() const
 {
     return sequence;
@@ -144,6 +149,11 @@ void Action::setId(const std::string &newId)
     id = newId;
 }
 
+void Action::setIconFilepath(const std::string &newIconFilepath)
+{
+    iconFilepath = newIconFilepath;
+}
+
 void Action::setItems(std::vector<std::unique_ptr<ActionItem>> newItems)
 {
     sequence = std::move(newItems);
@@ -164,6 +174,11 @@ void Action::moveItem(int fromIndex, int toIndex)
 uint32_t Action::channel() const
 {
     return m_channel;
+}
+
+void Action::setChannel(uint32_t channel) noexcept
+{
+    m_channel = channel;
 }
 
 const std::vector<std::unique_ptr<ActionItem>> &Action::items() const

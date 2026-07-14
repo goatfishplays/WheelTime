@@ -10,6 +10,44 @@
 namespace Application
 {
 
+const char *actionItemKindName(ActionItemKind kind) noexcept
+{
+    switch (kind)
+    {
+    case ActionItemKind::Base:
+        return "base";
+    case ActionItemKind::LaunchApp:
+        return "launch_app";
+    case ActionItemKind::Script:
+        return "script";
+    case ActionItemKind::Delay:
+        return "delay";
+    case ActionItemKind::Menu:
+        return "menu";
+    case ActionItemKind::Close:
+        return "close";
+    case ActionItemKind::Keystroke:
+        return "hotkey";
+    case ActionItemKind::KeyRelease:
+        return "key_release";
+    case ActionItemKind::Socket:
+        return "socket";
+    case ActionItemKind::NthRecent:
+        return "nth_recent";
+    case ActionItemKind::NthFrequent:
+        return "nth_frequent";
+    case ActionItemKind::MouseMove:
+        return "mouse_move";
+    case ActionItemKind::MouseButton:
+        return "mouse_button";
+    case ActionItemKind::MouseButtonRelease:
+        return "mouse_button_release";
+    case ActionItemKind::Cancel:
+        return "cancel";
+    }
+    return "unknown";
+}
+
 std::unique_ptr<ActionItem> ActionItem::clone() const
 {
     return std::make_unique<ActionItem>(*this);

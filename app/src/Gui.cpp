@@ -1,5 +1,6 @@
 #include "App/Gui.hpp"
 // TODO: segment this into multiple files
+#include <QAbstractButton>
 #include <QApplication>
 #include <QDebug>
 #include <QCursor>
@@ -30,6 +31,7 @@ Gui::Gui(QWidget *parent)
     setAttribute(Qt::WA_ShowWithoutActivating, true);
     setWindowFlags(Qt::FramelessWindowHint | Qt::Tool);
     setFocusPolicy(Qt::NoFocus);
+    setMouseTracking(true);
 
     qApp->installEventFilter(this);
 
@@ -37,20 +39,12 @@ Gui::Gui(QWidget *parent)
     root->setContentsMargins(0, 0, 0, 0);
     root->setSpacing(0);
 
-    root->addStretch();
-    auto *centerRow = new QHBoxLayout();
-    centerRow->addStretch();
-
-    // This centered panel contains the existing wheel UI while the top-level
-    // widget stretches fullscreen across the active monitor.
+    // Panel fills the fullscreen overlay (which is sized to the active monitor).
     m_overlayPanel = new QWidget(this);
     m_overlayPanel->setObjectName("launcherPanel");
-    m_overlayPanel->setFixedSize(600, 400);
-    m_overlayPanel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    centerRow->addWidget(m_overlayPanel);
-    centerRow->addStretch();
-    root->addLayout(centerRow);
-    root->addStretch();
+    m_overlayPanel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    m_overlayPanel->setMouseTracking(true);
+    root->addWidget(m_overlayPanel);
 
     auto *panelLayout = new QVBoxLayout(m_overlayPanel);
     panelLayout->setContentsMargins(12, 12, 12, 12);
@@ -58,17 +52,21 @@ Gui::Gui(QWidget *parent)
 
     // Top title
     m_titleLabel = new QLabel("Title", m_overlayPanel);
+    m_titleLabel->setObjectName("launcherTitle");
     m_titleLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     m_titleLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     panelLayout->addWidget(m_titleLabel);
 
     // Middle area that holds the radial widget and can expand freely.
     auto *middle = new QWidget(m_overlayPanel);
+    middle->setObjectName("launcherPanelBody");
+    middle->setMouseTracking(true);
     auto *middleLayout = new QVBoxLayout(middle);
     middleLayout->setContentsMargins(0, 0, 0, 0);
 
     m_radialMenu = new RadialMenuWidget(middle);
     m_radialMenu->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    m_radialMenu->setMouseTracking(true);
     middleLayout->addWidget(m_radialMenu);
 
     panelLayout->addWidget(middle, 1);
@@ -83,7 +81,8 @@ Gui::Gui(QWidget *parent)
     bottomRow->addWidget(m_editButton);
     panelLayout->addLayout(bottomRow);
 
-    m_radialMenu->setButtonRadius(100);
+    // Ring radius tracks the radial panel size (monitor body after chrome).
+    m_radialMenu->setButtonRadiusFraction(0.32);
     m_radialMenu->setActivationMode(RadialMenuWidget::ActivationMode::Distance);
 
     connect(m_radialMenu, &RadialMenuWidget::selectedIndexChanged, this, &Gui::onSelectChange);
@@ -109,16 +108,16 @@ bool Gui::eventFilter(QObject *watched, QEvent *event)
         return QWidget::eventFilter(watched, event);
     }
 
-    if (event->type() == QEvent::MouseMove)
+    if (event->type() == QEvent::MouseMove || event->type() == QEvent::HoverMove)
     {
-        auto *mouseMoveEvent = static_cast<QMouseEvent *>(event);
-        m_radialMenu->updateSelectionFromGlobalMousePosition(mouseMoveEvent->globalPosition().toPoint());
+        m_radialMenu->updateSelectionFromGlobalMousePosition(QCursor::pos());
     }
 
     if (event->type() == QEvent::MouseButtonPress)
     {
         auto *mouseEvent = static_cast<QMouseEvent *>(event);
-        const QPoint localPos = mapFromGlobal(mouseEvent->globalPosition().toPoint());
+        const QPoint globalPos = mouseEvent->globalPosition().toPoint();
+        const QPoint localPos = mapFromGlobal(globalPos);
         QWidget *clickedChild = childAt(localPos);
 
         if (mouseEvent->button() == Qt::LeftButton)
@@ -128,18 +127,16 @@ bool Gui::eventFilter(QObject *watched, QEvent *event)
                 return QWidget::eventFilter(watched, event);
             }
 
-            if (qobject_cast<QPushButton *>(watched) != nullptr || qobject_cast<QPushButton *>(clickedChild) != nullptr)
+            if (qobject_cast<QAbstractButton *>(watched) != nullptr
+                || qobject_cast<QAbstractButton *>(clickedChild) != nullptr)
             {
                 return QWidget::eventFilter(watched, event);
             }
 
-            if (m_radialMenu->geometry().contains(localPos))
-            {
-                App::getInstance().executeAction(m_radialMenu->getSelectedIndex());
-                return true;
-            }
-
-            return QWidget::eventFilter(watched, event);
+            // Any left click on the fullscreen overlay runs the currently selected action.
+            m_radialMenu->updateSelectionFromGlobalMousePosition(globalPos);
+            App::getInstance().executeAction(m_radialMenu->getSelectedIndex());
+            return true;
         }
 
         if (mouseEvent->button() == Qt::RightButton)
@@ -164,10 +161,10 @@ void Gui::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void Gui::setMenu(const Menu &menu, const std::vector<std::string> &actionLabels)
+void Gui::setMenu(const Menu &menu, const std::vector<ActionSlotVisual> &slotVisuals)
 {
     m_titleLabel->setText(QString::fromStdString(menu.getName()));
-    m_radialMenu->setMenu(menu, actionLabels);
+    m_radialMenu->setMenu(menu, slotVisuals);
 }
 
 void Gui::enterInteractiveOverlay()
@@ -177,6 +174,8 @@ void Gui::enterInteractiveOverlay()
     {
         m_overlayPanel->show();
     }
+    // Seed Distance-mode selection from wherever the cursor already is.
+    m_radialMenu->updateSelectionFromGlobalMousePosition(QCursor::pos());
 }
 
 void Gui::enterDormantOverlay()

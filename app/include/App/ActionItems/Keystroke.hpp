@@ -13,8 +13,7 @@ namespace Application
 /**
  * @brief Simulates a hotkey with optional modifiers and hold behavior.
  *
- * Hold uses keyDown + delayed keyUp (cancel-flush + scheduled cleanup) once
- * Platform exposes those APIs. Until then, behavior is logged and stand-ins run.
+ * Hold uses keyDown + delayed keyUp (cancel-flush + scheduled cleanup).
  */
 class AI_Keystroke : public ActionItem
 {

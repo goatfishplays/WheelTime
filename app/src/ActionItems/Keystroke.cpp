@@ -56,12 +56,7 @@ ExecuteResult AI_Keystroke::execute(ActionExecutionContext &context)
 
     if (holdDuration <= 0.0f)
     {
-        // When Platform exposes keyDown/keyUp:
-        // App::getInstance().executor.keyDown(bind);
-        // App::getInstance().executor.keyUp(bind);
-        std::cerr << "[AI_Keystroke] tap keyDown+keyUp key=" << keycode
-                  << " mods=" << modifiers << '\n';
-        // Stand-in: full tap via existing API.
+        std::cerr << "[AI_Keystroke] tap key=" << keycode << " mods=" << modifiers << '\n';
         App::getInstance().executor.executeKey(bind);
         return ExecuteResult::Continue();
     }
@@ -71,10 +66,9 @@ ExecuteResult AI_Keystroke::execute(ActionExecutionContext &context)
     const auto holdMs =
         std::chrono::duration_cast<std::chrono::milliseconds>(hold).count();
 
-    // When Platform exposes keyDown:
-    // App::getInstance().executor.keyDown(bind);
     std::cerr << "[AI_Keystroke] keyDown key=" << keycode << " mods=" << modifiers
               << " holdMs=" << holdMs << " proceed=" << (proceed ? "true" : "false") << '\n';
+    App::getInstance().executor.keyDown(bind);
 
     // Immediate KeyUp if this Action is cancelled mid-hold.
     context.setCancelFlush(makeKeyReleaseAction(keycode, modifiers));
@@ -93,8 +87,6 @@ ExecuteResult AI_Keystroke::execute(ActionExecutionContext &context)
 
     std::cerr << "[AI_Keystroke] scheduled delayed keyUp + cancel-flush registered\n";
 
-    // Stand-in: when !proceed, also park this Action so following items wait out the hold
-    // (real keyDown does not block; sequencing uses DelayUntil until Platform hold is enough).
     if (!proceed)
     {
         return ExecuteResult::DelayUntil(std::chrono::steady_clock::now() + hold);
@@ -122,12 +114,8 @@ ActionItemKind AI_KeyRelease::kind() const
 ExecuteResult AI_KeyRelease::execute(ActionExecutionContext & /*context*/)
 {
     Platform::InputBind bind{keycode, modifiers};
-
-    // When Platform exposes keyUp:
-    // App::getInstance().executor.keyUp(bind);
     std::cerr << "[AI_KeyRelease] keyUp key=" << keycode << " mods=" << modifiers << '\n';
-    (void)bind;
-
+    App::getInstance().executor.keyUp(bind);
     return ExecuteResult::Continue();
 }
 

@@ -147,15 +147,21 @@ void Window::setNonActivating(bool enabled)
     }
 
     LONG_PTR exStyle = GetWindowLongPtr(m_impl->hwnd, GWL_EXSTYLE);
+    const LONG_PTR desiredBits = WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW;
+    LONG_PTR newStyle = exStyle;
     if (enabled)
     {
-        exStyle |= WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW;
+        newStyle |= desiredBits;
     }
     else
     {
-        exStyle &= ~WS_EX_NOACTIVATE;
+        newStyle &= ~WS_EX_NOACTIVATE;
     }
-    SetWindowLongPtr(m_impl->hwnd, GWL_EXSTYLE, exStyle);
+    if (newStyle == exStyle)
+    {
+        return;
+    }
+    SetWindowLongPtr(m_impl->hwnd, GWL_EXSTYLE, newStyle);
     refreshWindowFrame(m_impl->hwnd);
 }
 
@@ -172,15 +178,20 @@ void Window::setTransparentOverlay(bool enabled)
     // SetLayeredWindowAttributes here because that conflicts with Qt's own
     // UpdateLayeredWindowIndirect rendering path for translucent widgets.
     LONG_PTR exStyle = GetWindowLongPtr(m_impl->hwnd, GWL_EXSTYLE);
+    LONG_PTR newStyle = exStyle;
     if (enabled)
     {
-        exStyle |= WS_EX_LAYERED;
+        newStyle |= WS_EX_LAYERED;
     }
     else
     {
-        exStyle &= ~WS_EX_LAYERED;
+        newStyle &= ~WS_EX_LAYERED;
     }
-    SetWindowLongPtr(m_impl->hwnd, GWL_EXSTYLE, exStyle);
+    if (newStyle == exStyle)
+    {
+        return;
+    }
+    SetWindowLongPtr(m_impl->hwnd, GWL_EXSTYLE, newStyle);
 
     refreshWindowFrame(m_impl->hwnd);
 }
@@ -193,15 +204,20 @@ void Window::setClickThrough(bool enabled)
     }
 
     LONG_PTR exStyle = GetWindowLongPtr(m_impl->hwnd, GWL_EXSTYLE);
+    LONG_PTR newStyle = exStyle;
     if (enabled)
     {
-        exStyle |= WS_EX_TRANSPARENT;
+        newStyle |= WS_EX_TRANSPARENT;
     }
     else
     {
-        exStyle &= ~WS_EX_TRANSPARENT;
+        newStyle &= ~WS_EX_TRANSPARENT;
     }
-    SetWindowLongPtr(m_impl->hwnd, GWL_EXSTYLE, exStyle);
+    if (newStyle == exStyle)
+    {
+        return;
+    }
+    SetWindowLongPtr(m_impl->hwnd, GWL_EXSTYLE, newStyle);
     refreshWindowFrame(m_impl->hwnd);
 }
 

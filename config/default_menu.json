@@ -1,6 +1,7 @@
 {
     "actions": [
         {
+            "channel": 1,
             "id": "action-menu-example-calculator",
             "items": [
                 {
@@ -16,21 +17,19 @@
                     "customTarget": "explorer.exe",
                     "presetId": "explorer",
                     "type": "launch_app"
-                },
-                {
-                    "type": "mouse_move",
-                    "x": 0,
-                    "y": 0
                 }
             ],
             "name": "calculator"
         },
         {
+            "channel": 0,
+            "icon": "E:/Media/Images/Wallpapers/brad.png",
             "id": "action-menu-example-paint",
             "items": [
                 {
-                    "path": "paint.exe",
-                    "type": "script"
+                    "customTarget": "",
+                    "presetId": "paint",
+                    "type": "launch_app"
                 },
                 {
                     "holdDuration": 2.4000000953674316,
@@ -43,6 +42,7 @@
             "name": "paint"
         },
         {
+            "channel": 0,
             "id": "action-menu-example-notepad",
             "items": [
                 {
@@ -53,15 +53,151 @@
             "name": "notepad"
         },
         {
+            "channel": 0,
             "id": "action-new-action",
             "items": [
                 {
-                    "type": "mouse_move",
-                    "x": 0,
-                    "y": 0
+                    "duration": 0,
+                    "type": "delay"
                 }
             ],
             "name": "New Action a"
+        },
+        {
+            "channel": 0,
+            "id": "action-cancel-latest",
+            "items": [
+                {
+                    "channel": 0,
+                    "level": "latest",
+                    "type": "cancel"
+                }
+            ],
+            "name": "Cancel Latest"
+        },
+        {
+            "channel": 0,
+            "id": "action-nth-recent-1",
+            "items": [
+                {
+                    "n": 1,
+                    "type": "nth_recent"
+                }
+            ],
+            "name": "Most Recent"
+        },
+        {
+            "channel": 0,
+            "id": "action-nth-frequent-1",
+            "items": [
+                {
+                    "n": 1,
+                    "type": "nth_frequent"
+                }
+            ],
+            "name": "Most Frequent"
+        },
+        {
+            "channel": 0,
+            "icon": "E:/Media/Images/Wallpapers/brad.png",
+            "id": "action-new-action-2",
+            "items": [
+                {
+                    "holdDuration": 10,
+                    "keycode": 65,
+                    "modifiers": 0,
+                    "proceed": true,
+                    "type": "hotkey"
+                },
+                {
+                    "duration": 1000,
+                    "type": "delay"
+                },
+                {
+                    "holdDuration": 5,
+                    "keycode": 66,
+                    "modifiers": 0,
+                    "proceed": true,
+                    "type": "hotkey"
+                },
+                {
+                    "duration": 5000,
+                    "type": "delay"
+                }
+            ],
+            "name": "AB"
+        },
+        {
+            "channel": 1,
+            "id": "action-new-action-3",
+            "items": [
+                {
+                    "holdDuration": 0,
+                    "keycode": 67,
+                    "modifiers": 2,
+                    "proceed": true,
+                    "type": "hotkey"
+                },
+                {
+                    "duration": 1000,
+                    "type": "delay"
+                },
+                {
+                    "holdDuration": 2,
+                    "keycode": 86,
+                    "modifiers": 6,
+                    "proceed": true,
+                    "type": "hotkey"
+                }
+            ],
+            "name": "Copy pase"
+        },
+        {
+            "channel": 0,
+            "icon": "E:/Media/Images/PixelArt/torpinFastFetch.png",
+            "id": "action-new-action-4",
+            "items": [
+                {
+                    "type": "close"
+                },
+                {
+                    "button": 0,
+                    "holdDuration": 0.10000000149011612,
+                    "proceed": false,
+                    "type": "mouse_button"
+                },
+                {
+                    "button": 0,
+                    "holdDuration": 0.10000000149011612,
+                    "proceed": false,
+                    "type": "mouse_button"
+                },
+                {
+                    "button": 0,
+                    "holdDuration": 0.10000000149011612,
+                    "proceed": false,
+                    "type": "mouse_button"
+                },
+                {
+                    "button": 0,
+                    "holdDuration": 0.10000000149011612,
+                    "proceed": false,
+                    "type": "mouse_button"
+                },
+                {
+                    "button": 0,
+                    "holdDuration": 0.10000000149011612,
+                    "proceed": false,
+                    "type": "mouse_button"
+                },
+                {
+                    "button": 0,
+                    "holdDuration": 0.10000000149011612,
+                    "proceed": false,
+                    "type": "mouse_button"
+                }
+            ],
+            "name": "SpeedClicks"
         }
     ],
     "globalHotkey": {
@@ -71,13 +207,17 @@
     "menus": [
         {
             "actionIds": [
+                "action-new-action-2",
+                "action-cancel-latest",
+                "action-nth-recent-1",
+                "action-new-action-3",
+                "action-new-action-4",
                 "action-menu-example-calculator",
-                "action-menu-example-paint",
-                "action-menu-example-notepad",
-                "action-new-action"
+                "action-menu-example-calculator",
+                "action-menu-example-calculator"
             ],
             "executeOnRelease": false,
-            "exitOnAction": false,
+            "exitOnAction": true,
             "id": "menu-example",
             "name": "GAMBLING"
         },
@@ -90,6 +230,14 @@
             "exitOnAction": false,
             "id": "menu-new-menu",
             "name": "test 1"
+        },
+        {
+            "actionIds": [
+            ],
+            "executeOnRelease": false,
+            "exitOnAction": false,
+            "id": "menu-new-menu-2",
+            "name": "New Menu"
         }
     ]
 }

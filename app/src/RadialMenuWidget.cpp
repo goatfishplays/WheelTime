@@ -1,17 +1,18 @@
 #include "App/RadialMenuWidget.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <QCursor>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QFormLayout>
 #include <QHeaderView>
+#include <QIcon>
 #include <QLabel>
 #include <QMessageBox>
 #include <QMouseEvent>
-#include <QTableWidget>
-#include <QTableWidgetItem>
 #include <QStyle>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 using namespace Application;
@@ -20,10 +21,12 @@ using namespace Application;
 RadialMenuWidget::RadialMenuWidget(QWidget *parent)
     : QWidget(parent)
 {
-    // setMouseTracking(true);
+    // Distance mode relies on MouseMove while no button is held.
+    setMouseTracking(true);
     setAttribute(Qt::WA_Hover, true);
 
     m_centerLabel = new QLabel(this);
+    m_centerLabel->setObjectName("radialCenterLabel");
     m_centerLabel->setAlignment(Qt::AlignCenter);
 }
 
@@ -33,25 +36,46 @@ RadialMenuWidget::RadialMenuWidget(const Menu &menu, QWidget *parent)
     setMenu(menu, {});
 }
 
-void RadialMenuWidget::setMenu(const Menu &menu, const std::vector<std::string> &actionLabels)
+void RadialMenuWidget::setMenu(const Menu &menu, const std::vector<ActionSlotVisual> &slotVisuals)
 {
+    // Hotkey open calls setMenu every time; skip a full tear-down/rebuild when
+    // nothing visible changed (icon decode + QToolButton construction is costly).
+    const bool unchanged = m_menu.getId() == menu.getId() && m_slotVisuals == slotVisuals
+        && static_cast<int>(m_buttons.size()) == static_cast<int>(slotVisuals.size());
     m_menu = menu;
-    m_actionLabels = actionLabels;
+    m_slotVisuals = slotVisuals;
+
+    if (unchanged)
+    {
+        setSelectedIndex(-1);
+        return;
+    }
+
+    m_selectedIndex = -1;
     setCenterText(QString::fromStdString(menu.getName()));
-    setSelectedIndex(-1);
     rebuildButtons();
 }
 
 void RadialMenuWidget::setCenterText(const QString &text)
 {
     m_centerLabel->setText(text);
+    m_centerLabel->ensurePolished();
     m_centerLabel->adjustSize();
+    placeWidgetCentered(m_centerLabel, layoutCenter());
     update();
+}
+
+void RadialMenuWidget::setButtonRadiusFraction(double fraction)
+{
+    m_buttonRadiusFraction = std::clamp(fraction, 0.15, 0.48);
+    m_useFixedButtonRadius = false;
+    repositionButtons();
 }
 
 void RadialMenuWidget::setButtonRadius(int radius)
 {
-    m_buttonRadius = radius;
+    m_buttonRadius = std::max(1, radius);
+    m_useFixedButtonRadius = true;
     repositionButtons();
 }
 
@@ -93,6 +117,18 @@ void RadialMenuWidget::setSelectedIndex(int newVal)
         button->update();
     }
 
+    if (m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(m_slotVisuals.size()))
+    {
+        setCenterText(QString::fromStdString(m_slotVisuals[m_selectedIndex].label));
+    }
+    else
+    {
+        setCenterText(QString::fromStdString(m_menu.getName()));
+    }
+
+    // Size can change with selection styling; recentre slots on the ring.
+    repositionButtons();
+
     emit selectedIndexChanged(m_selectedIndex);
 }
 
@@ -104,10 +140,22 @@ void RadialMenuWidget::rebuildButtons()
     }
     m_buttons.clear();
 
-    for (int i = 0; i < static_cast<int>(m_actionLabels.size()); ++i)
+    for (int i = 0; i < static_cast<int>(m_slotVisuals.size()); ++i)
     {
         auto *button = new HoverButton(this);
-        button->setText(QString::fromStdString(m_actionLabels[i]));
+        const ActionSlotVisual &visual = m_slotVisuals[i];
+        button->setText(QString::fromStdString(visual.label));
+        if (!visual.iconPath.empty())
+        {
+            const QIcon icon = iconForPath(visual.iconPath);
+            if (!icon.isNull())
+            {
+                button->setIcon(icon);
+            }
+        }
+        // Child widgets need their own tracking; parent tracking does not apply
+        // while the cursor is over a button.
+        button->setMouseTracking(true);
         button->adjustSize();
         button->show();
 
@@ -125,7 +173,7 @@ void RadialMenuWidget::rebuildButtons()
                         clearSelection();
                     } });
 
-        connect(button, &QPushButton::clicked, this, [this, i]()
+        connect(button, &QToolButton::clicked, this, [this, i]()
                 { emit buttonTriggered(i); });
 
         m_buttons.push_back(button);
@@ -136,18 +184,17 @@ void RadialMenuWidget::rebuildButtons()
 
 void RadialMenuWidget::repositionButtons()
 {
+    const QPointF center = layoutCenter();
     const int count = static_cast<int>(m_buttons.size());
     if (count == 0)
     {
+        m_centerLabel->ensurePolished();
         m_centerLabel->adjustSize();
-        m_centerLabel->move(
-            static_cast<int>(width() * 0.5 - m_centerLabel->width() * 0.5),
-            static_cast<int>(height() * 0.5 - m_centerLabel->height() * 0.5));
+        placeWidgetCentered(m_centerLabel, center);
         return;
     }
 
-    const QPointF center(width() * 0.5, height() * 0.5);
-    const double radius = static_cast<double>(m_buttonRadius);
+    const double radius = static_cast<double>(effectiveButtonRadius());
 
     // Angles are measured from the top and increase clockwise.
     // 1 button: 12:00
@@ -160,18 +207,72 @@ void RadialMenuWidget::repositionButtons()
         const double angle = (-M_PI / 2.0) + (2.0 * M_PI * i / count);
 
         HoverButton *button = m_buttons[i];
+        button->ensurePolished();
         button->adjustSize();
 
-        const int x = static_cast<int>(center.x() + radius * std::cos(angle) - button->width() * 0.5);
-        const int y = static_cast<int>(center.y() + radius * std::sin(angle) - button->height() * 0.5);
-        button->move(x, y);
+        const QPointF slotCenter(
+            center.x() + radius * std::cos(angle),
+            center.y() + radius * std::sin(angle));
+        placeWidgetCentered(button, slotCenter);
     }
 
-    // Center label stays centered.
+    // Center label stays on the same layout origin as the ring.
+    m_centerLabel->ensurePolished();
     m_centerLabel->adjustSize();
-    m_centerLabel->move(
-        static_cast<int>(center.x() - m_centerLabel->width() * 0.5),
-        static_cast<int>(center.y() - m_centerLabel->height() * 0.5));
+    placeWidgetCentered(m_centerLabel, center);
+}
+
+QPointF RadialMenuWidget::layoutCenter() const
+{
+    return {width() * 0.5, height() * 0.5};
+}
+
+QPointF RadialMenuWidget::widgetCenter(const QWidget *widget)
+{
+    return {
+        widget->x() + widget->width() * 0.5,
+        widget->y() + widget->height() * 0.5};
+}
+
+void RadialMenuWidget::placeWidgetCentered(QWidget *widget, QPointF center)
+{
+    widget->move(
+        qRound(center.x() - widget->width() * 0.5),
+        qRound(center.y() - widget->height() * 0.5));
+}
+
+int RadialMenuWidget::effectiveButtonRadius() const
+{
+    if (m_useFixedButtonRadius)
+    {
+        return m_buttonRadius;
+    }
+
+    // Scale with the radial panel (monitor-sized after title/footer chrome).
+    // Leave margin so enlarged selected buttons don't clip the edges.
+    const int shortSide = std::min(width(), height());
+    const int edgeMargin = 80;
+    const int scaled = qRound(shortSide * m_buttonRadiusFraction);
+    const int maxRadius = std::max(60, shortSide / 2 - edgeMargin);
+    return std::clamp(scaled, 60, maxRadius);
+}
+
+QIcon RadialMenuWidget::iconForPath(const std::string &path) const
+{
+    if (path.empty())
+    {
+        return {};
+    }
+
+    const auto cached = m_iconCache.find(path);
+    if (cached != m_iconCache.end())
+    {
+        return cached->second;
+    }
+
+    QIcon icon(QString::fromStdString(path));
+    m_iconCache.emplace(path, icon);
+    return icon;
 }
 
 void RadialMenuWidget::resizeEvent(QResizeEvent *event)
@@ -218,7 +319,7 @@ int RadialMenuWidget::indexFromAngle(double angleRadians, int count) const
 
 void RadialMenuWidget::updateSelection()
 {
-    const QPointF center = rect().center();
+    const QPointF center = layoutCenter();
     const double dx = m_mousePosition.x() - center.x();
     const double dy = m_mousePosition.y() - center.y();
     const double dist2 = dx * dx + dy * dy;
@@ -243,7 +344,7 @@ void RadialMenuWidget::updateSelection()
 
         for (int i = 0; i < count; ++i)
         {
-            const QPoint centerPoint = m_buttons[i]->geometry().center(); // local coords
+            const QPointF centerPoint = widgetCenter(m_buttons[i]);
             const double ddx = m_mousePosition.x() - centerPoint.x();
             const double ddy = m_mousePosition.y() - centerPoint.y();
             const double score = ddx * ddx + ddy * ddy;

@@ -6,6 +6,7 @@
 #pragma once
 
 #include "App/ActionItems/ActionItem.hpp"
+#include "App/ActionItems/Cancel.hpp"
 #include "App/ActionItems/Close.hpp"
 #include "App/ActionItems/Delay.hpp"
 #include "App/ActionItems/Keystroke.hpp"

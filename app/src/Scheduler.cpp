@@ -6,6 +6,7 @@
 #include "App/Scheduler.hpp"
 
 #include <algorithm>
+#include <iostream>
 #include <type_traits>
 #include <utility>
 
@@ -214,6 +215,7 @@ void Scheduler::registerContext(const ActionExecutionContext &context)
     m_cancelFlags[context.actionId()] = context.cancelFlag();
     m_cancelableById[context.actionId()] = context.isCancelable();
     m_logicalChannelById[context.actionId()] = context.channel();
+    noteSubmitOrder(context.actionId());
 }
 
 void Scheduler::unregisterContext(uint64_t actionId)
@@ -223,12 +225,26 @@ void Scheduler::unregisterContext(uint64_t actionId)
     m_logicalChannelById.erase(actionId);
     m_flushActions.erase(actionId);
     m_linkedDelayedByParent.erase(actionId);
+    forgetSubmitOrder(actionId);
 
     for (auto &[parentId, children] : m_linkedDelayedByParent)
     {
         (void)parentId;
         children.erase(std::remove(children.begin(), children.end(), actionId), children.end());
     }
+}
+
+void Scheduler::noteSubmitOrder(uint64_t actionId)
+{
+    forgetSubmitOrder(actionId);
+    m_submitOrder.push_back(actionId);
+}
+
+void Scheduler::forgetSubmitOrder(uint64_t actionId)
+{
+    m_submitOrder.erase(
+        std::remove(m_submitOrder.begin(), m_submitOrder.end(), actionId),
+        m_submitOrder.end());
 }
 
 bool Scheduler::isCancelableAction(uint64_t actionId) const
@@ -297,6 +313,10 @@ void Scheduler::handleSubmit(SubmitRequest request)
     }
 
     auto context = std::make_unique<ActionExecutionContext>(std::move(request.action), actionId);
+    if (request.isCancelFlush)
+    {
+        context->markCancelFlush();
+    }
     registerContext(*context);
 
     applyDispatch(
@@ -342,6 +362,25 @@ void Scheduler::ingestScheduledActions(ActionExecutionContext &context)
     }
 }
 
+void Scheduler::ingestCancelRequests(ActionExecutionContext &context)
+{
+    for (const PendingCancelRequest &request : context.takeCancelRequests())
+    {
+        switch (request.level)
+        {
+        case PendingCancelRequest::Level::MostRecent:
+            handleCancelMostRecent(request.channel, request.excludeActionId);
+            break;
+        case PendingCancelRequest::Level::Channel:
+            handleCancelChannel(request.channel);
+            break;
+        case PendingCancelRequest::Level::All:
+            handleCancelAll();
+            break;
+        }
+    }
+}
+
 void Scheduler::flushCleanups(uint64_t actionId)
 {
     auto it = m_flushActions.find(actionId);
@@ -353,6 +392,9 @@ void Scheduler::flushCleanups(uint64_t actionId)
     std::vector<std::unique_ptr<Action>> flushes = std::move(it->second);
     m_flushActions.erase(it);
 
+    std::cerr << "[Scheduler] cancel-flush parentRuntimeId=" << actionId
+              << " count=" << flushes.size() << '\n';
+
     const auto now = std::chrono::steady_clock::now();
     for (std::unique_ptr<Action> &flush : flushes)
     {
@@ -361,11 +403,16 @@ void Scheduler::flushCleanups(uint64_t actionId)
             continue;
         }
         flush->setCancelable(false);
+        const uint64_t flushId = allocateActionId();
+        std::cerr << "[Scheduler] submit cancel-flush runtimeId=" << flushId
+                  << " id=" << flush->getId() << " name=" << flush->getName()
+                  << " forParentRuntimeId=" << actionId << '\n';
         SubmitRequest request;
         request.action = std::move(flush);
         request.earliestStart = now;
-        request.actionId = allocateActionId();
+        request.actionId = flushId;
         request.forceDispatch = true;
+        request.isCancelFlush = true;
         handleSubmit(std::move(request));
     }
 }
@@ -542,6 +589,28 @@ void Scheduler::handleCancelAll()
     }
 }
 
+void Scheduler::handleCancelMostRecent(uint32_t channel, uint64_t excludeActionId)
+{
+    for (auto it = m_submitOrder.rbegin(); it != m_submitOrder.rend(); ++it)
+    {
+        const uint64_t candidate = *it;
+        if (candidate == excludeActionId || !isCancelableAction(candidate))
+        {
+            continue;
+        }
+        if (channel != 0)
+        {
+            const auto chIt = m_logicalChannelById.find(candidate);
+            if (chIt == m_logicalChannelById.end() || chIt->second != channel)
+            {
+                continue;
+            }
+        }
+        handleCancelAction(candidate);
+        return;
+    }
+}
+
 void Scheduler::handleResult(WorkerResult result)
 {
     if (!result.context)
@@ -558,9 +627,21 @@ void Scheduler::handleResult(WorkerResult result)
     {
         ingestCancelFlushes(*result.context);
         ingestScheduledActions(*result.context);
+        ingestCancelRequests(*result.context);
         if (!channelKey.has_value())
         {
             return;
+        }
+        // Cancel of this Action may have been requested by an item; finish now.
+        if (result.context->isCancelled())
+        {
+            flushCleanups(actionId);
+            result.context->clearScheduledActions();
+            m_channels.unbind(actionId);
+            unregisterContext(actionId);
+            applyDispatch(m_channels.releaseAndTakeNext(
+                *channelKey, std::chrono::steady_clock::now()));
+            break;
         }
         // Channel stays busy; resume the same Action on a worker (or hold if paused).
         dispatchToWorker(std::move(result.context));
@@ -570,9 +651,20 @@ void Scheduler::handleResult(WorkerResult result)
     {
         ingestCancelFlushes(*result.context);
         ingestScheduledActions(*result.context);
+        ingestCancelRequests(*result.context);
         if (!channelKey.has_value())
         {
             return;
+        }
+        if (result.context->isCancelled())
+        {
+            flushCleanups(actionId);
+            result.context->clearScheduledActions();
+            m_channels.unbind(actionId);
+            unregisterContext(actionId);
+            applyDispatch(m_channels.releaseAndTakeNext(
+                *channelKey, std::chrono::steady_clock::now()));
+            break;
         }
         // Hold channel until wake — park on DelayQueue; do not release the channel.
         m_delayQueue.push(result.wakeTime, std::move(result.context));
@@ -582,6 +674,7 @@ void Scheduler::handleResult(WorkerResult result)
     {
         ingestCancelFlushes(*result.context);
         ingestScheduledActions(*result.context);
+        ingestCancelRequests(*result.context);
         if (!channelKey.has_value())
         {
             unregisterContext(actionId);
@@ -597,6 +690,8 @@ void Scheduler::handleResult(WorkerResult result)
     {
         // Parent terminating: run flushes, do not admit pending schedules.
         ingestCancelFlushes(*result.context);
+        // Still honor cancel requests recorded before termination (e.g. Cancel All).
+        ingestCancelRequests(*result.context);
         flushCleanups(actionId);
         result.context->clearScheduledActions();
         if (!channelKey.has_value())

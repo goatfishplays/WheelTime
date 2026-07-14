@@ -81,6 +81,7 @@ namespace Application
         void refreshSlotList();
         void refreshActionItemList();
         void refreshActionSummary();
+        void refreshActionIconPreview();
         void refreshSlotActionCombo();
         void refreshMenuTargetCombo();
         void refreshItemDetail();
@@ -129,6 +130,12 @@ namespace Application
         QComboBox *m_slotActionCombo{nullptr};
 
         QLineEdit *m_actionNameEdit{nullptr};
+        QLineEdit *m_actionIconEdit{nullptr};
+        QPushButton *m_browseActionIconButton{nullptr};
+        QPushButton *m_clearActionIconButton{nullptr};
+        QLabel *m_actionIconPreview{nullptr};
+        QSpinBox *m_actionChannelSpin{nullptr};
+        QLabel *m_actionChannelHelpLabel{nullptr};
         QListWidget *m_actionItemList{nullptr};
         QComboBox *m_newItemTypeCombo{nullptr};
         QStackedWidget *m_itemDetailStack{nullptr};
@@ -141,6 +148,11 @@ namespace Application
         QWidget *m_itemHotkeyPage{nullptr};
         QWidget *m_itemMouseMovePage{nullptr};
         QWidget *m_itemMouseButtonPage{nullptr};
+        QWidget *m_itemCancelPage{nullptr};
+        QWidget *m_itemNthPage{nullptr};
+        QWidget *m_itemSocketPage{nullptr};
+        QWidget *m_itemKeyReleasePage{nullptr};
+        QLabel *m_keyReleaseHelpLabel{nullptr};
         QComboBox *m_launchPresetCombo{nullptr};
         QLineEdit *m_launchCustomPathEdit{nullptr};
         QPushButton *m_browseLaunchAppButton{nullptr};
@@ -158,7 +170,18 @@ namespace Application
         QSpinBox *m_mouseMoveXSpin{nullptr};
         QSpinBox *m_mouseMoveYSpin{nullptr};
         QComboBox *m_mouseButtonCombo{nullptr};
-        QComboBox *m_mouseButtonActionCombo{nullptr};
+        QDoubleSpinBox *m_mouseButtonHoldSpin{nullptr};
+        QCheckBox *m_mouseButtonProceedCheck{nullptr};
+        QComboBox *m_cancelLevelCombo{nullptr};
+        QSpinBox *m_cancelChannelSpin{nullptr};
+        QLabel *m_cancelHelpLabel{nullptr};
+        QSpinBox *m_nthSpin{nullptr};
+        QLabel *m_nthHelpLabel{nullptr};
+        QComboBox *m_socketProtocolCombo{nullptr};
+        QLineEdit *m_socketDestinationEdit{nullptr};
+        QLineEdit *m_socketMessageEdit{nullptr};
+        QLineEdit *m_socketHttpMethodEdit{nullptr};
+        QLabel *m_socketHelpLabel{nullptr};
         QLabel *m_actionSequenceLabel{nullptr};
     };
 }

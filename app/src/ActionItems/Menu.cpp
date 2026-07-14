@@ -33,11 +33,12 @@ ExecuteResult AI_Menu::execute(ActionExecutionContext & /*context*/)
     Menu *targetMenu = app.findMenuById(menuId);
     if (targetMenu != nullptr)
     {
+        std::cerr << "[AI_Menu] show menuId='" << menuId << "'\n";
         app.showGui(targetMenu);
     }
     else
     {
-        std::cerr << "Failed to find menu with id: '" << menuId << "'\n";
+        std::cerr << "[AI_Menu] failed to find menuId='" << menuId << "'\n";
     }
     return ExecuteResult::Continue();
 }

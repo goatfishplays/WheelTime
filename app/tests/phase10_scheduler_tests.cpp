@@ -1493,6 +1493,147 @@ bool testRandomizedFifoInvariant()
     return true;
 }
 
+bool testCancelActionItemStopsTail()
+{
+    std::atomic<int> targetTail{0};
+    std::atomic<int> entered{0};
+    std::atomic<bool> release{false};
+    std::atomic<int> cancelerDone{0};
+
+    std::vector<std::unique_ptr<ActionItem>> target;
+    target.push_back(std::make_unique<GateItem>(&entered, &release));
+    target.push_back(std::make_unique<CountingItem>(&targetTail));
+
+    std::vector<std::unique_ptr<ActionItem>> canceler;
+    canceler.push_back(std::make_unique<AI_Cancel>(CancelLevel::Latest, 0));
+    canceler.push_back(std::make_unique<CountingItem>(&cancelerDone));
+
+    Scheduler scheduler{4};
+    scheduler.submit(makeAction(std::move(target), 1));
+    if (!waitUntil(entered, 1, std::chrono::seconds(2)))
+    {
+        std::cerr << "ai_cancel_latest: target never entered\n";
+        scheduler.stop();
+        return false;
+    }
+    scheduler.submit(makeAction(std::move(canceler), 2));
+
+    if (!waitUntil(cancelerDone, 1, std::chrono::seconds(2)))
+    {
+        std::cerr << "ai_cancel_latest: canceler did not finish (cancelled itself?)\n";
+        release.store(true, std::memory_order_release);
+        scheduler.stop();
+        return false;
+    }
+
+    release.store(true, std::memory_order_release);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    scheduler.stop();
+
+    if (targetTail.load() != 0)
+    {
+        std::cerr << "ai_cancel_latest: most recent target tail still ran\n";
+        return false;
+    }
+    return true;
+}
+
+bool testCancelLatestRespectsChannel()
+{
+    std::atomic<int> ch1Tail{0};
+    std::atomic<int> ch2Tail{0};
+    std::atomic<int> entered{0};
+    std::atomic<bool> release{false};
+
+    std::vector<std::unique_ptr<ActionItem>> onCh1;
+    onCh1.push_back(std::make_unique<GateItem>(&entered, &release));
+    onCh1.push_back(std::make_unique<CountingItem>(&ch1Tail));
+
+    std::vector<std::unique_ptr<ActionItem>> onCh2;
+    onCh2.push_back(std::make_unique<GateItem>(&entered, &release));
+    onCh2.push_back(std::make_unique<CountingItem>(&ch2Tail));
+
+    std::vector<std::unique_ptr<ActionItem>> canceler;
+    // Cancel most recent on channel 1 only (ch2 submitted later globally).
+    canceler.push_back(std::make_unique<AI_Cancel>(CancelLevel::Latest, 1));
+
+    Scheduler scheduler{4};
+    scheduler.submit(makeAction(std::move(onCh1), 1));
+    scheduler.submit(makeAction(std::move(onCh2), 2));
+    if (!waitUntil(entered, 2, std::chrono::seconds(2)))
+    {
+        std::cerr << "ai_cancel_latest_ch: gates never entered\n";
+        scheduler.stop();
+        return false;
+    }
+    scheduler.submit(makeAction(std::move(canceler), 3));
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    release.store(true, std::memory_order_release);
+
+    if (!waitUntil(ch2Tail, 1, std::chrono::seconds(2)))
+    {
+        std::cerr << "ai_cancel_latest_ch: channel 2 was cancelled\n";
+        scheduler.stop();
+        return false;
+    }
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    scheduler.stop();
+
+    if (ch1Tail.load() != 0)
+    {
+        std::cerr << "ai_cancel_latest_ch: channel 1 tail still ran\n";
+        return false;
+    }
+    return true;
+}
+
+bool testCancelChannelItem()
+{
+    std::atomic<int> target{0};
+    std::atomic<int> other{0};
+    std::atomic<int> entered{0};
+    std::atomic<bool> release{false};
+
+    std::vector<std::unique_ptr<ActionItem>> blocker;
+    blocker.push_back(std::make_unique<GateItem>(&entered, &release));
+    blocker.push_back(std::make_unique<CountingItem>(&target));
+
+    std::vector<std::unique_ptr<ActionItem>> canceler;
+    canceler.push_back(std::make_unique<AI_Cancel>(CancelLevel::Channel, 1));
+
+    std::vector<std::unique_ptr<ActionItem>> survivor;
+    survivor.push_back(std::make_unique<CountingItem>(&other));
+
+    Scheduler scheduler{4};
+    scheduler.submit(makeAction(std::move(blocker), 1));
+    if (!waitUntil(entered, 1, std::chrono::seconds(2)))
+    {
+        std::cerr << "ai_cancel_channel: blocker never entered\n";
+        return false;
+    }
+    scheduler.submit(makeAction(std::move(canceler), 2));
+    scheduler.submit(makeAction(std::move(survivor), 3));
+
+    if (!waitUntil(other, 1, std::chrono::seconds(2)))
+    {
+        std::cerr << "ai_cancel_channel: other channel blocked\n";
+        release.store(true, std::memory_order_release);
+        scheduler.stop();
+        return false;
+    }
+
+    release.store(true, std::memory_order_release);
+    std::this_thread::sleep_for(std::chrono::milliseconds(80));
+    scheduler.stop();
+
+    if (target.load() != 0)
+    {
+        std::cerr << "ai_cancel_channel: channel 1 tail still ran\n";
+        return false;
+    }
+    return true;
+}
+
 } // namespace
 
 int main()
@@ -1540,6 +1681,10 @@ int main()
         // Randomized
         {"randomized_scheduling", testRandomizedScheduling},
         {"randomized_fifo_invariant", testRandomizedFifoInvariant},
+        // AI_Cancel ActionItems
+        {"ai_cancel_latest_item", testCancelActionItemStopsTail},
+        {"ai_cancel_latest_channel_filter", testCancelLatestRespectsChannel},
+        {"ai_cancel_channel_item", testCancelChannelItem},
     };
 
     int failed = 0;

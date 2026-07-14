@@ -10,6 +10,7 @@
 #include "App/ExecuteResult.hpp"
 
 #include <chrono>
+#include <iostream>
 #include <thread>
 #include <utility>
 #include <vector>
@@ -39,6 +40,19 @@ void SynchronousActionRunner::run(std::unique_ptr<Action> action)
             break;
         }
 
+        const Action &owned = context.action();
+        if (context.currentIndex() == 0)
+        {
+            std::cerr << "[Action] run runtimeId=" << context.actionId()
+                      << " id=" << owned.getId() << " name=" << owned.getName()
+                      << " channel=" << owned.channel()
+                      << " cancelable=" << (owned.cancelable() ? "true" : "false") << '\n';
+        }
+        std::cerr << "[ActionItem] execute kind=" << actionItemKindName(item->kind())
+                  << " index=" << context.currentIndex()
+                  << " actionId=" << owned.getId()
+                  << " runtimeId=" << context.actionId() << '\n';
+
         const ExecuteResult result = item->execute(context);
 
         for (ScheduledAction &request : context.takeScheduledActions())
@@ -49,6 +63,26 @@ void SynchronousActionRunner::run(std::unique_ptr<Action> action)
                 std::this_thread::sleep_until(request.wakeTime);
             }
             run(std::move(request.action));
+        }
+
+        // Best-effort: without a live Scheduler, only local cancel can apply.
+        for (const PendingCancelRequest &request : context.takeCancelRequests())
+        {
+            switch (request.level)
+            {
+            case PendingCancelRequest::Level::MostRecent:
+                // No peer Actions exist in the synchronous runner; nothing to cancel.
+                break;
+            case PendingCancelRequest::Level::Channel:
+                if (request.channel == context.channel())
+                {
+                    context.cancel();
+                }
+                break;
+            case PendingCancelRequest::Level::All:
+                context.cancel();
+                break;
+            }
         }
 
         if (result.type() == ExecuteResult::Type::DelayUntil)

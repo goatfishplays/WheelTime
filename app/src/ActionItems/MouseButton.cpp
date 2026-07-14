@@ -1,18 +1,55 @@
 /**
  * @file MouseButton.cpp
- * @brief AI_MouseButton definitions.
+ * @brief AI_MouseButton / AI_MouseButtonRelease definitions.
  */
 
 #include "App/ActionItems/MouseButton.hpp"
 
+#include "App/Action.hpp"
+#include "App/ActionExecutionContext.hpp"
+#include "App/ActionItems/Delay.hpp"
+#include "App/App.hpp"
+
+#include <chrono>
 #include <iostream>
+#include <vector>
 
 namespace Application
 {
+namespace
+{
 
-AI_MouseButton::AI_MouseButton(int button, bool down)
+const char *mouseButtonName(int button) noexcept
+{
+    switch (button)
+    {
+    case 0:
+        return "left";
+    case 1:
+        return "right";
+    case 2:
+        return "middle";
+    default:
+        return "unknown";
+    }
+}
+
+std::unique_ptr<Action> makeMouseButtonReleaseAction(int button)
+{
+    std::vector<std::unique_ptr<ActionItem>> items;
+    items.push_back(std::make_unique<AI_MouseButtonRelease>(button));
+    auto action =
+        std::make_unique<Action>(std::move(items), "mouse-release", "", "mouse-release", 0);
+    action->setCancelable(false);
+    return action;
+}
+
+} // namespace
+
+AI_MouseButton::AI_MouseButton(int button, float holdDuration, bool proceed)
     : button{button}
-    , down{down}
+    , holdDuration{holdDuration}
+    , proceed{proceed}
 {
 }
 
@@ -26,13 +63,69 @@ ActionItemKind AI_MouseButton::kind() const
     return ActionItemKind::MouseButton;
 }
 
-ExecuteResult AI_MouseButton::execute(ActionExecutionContext & /*context*/)
+ExecuteResult AI_MouseButton::execute(ActionExecutionContext &context)
 {
-    // When Platform exposes mouse button press/release:
-    // App::getInstance().executor.mouseButton(button, down);
-    // // or: mouseDown(button) / mouseUp(button)
-    std::cerr << "[AI_MouseButton] would "
-              << (down ? "press" : "release") << " button=" << button << '\n';
+    if (holdDuration <= 0.0f)
+    {
+        std::cerr << "[AI_MouseButton] tap button=" << mouseButtonName(button) << " ("
+                  << button << ")\n";
+        App::getInstance().executor.mouseButton(button, true);
+        App::getInstance().executor.mouseButton(button, false);
+        return ExecuteResult::Continue();
+    }
+
+    const auto hold = std::chrono::duration_cast<std::chrono::steady_clock::duration>(
+        std::chrono::duration<float>(holdDuration));
+    const auto holdMs =
+        std::chrono::duration_cast<std::chrono::milliseconds>(hold).count();
+
+    std::cerr << "[AI_MouseButton] press button=" << mouseButtonName(button)
+              << " holdMs=" << holdMs << " proceed=" << (proceed ? "true" : "false") << '\n';
+    App::getInstance().executor.mouseButton(button, true);
+
+    context.setCancelFlush(makeMouseButtonReleaseAction(button));
+
+    std::vector<std::unique_ptr<ActionItem>> delayedItems;
+    delayedItems.push_back(std::make_unique<AI_Delay>(static_cast<int>(holdMs)));
+    delayedItems.push_back(std::make_unique<AI_MouseButtonRelease>(button));
+    auto delayed = std::make_unique<Action>(
+        std::move(delayedItems), "mouse-hold-release", "", "mouse-hold-release", 0);
+    delayed->setCancelable(false);
+    context.scheduleAction(
+        std::move(delayed),
+        std::chrono::steady_clock::now() + hold,
+        /*removeIfParentCancelled=*/true);
+
+    std::cerr << "[AI_MouseButton] scheduled delayed release + cancel-flush registered\n";
+
+    if (!proceed)
+    {
+        return ExecuteResult::DelayUntil(std::chrono::steady_clock::now() + hold);
+    }
+
+    return ExecuteResult::Continue();
+}
+
+AI_MouseButtonRelease::AI_MouseButtonRelease(int button)
+    : button{button}
+{
+}
+
+std::unique_ptr<ActionItem> AI_MouseButtonRelease::clone() const
+{
+    return std::make_unique<AI_MouseButtonRelease>(*this);
+}
+
+ActionItemKind AI_MouseButtonRelease::kind() const
+{
+    return ActionItemKind::MouseButtonRelease;
+}
+
+ExecuteResult AI_MouseButtonRelease::execute(ActionExecutionContext & /*context*/)
+{
+    std::cerr << "[AI_MouseButtonRelease] release button=" << mouseButtonName(button) << " ("
+              << button << ")\n";
+    App::getInstance().executor.mouseButton(button, false);
     return ExecuteResult::Continue();
 }
 

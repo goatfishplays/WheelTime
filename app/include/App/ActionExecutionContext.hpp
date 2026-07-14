@@ -37,6 +37,29 @@ struct ScheduledAction
 };
 
 /**
+ * @brief Cancel request recorded by ActionItems for the scheduler to apply.
+ *
+ * Mirrors Scheduler cancel APIs. ActionItems must not call the Scheduler
+ * directly; they enqueue these and yield.
+ */
+struct PendingCancelRequest
+{
+    enum class Level
+    {
+        /// @brief Cancel the most recently submitted Action (see channel / excludeActionId).
+        MostRecent,
+        Channel,
+        All
+    };
+
+    Level level = Level::MostRecent;
+    /// @brief Runtime id to skip when level == MostRecent (usually the requester).
+    uint64_t excludeActionId = 0;
+    /// @brief Channel filter: for MostRecent, 0 = any channel; for Channel, the target.
+    uint32_t channel = 0;
+};
+
+/**
  * @brief Owns an Action and tracks progress while workers run its items.
  *
  * Workers execute contexts, not bare Actions. This type holds:
@@ -44,6 +67,7 @@ struct ScheduledAction
  * - the current ActionItem index,
  * - shared cancel state (so the scheduler can cancel an in-flight Action),
  * - pending ScheduledAction requests,
+ * - pending cancel requests (cancelAction / cancelChannel / cancelAll),
  * - cancel-flush Actions (run immediately when this Action is cancelled).
  */
 class ActionExecutionContext
@@ -91,6 +115,9 @@ public:
     [[nodiscard]] ActionItem *currentItem() noexcept;
     [[nodiscard]] const ActionItem *currentItem() const noexcept;
 
+    /// @brief Zero-based index of the next/current ActionItem.
+    [[nodiscard]] size_t currentIndex() const noexcept;
+
     /// @brief Advances to the next item without executing it.
     void advance() noexcept;
 
@@ -115,6 +142,18 @@ public:
      */
     void setCancelFlush(std::unique_ptr<Action> action);
 
+    /// @brief Requests cancel of the most recent Action on @p channel (0 = any).
+    ///
+    /// The requesting Action (this context) is excluded so Cancel Latest never
+    /// cancels itself.
+    void requestCancelMostRecent(uint32_t channel);
+
+    /// @brief Requests cancelChannel(@p channel) after execute() returns.
+    void requestCancelChannel(uint32_t channel);
+
+    /// @brief Requests cancelAll() after execute() returns.
+    void requestCancelAll();
+
     /// @brief Pending nested submits (scheduler should prefer takeScheduledActions()).
     [[nodiscard]] const std::vector<ScheduledAction> &scheduledActions() const noexcept;
 
@@ -127,8 +166,22 @@ public:
     /// @brief Moves out cancel-flush Actions and clears the list.
     [[nodiscard]] std::vector<std::unique_ptr<Action>> takeCancelFlushes() noexcept;
 
-    /// @brief True if scheduleAction / setCancelFlush produced work for the scheduler.
+    /// @brief Moves out pending cancel requests and clears the list.
+    [[nodiscard]] std::vector<PendingCancelRequest> takeCancelRequests() noexcept;
+
+    /// @brief True if scheduleAction / setCancelFlush / cancel requests are pending.
     [[nodiscard]] bool hasPendingSchedulerRequests() const noexcept;
+
+    /**
+     * @brief Marks this context as a cancel-flush cleanup Action.
+     *
+     * Set by the scheduler when submitting setCancelFlush work so workers can
+     * log flush execution separately from normal runs.
+     */
+    void markCancelFlush() noexcept;
+
+    /// @brief True if this Action was submitted as cancel-flush cleanup.
+    [[nodiscard]] bool isCancelFlush() const noexcept;
 
 private:
     std::unique_ptr<Action> m_action;
@@ -137,6 +190,8 @@ private:
     std::shared_ptr<std::atomic<bool>> m_cancelFlag;
     std::vector<ScheduledAction> m_scheduledActions;
     std::vector<std::unique_ptr<Action>> m_cancelFlushes;
+    std::vector<PendingCancelRequest> m_cancelRequests;
+    bool m_isCancelFlush = false;
 };
 
 } // namespace Application

@@ -28,6 +28,9 @@ int main(int argc, char *argv[])
     // app.exitMenu();
 
     QApplication qtApp(fake_argc, fake_argv);
+    // Launcher shell is a Qt::Tool overlay and is ignored for "last window" checks.
+    // Closing Settings (a real Qt::Window) must not quit the hotkey-resident app.
+    qtApp.setQuitOnLastWindowClosed(false);
 
     // QPushButton button("Hello world !");
 

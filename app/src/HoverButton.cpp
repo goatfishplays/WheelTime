@@ -1,21 +1,24 @@
 #include "App/HoverButton.hpp"
+
 using namespace Application;
 
-// ---------------- HoverButton ----------------
-
 HoverButton::HoverButton(QWidget *parent)
-    : QPushButton(parent)
+    : QToolButton(parent)
 {
+    setObjectName("wheelActionButton");
+    setProperty("selectedAction", false);
+    setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    setAutoRaise(false);
 }
 
 void HoverButton::enterEvent(QEnterEvent *event)
 {
-    QPushButton::enterEvent(event);
+    QToolButton::enterEvent(event);
     emit mouseHovered();
 }
 
 void HoverButton::leaveEvent(QEvent *event)
 {
-    QPushButton::leaveEvent(event);
+    QToolButton::leaveEvent(event);
     emit mouseLeft();
 }

@@ -14,6 +14,18 @@
 
 namespace Application
 {
+    /// @brief Display data for one radial-menu / settings slot preview.
+    struct ActionSlotVisual
+    {
+        std::string label;
+        std::string iconPath;
+
+        bool operator==(const ActionSlotVisual &other) const noexcept
+        {
+            return label == other.label && iconPath == other.iconPath;
+        }
+    };
+
     /**
      * @brief Represents one reusable macro/action in the shared action library.
      *
@@ -59,12 +71,15 @@ namespace Application
         /// @brief Stable config ID used by menus and serialization.
         std::string getId() const;
         std::string getName() const;
+        /// @brief Optional image shown above the action name on the wheel.
+        std::string getIconFilepath() const;
         /// @brief Exposes the item sequence for settings editing/serialization.
         const std::vector<std::unique_ptr<ActionItem>> &getItems() const;
         ActionItem *getItem(int index);
         const ActionItem *getItem(int index) const;
         void setName(const std::string &newName);
         void setId(const std::string &newId);
+        void setIconFilepath(const std::string &newIconFilepath);
         /// @brief Replaces the full item sequence, preserving ownership safety.
         void setItems(std::vector<std::unique_ptr<ActionItem>> newItems);
         /// @brief Moves an item within the sequence while preserving order.
@@ -76,6 +91,14 @@ namespace Application
          * @return uint32_t
          */
         uint32_t channel() const;
+
+        /**
+         * @brief Sets the logical run channel.
+         *
+         * 0 = independent (scheduler assigns a private key; does not block peers).
+         * >0 = shared FIFO with other Actions on the same channel.
+         */
+        void setChannel(uint32_t channel) noexcept;
 
         /**
          * @brief Returns a constant reference to the actionItems

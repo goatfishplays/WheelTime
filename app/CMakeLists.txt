@@ -23,6 +23,8 @@ add_library(App
     src/ActionItems/NthFrequent.cpp
     src/ActionItems/MouseMove.cpp
     src/ActionItems/MouseButton.cpp
+    src/ActionItems/Cancel.cpp
+    src/ActionHistory.cpp
     include/App/ActionItems.hpp
     include/App/ActionItems/ActionItem.hpp
     include/App/ActionItems/Delay.hpp
@@ -36,6 +38,8 @@ add_library(App
     include/App/ActionItems/NthFrequent.hpp
     include/App/ActionItems/MouseMove.hpp
     include/App/ActionItems/MouseButton.hpp
+    include/App/ActionItems/Cancel.hpp
+    include/App/ActionHistory.hpp
     src/ActionExecutionContext.cpp
     include/App/ActionExecutionContext.hpp
     src/ExecuteResult.cpp
@@ -183,6 +187,19 @@ target_link_libraries(phase10_scheduler_tests
         App
 )
 target_compile_features(phase10_scheduler_tests
+    PRIVATE
+        cxx_std_20
+)
+
+# ActionHistory smoke test.
+add_executable(action_history_smoke
+    tests/action_history_smoke.cpp
+)
+target_link_libraries(action_history_smoke
+    PRIVATE
+        App
+)
+target_compile_features(action_history_smoke
     PRIVATE
         cxx_std_20
 )
