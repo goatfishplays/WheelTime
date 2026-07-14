@@ -144,20 +144,23 @@ namespace
                 if (itemObject.contains("down") && !itemObject.value("down").toBool(true))
                 {
                     items.push_back(std::make_unique<AI_MouseButtonRelease>(
-                        itemObject.value("button").toInt(0)));
+                        itemObject.value("button").toInt(0),
+                        itemObject.value("modifiers").toInt(0)));
                 }
                 else
                 {
                     items.push_back(std::make_unique<AI_MouseButton>(
                         itemObject.value("button").toInt(0),
                         static_cast<float>(itemObject.value("holdDuration").toDouble(0.0)),
-                        itemObject.value("proceed").toBool(false)));
+                        itemObject.value("proceed").toBool(false),
+                        itemObject.value("modifiers").toInt(0)));
                 }
             }
             else if (type == "mouse_button_release")
             {
                 items.push_back(std::make_unique<AI_MouseButtonRelease>(
-                    itemObject.value("button").toInt(0)));
+                    itemObject.value("button").toInt(0),
+                    itemObject.value("modifiers").toInt(0)));
             }
             else if (type == "key_release")
             {
@@ -371,12 +374,14 @@ namespace
         case ActionItemKind::MouseButton:
             itemObject.insert("type", "mouse_button");
             itemObject.insert("button", static_cast<const AI_MouseButton &>(item).button);
+            itemObject.insert("modifiers", static_cast<const AI_MouseButton &>(item).modifiers);
             itemObject.insert("holdDuration", static_cast<const AI_MouseButton &>(item).holdDuration);
             itemObject.insert("proceed", static_cast<const AI_MouseButton &>(item).proceed);
             break;
         case ActionItemKind::MouseButtonRelease:
             itemObject.insert("type", "mouse_button_release");
             itemObject.insert("button", static_cast<const AI_MouseButtonRelease &>(item).button);
+            itemObject.insert("modifiers", static_cast<const AI_MouseButtonRelease &>(item).modifiers);
             break;
         case ActionItemKind::KeyRelease:
             itemObject.insert("type", "key_release");

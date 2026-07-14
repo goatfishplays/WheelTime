@@ -170,6 +170,10 @@ namespace Application
         QSpinBox *m_mouseMoveXSpin{nullptr};
         QSpinBox *m_mouseMoveYSpin{nullptr};
         QComboBox *m_mouseButtonCombo{nullptr};
+        QCheckBox *m_mouseButtonCtrlCheck{nullptr};
+        QCheckBox *m_mouseButtonAltCheck{nullptr};
+        QCheckBox *m_mouseButtonShiftCheck{nullptr};
+        QCheckBox *m_mouseButtonWinCheck{nullptr};
         QDoubleSpinBox *m_mouseButtonHoldSpin{nullptr};
         QCheckBox *m_mouseButtonProceedCheck{nullptr};
         QComboBox *m_cancelLevelCombo{nullptr};

@@ -28,13 +28,75 @@ namespace
 {
 constexpr DWORD kNetworkTimeoutMs = 5000;
 
+bool isMediaVirtualKey(WORD vk)
+{
+    switch (vk)
+    {
+    case VK_VOLUME_MUTE:
+    case VK_VOLUME_DOWN:
+    case VK_VOLUME_UP:
+    case VK_MEDIA_NEXT_TRACK:
+    case VK_MEDIA_PREV_TRACK:
+    case VK_MEDIA_STOP:
+    case VK_MEDIA_PLAY_PAUSE:
+    case VK_LAUNCH_MEDIA_SELECT:
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool isExtendedVirtualKey(WORD vk)
+{
+    switch (vk)
+    {
+    case VK_LEFT:
+    case VK_UP:
+    case VK_RIGHT:
+    case VK_DOWN:
+    case VK_PRIOR:
+    case VK_NEXT:
+    case VK_END:
+    case VK_HOME:
+    case VK_INSERT:
+    case VK_DELETE:
+    case VK_DIVIDE:
+    case VK_NUMLOCK:
+    case VK_RCONTROL:
+    case VK_RMENU:
+    case VK_LWIN:
+    case VK_RWIN:
+    case VK_APPS:
+        return true;
+    default:
+        return isMediaVirtualKey(vk);
+    }
+}
+
 void pushKeyboardInput(std::vector<INPUT> &inputs, WORD vk, DWORD flags = 0)
 {
     INPUT input{};
     input.type = INPUT_KEYBOARD;
     input.ki.wVk = vk;
-    input.ki.wScan = MapVirtualKey(vk, MAPVK_VK_TO_VSC);
-    input.ki.dwFlags = flags | KEYEVENTF_SCANCODE;
+
+    // Media keys don't map to usable scancodes via MapVirtualKey; SendInput must
+    // use the virtual-key path. Normal keys keep the scancode path so games /
+    // apps that ignore VK still see the physical key.
+    if (isMediaVirtualKey(vk))
+    {
+        input.ki.wScan = 0;
+        input.ki.dwFlags = flags | KEYEVENTF_EXTENDEDKEY;
+    }
+    else
+    {
+        input.ki.wScan = static_cast<WORD>(MapVirtualKey(vk, MAPVK_VK_TO_VSC));
+        input.ki.dwFlags = flags | KEYEVENTF_SCANCODE;
+        if (isExtendedVirtualKey(vk))
+        {
+            input.ki.dwFlags |= KEYEVENTF_EXTENDEDKEY;
+        }
+    }
+
     inputs.push_back(input);
 }
 
@@ -657,6 +719,30 @@ public:
         sendInputs(inputs);
     }
 
+    void modifiersDown(int mod)
+    {
+        if (mod == 0)
+        {
+            return;
+        }
+        std::vector<INPUT> inputs;
+        inputs.reserve(4);
+        appendModifierDowns(inputs, mod);
+        sendInputs(inputs);
+    }
+
+    void modifiersUp(int mod)
+    {
+        if (mod == 0)
+        {
+            return;
+        }
+        std::vector<INPUT> inputs;
+        inputs.reserve(4);
+        appendModifierUps(inputs, mod);
+        sendInputs(inputs);
+    }
+
     void executeKey(InputBind key)
     {
         keyDown(key);
@@ -747,6 +833,16 @@ void Executor::keyDown(InputBind key)
 void Executor::keyUp(InputBind key)
 {
     m_impl->keyUp(key);
+}
+
+void Executor::modifiersDown(int mod)
+{
+    m_impl->modifiersDown(mod);
+}
+
+void Executor::modifiersUp(int mod)
+{
+    m_impl->modifiersUp(mod);
 }
 
 void Executor::mouseButton(int button, bool down)

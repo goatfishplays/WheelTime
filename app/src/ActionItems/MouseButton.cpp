@@ -34,10 +34,10 @@ const char *mouseButtonName(int button) noexcept
     }
 }
 
-std::unique_ptr<Action> makeMouseButtonReleaseAction(int button)
+std::unique_ptr<Action> makeMouseButtonReleaseAction(int button, int modifiers)
 {
     std::vector<std::unique_ptr<ActionItem>> items;
-    items.push_back(std::make_unique<AI_MouseButtonRelease>(button));
+    items.push_back(std::make_unique<AI_MouseButtonRelease>(button, modifiers));
     auto action =
         std::make_unique<Action>(std::move(items), "mouse-release", "", "mouse-release", 0);
     action->setCancelable(false);
@@ -46,8 +46,9 @@ std::unique_ptr<Action> makeMouseButtonReleaseAction(int button)
 
 } // namespace
 
-AI_MouseButton::AI_MouseButton(int button, float holdDuration, bool proceed)
+AI_MouseButton::AI_MouseButton(int button, float holdDuration, bool proceed, int modifiers)
     : button{button}
+    , modifiers{modifiers}
     , holdDuration{holdDuration}
     , proceed{proceed}
 {
@@ -65,12 +66,16 @@ ActionItemKind AI_MouseButton::kind() const
 
 ExecuteResult AI_MouseButton::execute(ActionExecutionContext &context)
 {
+    auto &executor = App::getInstance().executor;
+
     if (holdDuration <= 0.0f)
     {
         std::cerr << "[AI_MouseButton] tap button=" << mouseButtonName(button) << " ("
-                  << button << ")\n";
-        App::getInstance().executor.mouseButton(button, true);
-        App::getInstance().executor.mouseButton(button, false);
+                  << button << ") mods=" << modifiers << '\n';
+        executor.modifiersDown(modifiers);
+        executor.mouseButton(button, true);
+        executor.mouseButton(button, false);
+        executor.modifiersUp(modifiers);
         return ExecuteResult::Continue();
     }
 
@@ -80,14 +85,16 @@ ExecuteResult AI_MouseButton::execute(ActionExecutionContext &context)
         std::chrono::duration_cast<std::chrono::milliseconds>(hold).count();
 
     std::cerr << "[AI_MouseButton] press button=" << mouseButtonName(button)
-              << " holdMs=" << holdMs << " proceed=" << (proceed ? "true" : "false") << '\n';
-    App::getInstance().executor.mouseButton(button, true);
+              << " mods=" << modifiers << " holdMs=" << holdMs
+              << " proceed=" << (proceed ? "true" : "false") << '\n';
+    executor.modifiersDown(modifiers);
+    executor.mouseButton(button, true);
 
-    context.setCancelFlush(makeMouseButtonReleaseAction(button));
+    context.setCancelFlush(makeMouseButtonReleaseAction(button, modifiers));
 
     std::vector<std::unique_ptr<ActionItem>> delayedItems;
     delayedItems.push_back(std::make_unique<AI_Delay>(static_cast<int>(holdMs)));
-    delayedItems.push_back(std::make_unique<AI_MouseButtonRelease>(button));
+    delayedItems.push_back(std::make_unique<AI_MouseButtonRelease>(button, modifiers));
     auto delayed = std::make_unique<Action>(
         std::move(delayedItems), "mouse-hold-release", "", "mouse-hold-release", 0);
     delayed->setCancelable(false);
@@ -108,8 +115,9 @@ ExecuteResult AI_MouseButton::execute(ActionExecutionContext &context)
     return ExecuteResult::Continue();
 }
 
-AI_MouseButtonRelease::AI_MouseButtonRelease(int button)
+AI_MouseButtonRelease::AI_MouseButtonRelease(int button, int modifiers)
     : button{button}
+    , modifiers{modifiers}
 {
 }
 
@@ -125,9 +133,11 @@ ActionItemKind AI_MouseButtonRelease::kind() const
 
 ExecuteResult AI_MouseButtonRelease::execute(ActionExecutionContext & /*context*/)
 {
+    auto &executor = App::getInstance().executor;
     std::cerr << "[AI_MouseButtonRelease] release button=" << mouseButtonName(button) << " ("
-              << button << ")\n";
-    App::getInstance().executor.mouseButton(button, false);
+              << button << ") mods=" << modifiers << '\n';
+    executor.mouseButton(button, false);
+    executor.modifiersUp(modifiers);
     return ExecuteResult::Continue();
 }
 
