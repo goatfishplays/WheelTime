@@ -27,9 +27,8 @@ namespace Application
     class Menu
     {
     public:
-        /// @brief InputBind to trigger this menu, if not set then this will likely only be being used as a recursive menu
-        // TODO: Might be better to have app control hotkeys
-        Platform::InputBind *inputBind;
+        int triggerMod;
+        int triggerVk;
 
         /// @brief On hotkey release will automatically execute the action under the mouse
         bool executeOnRelease;
@@ -38,7 +37,8 @@ namespace Application
         // TODO just make it so that it prepends exit if true
         bool exitOnAction;
 
-        Menu(Platform::InputBind *_inputBind = nullptr,
+        Menu(int _triggerMod = 0,
+             int _triggerVk = 0,
              bool _executeOnRelease = false,
              bool _exitOnAction = false,
              std::string name = "Unnamed Menu",

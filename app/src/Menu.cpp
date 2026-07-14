@@ -16,13 +16,14 @@
 
 using namespace Application;
 
-Menu::Menu(Platform::InputBind *_inputBind,
+Menu::Menu(int _triggerMod,
+           int _triggerVk,
            bool _executeOnRelease,
            bool _exitOnAction,
            std::string _name,
            std::vector<std::string> _actionIds,
            std::string _id)
-    : inputBind(_inputBind), executeOnRelease(_executeOnRelease), exitOnAction(_exitOnAction), name(std::move(_name)), id(std::move(_id)), actionIds(std::move(_actionIds))
+    : triggerMod(_triggerMod), triggerVk(_triggerVk), executeOnRelease(_executeOnRelease), exitOnAction(_exitOnAction), name(std::move(_name)), id(std::move(_id)), actionIds(std::move(_actionIds))
 {
 }
 

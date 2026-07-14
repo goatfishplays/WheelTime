@@ -120,7 +120,6 @@ namespace Application
         QWidget *m_menuEditor{nullptr};
         QWidget *m_actionEditor{nullptr};
 
-        QGroupBox *m_globalGroup{nullptr};
         QPushButton *m_hotkeyRecordButton{nullptr};
 
         QLineEdit *m_menuNameEdit{nullptr};
