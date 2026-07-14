@@ -91,9 +91,11 @@ ExecuteResult AI_MouseButton::execute(ActionExecutionContext &context)
     auto delayed = std::make_unique<Action>(
         std::move(delayedItems), "mouse-hold-release", "", "mouse-hold-release", 0);
     delayed->setCancelable(false);
+    // Start now; AI_Delay inside holds for `holdMs`. Do not also wake at
+    // now+hold or the release waits 2x holdDuration.
     context.scheduleAction(
         std::move(delayed),
-        std::chrono::steady_clock::now() + hold,
+        std::chrono::steady_clock::now(),
         /*removeIfParentCancelled=*/true);
 
     std::cerr << "[AI_MouseButton] scheduled delayed release + cancel-flush registered\n";

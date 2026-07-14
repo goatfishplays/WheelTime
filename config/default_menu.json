@@ -1,105 +1,7 @@
 {
     "actions": [
         {
-            "channel": 1,
-            "id": "action-menu-example-calculator",
-            "items": [
-                {
-                    "customTarget": "",
-                    "presetId": "calculator",
-                    "type": "launch_app"
-                },
-                {
-                    "duration": 5000,
-                    "type": "delay"
-                },
-                {
-                    "customTarget": "explorer.exe",
-                    "presetId": "explorer",
-                    "type": "launch_app"
-                }
-            ],
-            "name": "calculator"
-        },
-        {
             "channel": 0,
-            "icon": "E:/Media/Images/Wallpapers/brad.png",
-            "id": "action-menu-example-paint",
-            "items": [
-                {
-                    "customTarget": "",
-                    "presetId": "paint",
-                    "type": "launch_app"
-                },
-                {
-                    "holdDuration": 2.4000000953674316,
-                    "keycode": 74,
-                    "modifiers": 2,
-                    "proceed": false,
-                    "type": "hotkey"
-                }
-            ],
-            "name": "paint"
-        },
-        {
-            "channel": 0,
-            "id": "action-menu-example-notepad",
-            "items": [
-                {
-                    "path": "notepad.exe",
-                    "type": "script"
-                }
-            ],
-            "name": "notepad"
-        },
-        {
-            "channel": 0,
-            "id": "action-new-action",
-            "items": [
-                {
-                    "duration": 0,
-                    "type": "delay"
-                }
-            ],
-            "name": "New Action a"
-        },
-        {
-            "channel": 0,
-            "id": "action-cancel-latest",
-            "items": [
-                {
-                    "channel": 0,
-                    "level": "latest",
-                    "type": "cancel"
-                }
-            ],
-            "name": "Cancel Latest"
-        },
-        {
-            "channel": 0,
-            "id": "action-nth-recent-1",
-            "items": [
-                {
-                    "n": 1,
-                    "type": "nth_recent"
-                }
-            ],
-            "name": "Most Recent"
-        },
-        {
-            "channel": 0,
-            "id": "action-nth-frequent-1",
-            "items": [
-                {
-                    "n": 1,
-                    "type": "nth_frequent"
-                }
-            ],
-            "name": "Most Frequent"
-        },
-        {
-            "channel": 0,
-            "icon": "E:/Media/Images/Wallpapers/brad.png",
             "id": "action-new-action-2",
             "items": [
                 {
@@ -113,76 +15,32 @@
             "name": "Discord Mute"
         },
         {
-            "channel": 1,
-            "id": "action-new-action-3",
+            "channel": 0,
+            "id": "action-new-action-5",
             "items": [
                 {
                     "holdDuration": 0,
-                    "keycode": 67,
-                    "modifiers": 2,
-                    "proceed": true,
-                    "type": "hotkey"
-                },
-                {
-                    "duration": 1000,
-                    "type": "delay"
-                },
-                {
-                    "holdDuration": 2,
-                    "keycode": 86,
+                    "keycode": 112,
                     "modifiers": 6,
-                    "proceed": true,
+                    "proceed": false,
                     "type": "hotkey"
                 }
             ],
-            "name": "Copy pase"
+            "name": "Discord Deafen"
         },
         {
             "channel": 0,
-            "icon": "E:/Media/Images/PixelArt/torpinFastFetch.png",
-            "id": "action-new-action-4",
+            "id": "action-new-action",
             "items": [
                 {
-                    "type": "close"
-                },
-                {
-                    "button": 0,
-                    "holdDuration": 0.10000000149011612,
+                    "holdDuration": 10,
+                    "keycode": 87,
+                    "modifiers": 0,
                     "proceed": false,
-                    "type": "mouse_button"
-                },
-                {
-                    "button": 0,
-                    "holdDuration": 0.10000000149011612,
-                    "proceed": false,
-                    "type": "mouse_button"
-                },
-                {
-                    "button": 0,
-                    "holdDuration": 0.10000000149011612,
-                    "proceed": false,
-                    "type": "mouse_button"
-                },
-                {
-                    "button": 0,
-                    "holdDuration": 0.10000000149011612,
-                    "proceed": false,
-                    "type": "mouse_button"
-                },
-                {
-                    "button": 0,
-                    "holdDuration": 0.10000000149011612,
-                    "proceed": false,
-                    "type": "mouse_button"
-                },
-                {
-                    "button": 0,
-                    "holdDuration": 0.10000000149011612,
-                    "proceed": false,
-                    "type": "mouse_button"
+                    "type": "hotkey"
                 }
             ],
-            "name": "SpeedClicks"
+            "name": "Test Action"
         }
     ],
     "globalHotkey": {
@@ -193,13 +51,8 @@
         {
             "actionIds": [
                 "action-new-action-2",
-                "action-cancel-latest",
-                "action-nth-recent-1",
-                "action-new-action-3",
-                "action-new-action-4",
-                "action-menu-example-calculator",
-                "action-menu-example-calculator",
-                "action-menu-example-calculator"
+                "action-new-action-5",
+                "action-new-action"
             ],
             "executeOnRelease": false,
             "exitOnAction": true,
@@ -208,8 +61,6 @@
         },
         {
             "actionIds": [
-                "action-menu-example-calculator",
-                "action-menu-example-calculator"
             ],
             "executeOnRelease": false,
             "exitOnAction": false,
