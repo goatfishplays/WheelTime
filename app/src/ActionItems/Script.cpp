@@ -7,6 +7,8 @@
 
 #include "App/App.hpp"
 
+#include <iostream>
+
 namespace Application
 {
 
@@ -27,6 +29,7 @@ ActionItemKind AI_Script::kind() const
 
 ExecuteResult AI_Script::execute(ActionExecutionContext & /*context*/)
 {
+    std::cerr << "[AI_Script] path='" << filepath << "'\n";
     App::getInstance().executor.executeScript(filepath);
     return ExecuteResult::Continue();
 }

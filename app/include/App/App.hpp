@@ -109,6 +109,8 @@ namespace Application
         void onHotkeyTriggered(int hotkeyId);
         /// @brief Opens the non-modal settings editor window.
         void showSettingsWindow();
+        /// @brief Restores the dormant overlay shell after settings closes.
+        void restoreOverlayAfterSettings();
         /// @brief Persists the current runtime config to disk.
         bool saveConfig();
         /// @brief Replaces the live runtime config with an edited working copy.

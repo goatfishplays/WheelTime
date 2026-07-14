@@ -17,11 +17,6 @@
                     "customTarget": "explorer.exe",
                     "presetId": "explorer",
                     "type": "launch_app"
-                },
-                {
-                    "type": "mouse_move",
-                    "x": 0,
-                    "y": 0
                 }
             ],
             "name": "calculator"
@@ -31,8 +26,9 @@
             "id": "action-menu-example-paint",
             "items": [
                 {
-                    "path": "paint.exe",
-                    "type": "script"
+                    "customTarget": "",
+                    "presetId": "paint",
+                    "type": "launch_app"
                 },
                 {
                     "holdDuration": 2.4000000953674316,
@@ -60,9 +56,8 @@
             "id": "action-new-action",
             "items": [
                 {
-                    "type": "mouse_move",
-                    "x": 0,
-                    "y": 0
+                    "duration": 0,
+                    "type": "delay"
                 }
             ],
             "name": "New Action a"
@@ -126,11 +121,6 @@
                 {
                     "duration": 5000,
                     "type": "delay"
-                },
-                {
-                    "type": "mouse_move",
-                    "x": 0,
-                    "y": 0
                 }
             ],
             "name": "AB"
@@ -140,10 +130,10 @@
             "id": "action-new-action-3",
             "items": [
                 {
-                    "holdDuration": 5,
+                    "holdDuration": 0,
                     "keycode": 67,
-                    "modifiers": 6,
-                    "proceed": false,
+                    "modifiers": 2,
+                    "proceed": true,
                     "type": "hotkey"
                 },
                 {
@@ -152,13 +142,59 @@
                 },
                 {
                     "holdDuration": 2,
-                    "keycode": 65,
-                    "modifiers": 1,
-                    "proceed": false,
+                    "keycode": 86,
+                    "modifiers": 6,
+                    "proceed": true,
                     "type": "hotkey"
                 }
             ],
-            "name": "Test Keystrokes"
+            "name": "Copy pase"
+        },
+        {
+            "channel": 0,
+            "id": "action-new-action-4",
+            "items": [
+                {
+                    "type": "close"
+                },
+                {
+                    "button": 0,
+                    "holdDuration": 0.10000000149011612,
+                    "proceed": false,
+                    "type": "mouse_button"
+                },
+                {
+                    "button": 0,
+                    "holdDuration": 0.10000000149011612,
+                    "proceed": false,
+                    "type": "mouse_button"
+                },
+                {
+                    "button": 0,
+                    "holdDuration": 0.10000000149011612,
+                    "proceed": false,
+                    "type": "mouse_button"
+                },
+                {
+                    "button": 0,
+                    "holdDuration": 0.10000000149011612,
+                    "proceed": false,
+                    "type": "mouse_button"
+                },
+                {
+                    "button": 0,
+                    "holdDuration": 0.10000000149011612,
+                    "proceed": false,
+                    "type": "mouse_button"
+                },
+                {
+                    "button": 0,
+                    "holdDuration": 0.10000000149011612,
+                    "proceed": false,
+                    "type": "mouse_button"
+                }
+            ],
+            "name": "SpeedClicks"
         }
     ],
     "globalHotkey": {
@@ -171,7 +207,8 @@
                 "action-new-action-2",
                 "action-cancel-latest",
                 "action-nth-recent-1",
-                "action-new-action-3"
+                "action-new-action-3",
+                "action-new-action-4"
             ],
             "executeOnRelease": false,
             "exitOnAction": false,

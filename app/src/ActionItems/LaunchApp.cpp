@@ -7,6 +7,8 @@
 
 #include "App/App.hpp"
 
+#include <iostream>
+
 namespace Application
 {
 
@@ -30,13 +32,17 @@ ExecuteResult AI_LaunchApp::execute(ActionExecutionContext & /*context*/)
 {
     if (presetId == "custom")
     {
-        if (!customTarget.empty())
+        if (customTarget.empty())
         {
-            App::getInstance().executor.executeScript(customTarget);
+            std::cerr << "[AI_LaunchApp] custom target empty; skipping\n";
+            return ExecuteResult::Continue();
         }
+        std::cerr << "[AI_LaunchApp] custom target='" << customTarget << "'\n";
+        App::getInstance().executor.executeScript(customTarget);
         return ExecuteResult::Continue();
     }
 
+    std::cerr << "[AI_LaunchApp] preset='" << presetId << "'\n";
     App::getInstance().executor.executeLaunchPreset(presetId);
     return ExecuteResult::Continue();
 }

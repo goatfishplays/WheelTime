@@ -15,7 +15,9 @@
 #include <Platform/Execute.hpp>
 #include <QAbstractNativeEventFilter>
 #include <QApplication>
+#include <QMetaObject>
 #include <QPushButton>
+#include <QThread>
 
 #include "App/MenuConfigLoader.hpp"
 #include "App/SettingsWindow.hpp"
@@ -25,6 +27,7 @@
 #include <QFileInfo>
 
 #include <algorithm>
+#include <string>
 #include <thread>
 #include <vector>
 
@@ -173,6 +176,14 @@ void App::clearMenus()
 
 void App::onHotkeyTriggered(int hotkeyId)
 {
+    // Don't fight the settings editor (overlay shell is parked while it is open).
+    if (m_settingsWindow != nullptr && m_settingsWindow->isVisible())
+    {
+        m_settingsWindow->raise();
+        m_settingsWindow->activateWindow();
+        return;
+    }
+
     if (gui.isLauncherVisible())
     {
         hideGui();
@@ -329,6 +340,22 @@ void App::showGui(Menu *menu)
         return;
     }
 
+    // ActionItems run on scheduler worker threads; Qt widgets must only be touched
+    // on the GUI thread.
+    if (QCoreApplication::instance() != nullptr
+        && QThread::currentThread() != QCoreApplication::instance()->thread())
+    {
+        const std::string menuId = menu->getId();
+        QMetaObject::invokeMethod(
+            QCoreApplication::instance(),
+            [this, menuId]()
+            {
+                showGui(findMenuById(menuId));
+            },
+            Qt::QueuedConnection);
+        return;
+    }
+
     initializeOverlay();
     gatherPriors();
     activeMenu = menu;
@@ -343,6 +370,19 @@ void App::showGui(Menu *menu)
 
 void App::hideGui()
 {
+    if (QCoreApplication::instance() != nullptr
+        && QThread::currentThread() != QCoreApplication::instance()->thread())
+    {
+        QMetaObject::invokeMethod(
+            QCoreApplication::instance(),
+            [this]()
+            {
+                hideGui();
+            },
+            Qt::QueuedConnection);
+        return;
+    }
+
     initializeOverlay();
     gui.enterDormantOverlay();
     Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
@@ -479,6 +519,16 @@ void App::showSettingsWindow()
         hideGui();
     }
 
+    // Soft-park the overlay: keep the Qt widget alive (no native SW_HIDE — that
+    // desyncs QWidget visibility and later crashes showGui), but clear topmost so
+    // the settings window can stay above it.
+    if (m_overlayInitialized)
+    {
+        Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
+        overlayWindow.setClickThrough(true);
+        overlayWindow.setTopmost(false);
+    }
+
     if (m_settingsWindow == nullptr)
     {
         m_settingsWindow = new SettingsWindow();
@@ -494,6 +544,7 @@ void App::showSettingsWindow()
 
         QObject::connect(m_settingsWindow, &SettingsWindow::windowClosed, [this]()
                          {
+                             restoreOverlayAfterSettings();
                              if (m_scheduler)
                              {
                                  m_scheduler->resume();
@@ -506,6 +557,24 @@ void App::showSettingsWindow()
     m_settingsWindow->show();
     m_settingsWindow->raise();
     m_settingsWindow->activateWindow();
+}
+
+void App::restoreOverlayAfterSettings()
+{
+    if (!m_overlayInitialized)
+    {
+        return;
+    }
+
+    // Re-apply the dormant overlay shell styles. Avoid show()/hide() mismatches
+    // with Qt by only using showNoActivate after styles are restored.
+    gui.enterDormantOverlay();
+    Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
+    overlayWindow.setTransparentOverlay(true);
+    overlayWindow.setNonActivating(true);
+    overlayWindow.setClickThrough(true);
+    overlayWindow.setTopmost(true);
+    overlayWindow.showNoActivate();
 }
 
 bool App::saveConfig()

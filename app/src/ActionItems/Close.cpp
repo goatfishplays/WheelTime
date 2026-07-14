@@ -7,6 +7,8 @@
 
 #include "App/App.hpp"
 
+#include <iostream>
+
 namespace Application
 {
 
@@ -22,6 +24,7 @@ ActionItemKind AI_Close::kind() const
 
 ExecuteResult AI_Close::execute(ActionExecutionContext & /*context*/)
 {
+    std::cerr << "[AI_Close] hideGui\n";
     App::getInstance().hideGui();
     return ExecuteResult::Continue();
 }

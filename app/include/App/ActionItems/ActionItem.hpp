@@ -32,6 +32,7 @@ enum class ActionItemKind
     NthFrequent,
     MouseMove,
     MouseButton,
+    MouseButtonRelease,
     Cancel
 };
 

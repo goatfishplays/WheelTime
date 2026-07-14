@@ -6,6 +6,7 @@
 #include "App/ActionItems/Delay.hpp"
 
 #include <chrono>
+#include <iostream>
 
 namespace Application
 {
@@ -27,6 +28,7 @@ ActionItemKind AI_Delay::kind() const
 
 ExecuteResult AI_Delay::execute(ActionExecutionContext & /*context*/)
 {
+    std::cerr << "[AI_Delay] durationMs=" << duration << '\n';
     return ExecuteResult::DelayUntil(
         std::chrono::steady_clock::now() + std::chrono::milliseconds(duration));
 }

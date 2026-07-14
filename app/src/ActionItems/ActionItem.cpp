@@ -40,6 +40,8 @@ const char *actionItemKindName(ActionItemKind kind) noexcept
         return "mouse_move";
     case ActionItemKind::MouseButton:
         return "mouse_button";
+    case ActionItemKind::MouseButtonRelease:
+        return "mouse_button_release";
     case ActionItemKind::Cancel:
         return "cancel";
     }

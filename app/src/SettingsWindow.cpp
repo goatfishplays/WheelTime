@@ -82,11 +82,14 @@ namespace
 }
 
 SettingsWindow::SettingsWindow(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent, Qt::Window | Qt::WindowStaysOnTopHint)
 {
     setWindowTitle("WheelTime Settings");
+    setWindowFlag(Qt::WindowCloseButtonHint, true);
     resize(1000, 620);
     setObjectName("settingsWindow");
+    setAttribute(Qt::WA_DeleteOnClose, false);
+    setAttribute(Qt::WA_QuitOnClose, false);
 
     auto *root = new QVBoxLayout(this);
     root->setContentsMargins(16, 16, 16, 16);
@@ -232,7 +235,8 @@ SettingsWindow::SettingsWindow(QWidget *parent)
          "Cancel Channel",
          "Cancel All",
          "Nth Recent",
-         "Nth Frequent"});
+         "Nth Frequent",
+         "Socket Send"});
     auto *addItemButton = new QPushButton("Add Item", itemsGroup);
     auto *removeItemButton = new QPushButton("Remove Item", itemsGroup);
     auto *moveItemUpButton = new QPushButton("Move Up", itemsGroup);
@@ -328,11 +332,15 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_mouseButtonCombo->addItem("Left", 0);
     m_mouseButtonCombo->addItem("Right", 1);
     m_mouseButtonCombo->addItem("Middle", 2);
-    m_mouseButtonActionCombo = new QComboBox(m_itemMouseButtonPage);
-    m_mouseButtonActionCombo->addItem("Press", true);
-    m_mouseButtonActionCombo->addItem("Release", false);
+    m_mouseButtonHoldSpin = new QDoubleSpinBox(m_itemMouseButtonPage);
+    m_mouseButtonHoldSpin->setRange(0.0, 10.0);
+    m_mouseButtonHoldSpin->setDecimals(2);
+    m_mouseButtonHoldSpin->setSingleStep(0.1);
+    m_mouseButtonHoldSpin->setSuffix(" s");
+    m_mouseButtonProceedCheck = new QCheckBox("Continue while holding", m_itemMouseButtonPage);
     mouseButtonForm->addRow("Button", m_mouseButtonCombo);
-    mouseButtonForm->addRow("Action", m_mouseButtonActionCombo);
+    mouseButtonForm->addRow("Hold Time", m_mouseButtonHoldSpin);
+    mouseButtonForm->addRow("", m_mouseButtonProceedCheck);
 
     m_itemCancelPage = new QWidget(m_itemDetailStack);
     auto *cancelForm = new QFormLayout(m_itemCancelPage);
@@ -357,6 +365,36 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     nthForm->addRow("N (1 = top)", m_nthSpin);
     nthForm->addRow(m_nthHelpLabel);
 
+    m_itemSocketPage = new QWidget(m_itemDetailStack);
+    auto *socketForm = new QFormLayout(m_itemSocketPage);
+    m_socketProtocolCombo = new QComboBox(m_itemSocketPage);
+    m_socketProtocolCombo->addItem("UDP", static_cast<int>(Platform::SocketProtocol::Udp));
+    m_socketProtocolCombo->addItem("TCP", static_cast<int>(Platform::SocketProtocol::Tcp));
+    m_socketProtocolCombo->addItem("HTTP", static_cast<int>(Platform::SocketProtocol::Http));
+    m_socketProtocolCombo->addItem("WebSocket", static_cast<int>(Platform::SocketProtocol::WebSocket));
+    m_socketDestinationEdit = new QLineEdit(m_itemSocketPage);
+    m_socketDestinationEdit->setPlaceholderText("host:port or URL");
+    m_socketMessageEdit = new QLineEdit(m_itemSocketPage);
+    m_socketMessageEdit->setPlaceholderText("payload / body");
+    m_socketHttpMethodEdit = new QLineEdit(m_itemSocketPage);
+    m_socketHttpMethodEdit->setPlaceholderText("POST");
+    m_socketHttpMethodEdit->setText("POST");
+    m_socketHelpLabel = new QLabel(m_itemSocketPage);
+    m_socketHelpLabel->setWordWrap(true);
+    m_socketHelpLabel->setText("UDP/TCP use host:port. HTTP/WebSocket use a full URL.");
+    socketForm->addRow("Protocol", m_socketProtocolCombo);
+    socketForm->addRow("Destination", m_socketDestinationEdit);
+    socketForm->addRow("Message", m_socketMessageEdit);
+    socketForm->addRow("HTTP Method", m_socketHttpMethodEdit);
+    socketForm->addRow(m_socketHelpLabel);
+
+    m_itemKeyReleasePage = new QWidget(m_itemDetailStack);
+    auto *keyReleaseLayout = new QVBoxLayout(m_itemKeyReleasePage);
+    m_keyReleaseHelpLabel = new QLabel(m_itemKeyReleasePage);
+    m_keyReleaseHelpLabel->setWordWrap(true);
+    keyReleaseLayout->addWidget(m_keyReleaseHelpLabel);
+    keyReleaseLayout->addStretch();
+
     m_itemDetailStack->addWidget(m_itemNonePage);
     m_itemDetailStack->addWidget(m_itemLaunchAppPage);
     m_itemDetailStack->addWidget(m_itemScriptPage);
@@ -368,6 +406,8 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_itemDetailStack->addWidget(m_itemMouseButtonPage);
     m_itemDetailStack->addWidget(m_itemCancelPage);
     m_itemDetailStack->addWidget(m_itemNthPage);
+    m_itemDetailStack->addWidget(m_itemSocketPage);
+    m_itemDetailStack->addWidget(m_itemKeyReleasePage);
     auto *detailGroup = new QGroupBox("Item Details", m_actionEditor);
     auto *detailLayout = new QVBoxLayout(detailGroup);
     detailLayout->addWidget(m_itemDetailStack);
@@ -613,7 +653,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                     item = std::make_unique<AI_MouseMove>(0, 0);
                     break;
                 case 7:
-                    item = std::make_unique<AI_MouseButton>(0, true);
+                    item = std::make_unique<AI_MouseButton>(0, 0.0f, false);
                     break;
                 case 8:
                     item = std::make_unique<AI_Cancel>(CancelLevel::Latest, 0);
@@ -629,6 +669,10 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                     break;
                 case 12:
                     item = std::make_unique<AI_nthFrequent>(1);
+                    break;
+                case 13:
+                    item = std::make_unique<AI_Socket>(
+                        Platform::SocketProtocol::Udp, "127.0.0.1:9000", "", "POST");
                     break;
                 default:
                     return;
@@ -838,13 +882,16 @@ SettingsWindow::SettingsWindow(QWidget *parent)
             return;
         }
         item->button = m_mouseButtonCombo->currentData().toInt();
-        item->down = m_mouseButtonActionCombo->currentData().toBool();
+        item->holdDuration = static_cast<float>(m_mouseButtonHoldSpin->value());
+        item->proceed = m_mouseButtonProceedCheck->isChecked();
         refreshActionItemList();
         refreshActionSummary();
     };
     connect(m_mouseButtonCombo, qOverload<int>(&QComboBox::currentIndexChanged), this, [mouseButtonEditorChanged](int)
             { mouseButtonEditorChanged(); });
-    connect(m_mouseButtonActionCombo, qOverload<int>(&QComboBox::currentIndexChanged), this, [mouseButtonEditorChanged](int)
+    connect(m_mouseButtonHoldSpin, qOverload<double>(&QDoubleSpinBox::valueChanged), this, [mouseButtonEditorChanged](double)
+            { mouseButtonEditorChanged(); });
+    connect(m_mouseButtonProceedCheck, &QCheckBox::toggled, this, [mouseButtonEditorChanged](bool)
             { mouseButtonEditorChanged(); });
     auto cancelEditorChanged = [this]()
     {
@@ -911,6 +958,40 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 }
                 refreshActionItemList();
                 refreshActionSummary(); });
+    auto socketEditorChanged = [this]()
+    {
+        if (m_isRefreshing)
+        {
+            return;
+        }
+        const int actionIndex = currentActionIndex();
+        const int itemIndex = currentActionItemIndex();
+        auto *item = actionIndex >= 0 ? dynamic_cast<AI_Socket *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+        if (item == nullptr)
+        {
+            return;
+        }
+        item->protocol = static_cast<Platform::SocketProtocol>(m_socketProtocolCombo->currentData().toInt());
+        item->outputDst = m_socketDestinationEdit->text().trimmed().toStdString();
+        item->socketMsg = m_socketMessageEdit->text().toStdString();
+        item->httpMethod = m_socketHttpMethodEdit->text().trimmed().toStdString();
+        if (item->httpMethod.empty())
+        {
+            item->httpMethod = "POST";
+        }
+        const bool isHttp = item->protocol == Platform::SocketProtocol::Http;
+        m_socketHttpMethodEdit->setEnabled(isHttp);
+        refreshActionItemList();
+        refreshActionSummary();
+    };
+    connect(m_socketProtocolCombo, qOverload<int>(&QComboBox::currentIndexChanged), this,
+            [socketEditorChanged](int) { socketEditorChanged(); });
+    connect(m_socketDestinationEdit, &QLineEdit::textChanged, this, [socketEditorChanged](const QString &)
+            { socketEditorChanged(); });
+    connect(m_socketMessageEdit, &QLineEdit::textChanged, this, [socketEditorChanged](const QString &)
+            { socketEditorChanged(); });
+    connect(m_socketHttpMethodEdit, &QLineEdit::textChanged, this, [socketEditorChanged](const QString &)
+            { socketEditorChanged(); });
     connect(m_delaySpin, qOverload<int>(&QSpinBox::valueChanged), this, [this](int value)
             {
                 const int actionIndex = currentActionIndex();
@@ -987,6 +1068,16 @@ bool SettingsWindow::eventFilter(QObject *obj, QEvent *event)
 
 void SettingsWindow::closeEvent(QCloseEvent *event)
 {
+    if (m_isRecordingHotkey)
+    {
+        m_isRecordingHotkey = false;
+        if (m_hotkeyRecordButton != nullptr)
+        {
+            m_hotkeyRecordButton->releaseKeyboard();
+        }
+        updateHotkeyButtonText();
+    }
+
     QWidget::closeEvent(event);
     emit windowClosed();
 }
@@ -1355,11 +1446,12 @@ void SettingsWindow::refreshItemDetail()
     if (auto *mouseButton = dynamic_cast<AI_MouseButton *>(item))
     {
         const QSignalBlocker buttonBlocker(m_mouseButtonCombo);
-        const QSignalBlocker actionBlocker(m_mouseButtonActionCombo);
+        const QSignalBlocker holdBlocker(m_mouseButtonHoldSpin);
+        const QSignalBlocker proceedBlocker(m_mouseButtonProceedCheck);
         const int buttonIndex = m_mouseButtonCombo->findData(mouseButton->button);
         m_mouseButtonCombo->setCurrentIndex(buttonIndex >= 0 ? buttonIndex : 0);
-        const int actionIndexCombo = m_mouseButtonActionCombo->findData(mouseButton->down);
-        m_mouseButtonActionCombo->setCurrentIndex(actionIndexCombo >= 0 ? actionIndexCombo : 0);
+        m_mouseButtonHoldSpin->setValue(mouseButton->holdDuration);
+        m_mouseButtonProceedCheck->setChecked(mouseButton->proceed);
         m_itemDetailStack->setCurrentWidget(m_itemMouseButtonPage);
         return;
     }
@@ -1407,6 +1499,58 @@ void SettingsWindow::refreshItemDetail()
         m_nthSpin->setValue(std::max(1, frequent->n));
         m_nthHelpLabel->setText("Runs the Nth most frequently launched action from the wheel (1 = most used).");
         m_itemDetailStack->setCurrentWidget(m_itemNthPage);
+        return;
+    }
+
+    if (auto *socket = dynamic_cast<AI_Socket *>(item))
+    {
+        const QSignalBlocker protocolBlocker(m_socketProtocolCombo);
+        const QSignalBlocker destinationBlocker(m_socketDestinationEdit);
+        const QSignalBlocker messageBlocker(m_socketMessageEdit);
+        const QSignalBlocker methodBlocker(m_socketHttpMethodEdit);
+        const int protocolIndex =
+            m_socketProtocolCombo->findData(static_cast<int>(socket->protocol));
+        m_socketProtocolCombo->setCurrentIndex(protocolIndex >= 0 ? protocolIndex : 0);
+        m_socketDestinationEdit->setText(QString::fromStdString(socket->outputDst));
+        m_socketMessageEdit->setText(QString::fromStdString(socket->socketMsg));
+        m_socketHttpMethodEdit->setText(
+            socket->httpMethod.empty() ? QStringLiteral("POST")
+                                       : QString::fromStdString(socket->httpMethod));
+        const bool isHttp = socket->protocol == Platform::SocketProtocol::Http;
+        m_socketHttpMethodEdit->setEnabled(isHttp);
+        m_itemDetailStack->setCurrentWidget(m_itemSocketPage);
+        return;
+    }
+
+    if (auto *release = dynamic_cast<AI_KeyRelease *>(item))
+    {
+        m_keyReleaseHelpLabel->setText(
+            QString("Internal key release (keycode %1, mods %2).\n"
+                    "Created automatically by Press Hotkey holds for cancel-flush / "
+                    "delayed release. Not added from the item picker.")
+                .arg(release->keycode)
+                .arg(release->modifiers));
+        m_itemDetailStack->setCurrentWidget(m_itemKeyReleasePage);
+        return;
+    }
+
+    if (auto *mouseRelease = dynamic_cast<AI_MouseButtonRelease *>(item))
+    {
+        const char *name = "Left";
+        if (mouseRelease->button == 1)
+        {
+            name = "Right";
+        }
+        else if (mouseRelease->button == 2)
+        {
+            name = "Middle";
+        }
+        m_keyReleaseHelpLabel->setText(
+            QString("Internal mouse button release (%1).\n"
+                    "Created automatically by Mouse Button holds for cancel-flush / "
+                    "delayed release. Not added from the item picker.")
+                .arg(name));
+        m_itemDetailStack->setCurrentWidget(m_itemKeyReleasePage);
         return;
     }
 
@@ -1497,9 +1641,28 @@ QString SettingsWindow::describeActionItem(const ActionItem *item) const
         {
             name = "Middle";
         }
-        return QString("Mouse Button: %1 %2")
+        if (button->holdDuration <= 0.0f)
+        {
+            return QString("Mouse Button: %1 click").arg(name);
+        }
+        return QString("Mouse Button: %1 hold %2 s%3")
             .arg(name)
-            .arg(button->down ? "Press" : "Release");
+            .arg(button->holdDuration, 0, 'f', 2)
+            .arg(button->proceed ? " (proceed)" : "");
+    }
+    case ActionItemKind::MouseButtonRelease:
+    {
+        const auto *release = static_cast<const AI_MouseButtonRelease *>(item);
+        const char *name = "Left";
+        if (release->button == 1)
+        {
+            name = "Right";
+        }
+        else if (release->button == 2)
+        {
+            name = "Middle";
+        }
+        return QString("Mouse Button Release: %1").arg(name);
     }
     case ActionItemKind::Cancel:
     {
@@ -1523,6 +1686,33 @@ QString SettingsWindow::describeActionItem(const ActionItem *item) const
         return QString("Nth Recent: %1").arg(static_cast<const AI_nthRecent *>(item)->n);
     case ActionItemKind::NthFrequent:
         return QString("Nth Frequent: %1").arg(static_cast<const AI_nthFrequent *>(item)->n);
+    case ActionItemKind::Socket:
+    {
+        const auto *socket = static_cast<const AI_Socket *>(item);
+        const char *proto = "UDP";
+        switch (socket->protocol)
+        {
+        case Platform::SocketProtocol::Tcp:
+            proto = "TCP";
+            break;
+        case Platform::SocketProtocol::Http:
+            proto = "HTTP";
+            break;
+        case Platform::SocketProtocol::WebSocket:
+            proto = "WebSocket";
+            break;
+        case Platform::SocketProtocol::Udp:
+        default:
+            proto = "UDP";
+            break;
+        }
+        const QString dst = QString::fromStdString(socket->outputDst).trimmed();
+        if (dst.isEmpty())
+        {
+            return QString("Socket Send (%1): set destination").arg(proto);
+        }
+        return QString("Socket Send (%1): %2").arg(proto, dst);
+    }
     case ActionItemKind::KeyRelease:
     {
         const auto *release = static_cast<const AI_KeyRelease *>(item);
@@ -1870,6 +2060,20 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
                     errorMessage = QString("Mouse Button item in '%1' has an invalid button.").arg(QString::fromStdString(action.getName()));
                     return false;
                 }
+                if (button->holdDuration < 0.0f)
+                {
+                    errorMessage = QString("Mouse Button item in '%1' has an invalid hold time.").arg(QString::fromStdString(action.getName()));
+                    return false;
+                }
+            }
+            else if (itemPtr->kind() == ActionItemKind::MouseButtonRelease)
+            {
+                const auto *release = static_cast<const AI_MouseButtonRelease *>(itemPtr.get());
+                if (release->button < 0 || release->button > 2)
+                {
+                    errorMessage = QString("Mouse Button Release item in '%1' has an invalid button.").arg(QString::fromStdString(action.getName()));
+                    return false;
+                }
             }
             else if (itemPtr->kind() == ActionItemKind::NthRecent)
             {
@@ -1884,6 +2088,49 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
                 if (static_cast<const AI_nthFrequent *>(itemPtr.get())->n < 1)
                 {
                     errorMessage = QString("Nth Frequent item in '%1' must be >= 1.").arg(QString::fromStdString(action.getName()));
+                    return false;
+                }
+            }
+            else if (itemPtr->kind() == ActionItemKind::Socket)
+            {
+                const auto *socket = static_cast<const AI_Socket *>(itemPtr.get());
+                const QString destination = QString::fromStdString(socket->outputDst).trimmed();
+                if (destination.isEmpty())
+                {
+                    errorMessage = QString("Socket Send item in '%1' needs a destination.").arg(QString::fromStdString(action.getName()));
+                    return false;
+                }
+                const bool needsUrl = socket->protocol == Platform::SocketProtocol::Http
+                    || socket->protocol == Platform::SocketProtocol::WebSocket;
+                if (needsUrl)
+                {
+                    const QString lower = destination.toLower();
+                    const bool okHttp = socket->protocol == Platform::SocketProtocol::Http
+                        && (lower.startsWith("http://") || lower.startsWith("https://"));
+                    const bool okWs = socket->protocol == Platform::SocketProtocol::WebSocket
+                        && (lower.startsWith("ws://") || lower.startsWith("wss://"));
+                    if (!okHttp && !okWs)
+                    {
+                        errorMessage = QString(
+                            "Socket Send item in '%1' needs a full URL "
+                            "(http(s):// for HTTP, ws(s):// for WebSocket).")
+                                           .arg(QString::fromStdString(action.getName()));
+                        return false;
+                    }
+                }
+                else if (!destination.contains(':'))
+                {
+                    errorMessage = QString(
+                        "Socket Send item in '%1' needs host:port for UDP/TCP.")
+                                       .arg(QString::fromStdString(action.getName()));
+                    return false;
+                }
+            }
+            else if (itemPtr->kind() == ActionItemKind::KeyRelease)
+            {
+                if (static_cast<const AI_KeyRelease *>(itemPtr.get())->keycode == 0)
+                {
+                    errorMessage = QString("Key Release item in '%1' needs a main key.").arg(QString::fromStdString(action.getName()));
                     return false;
                 }
             }
