@@ -274,7 +274,8 @@ namespace
             }
 
             menus.push_back(new Menu(
-                nullptr,
+                menuObject.value("triggerMod").toInt(0),
+                menuObject.value("triggerVk").toInt(0),
                 menuObject.value("executeOnRelease").toBool(false),
                 menuObject.value("exitOnAction").toBool(false),
                 menuObject.value("name").toString("Unnamed Menu").toStdString(),
@@ -323,7 +324,8 @@ namespace
             }
 
             menus.push_back(new Menu(
-                nullptr,
+                0,
+                0,
                 menuObject.value("executeOnRelease").toBool(false),
                 menuObject.value("exitOnAction").toBool(false),
                 menuObject.value("name").toString("Unnamed Menu").toStdString(),
@@ -479,9 +481,8 @@ bool MenuConfigLoader::loadConfig(const QString &filepath, AppConfig &appConfig,
 
     if (rootObject.contains("globalHotkey"))
     {
-        QJsonObject hk = rootObject.value("globalHotkey").toObject();
-        appConfig.globalHotkeyMod = hk.value("mod").toInt(0x0001);
-        appConfig.globalHotkeyVk = hk.value("vk").toInt(0x20);
+        // Legacy global hotkey loading logic can be kept if we want to migrate
+        // it to the first menu or something, but we'll just ignore it since it's menu-based now.
     }
 
     // Newer configs include a top-level action library. If that section is
@@ -533,6 +534,8 @@ bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appC
         menuObject.insert("name", QString::fromStdString(menu->getName()));
         menuObject.insert("executeOnRelease", menu->executeOnRelease);
         menuObject.insert("exitOnAction", menu->exitOnAction);
+        menuObject.insert("triggerMod", menu->triggerMod);
+        menuObject.insert("triggerVk", menu->triggerVk);
 
         QJsonArray actionIdsArray;
         for (const std::string &actionId : menu->getActionIds())
@@ -546,11 +549,6 @@ bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appC
     QJsonObject rootObject;
     rootObject.insert("actions", actionsArray);
     rootObject.insert("menus", menusArray);
-
-    QJsonObject hkObject;
-    hkObject.insert("mod", appConfig.globalHotkeyMod);
-    hkObject.insert("vk", appConfig.globalHotkeyVk);
-    rootObject.insert("globalHotkey", hkObject);
 
     QFileInfo fileInfo(filepath);
     QDir().mkpath(fileInfo.absolutePath());

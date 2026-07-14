@@ -8,8 +8,6 @@
 #include <string>
 #include <vector>
 
-#include <Platform/Inputs.hpp>
-
 #include "App/Action.hpp"
 
 namespace Application
@@ -24,8 +22,8 @@ namespace Application
 class Menu
 {
 public:
-    /// @brief InputBind to trigger this menu; null when used only as a nested menu.
-    Platform::InputBind *inputBind = nullptr;
+    int triggerMod = 0;
+    int triggerVk = 0;
 
     /// @brief On hotkey release, execute the action under the mouse.
     bool executeOnRelease = false;
@@ -33,7 +31,8 @@ public:
     /// @brief Exit the menu after performing an action.
     bool exitOnAction = false;
 
-    Menu(Platform::InputBind *inputBind = nullptr,
+    Menu(int triggerMod = 0,
+         int triggerVk = 0,
          bool executeOnRelease = false,
          bool exitOnAction = false,
          std::string name = "Unnamed Menu",

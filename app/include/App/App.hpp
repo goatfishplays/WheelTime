@@ -27,8 +27,6 @@ namespace Application
 
     struct AppConfig
     {
-        int globalHotkeyMod = 0x0001; // MOD_ALT
-        int globalHotkeyVk = 0x20;    // VK_SPACE
     };
 
     /**

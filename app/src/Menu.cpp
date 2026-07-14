@@ -12,13 +12,15 @@
 namespace Application
 {
 
-Menu::Menu(Platform::InputBind *inputBind,
+Menu::Menu(int triggerMod,
+           int triggerVk,
            bool executeOnRelease,
            bool exitOnAction,
            std::string name,
            std::vector<std::string> actionIds,
            std::string id)
-    : inputBind(inputBind)
+    : triggerMod(triggerMod)
+    , triggerVk(triggerVk)
     , executeOnRelease(executeOnRelease)
     , exitOnAction(exitOnAction)
     , m_name(std::move(name))
