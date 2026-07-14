@@ -1,12 +1,6 @@
 /**
  * @file SettingsWindow.hpp
- * @author your name (you@domain.com)
- * @brief The settings editor window for menus and reusable actions
- * @version 0.1
- * @date 2026-07-10
- *
- * @copyright Copyright (c) 2026
- *
+ * @brief Settings editor for menus and reusable actions.
  */
 
 #pragma once

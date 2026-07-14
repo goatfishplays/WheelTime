@@ -1,40 +1,44 @@
 /**
  * @file Action.cpp
- * @author your name (you@domain.com)
- * @brief
- * @version 0.1
- * @date 2026-07-02
- *
- * @copyright Copyright (c) 2026
- *
+ * @brief Action definitions.
  */
 
 #include "App/Action.hpp"
-#include "App/ActionItems.hpp"
-#include <typeinfo>
+
 #include <memory>
+#include <utility>
 #include <vector>
 
-using namespace Application;
+namespace Application
+{
 
-Action::Action(std::vector<std::unique_ptr<ActionItem>> _sequence, std::string _name, std::string _iconFilepath, std::string _id, uint32_t _channel)
-    : sequence(std::move(_sequence)), name(std::move(_name)), iconFilepath(std::move(_iconFilepath)), id(std::move(_id)), m_channel(_channel), m_cancelable(true)
+Action::Action(std::vector<std::unique_ptr<ActionItem>> sequence,
+               std::string name,
+               std::string iconFilepath,
+               std::string id,
+               uint32_t channel)
+    : m_sequence(std::move(sequence))
+    , m_name(std::move(name))
+    , m_iconFilepath(std::move(iconFilepath))
+    , m_id(std::move(id))
+    , m_channel(channel)
+    , m_cancelable(true)
 {
 }
 
 Action::Action(const Action &other)
-    : name(other.name)
-    , iconFilepath(other.iconFilepath)
-    , id(other.id)
+    : m_name(other.m_name)
+    , m_iconFilepath(other.m_iconFilepath)
+    , m_id(other.m_id)
     , m_channel(other.m_channel)
     , m_cancelable(other.m_cancelable)
 {
-    sequence.reserve(other.sequence.size());
-    for (const auto &item : other.sequence)
+    m_sequence.reserve(other.m_sequence.size());
+    for (const auto &item : other.m_sequence)
     {
         if (item)
         {
-            sequence.push_back(item->clone());
+            m_sequence.push_back(item->clone());
         }
     }
 }
@@ -46,18 +50,18 @@ Action &Action::operator=(const Action &other)
         return *this;
     }
 
-    name = other.name;
-    iconFilepath = other.iconFilepath;
-    id = other.id;
+    m_name = other.m_name;
+    m_iconFilepath = other.m_iconFilepath;
+    m_id = other.m_id;
     m_channel = other.m_channel;
     m_cancelable = other.m_cancelable;
-    sequence.clear();
-    sequence.reserve(other.sequence.size());
-    for (const auto &item : other.sequence)
+    m_sequence.clear();
+    m_sequence.reserve(other.m_sequence.size());
+    for (const auto &item : other.m_sequence)
     {
         if (item)
         {
-            sequence.push_back(item->clone());
+            m_sequence.push_back(item->clone());
         }
     }
 
@@ -70,105 +74,106 @@ Action &Action::operator=(Action &&other) noexcept = default;
 
 Action::~Action() = default;
 
-void Action::addItem(int ind, std::unique_ptr<ActionItem> ai)
+void Action::addItem(int index, std::unique_ptr<ActionItem> ai)
 {
     if (!ai)
     {
         return;
     }
 
-    if (ind < 0 || ind >= static_cast<int>(sequence.size()))
+    if (index < 0 || index >= static_cast<int>(m_sequence.size()))
     {
-        sequence.push_back(std::move(ai));
+        m_sequence.push_back(std::move(ai));
         return;
     }
 
-    sequence.insert(sequence.begin() + ind, std::move(ai));
+    m_sequence.insert(m_sequence.begin() + index, std::move(ai));
 }
 
-void Action::removeItem(int ind)
+void Action::removeItem(int index)
 {
-    if (ind >= 0 && ind < static_cast<int>(sequence.size()))
+    if (index >= 0 && index < static_cast<int>(m_sequence.size()))
     {
-        sequence.erase(sequence.begin() + ind);
+        m_sequence.erase(m_sequence.begin() + index);
     }
 }
 
-int Action::len() const
+int Action::itemCount() const
 {
-    return this->sequence.size();
+    return static_cast<int>(m_sequence.size());
 }
 
 std::string Action::getId() const
 {
-    return id;
+    return m_id;
 }
 
 std::string Action::getName() const
 {
-    return name;
+    return m_name;
 }
 
 std::string Action::getIconFilepath() const
 {
-    return iconFilepath;
+    return m_iconFilepath;
 }
 
 const std::vector<std::unique_ptr<ActionItem>> &Action::getItems() const
 {
-    return sequence;
+    return m_sequence;
 }
 
 ActionItem *Action::getItem(int index)
 {
-    if (index < 0 || index >= static_cast<int>(sequence.size()))
+    if (index < 0 || index >= static_cast<int>(m_sequence.size()))
     {
         return nullptr;
     }
 
-    return sequence[index].get();
+    return m_sequence[index].get();
 }
 
 const ActionItem *Action::getItem(int index) const
 {
-    if (index < 0 || index >= static_cast<int>(sequence.size()))
+    if (index < 0 || index >= static_cast<int>(m_sequence.size()))
     {
         return nullptr;
     }
 
-    return sequence[index].get();
+    return m_sequence[index].get();
 }
 
 void Action::setName(const std::string &newName)
 {
-    name = newName;
+    m_name = newName;
 }
 
 void Action::setId(const std::string &newId)
 {
-    id = newId;
+    m_id = newId;
 }
 
 void Action::setIconFilepath(const std::string &newIconFilepath)
 {
-    iconFilepath = newIconFilepath;
+    m_iconFilepath = newIconFilepath;
 }
 
 void Action::setItems(std::vector<std::unique_ptr<ActionItem>> newItems)
 {
-    sequence = std::move(newItems);
+    m_sequence = std::move(newItems);
 }
 
 void Action::moveItem(int fromIndex, int toIndex)
 {
-    if (fromIndex < 0 || toIndex < 0 || fromIndex >= static_cast<int>(sequence.size()) || toIndex >= static_cast<int>(sequence.size()) || fromIndex == toIndex)
+    if (fromIndex < 0 || toIndex < 0 || fromIndex >= static_cast<int>(m_sequence.size())
+        || toIndex >= static_cast<int>(m_sequence.size()) || fromIndex == toIndex)
     {
         return;
     }
 
-    std::unique_ptr<ActionItem> item = std::move(sequence[fromIndex]);
-    sequence.erase(sequence.begin() + fromIndex);
-    sequence.insert(sequence.begin() + toIndex, std::move(item));
+    std::unique_ptr<ActionItem> item = std::move(m_sequence[fromIndex]);
+    m_sequence.erase(m_sequence.begin() + fromIndex);
+    m_sequence.insert(m_sequence.begin() + toIndex, std::move(item));
 }
 
 uint32_t Action::channel() const
@@ -181,11 +186,6 @@ void Action::setChannel(uint32_t channel) noexcept
     m_channel = channel;
 }
 
-const std::vector<std::unique_ptr<ActionItem>> &Action::items() const
-{
-    return sequence;
-}
-
 bool Action::cancelable() const noexcept
 {
     return m_cancelable;
@@ -195,3 +195,5 @@ void Action::setCancelable(bool cancelable) noexcept
 {
     m_cancelable = cancelable;
 }
+
+} // namespace Application

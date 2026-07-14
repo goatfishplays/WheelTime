@@ -1,12 +1,6 @@
 /**
  * @file MenuConfigLoader.hpp
- * @author your name (you@domain.com)
- * @brief
- * @version 0.1
- * @date 2026-07-10
- *
- * @copyright Copyright (c) 2026
- *
+ * @brief JSON config ↔ runtime menu/action model conversion.
  */
 
 #pragma once

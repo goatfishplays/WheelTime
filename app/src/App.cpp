@@ -250,7 +250,7 @@ const Action *App::findActionById(const std::string &actionId) const
 std::vector<ActionSlotVisual> App::getActionSlotVisualsForMenu(const Menu &menu) const
 {
     std::vector<ActionSlotVisual> visuals;
-    visuals.reserve(menu.numActions());
+    visuals.reserve(menu.actionCount());
 
     const QFileInfo configInfo(m_configPath);
     const QDir configDir = configInfo.absoluteDir();
@@ -412,7 +412,7 @@ void App::hideGui()
 
 void App::executeAction(int actionInd)
 {
-    if (activeMenu == nullptr || actionInd < 0 || actionInd >= activeMenu->numActions())
+    if (activeMenu == nullptr || actionInd < 0 || actionInd >= activeMenu->actionCount())
     {
         return;
     }

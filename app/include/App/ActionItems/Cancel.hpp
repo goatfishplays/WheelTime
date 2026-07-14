@@ -1,6 +1,6 @@
 /**
  * @file Cancel.hpp
- * @brief Cancel Latest / Channel / All ActionItem.
+ * @brief Cancel MostRecent / Channel / All ActionItem.
  */
 
 #pragma once
@@ -19,7 +19,7 @@ enum class CancelLevel
     ///
     /// channel == 0 means the most recent Action on any channel. The Action that
     /// contains this item is never chosen (it would cancel itself).
-    Latest,
+    MostRecent,
     /// @brief Cancel every cancelable Action on @ref AI_Cancel::channel.
     Channel,
     /// @brief Cancel every cancelable Action.
@@ -29,20 +29,20 @@ enum class CancelLevel
 /**
  * @brief Records a cancel request for the scheduler (does not call Scheduler directly).
  *
- * - Latest: cancel most recent Action on channel (0 = global); never self.
+ * - MostRecent: cancel most recent Action on channel (0 = global); never self.
  * - Channel: cancel every cancelable Action on the configured channel.
  * - All: cancel every cancelable Action.
  */
 class AI_Cancel : public ActionItem
 {
 public:
-    explicit AI_Cancel(CancelLevel level = CancelLevel::Latest, uint32_t channel = 0);
+    explicit AI_Cancel(CancelLevel level = CancelLevel::MostRecent, uint32_t channel = 0);
 
-    CancelLevel level = CancelLevel::Latest;
+    CancelLevel level = CancelLevel::MostRecent;
     /**
      * @brief Channel selector.
      *
-     * - Latest: 0 = most recent across all channels; otherwise that channel only.
+     * - MostRecent: 0 = most recent across all channels; otherwise that channel only.
      * - Channel: logical channel whose cancelable Actions are cancelled.
      * - All: ignored.
      */

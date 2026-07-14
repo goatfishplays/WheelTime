@@ -223,7 +223,7 @@ bool testAppLookupAndActionItemSchedule()
     ActionExecutionContext ctx{std::make_unique<Action>(
         std::vector<std::unique_ptr<ActionItem>>{}, "host", "", "host", 0)};
 
-    AI_nthRecent recentItem{1};
+    AI_NthRecent recentItem{1};
     if (recentItem.execute(ctx).type() != ExecuteResult::Type::Continue)
     {
         std::cerr << "nth_recent_item: expected Continue\n";
@@ -239,7 +239,7 @@ bool testAppLookupAndActionItemSchedule()
         }
     }
 
-    AI_nthFrequent frequentItem{1};
+    AI_NthFrequent frequentItem{1};
     if (frequentItem.execute(ctx).type() != ExecuteResult::Type::Continue)
     {
         std::cerr << "nth_frequent_item: expected Continue\n";
@@ -255,7 +255,7 @@ bool testAppLookupAndActionItemSchedule()
         }
     }
 
-    AI_nthRecent miss{99};
+    AI_NthRecent miss{99};
     if (miss.execute(ctx).type() != ExecuteResult::Type::Continue)
     {
         return false;
@@ -266,7 +266,7 @@ bool testAppLookupAndActionItemSchedule()
         return false;
     }
 
-    AI_nthRecent bad{0};
+    AI_NthRecent bad{0};
     if (bad.execute(ctx).type() != ExecuteResult::Type::Continue)
     {
         return false;
@@ -294,7 +294,7 @@ bool testSchedulerRunsScheduledNthTarget()
     // is the library Action; we only assert the host completes and schedules
     // were ingested (no hang / deadlock). Nested launch_app may run — cancel soon.
     std::vector<std::unique_ptr<ActionItem>> items;
-    items.push_back(std::make_unique<AI_nthRecent>(1));
+    items.push_back(std::make_unique<AI_NthRecent>(1));
     auto host = std::make_unique<Action>(std::move(items), "nth-host", "", "nth-host", 0);
 
     Scheduler &scheduler = app.scheduler();
@@ -348,7 +348,7 @@ bool testHistoryMetaActionsDoNotLoop()
     // Even if polluted history somehow listed the helper first, lookup must skip it.
     ActionExecutionContext ctx{std::make_unique<Action>(
         std::vector<std::unique_ptr<ActionItem>>{}, "host", "", "action-nth-recent-1", 0)};
-    AI_nthRecent item{1};
+    AI_NthRecent item{1};
     if (item.execute(ctx).type() != ExecuteResult::Type::Continue)
     {
         std::cerr << "meta_loop: nth_recent execute failed\n";

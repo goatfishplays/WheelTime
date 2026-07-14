@@ -1,6 +1,6 @@
 /**
  * @file NthFrequent.cpp
- * @brief AI_nthFrequent definitions.
+ * @brief AI_NthFrequent definitions.
  */
 
 #include "App/ActionItems/NthFrequent.hpp"
@@ -16,37 +16,37 @@
 namespace Application
 {
 
-AI_nthFrequent::AI_nthFrequent(int n)
+AI_NthFrequent::AI_NthFrequent(int n)
     : n{n}
 {
 }
 
-std::unique_ptr<ActionItem> AI_nthFrequent::clone() const
+std::unique_ptr<ActionItem> AI_NthFrequent::clone() const
 {
-    return std::make_unique<AI_nthFrequent>(*this);
+    return std::make_unique<AI_NthFrequent>(*this);
 }
 
-ActionItemKind AI_nthFrequent::kind() const
+ActionItemKind AI_NthFrequent::kind() const
 {
     return ActionItemKind::NthFrequent;
 }
 
-ExecuteResult AI_nthFrequent::execute(ActionExecutionContext &context)
+ExecuteResult AI_NthFrequent::execute(ActionExecutionContext &context)
 {
     if (n < 1)
     {
-        std::cerr << "[AI_nthFrequent] ignored invalid n=" << n << " (expected >= 1)\n";
+        std::cerr << "[AI_NthFrequent] ignored invalid n=" << n << " (expected >= 1)\n";
         return ExecuteResult::Continue();
     }
 
     Action *frequent = App::getInstance().nthFrequentAction(n);
     if (frequent == nullptr)
     {
-        std::cerr << "[AI_nthFrequent] no history entry for n=" << n << '\n';
+        std::cerr << "[AI_NthFrequent] no history entry for n=" << n << '\n';
         return ExecuteResult::Continue();
     }
 
-    std::cerr << "[AI_nthFrequent] n=" << n << " -> actionId=" << frequent->getId()
+    std::cerr << "[AI_NthFrequent] n=" << n << " -> actionId=" << frequent->getId()
               << " name=" << frequent->getName() << '\n';
     context.scheduleAction(
         std::make_unique<Action>(*frequent),

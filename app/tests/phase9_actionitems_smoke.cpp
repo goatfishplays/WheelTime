@@ -211,7 +211,7 @@ bool testCancelItemsRecordRequests()
     ActionExecutionContext ctx{std::make_unique<Action>(
         std::vector<std::unique_ptr<ActionItem>>{}, "t", "", "t", 3)};
 
-    AI_Cancel cancelLatest{CancelLevel::Latest, 0};
+    AI_Cancel cancelLatest{CancelLevel::MostRecent, 0};
     if (cancelLatest.execute(ctx).type() != ExecuteResult::Type::Continue)
     {
         std::cerr << "cancel_latest: expected Continue\n";
@@ -263,7 +263,7 @@ bool testCancelItemsRecordRequests()
         }
     }
 
-    AI_Cancel cancelLatestCh{CancelLevel::Latest, 4};
+    AI_Cancel cancelLatestCh{CancelLevel::MostRecent, 4};
     (void)cancelLatestCh.execute(ctx);
     {
         auto requests = ctx.takeCancelRequests();
@@ -279,8 +279,8 @@ bool testCancelItemsRecordRequests()
 
 bool testNthItemDefaults()
 {
-    AI_nthRecent recent;
-    AI_nthFrequent frequent;
+    AI_NthRecent recent;
+    AI_NthFrequent frequent;
     if (recent.n != 1 || frequent.n != 1)
     {
         std::cerr << "nth: expected default n=1\n";

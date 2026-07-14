@@ -1,12 +1,6 @@
 /**
  * @file Gui.hpp
- * @author your name (you@domain.com)
- * @brief The main gui interface class
- * @version 0.1
- * @date 2026-07-09
- *
- * @copyright Copyright (c) 2026
- *
+ * @brief Main launcher GUI host for the radial wheel.
  */
 #pragma once
 

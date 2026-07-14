@@ -171,7 +171,7 @@ namespace
             else if (type == "cancel")
             {
                 const QString level = itemObject.value("level").toString("latest");
-                CancelLevel cancelLevel = CancelLevel::Latest;
+                CancelLevel cancelLevel = CancelLevel::MostRecent;
                 if (level == "channel")
                 {
                     cancelLevel = CancelLevel::Channel;
@@ -182,8 +182,8 @@ namespace
                 }
                 else
                 {
-                    // "latest" or legacy "action"
-                    cancelLevel = CancelLevel::Latest;
+                    // Wire format: "latest" (canonical). Also accept "most_recent" / legacy "action".
+                    cancelLevel = CancelLevel::MostRecent;
                 }
                 items.push_back(std::make_unique<AI_Cancel>(
                     cancelLevel,
@@ -191,11 +191,11 @@ namespace
             }
             else if (type == "nth_recent")
             {
-                items.push_back(std::make_unique<AI_nthRecent>(itemObject.value("n").toInt(1)));
+                items.push_back(std::make_unique<AI_NthRecent>(itemObject.value("n").toInt(1)));
             }
             else if (type == "nth_frequent")
             {
-                items.push_back(std::make_unique<AI_nthFrequent>(itemObject.value("n").toInt(1)));
+                items.push_back(std::make_unique<AI_NthFrequent>(itemObject.value("n").toInt(1)));
             }
             else if (type == "socket")
             {
@@ -401,7 +401,7 @@ namespace
             case CancelLevel::All:
                 itemObject.insert("level", "all");
                 break;
-            case CancelLevel::Latest:
+            case CancelLevel::MostRecent:
             default:
                 itemObject.insert("level", "latest");
                 itemObject.insert("channel", static_cast<int>(cancel.channel));
@@ -411,11 +411,11 @@ namespace
         }
         case ActionItemKind::NthRecent:
             itemObject.insert("type", "nth_recent");
-            itemObject.insert("n", static_cast<const AI_nthRecent &>(item).n);
+            itemObject.insert("n", static_cast<const AI_NthRecent &>(item).n);
             break;
         case ActionItemKind::NthFrequent:
             itemObject.insert("type", "nth_frequent");
-            itemObject.insert("n", static_cast<const AI_nthFrequent &>(item).n);
+            itemObject.insert("n", static_cast<const AI_NthFrequent &>(item).n);
             break;
         case ActionItemKind::Socket:
         {

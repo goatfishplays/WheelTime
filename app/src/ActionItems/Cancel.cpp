@@ -18,8 +18,8 @@ const char *cancelLevelName(CancelLevel level) noexcept
 {
     switch (level)
     {
-    case CancelLevel::Latest:
-        return "latest";
+    case CancelLevel::MostRecent:
+        return "most_recent";
     case CancelLevel::Channel:
         return "channel";
     case CancelLevel::All:
@@ -54,7 +54,7 @@ ExecuteResult AI_Cancel::execute(ActionExecutionContext &context)
 
     switch (level)
     {
-    case CancelLevel::Latest:
+    case CancelLevel::MostRecent:
         context.requestCancelMostRecent(channel);
         break;
     case CancelLevel::Channel:

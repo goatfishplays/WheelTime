@@ -251,7 +251,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
          "Custom Script/App (Advanced)",
          "Mouse Move",
          "Mouse Button",
-         "Cancel Latest",
+         "Cancel Most Recent",
          "Cancel Channel",
          "Cancel All",
          "Nth Recent",
@@ -379,7 +379,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_itemCancelPage = new QWidget(m_itemDetailStack);
     auto *cancelForm = new QFormLayout(m_itemCancelPage);
     m_cancelLevelCombo = new QComboBox(m_itemCancelPage);
-    m_cancelLevelCombo->addItem("Latest on Channel", static_cast<int>(CancelLevel::Latest));
+    m_cancelLevelCombo->addItem("Most Recent on Channel", static_cast<int>(CancelLevel::MostRecent));
     m_cancelLevelCombo->addItem("Entire Channel", static_cast<int>(CancelLevel::Channel));
     m_cancelLevelCombo->addItem("All Actions", static_cast<int>(CancelLevel::All));
     m_cancelChannelSpin = new QSpinBox(m_itemCancelPage);
@@ -584,7 +584,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 const int slotIndex = m_slotList->currentRow();
                 if (menuIndex >= 0 && slotIndex >= 0)
                 {
-                    m_menus[menuIndex].remAction(slotIndex);
+                    m_menus[menuIndex].removeAction(slotIndex);
                     refreshMenuEditor();
                 } });
     connect(moveSlotUpButton, &QPushButton::clicked, this, [this]()
@@ -601,7 +601,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
             {
                 const int menuIndex = currentMenuIndex();
                 const int slotIndex = m_slotList->currentRow();
-                if (menuIndex >= 0 && slotIndex >= 0 && slotIndex + 1 < m_menus[menuIndex].numActions())
+                if (menuIndex >= 0 && slotIndex >= 0 && slotIndex + 1 < m_menus[menuIndex].actionCount())
                 {
                     m_menus[menuIndex].moveActionId(slotIndex, slotIndex + 1);
                     refreshMenuEditor();
@@ -729,7 +729,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                     item = std::make_unique<AI_MouseButton>(0, 0.0f, false);
                     break;
                 case 8:
-                    item = std::make_unique<AI_Cancel>(CancelLevel::Latest, 0);
+                    item = std::make_unique<AI_Cancel>(CancelLevel::MostRecent, 0);
                     break;
                 case 9:
                     item = std::make_unique<AI_Cancel>(CancelLevel::Channel, 0);
@@ -738,10 +738,10 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                     item = std::make_unique<AI_Cancel>(CancelLevel::All);
                     break;
                 case 11:
-                    item = std::make_unique<AI_nthRecent>(1);
+                    item = std::make_unique<AI_NthRecent>(1);
                     break;
                 case 12:
-                    item = std::make_unique<AI_nthFrequent>(1);
+                    item = std::make_unique<AI_NthFrequent>(1);
                     break;
                 case 13:
                     item = std::make_unique<AI_Socket>(
@@ -752,7 +752,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 }
                 m_actions[actionIndex].addItem(-1, std::move(item));
                 refreshActionEditor();
-                m_actionItemList->setCurrentRow(m_actions[actionIndex].len() - 1); });
+                m_actionItemList->setCurrentRow(m_actions[actionIndex].itemCount() - 1); });
     connect(removeItemButton, &QPushButton::clicked, this, [this]()
             {
                 const int actionIndex = currentActionIndex();
@@ -776,7 +776,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
             {
                 const int actionIndex = currentActionIndex();
                 const int itemIndex = currentActionItemIndex();
-                if (actionIndex >= 0 && itemIndex >= 0 && itemIndex + 1 < m_actions[actionIndex].len())
+                if (actionIndex >= 0 && itemIndex >= 0 && itemIndex + 1 < m_actions[actionIndex].itemCount())
                 {
                     m_actions[actionIndex].moveItem(itemIndex, itemIndex + 1);
                     refreshActionEditor();
@@ -994,9 +994,9 @@ SettingsWindow::SettingsWindow(QWidget *parent)
         }
         item->level = static_cast<CancelLevel>(m_cancelLevelCombo->currentData().toInt());
         item->channel = static_cast<uint32_t>(m_cancelChannelSpin->value());
-        const bool needsChannel = item->level == CancelLevel::Latest || item->level == CancelLevel::Channel;
+        const bool needsChannel = item->level == CancelLevel::MostRecent || item->level == CancelLevel::Channel;
         m_cancelChannelSpin->setEnabled(needsChannel);
-        if (item->level == CancelLevel::Latest)
+        if (item->level == CancelLevel::MostRecent)
         {
             m_cancelHelpLabel->setText(
                 "Cancels the most recently submitted action on the chosen channel. "
@@ -1030,11 +1030,11 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 {
                     return;
                 }
-                if (auto *recent = dynamic_cast<AI_nthRecent *>(m_actions[actionIndex].getItem(itemIndex)))
+                if (auto *recent = dynamic_cast<AI_NthRecent *>(m_actions[actionIndex].getItem(itemIndex)))
                 {
                     recent->n = value;
                 }
-                else if (auto *frequent = dynamic_cast<AI_nthFrequent *>(m_actions[actionIndex].getItem(itemIndex)))
+                else if (auto *frequent = dynamic_cast<AI_NthFrequent *>(m_actions[actionIndex].getItem(itemIndex)))
                 {
                     frequent->n = value;
                 }
@@ -1588,9 +1588,9 @@ void SettingsWindow::refreshItemDetail()
         const int levelIndex = m_cancelLevelCombo->findData(static_cast<int>(cancel->level));
         m_cancelLevelCombo->setCurrentIndex(levelIndex >= 0 ? levelIndex : 0);
         m_cancelChannelSpin->setValue(static_cast<int>(cancel->channel));
-        const bool needsChannel = cancel->level == CancelLevel::Latest || cancel->level == CancelLevel::Channel;
+        const bool needsChannel = cancel->level == CancelLevel::MostRecent || cancel->level == CancelLevel::Channel;
         m_cancelChannelSpin->setEnabled(needsChannel);
-        if (cancel->level == CancelLevel::Latest)
+        if (cancel->level == CancelLevel::MostRecent)
         {
             m_cancelHelpLabel->setText(
                 "Cancels the most recently submitted action on the chosen channel. "
@@ -1609,7 +1609,7 @@ void SettingsWindow::refreshItemDetail()
         return;
     }
 
-    if (auto *recent = dynamic_cast<AI_nthRecent *>(item))
+    if (auto *recent = dynamic_cast<AI_NthRecent *>(item))
     {
         const QSignalBlocker blocker(m_nthSpin);
         m_nthSpin->setValue(std::max(1, recent->n));
@@ -1618,7 +1618,7 @@ void SettingsWindow::refreshItemDetail()
         return;
     }
 
-    if (auto *frequent = dynamic_cast<AI_nthFrequent *>(item))
+    if (auto *frequent = dynamic_cast<AI_NthFrequent *>(item))
     {
         const QSignalBlocker blocker(m_nthSpin);
         m_nthSpin->setValue(std::max(1, frequent->n));
@@ -1802,19 +1802,19 @@ QString SettingsWindow::describeActionItem(const ActionItem *item) const
             return QString("Cancel Channel: %1").arg(cancel->channel);
         case CancelLevel::All:
             return "Cancel All";
-        case CancelLevel::Latest:
+        case CancelLevel::MostRecent:
         default:
             if (cancel->channel == 0)
             {
-                return "Cancel Latest (any channel)";
+                return "Cancel Most Recent (any channel)";
             }
-            return QString("Cancel Latest: channel %1").arg(cancel->channel);
+            return QString("Cancel Most Recent: channel %1").arg(cancel->channel);
         }
     }
     case ActionItemKind::NthRecent:
-        return QString("Nth Recent: %1").arg(static_cast<const AI_nthRecent *>(item)->n);
+        return QString("Nth Recent: %1").arg(static_cast<const AI_NthRecent *>(item)->n);
     case ActionItemKind::NthFrequent:
-        return QString("Nth Frequent: %1").arg(static_cast<const AI_nthFrequent *>(item)->n);
+        return QString("Nth Frequent: %1").arg(static_cast<const AI_NthFrequent *>(item)->n);
     case ActionItemKind::Socket:
     {
         const auto *socket = static_cast<const AI_Socket *>(item);
@@ -2238,7 +2238,7 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
             }
             else if (itemPtr->kind() == ActionItemKind::NthRecent)
             {
-                if (static_cast<const AI_nthRecent *>(itemPtr.get())->n < 1)
+                if (static_cast<const AI_NthRecent *>(itemPtr.get())->n < 1)
                 {
                     errorMessage = QString("Nth Recent item in '%1' must be >= 1.").arg(QString::fromStdString(action.getName()));
                     return false;
@@ -2246,7 +2246,7 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
             }
             else if (itemPtr->kind() == ActionItemKind::NthFrequent)
             {
-                if (static_cast<const AI_nthFrequent *>(itemPtr.get())->n < 1)
+                if (static_cast<const AI_NthFrequent *>(itemPtr.get())->n < 1)
                 {
                     errorMessage = QString("Nth Frequent item in '%1' must be >= 1.").arg(QString::fromStdString(action.getName()));
                     return false;
