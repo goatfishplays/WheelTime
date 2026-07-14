@@ -33,7 +33,8 @@ void pushKeyboardInput(std::vector<INPUT> &inputs, WORD vk, DWORD flags = 0)
     INPUT input{};
     input.type = INPUT_KEYBOARD;
     input.ki.wVk = vk;
-    input.ki.dwFlags = flags;
+    input.ki.wScan = MapVirtualKey(vk, MAPVK_VK_TO_VSC);
+    input.ki.dwFlags = flags | KEYEVENTF_SCANCODE;
     inputs.push_back(input);
 }
 
@@ -60,13 +61,15 @@ void appendModifierDowns(std::vector<INPUT> &inputs, int mod)
     if (mod & 0x0001) // MOD_ALT
         pushKeyboardInput(inputs, VK_MENU);
     if (mod & 0x0004) // MOD_SHIFT
-        pushKeyboardInput(inputs, VK_SHIFT);
+        pushKeyboardInput(inputs, VK_LSHIFT);
+        // pushKeyboardInput(inputs, VK_SHIFT);
 }
 
 void appendModifierUps(std::vector<INPUT> &inputs, int mod)
 {
     if (mod & 0x0004)
-        pushKeyboardInput(inputs, VK_SHIFT, KEYEVENTF_KEYUP);
+        // pushKeyboardInput(inputs, VK_SHIFT, KEYEVENTF_KEYUP);
+        pushKeyboardInput(inputs, VK_LSHIFT, KEYEVENTF_KEYUP);
     if (mod & 0x0001)
         pushKeyboardInput(inputs, VK_MENU, KEYEVENTF_KEYUP);
     if (mod & 0x0002)

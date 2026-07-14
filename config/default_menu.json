@@ -103,29 +103,14 @@
             "id": "action-new-action-2",
             "items": [
                 {
-                    "holdDuration": 10,
-                    "keycode": 65,
-                    "modifiers": 0,
-                    "proceed": true,
+                    "holdDuration": 0.10000000149011612,
+                    "keycode": 112,
+                    "modifiers": 4,
+                    "proceed": false,
                     "type": "hotkey"
-                },
-                {
-                    "duration": 1000,
-                    "type": "delay"
-                },
-                {
-                    "holdDuration": 5,
-                    "keycode": 66,
-                    "modifiers": 0,
-                    "proceed": true,
-                    "type": "hotkey"
-                },
-                {
-                    "duration": 5000,
-                    "type": "delay"
                 }
             ],
-            "name": "AB"
+            "name": "Discord Mute"
         },
         {
             "channel": 1,
