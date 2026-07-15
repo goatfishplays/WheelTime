@@ -5,7 +5,7 @@
             "id": "action-new-action-2",
             "items": [
                 {
-                    "holdDuration": 0.10000000149011612,
+                    "holdDuration": 0,
                     "keycode": 112,
                     "modifiers": 4,
                     "proceed": false,
@@ -77,16 +77,19 @@
                 "action-new-action",
                 "action-new-action-3"
             ],
-            "executeOnRelease": false,
+            "centerMouseOnOpen": true,
+            "executeOnRelease": true,
             "exitOnAction": true,
             "id": "menu-example",
             "name": "GAMBLING",
-            "triggerMod": 0,
-            "triggerVk": 0
+            "triggerMod": 6,
+            "triggerVk": 9
         },
         {
             "actionIds": [
+                "action-new-action-2"
             ],
+            "centerMouseOnOpen": true,
             "executeOnRelease": false,
             "exitOnAction": false,
             "id": "menu-new-menu",
@@ -97,6 +100,7 @@
         {
             "actionIds": [
             ],
+            "centerMouseOnOpen": true,
             "executeOnRelease": false,
             "exitOnAction": false,
             "id": "menu-new-menu-2",

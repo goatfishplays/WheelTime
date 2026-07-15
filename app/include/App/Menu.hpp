@@ -31,10 +31,14 @@ public:
     /// @brief Exit the menu after performing an action.
     bool exitOnAction = false;
 
+    /// @brief Move the cursor to the monitor center when this menu opens.
+    bool centerMouseOnOpen = true;
+
     Menu(int triggerMod = 0,
          int triggerVk = 0,
          bool executeOnRelease = false,
          bool exitOnAction = false,
+         bool centerMouseOnOpen = true,
          std::string name = "Unnamed Menu",
          std::vector<std::string> actionIds = {},
          std::string id = "");

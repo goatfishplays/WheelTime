@@ -49,6 +49,10 @@ namespace Application
         void enterDormantOverlay();
         /// @brief Whether the launcher visuals are currently visible.
         bool isLauncherVisible() const;
+        /// @brief Seeds Distance-mode selection from the current cursor position.
+        void refreshSelectionFromCursor();
+        /// @brief Currently selected wheel slot, or -1 when none.
+        [[nodiscard]] int selectedActionIndex() const;
 
     signals:
         /// @brief Emitted when the launcher should be dismissed with Escape.

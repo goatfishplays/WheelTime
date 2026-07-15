@@ -119,6 +119,7 @@ namespace Application
         QLineEdit *m_menuNameEdit{nullptr};
         QCheckBox *m_executeOnReleaseCheck{nullptr};
         QCheckBox *m_exitOnActionCheck{nullptr};
+        QCheckBox *m_centerMouseOnOpenCheck{nullptr};
         QListWidget *m_slotList{nullptr};
         QComboBox *m_slotActionCombo{nullptr};
 

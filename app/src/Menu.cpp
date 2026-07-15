@@ -16,6 +16,7 @@ Menu::Menu(int triggerMod,
            int triggerVk,
            bool executeOnRelease,
            bool exitOnAction,
+           bool centerMouseOnOpen,
            std::string name,
            std::vector<std::string> actionIds,
            std::string id)
@@ -23,6 +24,7 @@ Menu::Menu(int triggerMod,
     , triggerVk(triggerVk)
     , executeOnRelease(executeOnRelease)
     , exitOnAction(exitOnAction)
+    , centerMouseOnOpen(centerMouseOnOpen)
     , m_name(std::move(name))
     , m_id(std::move(id))
     , m_actionIds(std::move(actionIds))

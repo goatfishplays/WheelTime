@@ -278,6 +278,7 @@ namespace
                 menuObject.value("triggerVk").toInt(0),
                 menuObject.value("executeOnRelease").toBool(false),
                 menuObject.value("exitOnAction").toBool(false),
+                menuObject.value("centerMouseOnOpen").toBool(true),
                 menuObject.value("name").toString("Unnamed Menu").toStdString(),
                 actionIds,
                 menuObject.value("id").toString().toStdString()));
@@ -328,6 +329,7 @@ namespace
                 0,
                 menuObject.value("executeOnRelease").toBool(false),
                 menuObject.value("exitOnAction").toBool(false),
+                menuObject.value("centerMouseOnOpen").toBool(true),
                 menuObject.value("name").toString("Unnamed Menu").toStdString(),
                 menuActionIds,
                 menuId));
@@ -534,6 +536,7 @@ bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appC
         menuObject.insert("name", QString::fromStdString(menu->getName()));
         menuObject.insert("executeOnRelease", menu->executeOnRelease);
         menuObject.insert("exitOnAction", menu->exitOnAction);
+        menuObject.insert("centerMouseOnOpen", menu->centerMouseOnOpen);
         menuObject.insert("triggerMod", menu->triggerMod);
         menuObject.insert("triggerVk", menu->triggerVk);
 

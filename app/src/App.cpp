@@ -106,7 +106,7 @@ App::App()
         std::vector<std::unique_ptr<ActionItem>> items;
         items.push_back(std::make_unique<AI_Close>());
         actionLibrary.push_back(Action(std::move(items), "Config missing", "", "action-config-missing"));
-        loadedMenus.push_back(new Menu(0, 0, false, false, "Config Error", {"action-config-missing"}, "menu-config-error"));
+        loadedMenus.push_back(new Menu(0, 0, false, false, true, "Config Error", {"action-config-missing"}, "menu-config-error"));
     }
 
     bool anyHotkey = false;
@@ -139,6 +139,11 @@ App::App()
     }
 
     initializeOverlay();
+
+    m_releaseWatchTimer = new QTimer(qApp);
+    m_releaseWatchTimer->setInterval(16);
+    QObject::connect(m_releaseWatchTimer, &QTimer::timeout, [this]()
+                     { onExecuteOnReleaseTick(); });
 
     QTimer::singleShot(0, [this]() { showSettingsWindow(); });
 }
@@ -198,32 +203,99 @@ void App::onHotkeyTriggered(int hotkeyId)
 
     int mod = (hotkeyId >> 16) & 0xFFFF;
     int vk = hotkeyId & 0xFFFF;
-    Menu* targetMenu = nullptr;
-    for (Menu* m : loadedMenus) {
-        if (m->triggerMod == mod && m->triggerVk == vk) {
+    Menu *targetMenu = nullptr;
+    for (Menu *m : loadedMenus)
+    {
+        if (m->triggerMod == mod && m->triggerVk == vk)
+        {
             targetMenu = m;
             break;
         }
     }
 
+    // Second press / visible launcher always dismisses (and disarms release-watch).
     if (gui.isLauncherVisible())
     {
         hideGui();
+        return;
     }
-    else if (targetMenu != nullptr)
+
+    Menu *menuToShow = targetMenu;
+    if (menuToShow == nullptr && activeMenu == nullptr && !loadedMenus.empty())
     {
-        activeMenu = targetMenu;
-        showGui(activeMenu);
+        menuToShow = loadedMenus.front();
     }
-    else if (activeMenu == nullptr && !loadedMenus.empty())
+    else if (menuToShow == nullptr)
     {
-        activeMenu = loadedMenus.front();
-        showGui(activeMenu);
+        menuToShow = activeMenu;
     }
-    else if (activeMenu != nullptr)
+
+    if (menuToShow == nullptr)
     {
-        showGui(activeMenu);
+        return;
     }
+
+    activeMenu = menuToShow;
+    showGui(activeMenu);
+
+    if (activeMenu->executeOnRelease)
+    {
+        armExecuteOnRelease(activeMenu->triggerMod, activeMenu->triggerVk);
+    }
+}
+
+void App::armExecuteOnRelease(int mod, int vk)
+{
+    m_executeOnReleaseArmed = true;
+    m_releaseWatchMod = mod;
+    m_releaseWatchVk = vk;
+    if (m_releaseWatchTimer != nullptr)
+    {
+        m_releaseWatchTimer->start();
+    }
+}
+
+void App::disarmExecuteOnRelease()
+{
+    m_executeOnReleaseArmed = false;
+    m_releaseWatchMod = 0;
+    m_releaseWatchVk = 0;
+    if (m_releaseWatchTimer != nullptr)
+    {
+        m_releaseWatchTimer->stop();
+    }
+}
+
+void App::onExecuteOnReleaseTick()
+{
+    if (!m_executeOnReleaseArmed)
+    {
+        return;
+    }
+
+    if (m_inputRcvr.isChordHeld(m_releaseWatchMod, m_releaseWatchVk))
+    {
+        return;
+    }
+
+    disarmExecuteOnRelease();
+
+    if (!gui.isLauncherVisible())
+    {
+        return;
+    }
+
+    gui.refreshSelectionFromCursor();
+    const int selected = gui.selectedActionIndex();
+    if (activeMenu != nullptr && selected >= 0 && selected < activeMenu->actionCount()
+        && findActionById(activeMenu->getActionId(selected)) != nullptr)
+    {
+        executeAction(selected);
+        return;
+    }
+
+    // No valid selection — close so a hold-open does not stick after release.
+    hideGui();
 }
 
 Menu *App::getActiveMenu()
@@ -411,6 +483,18 @@ void App::showGui(Menu *menu)
     activeMenu = menu;
     // Size the overlay to the current monitor first so radius/layout use final dims.
     configureOverlayForCursor();
+
+    if (activeMenu->centerMouseOnOpen)
+    {
+        const Platform::Vec2 cursorPos = inputRcvr.getAbsoluteMousePosition();
+        Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
+        const Platform::WindowRect bounds =
+            overlayWindow.monitorBoundsForPoint(cursorPos.x, cursorPos.y);
+        inputRcvr.setAbsoluteMousePosition(Platform::Vec2{
+            bounds.x + bounds.width / 2,
+            bounds.y + bounds.height / 2});
+    }
+
     gui.setMenu(*activeMenu, getActionSlotVisualsForMenu(*activeMenu));
 
     Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
@@ -434,6 +518,7 @@ void App::hideGui()
         return;
     }
 
+    disarmExecuteOnRelease();
     initializeOverlay();
     gui.enterDormantOverlay();
     Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
@@ -444,6 +529,9 @@ void App::hideGui()
 
 void App::executeAction(int actionInd)
 {
+    // Click-to-execute while holding must not also fire on release.
+    disarmExecuteOnRelease();
+
     if (activeMenu == nullptr || actionInd < 0 || actionInd >= activeMenu->actionCount())
     {
         return;
