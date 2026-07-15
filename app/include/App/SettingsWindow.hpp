@@ -1,12 +1,6 @@
 /**
  * @file SettingsWindow.hpp
- * @author your name (you@domain.com)
- * @brief The settings editor window for menus and reusable actions
- * @version 0.1
- * @date 2026-07-10
- *
- * @copyright Copyright (c) 2026
- *
+ * @brief Settings editor for menus and reusable actions.
  */
 
 #pragma once
@@ -125,6 +119,7 @@ namespace Application
         QLineEdit *m_menuNameEdit{nullptr};
         QCheckBox *m_executeOnReleaseCheck{nullptr};
         QCheckBox *m_exitOnActionCheck{nullptr};
+        QCheckBox *m_centerMouseOnOpenCheck{nullptr};
         QListWidget *m_slotList{nullptr};
         QComboBox *m_slotActionCombo{nullptr};
 
@@ -169,6 +164,10 @@ namespace Application
         QSpinBox *m_mouseMoveXSpin{nullptr};
         QSpinBox *m_mouseMoveYSpin{nullptr};
         QComboBox *m_mouseButtonCombo{nullptr};
+        QCheckBox *m_mouseButtonCtrlCheck{nullptr};
+        QCheckBox *m_mouseButtonAltCheck{nullptr};
+        QCheckBox *m_mouseButtonShiftCheck{nullptr};
+        QCheckBox *m_mouseButtonWinCheck{nullptr};
         QDoubleSpinBox *m_mouseButtonHoldSpin{nullptr};
         QCheckBox *m_mouseButtonProceedCheck{nullptr};
         QComboBox *m_cancelLevelCombo{nullptr};

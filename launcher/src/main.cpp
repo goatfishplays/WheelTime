@@ -1,12 +1,6 @@
 /**
  * @file main.cpp
- * @author your name (you@domain.com)
- * @brief
- * @version 0.1
- * @date 2026-07-04
- *
- * @copyright Copyright (c) 2026
- *
+ * @brief WheelTime launcher entry point.
  */
 
 // #include "lib.h"

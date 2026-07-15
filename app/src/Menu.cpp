@@ -1,106 +1,116 @@
 /**
  * @file Menu.cpp
- * @author your name (you@domain.com)
- * @brief
- * @version 0.1
- * @date 2026-07-02
- *
- * @copyright Copyright (c) 2026
- *
+ * @brief Menu definitions.
  */
 
 #include "App/Menu.hpp"
-#include <Platform/Inputs.hpp>
-#include <vector>
+
 #include <string>
+#include <utility>
+#include <vector>
 
-using namespace Application;
+namespace Application
+{
 
-Menu::Menu(int _triggerMod,
-           int _triggerVk,
-           bool _executeOnRelease,
-           bool _exitOnAction,
-           std::string _name,
-           std::vector<std::string> _actionIds,
-           std::string _id)
-    : triggerMod(_triggerMod), triggerVk(_triggerVk), executeOnRelease(_executeOnRelease), exitOnAction(_exitOnAction), name(std::move(_name)), id(std::move(_id)), actionIds(std::move(_actionIds))
+Menu::Menu(int triggerMod,
+           int triggerVk,
+           bool executeOnRelease,
+           bool exitOnAction,
+           bool centerMouseOnOpen,
+           std::string name,
+           std::vector<std::string> actionIds,
+           std::string id)
+    : triggerMod(triggerMod)
+    , triggerVk(triggerVk)
+    , executeOnRelease(executeOnRelease)
+    , exitOnAction(exitOnAction)
+    , centerMouseOnOpen(centerMouseOnOpen)
+    , m_name(std::move(name))
+    , m_id(std::move(id))
+    , m_actionIds(std::move(actionIds))
 {
 }
 
-Menu::~Menu() {};
+Menu::~Menu() = default;
 
-void Menu::addActionId(int ind, const std::string &actionId)
+void Menu::addActionId(int index, const std::string &actionId)
 {
-    if (ind < 0 || ind >= static_cast<int>(actionIds.size()))
+    if (index < 0 || index >= static_cast<int>(m_actionIds.size()))
     {
-        actionIds.push_back(actionId);
+        m_actionIds.push_back(actionId);
         return;
     }
 
-    actionIds.insert(actionIds.begin() + ind, actionId);
+    m_actionIds.insert(m_actionIds.begin() + index, actionId);
 }
 
-void Menu::remAction(int ind)
+void Menu::removeAction(int index)
 {
-    if (ind >= 0 && ind < static_cast<int>(actionIds.size()))
+    if (index >= 0 && index < static_cast<int>(m_actionIds.size()))
     {
-        actionIds.erase(actionIds.begin() + ind);
+        m_actionIds.erase(m_actionIds.begin() + index);
     }
 }
 
-int Menu::numActions() const { return static_cast<int>(this->actionIds.size()); }
+int Menu::actionCount() const
+{
+    return static_cast<int>(m_actionIds.size());
+}
 
 std::string Menu::getId() const
 {
-    return id;
+    return m_id;
 }
 
 std::string Menu::getName() const
 {
-    return name;
+    return m_name;
 }
 
 void Menu::setId(const std::string &newId)
 {
-    id = newId;
+    m_id = newId;
 }
 
 void Menu::setName(const std::string &newName)
 {
-    name = newName;
+    m_name = newName;
 }
 
 const std::vector<std::string> &Menu::getActionIds() const
 {
-    return actionIds;
+    return m_actionIds;
 }
 
 std::string Menu::getActionId(int index) const
 {
-    if (index < 0 || index >= static_cast<int>(actionIds.size()))
+    if (index < 0 || index >= static_cast<int>(m_actionIds.size()))
     {
         return "";
     }
 
-    return actionIds[index];
+    return m_actionIds[index];
 }
 
 void Menu::setActionId(int index, const std::string &actionId)
 {
-    if (index >= 0 && index < static_cast<int>(actionIds.size()))
+    if (index >= 0 && index < static_cast<int>(m_actionIds.size()))
     {
-        actionIds[index] = actionId;
+        m_actionIds[index] = actionId;
     }
 }
 
 void Menu::moveActionId(int fromIndex, int toIndex)
 {
-    if (fromIndex < 0 || toIndex < 0 || fromIndex >= static_cast<int>(actionIds.size()) || toIndex >= static_cast<int>(actionIds.size()) || fromIndex == toIndex)
+    if (fromIndex < 0 || toIndex < 0 || fromIndex >= static_cast<int>(m_actionIds.size())
+        || toIndex >= static_cast<int>(m_actionIds.size()) || fromIndex == toIndex)
     {
         return;
     }
 
-    std::string actionId = actionIds[fromIndex];
-    actionIds.erase(actionIds.begin() + fromIndex);
-    actionIds.insert(actionIds.begin() + toIndex, actionId);
+    std::string actionId = m_actionIds[fromIndex];
+    m_actionIds.erase(m_actionIds.begin() + fromIndex);
+    m_actionIds.insert(m_actionIds.begin() + toIndex, std::move(actionId));
 }
+
+} // namespace Application

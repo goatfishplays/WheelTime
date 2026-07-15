@@ -1,6 +1,10 @@
 /**
  * @file action_history_smoke.cpp
  * @brief Smoke / integration tests for ActionHistory and nth ActionItems.
+ *
+ * Pure ActionHistory tests are isolated. App integration tests install their own
+ * fixture actions/menu slots so they do not depend on the user-editable
+ * default_menu.json contents.
  */
 
 #include "App/Action.hpp"
@@ -34,6 +38,13 @@ using namespace Application;
 namespace
 {
 
+constexpr const char *kSmokeAlpha = "action-smoke-alpha";
+constexpr const char *kSmokeBeta = "action-smoke-beta";
+constexpr const char *kSmokeGamma = "action-smoke-gamma";
+constexpr const char *kSmokeNthRecent = "action-smoke-nth-recent";
+constexpr const char *kSmokeNthFrequent = "action-smoke-nth-frequent";
+constexpr const char *kSmokeCancel = "action-smoke-cancel";
+
 QString historyPathBesideConfig()
 {
     return QFileInfo(MenuConfigLoader::defaultConfigPath()).dir().filePath("action_history.json");
@@ -53,6 +64,98 @@ bool writeHistoryFile(const QString &path, const QJsonArray &recent, const QJson
     }
     file.write(QJsonDocument(root).toJson(QJsonDocument::Indented));
     return true;
+}
+
+Action makeDelayAction(const char *id, const char *name)
+{
+    std::vector<std::unique_ptr<ActionItem>> items;
+    items.push_back(std::make_unique<AI_Delay>(1));
+    return Action(std::move(items), name, "", id, 0);
+}
+
+void upsertAction(App &app, Action action)
+{
+    for (Action &existing : app.actionLibrary)
+    {
+        if (existing.getId() == action.getId())
+        {
+            existing = std::move(action);
+            return;
+        }
+    }
+    app.actionLibrary.push_back(std::move(action));
+}
+
+/// @brief Installs deterministic library + menu slots without saving user config.
+bool installSmokeFixtures(App &app)
+{
+    upsertAction(app, makeDelayAction(kSmokeAlpha, "Smoke Alpha"));
+    upsertAction(app, makeDelayAction(kSmokeBeta, "Smoke Beta"));
+    upsertAction(app, makeDelayAction(kSmokeGamma, "Smoke Gamma"));
+
+    {
+        std::vector<std::unique_ptr<ActionItem>> items;
+        items.push_back(std::make_unique<AI_NthRecent>(1));
+        upsertAction(app, Action(std::move(items), "Smoke Nth Recent", "", kSmokeNthRecent, 0));
+    }
+    {
+        std::vector<std::unique_ptr<ActionItem>> items;
+        items.push_back(std::make_unique<AI_NthFrequent>(1));
+        upsertAction(app, Action(std::move(items), "Smoke Nth Frequent", "", kSmokeNthFrequent, 0));
+    }
+    {
+        std::vector<std::unique_ptr<ActionItem>> items;
+        items.push_back(std::make_unique<AI_Cancel>(CancelLevel::MostRecent, 0));
+        upsertAction(app, Action(std::move(items), "Smoke Cancel", "", kSmokeCancel, 0));
+    }
+
+    if (app.loadedMenus.empty())
+    {
+        app.loadedMenus.push_back(
+            new Menu(0, 0, false, false, true, "Smoke Menu", {}, "menu-smoke"));
+    }
+
+    Menu *menu = app.loadedMenus.front();
+    if (menu == nullptr)
+    {
+        std::cerr << "smoke fixtures: front menu null\n";
+        return false;
+    }
+
+    while (menu->actionCount() > 0)
+    {
+        menu->removeAction(0);
+    }
+
+    // Slots: 0 alpha, 1 beta, 2 gamma, 3 cancel, 4 nth-recent, 5 nth-frequent
+    menu->addActionId(-1, kSmokeAlpha);
+    menu->addActionId(-1, kSmokeBeta);
+    menu->addActionId(-1, kSmokeGamma);
+    menu->addActionId(-1, kSmokeCancel);
+    menu->addActionId(-1, kSmokeNthRecent);
+    menu->addActionId(-1, kSmokeNthFrequent);
+
+    if (app.getActiveMenu() != menu)
+    {
+        // showGui sets activeMenu; keep the overlay dormant via hide afterward.
+        app.showGui(menu);
+        app.hideGui();
+    }
+
+    if (app.findActionById(kSmokeAlpha) == nullptr || app.getActiveMenu() == nullptr
+        || app.getActiveMenu()->actionCount() < 6)
+    {
+        std::cerr << "smoke fixtures: install incomplete\n";
+        return false;
+    }
+
+    return true;
+}
+
+void drainScheduler(App &app)
+{
+    app.scheduler().cancelAll();
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
 }
 
 bool testRecentAndFrequentRanking()
@@ -174,26 +277,18 @@ bool testMaxRecentCapAndEmptyIgnored()
 bool testAppLookupAndActionItemSchedule()
 {
     App &app = App::getInstance();
-
-    const Action *calc = app.findActionById("action-menu-example-calculator");
-    const Action *paint = app.findActionById("action-menu-example-paint");
-    const Action *note = app.findActionById("action-menu-example-notepad");
-    if (calc == nullptr || paint == nullptr || note == nullptr)
+    if (!installSmokeFixtures(app))
     {
-        std::cerr << "app_lookup: default config actions missing\n";
         return false;
     }
 
     // Seed history the same way wheel launches do: executeAction records use.
-    // Menu order: calculator(0), paint(1), notepad(2), ...
-    app.executeAction(1); // paint
-    app.executeAction(2); // notepad
-    app.executeAction(0); // calculator (most recent)
-    app.executeAction(0); // calculator again (most frequent)
-
-    // Stop any macros started by executeAction so we don't leave processes around.
-    app.scheduler().cancelAll();
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    // Menu order: alpha(0), beta(1), gamma(2), ...
+    app.executeAction(1); // beta
+    app.executeAction(2); // gamma
+    app.executeAction(0); // alpha (most recent)
+    app.executeAction(0); // alpha again (most frequent)
+    drainScheduler(app);
 
     Action *r1 = app.nthRecentAction(1);
     Action *r2 = app.nthRecentAction(2);
@@ -203,27 +298,24 @@ bool testAppLookupAndActionItemSchedule()
         std::cerr << "app_lookup: recent pointers null\n";
         return false;
     }
-    if (r1->getId() != "action-menu-example-calculator"
-        || r2->getId() != "action-menu-example-notepad"
-        || r3->getId() != "action-menu-example-paint")
+    if (r1->getId() != kSmokeAlpha || r2->getId() != kSmokeGamma || r3->getId() != kSmokeBeta)
     {
-        std::cerr << "app_lookup: recent order wrong: "
-                  << r1->getId() << ", " << r2->getId() << ", " << r3->getId() << '\n';
+        std::cerr << "app_lookup: recent order wrong: " << r1->getId() << ", " << r2->getId()
+                  << ", " << r3->getId() << '\n';
         return false;
     }
 
     Action *f1 = app.nthFrequentAction(1);
-    if (f1 == nullptr || f1->getId() != "action-menu-example-calculator")
+    if (f1 == nullptr || f1->getId() != kSmokeAlpha)
     {
-        std::cerr << "app_lookup: frequent #1 should be calculator\n";
+        std::cerr << "app_lookup: frequent #1 should be alpha\n";
         return false;
     }
 
-    // ActionItems should schedule copies of those library Actions.
     ActionExecutionContext ctx{std::make_unique<Action>(
         std::vector<std::unique_ptr<ActionItem>>{}, "host", "", "host", 0)};
 
-    AI_nthRecent recentItem{1};
+    AI_NthRecent recentItem{1};
     if (recentItem.execute(ctx).type() != ExecuteResult::Type::Continue)
     {
         std::cerr << "nth_recent_item: expected Continue\n";
@@ -232,14 +324,14 @@ bool testAppLookupAndActionItemSchedule()
     {
         auto scheduled = ctx.takeScheduledActions();
         if (scheduled.size() != 1 || !scheduled[0].action
-            || scheduled[0].action->getId() != "action-menu-example-calculator")
+            || scheduled[0].action->getId() != kSmokeAlpha)
         {
-            std::cerr << "nth_recent_item: did not schedule calculator copy\n";
+            std::cerr << "nth_recent_item: did not schedule alpha copy\n";
             return false;
         }
     }
 
-    AI_nthFrequent frequentItem{1};
+    AI_NthFrequent frequentItem{1};
     if (frequentItem.execute(ctx).type() != ExecuteResult::Type::Continue)
     {
         std::cerr << "nth_frequent_item: expected Continue\n";
@@ -248,14 +340,14 @@ bool testAppLookupAndActionItemSchedule()
     {
         auto scheduled = ctx.takeScheduledActions();
         if (scheduled.size() != 1 || !scheduled[0].action
-            || scheduled[0].action->getId() != "action-menu-example-calculator")
+            || scheduled[0].action->getId() != kSmokeAlpha)
         {
-            std::cerr << "nth_frequent_item: did not schedule calculator copy\n";
+            std::cerr << "nth_frequent_item: did not schedule alpha copy\n";
             return false;
         }
     }
 
-    AI_nthRecent miss{99};
+    AI_NthRecent miss{99};
     if (miss.execute(ctx).type() != ExecuteResult::Type::Continue)
     {
         return false;
@@ -266,7 +358,7 @@ bool testAppLookupAndActionItemSchedule()
         return false;
     }
 
-    AI_nthRecent bad{0};
+    AI_NthRecent bad{0};
     if (bad.execute(ctx).type() != ExecuteResult::Type::Continue)
     {
         return false;
@@ -283,57 +375,62 @@ bool testAppLookupAndActionItemSchedule()
 bool testSchedulerRunsScheduledNthTarget()
 {
     App &app = App::getInstance();
-    Action *target = app.nthRecentAction(1);
-    if (target == nullptr)
+    if (!installSmokeFixtures(app))
     {
-        std::cerr << "scheduler_nth: need prior recent history from previous test\n";
         return false;
     }
 
-    // Build a host Action whose only item is nth-recent(1). The scheduled copy
-    // is the library Action; we only assert the host completes and schedules
-    // were ingested (no hang / deadlock). Nested launch_app may run — cancel soon.
+    app.executeAction(0); // ensure a recent non-meta Action exists
+    drainScheduler(app);
+
+    if (app.nthRecentAction(1) == nullptr)
+    {
+        std::cerr << "scheduler_nth: failed to seed recent history\n";
+        return false;
+    }
+
     std::vector<std::unique_ptr<ActionItem>> items;
-    items.push_back(std::make_unique<AI_nthRecent>(1));
+    items.push_back(std::make_unique<AI_NthRecent>(1));
     auto host = std::make_unique<Action>(std::move(items), "nth-host", "", "nth-host", 0);
 
     Scheduler &scheduler = app.scheduler();
     scheduler.submit(std::move(host));
     std::this_thread::sleep_for(std::chrono::milliseconds(150));
-    scheduler.cancelAll();
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    drainScheduler(app);
     return true;
 }
 
 bool testHistoryMetaActionsDoNotLoop()
 {
     App &app = App::getInstance();
-
-    const Action *recentHelper = app.findActionById("action-nth-recent-1");
-    const Action *frequentHelper = app.findActionById("action-nth-frequent-1");
-    const Action *cancelHelper = app.findActionById("action-cancel-latest");
-    const Action *calc = app.findActionById("action-menu-example-calculator");
-    if (recentHelper == nullptr || frequentHelper == nullptr || cancelHelper == nullptr
-        || calc == nullptr)
+    if (!installSmokeFixtures(app))
     {
-        std::cerr << "meta_loop: expected helper/library actions in default config\n";
+        return false;
+    }
+
+    const Action *recentHelper = app.findActionById(kSmokeNthRecent);
+    const Action *frequentHelper = app.findActionById(kSmokeNthFrequent);
+    const Action *cancelHelper = app.findActionById(kSmokeCancel);
+    const Action *alpha = app.findActionById(kSmokeAlpha);
+    if (recentHelper == nullptr || frequentHelper == nullptr || cancelHelper == nullptr
+        || alpha == nullptr)
+    {
+        std::cerr << "meta_loop: smoke helper/library actions missing\n";
         return false;
     }
 
     // Seed a normal most-recent, then launch helpers. Helpers must not enter history.
-    app.executeAction(0); // calculator
-    app.scheduler().cancelAll();
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    app.executeAction(0); // alpha
+    drainScheduler(app);
 
-    // Menu: ... ab-chord(4), cancel(5), most-recent(6), most-frequent(7)
-    app.executeAction(6);
-    app.executeAction(7);
+    // Slots: cancel(3), nth-recent(4), nth-frequent(5)
+    app.executeAction(4);
     app.executeAction(5);
-    app.scheduler().cancelAll();
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    app.executeAction(3);
+    drainScheduler(app);
 
     Action *r1 = app.nthRecentAction(1);
-    if (r1 == nullptr || r1->getId() != "action-menu-example-calculator")
+    if (r1 == nullptr || r1->getId() != kSmokeAlpha)
     {
         std::cerr << "meta_loop: helpers were recorded as most recent\n";
         return false;
@@ -345,10 +442,9 @@ bool testHistoryMetaActionsDoNotLoop()
         return false;
     }
 
-    // Even if polluted history somehow listed the helper first, lookup must skip it.
     ActionExecutionContext ctx{std::make_unique<Action>(
-        std::vector<std::unique_ptr<ActionItem>>{}, "host", "", "action-nth-recent-1", 0)};
-    AI_nthRecent item{1};
+        std::vector<std::unique_ptr<ActionItem>>{}, "host", "", kSmokeNthRecent, 0)};
+    AI_NthRecent item{1};
     if (item.execute(ctx).type() != ExecuteResult::Type::Continue)
     {
         std::cerr << "meta_loop: nth_recent execute failed\n";
@@ -356,7 +452,7 @@ bool testHistoryMetaActionsDoNotLoop()
     }
     auto scheduled = ctx.takeScheduledActions();
     if (scheduled.size() != 1 || !scheduled[0].action
-        || scheduled[0].action->getId() == "action-nth-recent-1")
+        || scheduled[0].action->getId() == kSmokeNthRecent)
     {
         std::cerr << "meta_loop: nth_recent scheduled itself\n";
         return false;
@@ -369,20 +465,11 @@ bool testHistoryMetaActionsDoNotLoop()
 
 int main(int argc, char **argv)
 {
-    QApplication app(argc, argv);
+    // Clear history beside config before App loads it so stale user history
+    // cannot steal nth-recent ranks from the fixture ids.
+    writeHistoryFile(historyPathBesideConfig(), QJsonArray{}, QJsonObject{});
 
-    // Seed history before first App access so startup load is deterministic if
-    // the singleton was never created; App may already exist from linking order,
-    // so executeAction-based seeding in the App tests remains the source of truth.
-    {
-        QJsonArray recent;
-        recent.append("action-menu-example-notepad");
-        recent.append("action-menu-example-paint");
-        QJsonObject frequent;
-        frequent.insert("action-menu-example-notepad", 1);
-        frequent.insert("action-menu-example-paint", 1);
-        writeHistoryFile(historyPathBesideConfig(), recent, frequent);
-    }
+    QApplication app(argc, argv);
 
     const std::pair<const char *, bool (*)()> tests[] = {
         {"ranking", testRecentAndFrequentRanking},

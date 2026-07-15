@@ -88,7 +88,7 @@ ActionItem *ActionExecutionContext::currentItem() noexcept
     {
         return nullptr;
     }
-    return m_action->items()[m_currentIndex].get();
+    return m_action->getItems()[m_currentIndex].get();
 }
 
 const ActionItem *ActionExecutionContext::currentItem() const noexcept
@@ -97,7 +97,7 @@ const ActionItem *ActionExecutionContext::currentItem() const noexcept
     {
         return nullptr;
     }
-    return m_action->items()[m_currentIndex].get();
+    return m_action->getItems()[m_currentIndex].get();
 }
 
 size_t ActionExecutionContext::currentIndex() const noexcept
@@ -115,7 +115,7 @@ void ActionExecutionContext::advance() noexcept
 
 bool ActionExecutionContext::finished() const noexcept
 {
-    return m_currentIndex >= m_action->items().size();
+    return m_currentIndex >= m_action->getItems().size();
 }
 
 void ActionExecutionContext::scheduleAction(std::unique_ptr<Action> action,

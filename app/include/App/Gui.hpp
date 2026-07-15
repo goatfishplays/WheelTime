@@ -1,12 +1,6 @@
 /**
  * @file Gui.hpp
- * @author your name (you@domain.com)
- * @brief The main gui interface class
- * @version 0.1
- * @date 2026-07-09
- *
- * @copyright Copyright (c) 2026
- *
+ * @brief Main launcher GUI host for the radial wheel.
  */
 #pragma once
 
@@ -55,6 +49,10 @@ namespace Application
         void enterDormantOverlay();
         /// @brief Whether the launcher visuals are currently visible.
         bool isLauncherVisible() const;
+        /// @brief Seeds Distance-mode selection from the current cursor position.
+        void refreshSelectionFromCursor();
+        /// @brief Currently selected wheel slot, or -1 when none.
+        [[nodiscard]] int selectedActionIndex() const;
 
     signals:
         /// @brief Emitted when the launcher should be dismissed with Escape.

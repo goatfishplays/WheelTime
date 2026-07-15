@@ -80,9 +80,11 @@ ExecuteResult AI_Keystroke::execute(ActionExecutionContext &context)
     auto delayed = std::make_unique<Action>(
         std::move(delayedItems), "key-hold-release", "", "key-hold-release", 0);
     delayed->setCancelable(false);
+    // Start now; AI_Delay inside holds for `holdMs`. Do not also wake at
+    // now+hold or the release waits 2x holdDuration.
     context.scheduleAction(
         std::move(delayed),
-        std::chrono::steady_clock::now() + hold,
+        std::chrono::steady_clock::now(),
         /*removeIfParentCancelled=*/true);
 
     std::cerr << "[AI_Keystroke] scheduled delayed keyUp + cancel-flush registered\n";

@@ -44,8 +44,6 @@ add_library(App
     include/App/ActionExecutionContext.hpp
     src/ExecuteResult.cpp
     include/App/ExecuteResult.hpp
-    src/SynchronousActionRunner.cpp
-    include/App/SynchronousActionRunner.hpp
     include/App/ThreadSafeQueue.hpp
     src/WorkerPool.cpp
     include/App/WorkerPool.hpp

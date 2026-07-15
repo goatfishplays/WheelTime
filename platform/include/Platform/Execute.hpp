@@ -10,7 +10,7 @@
  */
 
 #pragma once
-#include <Platform/Inputs.hpp>
+#include "Platform/Inputs.hpp"
 #include <memory>
 #include <string>
 
@@ -48,6 +48,10 @@ namespace Platform
         void executeKey(InputBind key);
         void keyDown(InputBind key);
         void keyUp(InputBind key);
+        /// @brief Press modifier keys only (same mask as InputBind::mod).
+        void modifiersDown(int mod);
+        /// @brief Release modifier keys only (same mask as InputBind::mod).
+        void modifiersUp(int mod);
         /// @brief Mouse button press/release. `button`: 0 left, 1 right, 2 middle.
         void mouseButton(int button, bool down);
         void executeScript(std::string filepath);

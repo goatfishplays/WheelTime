@@ -1,229 +1,95 @@
 {
     "actions": [
         {
-            "channel": 1,
-            "id": "action-menu-example-calculator",
-            "items": [
-                {
-                    "customTarget": "",
-                    "presetId": "calculator",
-                    "type": "launch_app"
-                },
-                {
-                    "duration": 5000,
-                    "type": "delay"
-                },
-                {
-                    "customTarget": "explorer.exe",
-                    "presetId": "explorer",
-                    "type": "launch_app"
-                }
-            ],
-            "name": "calculator"
-        },
-        {
             "channel": 0,
-            "icon": "E:/Media/Images/Wallpapers/brad.png",
-            "id": "action-menu-example-paint",
+            "id": "action-new-action-2",
             "items": [
                 {
-                    "customTarget": "",
-                    "presetId": "paint",
-                    "type": "launch_app"
-                },
-                {
-                    "holdDuration": 2.4000000953674316,
-                    "keycode": 74,
-                    "modifiers": 2,
+                    "holdDuration": 0,
+                    "keycode": 112,
+                    "modifiers": 4,
                     "proceed": false,
                     "type": "hotkey"
                 }
             ],
-            "name": "paint"
+            "name": "Discord Mute"
         },
         {
             "channel": 0,
-            "id": "action-menu-example-notepad",
+            "id": "action-new-action-5",
             "items": [
                 {
-                    "path": "notepad.exe",
-                    "type": "script"
+                    "holdDuration": 0,
+                    "keycode": 112,
+                    "modifiers": 6,
+                    "proceed": false,
+                    "type": "hotkey"
                 }
             ],
-            "name": "notepad"
+            "name": "Discord Deafen"
         },
         {
             "channel": 0,
             "id": "action-new-action",
             "items": [
                 {
-                    "duration": 0,
-                    "type": "delay"
-                }
-            ],
-            "name": "New Action a"
-        },
-        {
-            "channel": 0,
-            "id": "action-cancel-latest",
-            "items": [
-                {
-                    "channel": 0,
-                    "level": "latest",
-                    "type": "cancel"
-                }
-            ],
-            "name": "Cancel Latest"
-        },
-        {
-            "channel": 0,
-            "id": "action-nth-recent-1",
-            "items": [
-                {
-                    "n": 1,
-                    "type": "nth_recent"
-                }
-            ],
-            "name": "Most Recent"
-        },
-        {
-            "channel": 0,
-            "id": "action-nth-frequent-1",
-            "items": [
-                {
-                    "n": 1,
-                    "type": "nth_frequent"
-                }
-            ],
-            "name": "Most Frequent"
-        },
-        {
-            "channel": 0,
-            "icon": "E:/Media/Images/Wallpapers/brad.png",
-            "id": "action-new-action-2",
-            "items": [
-                {
-                    "holdDuration": 10,
-                    "keycode": 65,
+                    "holdDuration": 0,
+                    "keycode": 69,
                     "modifiers": 0,
-                    "proceed": true,
+                    "proceed": false,
                     "type": "hotkey"
-                },
-                {
-                    "duration": 1000,
-                    "type": "delay"
-                },
-                {
-                    "holdDuration": 5,
-                    "keycode": 66,
-                    "modifiers": 0,
-                    "proceed": true,
-                    "type": "hotkey"
-                },
-                {
-                    "duration": 5000,
-                    "type": "delay"
                 }
             ],
-            "name": "AB"
+            "name": "Test Action"
         },
         {
-            "channel": 1,
+            "channel": 0,
             "id": "action-new-action-3",
             "items": [
                 {
                     "holdDuration": 0,
-                    "keycode": 67,
-                    "modifiers": 2,
-                    "proceed": true,
-                    "type": "hotkey"
-                },
-                {
-                    "duration": 1000,
-                    "type": "delay"
-                },
-                {
-                    "holdDuration": 2,
-                    "keycode": 86,
-                    "modifiers": 6,
-                    "proceed": true,
+                    "keycode": 179,
+                    "modifiers": 0,
+                    "proceed": false,
                     "type": "hotkey"
                 }
             ],
-            "name": "Copy pase"
+            "name": "Media Pause"
         },
         {
             "channel": 0,
-            "icon": "E:/Media/Images/PixelArt/torpinFastFetch.png",
             "id": "action-new-action-4",
             "items": [
                 {
-                    "type": "close"
-                },
-                {
-                    "button": 0,
-                    "holdDuration": 0.10000000149011612,
-                    "proceed": false,
-                    "type": "mouse_button"
-                },
-                {
-                    "button": 0,
-                    "holdDuration": 0.10000000149011612,
-                    "proceed": false,
-                    "type": "mouse_button"
-                },
-                {
-                    "button": 0,
-                    "holdDuration": 0.10000000149011612,
-                    "proceed": false,
-                    "type": "mouse_button"
-                },
-                {
-                    "button": 0,
-                    "holdDuration": 0.10000000149011612,
-                    "proceed": false,
-                    "type": "mouse_button"
-                },
-                {
-                    "button": 0,
-                    "holdDuration": 0.10000000149011612,
-                    "proceed": false,
-                    "type": "mouse_button"
-                },
-                {
-                    "button": 0,
-                    "holdDuration": 0.10000000149011612,
-                    "proceed": false,
-                    "type": "mouse_button"
+                    "customTarget": "",
+                    "presetId": "calculator",
+                    "type": "launch_app"
                 }
             ],
-            "name": "SpeedClicks"
+            "name": "New Action"
         }
     ],
     "menus": [
         {
             "actionIds": [
                 "action-new-action-2",
-                "action-cancel-latest",
-                "action-nth-recent-1",
-                "action-new-action-3",
-                "action-new-action-4",
-                "action-menu-example-calculator",
-                "action-menu-example-calculator",
-                "action-menu-example-calculator"
+                "action-new-action-5",
+                "action-new-action",
+                "action-new-action-3"
             ],
-            "executeOnRelease": false,
+            "centerMouseOnOpen": true,
+            "executeOnRelease": true,
             "exitOnAction": true,
             "id": "menu-example",
             "name": "GAMBLING",
-            "triggerMod": 0,
-            "triggerVk": 0
+            "triggerMod": 6,
+            "triggerVk": 9
         },
         {
             "actionIds": [
-                "action-menu-example-notepad",
-                "action-menu-example-calculator"
+                "action-new-action-2"
             ],
+            "centerMouseOnOpen": true,
             "executeOnRelease": false,
             "exitOnAction": false,
             "id": "menu-new-menu",
@@ -234,6 +100,7 @@
         {
             "actionIds": [
             ],
+            "centerMouseOnOpen": true,
             "executeOnRelease": false,
             "exitOnAction": false,
             "id": "menu-new-menu-2",

@@ -11,10 +11,10 @@ namespace Application
 {
 
 /// @brief Schedules a copy of the nth most recently wheel-launched Action (1-based).
-class AI_nthRecent : public ActionItem
+class AI_NthRecent : public ActionItem
 {
 public:
-    explicit AI_nthRecent(int n = 1);
+    explicit AI_NthRecent(int n = 1);
 
     int n = 1; ///< 1 = most recent.
 

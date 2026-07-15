@@ -144,20 +144,23 @@ namespace
                 if (itemObject.contains("down") && !itemObject.value("down").toBool(true))
                 {
                     items.push_back(std::make_unique<AI_MouseButtonRelease>(
-                        itemObject.value("button").toInt(0)));
+                        itemObject.value("button").toInt(0),
+                        itemObject.value("modifiers").toInt(0)));
                 }
                 else
                 {
                     items.push_back(std::make_unique<AI_MouseButton>(
                         itemObject.value("button").toInt(0),
                         static_cast<float>(itemObject.value("holdDuration").toDouble(0.0)),
-                        itemObject.value("proceed").toBool(false)));
+                        itemObject.value("proceed").toBool(false),
+                        itemObject.value("modifiers").toInt(0)));
                 }
             }
             else if (type == "mouse_button_release")
             {
                 items.push_back(std::make_unique<AI_MouseButtonRelease>(
-                    itemObject.value("button").toInt(0)));
+                    itemObject.value("button").toInt(0),
+                    itemObject.value("modifiers").toInt(0)));
             }
             else if (type == "key_release")
             {
@@ -168,7 +171,7 @@ namespace
             else if (type == "cancel")
             {
                 const QString level = itemObject.value("level").toString("latest");
-                CancelLevel cancelLevel = CancelLevel::Latest;
+                CancelLevel cancelLevel = CancelLevel::MostRecent;
                 if (level == "channel")
                 {
                     cancelLevel = CancelLevel::Channel;
@@ -179,8 +182,8 @@ namespace
                 }
                 else
                 {
-                    // "latest" or legacy "action"
-                    cancelLevel = CancelLevel::Latest;
+                    // Wire format: "latest" (canonical). Also accept "most_recent" / legacy "action".
+                    cancelLevel = CancelLevel::MostRecent;
                 }
                 items.push_back(std::make_unique<AI_Cancel>(
                     cancelLevel,
@@ -188,11 +191,11 @@ namespace
             }
             else if (type == "nth_recent")
             {
-                items.push_back(std::make_unique<AI_nthRecent>(itemObject.value("n").toInt(1)));
+                items.push_back(std::make_unique<AI_NthRecent>(itemObject.value("n").toInt(1)));
             }
             else if (type == "nth_frequent")
             {
-                items.push_back(std::make_unique<AI_nthFrequent>(itemObject.value("n").toInt(1)));
+                items.push_back(std::make_unique<AI_NthFrequent>(itemObject.value("n").toInt(1)));
             }
             else if (type == "socket")
             {
@@ -275,6 +278,7 @@ namespace
                 menuObject.value("triggerVk").toInt(0),
                 menuObject.value("executeOnRelease").toBool(false),
                 menuObject.value("exitOnAction").toBool(false),
+                menuObject.value("centerMouseOnOpen").toBool(true),
                 menuObject.value("name").toString("Unnamed Menu").toStdString(),
                 actionIds,
                 menuObject.value("id").toString().toStdString()));
@@ -325,6 +329,7 @@ namespace
                 0,
                 menuObject.value("executeOnRelease").toBool(false),
                 menuObject.value("exitOnAction").toBool(false),
+                menuObject.value("centerMouseOnOpen").toBool(true),
                 menuObject.value("name").toString("Unnamed Menu").toStdString(),
                 menuActionIds,
                 menuId));
@@ -373,12 +378,14 @@ namespace
         case ActionItemKind::MouseButton:
             itemObject.insert("type", "mouse_button");
             itemObject.insert("button", static_cast<const AI_MouseButton &>(item).button);
+            itemObject.insert("modifiers", static_cast<const AI_MouseButton &>(item).modifiers);
             itemObject.insert("holdDuration", static_cast<const AI_MouseButton &>(item).holdDuration);
             itemObject.insert("proceed", static_cast<const AI_MouseButton &>(item).proceed);
             break;
         case ActionItemKind::MouseButtonRelease:
             itemObject.insert("type", "mouse_button_release");
             itemObject.insert("button", static_cast<const AI_MouseButtonRelease &>(item).button);
+            itemObject.insert("modifiers", static_cast<const AI_MouseButtonRelease &>(item).modifiers);
             break;
         case ActionItemKind::KeyRelease:
             itemObject.insert("type", "key_release");
@@ -398,7 +405,7 @@ namespace
             case CancelLevel::All:
                 itemObject.insert("level", "all");
                 break;
-            case CancelLevel::Latest:
+            case CancelLevel::MostRecent:
             default:
                 itemObject.insert("level", "latest");
                 itemObject.insert("channel", static_cast<int>(cancel.channel));
@@ -408,11 +415,11 @@ namespace
         }
         case ActionItemKind::NthRecent:
             itemObject.insert("type", "nth_recent");
-            itemObject.insert("n", static_cast<const AI_nthRecent &>(item).n);
+            itemObject.insert("n", static_cast<const AI_NthRecent &>(item).n);
             break;
         case ActionItemKind::NthFrequent:
             itemObject.insert("type", "nth_frequent");
-            itemObject.insert("n", static_cast<const AI_nthFrequent &>(item).n);
+            itemObject.insert("n", static_cast<const AI_NthFrequent &>(item).n);
             break;
         case ActionItemKind::Socket:
         {
@@ -529,6 +536,7 @@ bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appC
         menuObject.insert("name", QString::fromStdString(menu->getName()));
         menuObject.insert("executeOnRelease", menu->executeOnRelease);
         menuObject.insert("exitOnAction", menu->exitOnAction);
+        menuObject.insert("centerMouseOnOpen", menu->centerMouseOnOpen);
         menuObject.insert("triggerMod", menu->triggerMod);
         menuObject.insert("triggerVk", menu->triggerVk);
 

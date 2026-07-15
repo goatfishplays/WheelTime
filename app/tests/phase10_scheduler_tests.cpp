@@ -1505,7 +1505,7 @@ bool testCancelActionItemStopsTail()
     target.push_back(std::make_unique<CountingItem>(&targetTail));
 
     std::vector<std::unique_ptr<ActionItem>> canceler;
-    canceler.push_back(std::make_unique<AI_Cancel>(CancelLevel::Latest, 0));
+    canceler.push_back(std::make_unique<AI_Cancel>(CancelLevel::MostRecent, 0));
     canceler.push_back(std::make_unique<CountingItem>(&cancelerDone));
 
     Scheduler scheduler{4};
@@ -1555,7 +1555,7 @@ bool testCancelLatestRespectsChannel()
 
     std::vector<std::unique_ptr<ActionItem>> canceler;
     // Cancel most recent on channel 1 only (ch2 submitted later globally).
-    canceler.push_back(std::make_unique<AI_Cancel>(CancelLevel::Latest, 1));
+    canceler.push_back(std::make_unique<AI_Cancel>(CancelLevel::MostRecent, 1));
 
     Scheduler scheduler{4};
     scheduler.submit(makeAction(std::move(onCh1), 1));

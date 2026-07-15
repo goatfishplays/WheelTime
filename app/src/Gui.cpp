@@ -191,3 +191,20 @@ bool Gui::isLauncherVisible() const
 {
     return m_launcherVisible;
 }
+
+void Gui::refreshSelectionFromCursor()
+{
+    if (m_radialMenu != nullptr)
+    {
+        m_radialMenu->updateSelectionFromGlobalMousePosition(QCursor::pos());
+    }
+}
+
+int Gui::selectedActionIndex() const
+{
+    if (m_radialMenu == nullptr)
+    {
+        return -1;
+    }
+    return m_radialMenu->getSelectedIndex();
+}

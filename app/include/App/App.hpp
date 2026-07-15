@@ -1,12 +1,6 @@
 /**
  * @file App.hpp
- * @author your name (you@domain.com)
- * @brief Contains `App` class, controls state of app
- * @version 0.1
- * @date 2026-06-29
- *
- * @copyright Copyright (c) 2026
- *
+ * @brief Application singleton: menus, actions, input, and scheduler ownership.
  */
 #pragma once
 
@@ -25,6 +19,8 @@
 #include "App/Scheduler.hpp"
 
 #include <memory>
+
+class QTimer;
 
 namespace Application
 {
@@ -133,6 +129,12 @@ namespace Application
         void configureOverlayForCursor();
         /// @brief Deletes and clears the currently loaded heap-allocated menus.
         void clearMenus();
+        /// @brief Starts polling for hotkey chord release (execute-on-release mode).
+        void armExecuteOnRelease(int mod, int vk);
+        /// @brief Stops release polling without executing.
+        void disarmExecuteOnRelease();
+        /// @brief QTimer callback: execute current selection once the chord is up.
+        void onExecuteOnReleaseTick();
         App();
         ~App();
 
@@ -145,14 +147,19 @@ namespace Application
         ActionHistory m_actionHistory;
         /// @brief Owns worker + scheduler threads for Action execution.
         std::unique_ptr<Scheduler> m_scheduler;
+        /// @brief Polls GetAsyncKeyState while waiting for hotkey release.
+        QTimer *m_releaseWatchTimer{nullptr};
+        bool m_executeOnReleaseArmed{false};
+        int m_releaseWatchMod{0};
+        int m_releaseWatchVk{0};
 
         /// @brief Path of action_history.json next to the menu config.
         [[nodiscard]] QString historyPath() const;
         /// @brief Drops history entries that no longer exist in the library.
         void pruneActionHistory();
         /// @brief Persists action history to disk (best-effort).
-        void saveActionHistory(); 
-    /// @brief Application level configuration like global hotkey.
-    AppConfig m_appConfig;
+        void saveActionHistory();
+        /// @brief Application level configuration like global hotkey.
+        AppConfig m_appConfig;
     };
 }

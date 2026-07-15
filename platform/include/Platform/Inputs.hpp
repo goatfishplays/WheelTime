@@ -46,6 +46,9 @@ namespace Platform
          */
         Vec2 getAbsoluteMousePosition();
 
+        /// @brief Moves the system cursor to an absolute screen position.
+        void setAbsoluteMousePosition(Vec2 position);
+
         // /**
         //  * @brief Get mouse position relative to window,
         //  *
@@ -75,6 +78,25 @@ namespace Platform
          *
          */
         static bool isHotkeyMessage(void* message, int& hotkeyIdOut);
+
+        /// @brief True if @p vk is currently physically down.
+        [[nodiscard]] bool isVirtualKeyDown(int vk) const;
+
+        /**
+         * @brief True if the hotkey chord is still held.
+         *
+         * Requires @p vk down and every modifier bit in @p mod still down.
+         * @p mod uses the same flags as RegisterHotKey (without MOD_NOREPEAT).
+         */
+        [[nodiscard]] bool isChordHeld(int mod, int vk) const;
+
+        /**
+         * @brief True when the primary key and every required modifier are up.
+         *
+         * Used for execute-on-release so injected keys are not combined with
+         * leftover Ctrl/Shift/Alt/Win from the launcher chord.
+         */
+        [[nodiscard]] bool isChordFullyReleased(int mod, int vk) const;
 
     private:
         /**
