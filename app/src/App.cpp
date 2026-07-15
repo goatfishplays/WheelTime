@@ -273,7 +273,9 @@ void App::onExecuteOnReleaseTick()
         return;
     }
 
-    if (m_inputRcvr.isChordHeld(m_releaseWatchMod, m_releaseWatchVk))
+    // Wait until primary key AND every launcher modifier are up. Otherwise
+    // releasing only Tab on Ctrl+Shift+Tab would inject keys with Ctrl/Shift still held.
+    if (!m_inputRcvr.isChordFullyReleased(m_releaseWatchMod, m_releaseWatchVk))
     {
         return;
     }
@@ -549,6 +551,13 @@ void App::executeAction(int actionInd)
     {
         m_actionHistory.recordUse(action->getId());
         saveActionHistory();
+    }
+
+    // Clear leftover launcher modifiers before inject (click-while-holding path).
+    // Release-execute also waits for a full physical chord-up; this is the safety net.
+    if (activeMenu->triggerMod != 0)
+    {
+        executor.modifiersUp(activeMenu->triggerMod);
     }
 
     // Copy into the scheduler so the library Action stays editable/reusable.

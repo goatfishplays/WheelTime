@@ -90,6 +90,14 @@ namespace Platform
          */
         [[nodiscard]] bool isChordHeld(int mod, int vk) const;
 
+        /**
+         * @brief True when the primary key and every required modifier are up.
+         *
+         * Used for execute-on-release so injected keys are not combined with
+         * leftover Ctrl/Shift/Alt/Win from the launcher chord.
+         */
+        [[nodiscard]] bool isChordFullyReleased(int mod, int vk) const;
+
     private:
         /**
          * @brief Contains additional memnber variables if needed

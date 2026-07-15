@@ -119,25 +119,36 @@ void appendModifierDowns(std::vector<INPUT> &inputs, int mod)
     if (mod & 0x0008) // MOD_WIN
         pushKeyboardInput(inputs, VK_LWIN);
     if (mod & 0x0002) // MOD_CONTROL
-        pushKeyboardInput(inputs, VK_CONTROL);
+        pushKeyboardInput(inputs, VK_LCONTROL);
     if (mod & 0x0001) // MOD_ALT
-        pushKeyboardInput(inputs, VK_MENU);
+        pushKeyboardInput(inputs, VK_LMENU);
     if (mod & 0x0004) // MOD_SHIFT
         pushKeyboardInput(inputs, VK_LSHIFT);
-        // pushKeyboardInput(inputs, VK_SHIFT);
 }
 
 void appendModifierUps(std::vector<INPUT> &inputs, int mod)
 {
+    // Release both left/right so a physical RCtrl/RShift leftover is cleared.
     if (mod & 0x0004)
-        // pushKeyboardInput(inputs, VK_SHIFT, KEYEVENTF_KEYUP);
+    {
         pushKeyboardInput(inputs, VK_LSHIFT, KEYEVENTF_KEYUP);
+        pushKeyboardInput(inputs, VK_RSHIFT, KEYEVENTF_KEYUP);
+    }
     if (mod & 0x0001)
-        pushKeyboardInput(inputs, VK_MENU, KEYEVENTF_KEYUP);
+    {
+        pushKeyboardInput(inputs, VK_LMENU, KEYEVENTF_KEYUP);
+        pushKeyboardInput(inputs, VK_RMENU, KEYEVENTF_KEYUP);
+    }
     if (mod & 0x0002)
-        pushKeyboardInput(inputs, VK_CONTROL, KEYEVENTF_KEYUP);
+    {
+        pushKeyboardInput(inputs, VK_LCONTROL, KEYEVENTF_KEYUP);
+        pushKeyboardInput(inputs, VK_RCONTROL, KEYEVENTF_KEYUP);
+    }
     if (mod & 0x0008)
+    {
         pushKeyboardInput(inputs, VK_LWIN, KEYEVENTF_KEYUP);
+        pushKeyboardInput(inputs, VK_RWIN, KEYEVENTF_KEYUP);
+    }
 }
 
 struct HostPort
@@ -738,7 +749,7 @@ public:
             return;
         }
         std::vector<INPUT> inputs;
-        inputs.reserve(4);
+        inputs.reserve(8);
         appendModifierUps(inputs, mod);
         sendInputs(inputs);
     }

@@ -134,3 +134,30 @@ bool InputRcvr::isChordHeld(int mod, int vk) const
 
     return true;
 }
+
+bool InputRcvr::isChordFullyReleased(int mod, int vk) const
+{
+    if (isVkDown(vk))
+    {
+        return false;
+    }
+
+    if ((mod & 0x0001) != 0 && isVkDown(VK_MENU))
+    {
+        return false;
+    }
+    if ((mod & 0x0002) != 0 && isVkDown(VK_CONTROL))
+    {
+        return false;
+    }
+    if ((mod & 0x0004) != 0 && isVkDown(VK_SHIFT))
+    {
+        return false;
+    }
+    if ((mod & 0x0008) != 0 && (isVkDown(VK_LWIN) || isVkDown(VK_RWIN)))
+    {
+        return false;
+    }
+
+    return true;
+}
