@@ -83,10 +83,9 @@ namespace
 }
 
 SettingsWindow::SettingsWindow(QWidget *parent)
-    : QWidget(parent, Qt::Window | Qt::WindowStaysOnTopHint)
+    : QWidget(parent)
 {
     setWindowTitle("WheelTime Settings");
-    setWindowFlag(Qt::WindowCloseButtonHint, true);
     resize(1000, 620);
     setObjectName("settingsWindow");
     setAttribute(Qt::WA_DeleteOnClose, false);

@@ -19,6 +19,7 @@
 #include <QMouseEvent>
 #include <QPushButton>
 #include <QDialog>
+#include <QGridLayout>
 
 #include "App/Menu.hpp"
 #include "App/Action.hpp"
@@ -26,6 +27,8 @@
 
 namespace Application
 {
+    class SettingsWindow;
+
     /**
      * @brief Hosts the wheel widget and top-level launcher controls.
      *
@@ -47,8 +50,14 @@ namespace Application
         void enterInteractiveOverlay();
         /// @brief Hides launcher visuals and leaves the shell alive for click-through mode.
         void enterDormantOverlay();
+        /// @brief Shows the settings editor inside the overlay shell.
+        void showSettingsPanel(SettingsWindow *settingsWindow);
+        /// @brief Hides the embedded settings editor without destroying it.
+        void hideSettingsPanel();
         /// @brief Whether the launcher visuals are currently visible.
         bool isLauncherVisible() const;
+        /// @brief Whether the overlay is currently showing the embedded settings editor.
+        bool isSettingsVisible() const;
         /// @brief Seeds Distance-mode selection from the current cursor position.
         void refreshSelectionFromCursor();
         /// @brief Currently selected wheel slot, or -1 when none.
@@ -63,12 +72,21 @@ namespace Application
         void keyPressEvent(QKeyEvent *event) override;
 
     private:
+        enum class OverlayMode
+        {
+            Dormant,
+            Wheel,
+            Settings
+        };
+
         QWidget *m_overlayPanel{nullptr};
+        QWidget *m_settingsHost{nullptr};
+        QGridLayout *m_settingsHostLayout{nullptr};
         QLabel *m_titleLabel{nullptr};
         RadialMenuWidget *m_radialMenu{nullptr};
         QPushButton *m_settingsButton{nullptr};
         /// @brief Kept for now so the older UI affordance still exists visually.
         QPushButton *m_editButton{nullptr};
-        bool m_launcherVisible{false};
+        OverlayMode m_overlayMode{OverlayMode::Dormant};
     };
 }

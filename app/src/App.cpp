@@ -193,11 +193,9 @@ void App::clearMenus()
 
 void App::onHotkeyTriggered(int hotkeyId)
 {
-    // Don't fight the settings editor (overlay shell is parked while it is open).
-    if (m_settingsWindow != nullptr && m_settingsWindow->isVisible())
+    // Don't fight the settings editor while the overlay is in focusable editor mode.
+    if (gui.isSettingsVisible())
     {
-        m_settingsWindow->raise();
-        m_settingsWindow->activateWindow();
         return;
     }
 
@@ -662,21 +660,6 @@ const Scheduler &App::scheduler() const noexcept
 
 void App::showSettingsWindow()
 {
-    if (gui.isLauncherVisible())
-    {
-        hideGui();
-    }
-
-    // Soft-park the overlay: keep the Qt widget alive (no native SW_HIDE — that
-    // desyncs QWidget visibility and later crashes showGui), but clear topmost so
-    // the settings window can stay above it.
-    if (m_overlayInitialized)
-    {
-        Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
-        overlayWindow.setClickThrough(true);
-        overlayWindow.setTopmost(false);
-    }
-
     if (m_settingsWindow == nullptr)
     {
         m_settingsWindow = new SettingsWindow();
@@ -699,12 +682,25 @@ void App::showSettingsWindow()
                              } });
     }
 
+    initializeOverlay();
+    configureOverlayForCursor();
+
+    // Settings mode is intentionally different from wheel mode. The wheel must
+    // not steal keyboard focus from games/apps, but the editor has line edits,
+    // combo boxes, and hotkey recording controls that need normal focus.
+    Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
+    overlayWindow.setTransparentOverlay(true);
+    overlayWindow.setNonActivating(false);
+    overlayWindow.setClickThrough(false);
+    overlayWindow.setTopmost(true);
+
     // Pause macros while editing; resume when the window closes.
     m_scheduler->pause();
     m_settingsWindow->loadWorkingCopy(m_appConfig, actionLibrary, getMenuCopies());
-    m_settingsWindow->show();
-    m_settingsWindow->raise();
-    m_settingsWindow->activateWindow();
+    gui.showSettingsPanel(m_settingsWindow);
+    gui.show();
+    gui.raise();
+    gui.activateWindow();
 }
 
 void App::restoreOverlayAfterSettings()
@@ -716,6 +712,7 @@ void App::restoreOverlayAfterSettings()
 
     // Re-apply the dormant overlay shell styles. Avoid show()/hide() mismatches
     // with Qt by only using showNoActivate after styles are restored.
+    gui.hideSettingsPanel();
     gui.enterDormantOverlay();
     Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
     overlayWindow.setTransparentOverlay(true);
