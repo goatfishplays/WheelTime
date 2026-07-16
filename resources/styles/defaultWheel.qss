@@ -42,6 +42,12 @@ QWidget#launcherPanel QLabel {
 
 QWidget#settingsWindow {
     background-color: #d7dde5;
+    border: 1px solid #86b5dc;
+    border-radius: 12px;
+}
+
+QWidget#settingsOverlayHost {
+    background-color: rgba(12, 21, 31, 132);
 }
 
 QWidget#settingsSidebar,
@@ -107,7 +113,8 @@ QListWidget::item:selected {
 
 QLineEdit,
 QComboBox,
-QSpinBox {
+QSpinBox,
+QDoubleSpinBox {
     background-color: #ffffff;
     border: 1px solid #adc3d8;
     border-radius: 7px;
@@ -117,14 +124,16 @@ QSpinBox {
 
 QLineEdit:hover,
 QComboBox:hover,
-QSpinBox:hover {
+QSpinBox:hover,
+QDoubleSpinBox:hover {
     border-color: #82afd8;
     background-color: #fafdff;
 }
 
 QLineEdit:focus,
 QComboBox:focus,
-QSpinBox:focus {
+QSpinBox:focus,
+QDoubleSpinBox:focus {
     border: 1px solid #5d97cc;
     background-color: #ffffff;
 }

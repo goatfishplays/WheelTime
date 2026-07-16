@@ -18,6 +18,7 @@
 
 #include "App/App.hpp"
 #include "App/Action.hpp"
+#include "App/SettingsWindow.hpp"
 
 using namespace Application;
 
@@ -93,6 +94,20 @@ Gui::Gui(QWidget *parent)
     connect(m_radialMenu, &RadialMenuWidget::buttonTriggered, this, [](int index)
             { App::getInstance().executeAction(index); });
 
+    // Settings shares the long-lived overlay shell so it feels like part of
+    // WheelTime instead of an unrelated always-on-top window. It is only shown
+    // in settings mode; dormant mode still hides all graphics and becomes
+    // click-through at the native window layer.
+    m_settingsHost = new QWidget(this);
+    m_settingsHost->setObjectName("settingsOverlayHost");
+    m_settingsHost->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    root->addWidget(m_settingsHost);
+
+    m_settingsHostLayout = new QGridLayout(m_settingsHost);
+    m_settingsHostLayout->setContentsMargins(48, 36, 48, 36);
+    m_settingsHostLayout->setSpacing(0);
+    m_settingsHost->hide();
+
     enterDormantOverlay();
 }
 
@@ -103,7 +118,7 @@ void Gui::onSelectChange(int index)
 
 bool Gui::eventFilter(QObject *watched, QEvent *event)
 {
-    if (!m_launcherVisible)
+    if (m_overlayMode != OverlayMode::Wheel)
     {
         return QWidget::eventFilter(watched, event);
     }
@@ -169,7 +184,11 @@ void Gui::setMenu(const Menu &menu, const std::vector<ActionSlotVisual> &slotVis
 
 void Gui::enterInteractiveOverlay()
 {
-    m_launcherVisible = true;
+    m_overlayMode = OverlayMode::Wheel;
+    if (m_settingsHost != nullptr)
+    {
+        m_settingsHost->hide();
+    }
     if (m_overlayPanel != nullptr)
     {
         m_overlayPanel->show();
@@ -180,16 +199,68 @@ void Gui::enterInteractiveOverlay()
 
 void Gui::enterDormantOverlay()
 {
-    m_launcherVisible = false;
+    m_overlayMode = OverlayMode::Dormant;
     if (m_overlayPanel != nullptr)
     {
         m_overlayPanel->hide();
+    }
+    if (m_settingsHost != nullptr)
+    {
+        m_settingsHost->hide();
+    }
+}
+
+void Gui::showSettingsPanel(SettingsWindow *settingsWindow)
+{
+    if (settingsWindow == nullptr || m_settingsHost == nullptr || m_settingsHostLayout == nullptr)
+    {
+        return;
+    }
+
+    m_overlayMode = OverlayMode::Settings;
+    if (m_overlayPanel != nullptr)
+    {
+        m_overlayPanel->hide();
+    }
+
+    // A settings editor needs keyboard focus for text boxes and hotkey capture.
+    // App switches the native overlay out of no-activate mode before calling
+    // this method; wheel mode restores no-activate behavior afterward.
+    settingsWindow->setParent(m_settingsHost);
+    settingsWindow->setWindowFlags(Qt::Widget);
+    settingsWindow->setMaximumSize(1180, 820);
+    settingsWindow->setMinimumSize(820, 560);
+    settingsWindow->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    if (m_settingsHostLayout->indexOf(settingsWindow) < 0)
+    {
+        m_settingsHostLayout->addWidget(settingsWindow, 0, 0, Qt::AlignCenter);
+    }
+
+    m_settingsHost->show();
+    settingsWindow->show();
+    settingsWindow->setFocus();
+}
+
+void Gui::hideSettingsPanel()
+{
+    if (m_overlayMode == OverlayMode::Settings)
+    {
+        m_overlayMode = OverlayMode::Dormant;
+    }
+    if (m_settingsHost != nullptr)
+    {
+        m_settingsHost->hide();
     }
 }
 
 bool Gui::isLauncherVisible() const
 {
-    return m_launcherVisible;
+    return m_overlayMode == OverlayMode::Wheel;
+}
+
+bool Gui::isSettingsVisible() const
+{
+    return m_overlayMode == OverlayMode::Settings;
 }
 
 void Gui::refreshSelectionFromCursor()
