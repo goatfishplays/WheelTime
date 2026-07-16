@@ -154,12 +154,35 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     auto *menuForm = new QFormLayout(menuSettingsGroup);
     m_menuNameEdit = new QLineEdit(menuSettingsGroup);
     m_hotkeyRecordButton = new QPushButton("Unassigned", menuSettingsGroup);
+    m_hotkeyClearButton = new QPushButton("X", menuSettingsGroup);
+    m_hotkeyClearButton->setFixedWidth(30);
+    m_hotkeyClearButton->setCursor(Qt::PointingHandCursor);
+    m_hotkeyClearButton->setStyleSheet(
+        "QPushButton {"
+        "   color: #e53935;"
+        "   font-family: 'Segoe UI', sans-serif;"
+        "   font-weight: bold;"
+        "   font-size: 11px;"
+        "   border: 1px solid transparent;"
+        "   border-radius: 4px;"
+        "}"
+        "QPushButton:hover {"
+        "   background-color: #ffebee;"
+        "   border: 1px solid #ef9a9a;"
+        "}"
+    );
+
+    auto *hotkeyLayout = new QHBoxLayout();
+    hotkeyLayout->addWidget(m_hotkeyRecordButton);
+    hotkeyLayout->addWidget(m_hotkeyClearButton);
+    hotkeyLayout->setContentsMargins(0, 0, 0, 0);
+
     m_hotkeyRecordButton->installEventFilter(this);
     m_executeOnReleaseCheck = new QCheckBox("Execute on release", menuSettingsGroup);
     m_exitOnActionCheck = new QCheckBox("Exit on action", menuSettingsGroup);
     m_centerMouseOnOpenCheck = new QCheckBox("Center mouse on open", menuSettingsGroup);
     menuForm->addRow("Menu Name", m_menuNameEdit);
-    menuForm->addRow("Trigger Hotkey", m_hotkeyRecordButton);
+    menuForm->addRow("Trigger Hotkey", hotkeyLayout);
     menuForm->addRow("", m_executeOnReleaseCheck);
     menuForm->addRow("", m_exitOnActionCheck);
     menuForm->addRow("", m_centerMouseOnOpenCheck);
@@ -474,6 +497,15 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                     m_isRecordingHotkey = true;
                     m_hotkeyRecordButton->setText("Press any key combination...");
                     m_hotkeyRecordButton->grabKeyboard();
+                } });
+
+    connect(m_hotkeyClearButton, &QPushButton::clicked, this, [this]()
+            {
+                int index = currentMenuIndex();
+                if (index >= 0) {
+                    m_menus[index].triggerMod = 0;
+                    m_menus[index].triggerVk = 0;
+                    updateHotkeyButtonText();
                 } });
 
     connect(m_menuList, &QListWidget::currentRowChanged, this, [this](int row)
