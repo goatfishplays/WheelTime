@@ -69,7 +69,7 @@ Completed work:
 
 * Researched GUI/window options.  
 * Researched Windows API window behavior.  
-* Began building the basic launcher interface and polishing a working launcher window prototype.
+* Built the basic launcher interface and polishing a working launcher window prototype.
 
 ## **Work Completion Rate**
 
@@ -95,7 +95,7 @@ Because this is Sprint 1, there are no previous sprint averages yet. Future spri
 
 ## **Final Burnup Chart**
 
-![Sprint 1 Final Burnup Chart](WheelTime/docs/images/final-burnup-chart-s1.png)
+![Sprint 1 Final Burnup Chart](images/final-burnup-chart-s1.png)
 
 ## **Sprint 1 Summary**
 
