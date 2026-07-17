@@ -95,7 +95,7 @@ Because this is Sprint 1, there are no previous sprint averages yet. Future spri
 
 ## **Final Burnup Chart**
 
-![Sprint 1 Final Burnup Chart](WheelTime/docs/images/sprint1-final-burnup-chart.png)
+![Sprint 1 Final Burnup Chart](WheelTime/docs/images/final-burnup-chart-s1.png)
 
 ## **Sprint 1 Summary**
 
