@@ -4,11 +4,11 @@
 
 **Team Name:** Wheelest Wheels
 
-**Sprint Completion Date:** 6/25/26
+**Sprint Completion Date:** 6/30/26
 
 **Revision:** 0
 
-**Revision Date:** 6/24/26
+**Revision Date:** 6/30/26
 
 ## Sprint Goal
 
