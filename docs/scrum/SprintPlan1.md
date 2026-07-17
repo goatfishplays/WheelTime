@@ -104,7 +104,7 @@ The goal of Sprint 1 is to create the foundation for a basic Windows launcher pr
 
 ## Initial Burnup Chart
 
-![Sprint 1 Burnup Chart](images/sprint1-burnup-chart.png)
+![Sprint 1 Burnup Chart](WheelTime/docs/images/sprint1-burnup-chart.png)
 
 **Burnup Chart Notes:**
 The burnup chart tracks the total Sprint 1 scope compared to the amount of work completed over time. The planned scope begins at 60 ideal hours and stays constant unless new tasks are added. Work completed starts at 0 hours and increases as the team finishes tasks throughout the sprint.
