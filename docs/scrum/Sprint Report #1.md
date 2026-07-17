@@ -99,7 +99,7 @@ Because this is Sprint 1, there are no previous sprint averages yet. Future spri
 
 ## **Sprint 1 Summary**
 
-During Sprint 1, the team focused on setting up the foundation for Wheel Time. The sprint goal was to create a basic Windows launcher prototype with a simple interface. The team made progress on project setup, README/build documentation, C++ app-launching research, and early Windows API/GUI planning.
+During Sprint 1, the team focused on setting up the foundation for Wheel Time. The sprint goal was to create a basic Windows launcher prototype with a simple interface. The team completed project setup, README/build documentation, C++ app-launching research, and early Windows API/GUI planning.
 
 Sprint 1 also showed that the team needs clearer task ownership and more frequent scrum board updates. For Sprint 2, the team should focus on implementing quick open/close behavior, researching and using Windows API global hotkeys, and adding basic launcher actions.
 
