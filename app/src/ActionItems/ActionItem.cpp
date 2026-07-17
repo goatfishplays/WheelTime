@@ -44,6 +44,8 @@ const char *actionItemKindName(ActionItemKind kind) noexcept
         return "mouse_button_release";
     case ActionItemKind::Cancel:
         return "cancel";
+    case ActionItemKind::Search:
+        return "search";
     }
     return "unknown";
 }

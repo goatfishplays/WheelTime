@@ -1,7 +1,15 @@
+/* No background on the universal rule: plain container widgets (splitters,
+   stacked-widget pages, form rows) must stay transparent, otherwise they paint
+   opaque sharp-cornered rectangles behind the rounded panels. */
 QWidget {
-    background-color: #dfe4ea;
     color: #213347;
     font-size: 13px;
+}
+
+/* Real top-level dialogs still need an opaque background of their own. */
+QDialog,
+QMessageBox {
+    background-color: #dfe4ea;
 }
 
 QWidget#launcherOverlay {
@@ -41,7 +49,7 @@ QWidget#launcherPanel QLabel {
 }
 
 QWidget#settingsWindow {
-    background-color: #d7dde5;
+    background-color: #eef3f8;
     border: 1px solid #86b5dc;
     border-radius: 12px;
 }
@@ -50,15 +58,72 @@ QWidget#settingsOverlayHost {
     background-color: rgba(12, 21, 31, 132);
 }
 
+QWidget#searchOverlayHost {
+    background-color: rgba(12, 21, 31, 132);
+}
+
+QWidget#searchPanel {
+    background-color: #eef3f8;
+    border: 1px solid #aac4de;
+    border-radius: 12px;
+}
+
+QLineEdit#searchInput {
+    font-size: 16px;
+    padding: 10px 12px;
+}
+
+QListWidget#searchResults::item {
+    margin: 1px 0;
+    padding: 0px;
+}
+
+QWidget#searchResultRow,
+QWidget#searchResultRow QLabel {
+    background: transparent;
+}
+
+QLabel#searchResultName {
+    color: #213347;
+    font-size: 14px;
+}
+
+QLabel#searchResultCategory {
+    color: #7d93a8;
+    font-size: 11px;
+}
+
+QToolButton#searchFilterChip {
+    background-color: #edf3f9;
+    border: 1px solid #9db9d6;
+    border-radius: 10px;
+    color: #23405d;
+    padding: 4px 12px;
+}
+
+QToolButton#searchFilterChip:hover {
+    background-color: #dcebfa;
+    border-color: #75a7d6;
+}
+
+QToolButton#searchFilterChip:checked {
+    background-color: #8cb7de;
+    border-color: #5f93c2;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* Sidebar, editor pages, and detail stack sit flat on the settings window
+   background so the whole editor reads as one window instead of separate
+   bordered panes. Structure comes from the group boxes alone. */
 QWidget#settingsSidebar,
 QWidget#menuEditor,
 QWidget#actionEditor,
 QWidget#emptyEditor,
 QStackedWidget#settingsEditorStack,
 QStackedWidget#itemDetailStack {
-    background-color: #eef3f8;
-    border: 1px solid #aac4de;
-    border-radius: 10px;
+    background-color: transparent;
+    border: none;
 }
 
 QLabel {
@@ -136,6 +201,14 @@ QSpinBox:focus,
 QDoubleSpinBox:focus {
     border: 1px solid #5d97cc;
     background-color: #ffffff;
+}
+
+/* Combo popups no longer inherit a background from the universal rule. */
+QComboBox QAbstractItemView {
+    background-color: #ffffff;
+    border: 1px solid #adc3d8;
+    selection-background-color: #cfe4fb;
+    selection-color: #102b43;
 }
 
 QPushButton {
@@ -241,7 +314,59 @@ QCheckBox::indicator:checked {
     border-color: #5f93c2;
 }
 
+/* Slim but visible resize bars; they darken on hover/drag. */
 QSplitter::handle {
-    background-color: #bfd0df;
-    width: 6px;
+    background-color: #b3c6d9;
+    border-radius: 2px;
+}
+
+QSplitter::handle:hover {
+    background-color: #82afd8;
+}
+
+QSplitter::handle:pressed {
+    background-color: #5f93c2;
+}
+
+/* The margins leave a gap between the painted bar and the neighboring
+   sections and enlarge the grab area (total thickness = bar + margins). */
+QSplitter::handle:horizontal {
+    width: 4px;
+    margin: 0 4px;
+}
+
+QSplitter::handle:vertical {
+    height: 4px;
+    margin: 4px 0;
+}
+
+QScrollArea {
+    background: transparent;
+    border: none;
+}
+
+QScrollBar:vertical {
+    background: transparent;
+    width: 10px;
+    margin: 2px;
+}
+
+QScrollBar::handle:vertical {
+    background: #9db9d6;
+    border-radius: 3px;
+    min-height: 24px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #75a7d6;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: transparent;
 }

@@ -35,14 +35,11 @@
 
 using namespace Application;
 
-namespace
-{
-
 /// @brief True if @p action is a history/cancel helper that must not enter MRU/MFU.
 ///
 /// Recording nth-recent/nth-frequent (or cancel) would make "Most Recent" the most
 /// recent launch, so resolving n=1 schedules itself forever.
-bool isHistoryMetaAction(const Action &action)
+bool App::isHistoryMetaAction(const Action &action)
 {
     for (const auto &item : action.getItems())
     {
@@ -59,8 +56,6 @@ bool isHistoryMetaAction(const Action &action)
     }
     return false;
 }
-
-} // namespace
 
 class HotkeyFilter : public QAbstractNativeEventFilter
 {
@@ -125,7 +120,14 @@ App::App()
 
     // Connect escapePressed signal from Gui to hide and return focus
     QObject::connect(&gui, &Gui::escapePressed, [this]()
-                     { hideGui(); });
+                     {
+                         if (gui.isSearchVisible())
+                         {
+                             hideSearchOverlay();
+                             return;
+                         }
+                         hideGui();
+                     });
 
     // Move the old loadConfig block up above so it is loaded before inputRcvr registration
 
@@ -139,6 +141,10 @@ App::App()
     }
 
     initializeOverlay();
+
+    // Warm the search palette's program index in the background so the first
+    // palette open does not block on the initial shortcut-folder scan.
+    gui.preloadSearchIndex();
 
     m_releaseWatchTimer = new QTimer(qApp);
     m_releaseWatchTimer->setInterval(16);
@@ -197,6 +203,14 @@ void App::onHotkeyTriggered(int hotkeyId)
     if (gui.isSettingsVisible())
     {
         return;
+    }
+
+    // A menu hotkey while the search palette is open exits search into that
+    // menu. Restore prior focus first so wheel mode keeps its invariant that
+    // the underlying app owns the keyboard.
+    if (gui.isSearchVisible())
+    {
+        hideSearchOverlay();
     }
 
     int mod = (hotkeyId >> 16) & 0xFFFF;
@@ -478,6 +492,13 @@ void App::showGui(Menu *menu)
         return;
     }
 
+    // Wheel and search are mutually exclusive; wheel mode must also win back
+    // the non-activating focus model, so restore the prior foreground window.
+    if (gui.isSearchVisible())
+    {
+        hideSearchOverlay();
+    }
+
     initializeOverlay();
     gatherPriors();
     activeMenu = menu;
@@ -490,9 +511,12 @@ void App::showGui(Menu *menu)
         Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
         const Platform::WindowRect bounds =
             overlayWindow.monitorBoundsForPoint(cursorPos.x, cursorPos.y);
+        // Start the cursor slightly above the wheel center; scales with the
+        // monitor so the nudge feels the same across resolutions.
+        const int upwardNudge = bounds.height * 2 / 100;
         inputRcvr.setAbsoluteMousePosition(Platform::Vec2{
             bounds.x + bounds.width / 2,
-            bounds.y + bounds.height / 2});
+            bounds.y + bounds.height / 2 - upwardNudge});
     }
 
     gui.setMenu(*activeMenu, getActionSlotVisualsForMenu(*activeMenu));
@@ -527,6 +551,92 @@ void App::hideGui()
     restorePriors();
 }
 
+void App::showSearchOverlay(const SearchConfig &config)
+{
+    // AI_Search runs on scheduler worker threads; Qt widgets must only be
+    // touched on the GUI thread.
+    if (QCoreApplication::instance() != nullptr
+        && QThread::currentThread() != QCoreApplication::instance()->thread())
+    {
+        QMetaObject::invokeMethod(
+            QCoreApplication::instance(),
+            [this, config]()
+            {
+                showSearchOverlay(config);
+            },
+            Qt::QueuedConnection);
+        return;
+    }
+
+    // Don't fight the settings editor; search and settings are mutually exclusive.
+    if (gui.isSettingsVisible())
+    {
+        return;
+    }
+
+    disarmExecuteOnRelease();
+    initializeOverlay();
+
+    // The wheel never takes focus, so even if it is currently up the real
+    // foreground window is still the user's app — capture it before we steal
+    // focus so hideSearchOverlay can give it back.
+    gatherPriors();
+    configureOverlayForCursor();
+
+    // Search mode needs real keyboard focus for the query field, unlike wheel
+    // mode. Same native flip settings mode uses.
+    Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
+    overlayWindow.setNonActivating(false);
+    overlayWindow.setClickThrough(false);
+    overlayWindow.setTopmost(true);
+
+    // showSearchPanel hides the wheel/settings panels and flips the mode enum.
+    gui.showSearchPanel(config);
+    gui.show();
+    gui.raise();
+    gui.activateWindow();
+    // Beat the Windows foreground lock if activateWindow was not enough.
+    overlayWindow.focus();
+    gui.focusSearchInput();
+}
+
+void App::hideSearchOverlay(bool restoreFocus)
+{
+    if (QCoreApplication::instance() != nullptr
+        && QThread::currentThread() != QCoreApplication::instance()->thread())
+    {
+        QMetaObject::invokeMethod(
+            QCoreApplication::instance(),
+            [this, restoreFocus]()
+            {
+                hideSearchOverlay(restoreFocus);
+            },
+            Qt::QueuedConnection);
+        return;
+    }
+
+    if (!gui.isSearchVisible())
+    {
+        return;
+    }
+
+    gui.hideSearchPanel();
+
+    // Back to the dormant shell: non-activating, click-through, topmost.
+    Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
+    overlayWindow.setTransparentOverlay(true);
+    overlayWindow.setNonActivating(true);
+    overlayWindow.setClickThrough(true);
+    overlayWindow.setTopmost(true);
+    overlayWindow.showNoActivate();
+
+    // Search genuinely steals focus (unlike the wheel), so hand it back.
+    if (restoreFocus)
+    {
+        priorWindow.focus();
+    }
+}
+
 void App::executeAction(int actionInd)
 {
     // Click-to-execute while holding must not also fire on release.
@@ -543,14 +653,6 @@ void App::executeAction(int actionInd)
         return;
     }
 
-    // Wheel launches own usage history (not nested scheduleAction / nth-* re-runs).
-    // Skip history/cancel helpers so "Most Recent" cannot become most recent.
-    if (!isHistoryMetaAction(*action))
-    {
-        m_actionHistory.recordUse(action->getId());
-        saveActionHistory();
-    }
-
     // Clear leftover launcher modifiers before inject (click-while-holding path).
     // Release-execute also waits for a full physical chord-up; this is the safety net.
     if (activeMenu->triggerMod != 0)
@@ -558,13 +660,32 @@ void App::executeAction(int actionInd)
         executor.modifiersUp(activeMenu->triggerMod);
     }
 
-    // Copy into the scheduler so the library Action stays editable/reusable.
-    m_scheduler->submit(*action);
+    executeActionById(action->getId());
 
     if (activeMenu->exitOnAction && gui.isLauncherVisible())
     {
         hideGui();
     }
+}
+
+void App::executeActionById(const std::string &actionId)
+{
+    Action *action = findActionById(actionId);
+    if (action == nullptr)
+    {
+        return;
+    }
+
+    // Direct launches own usage history (not nested scheduleAction / nth-* re-runs).
+    // Skip history/cancel helpers so "Most Recent" cannot become most recent.
+    if (!isHistoryMetaAction(*action))
+    {
+        m_actionHistory.recordUse(action->getId());
+        saveActionHistory();
+    }
+
+    // Copy into the scheduler so the library Action stays editable/reusable.
+    m_scheduler->submit(*action);
 }
 
 Action *App::nthRecentAction(int n)
@@ -660,6 +781,13 @@ const Scheduler &App::scheduler() const noexcept
 
 void App::showSettingsWindow()
 {
+    // Settings replaces the search palette; settings takes focus itself, so
+    // there is no point bouncing focus back to the prior window first.
+    if (gui.isSearchVisible())
+    {
+        hideSearchOverlay(/*restoreFocus=*/false);
+    }
+
     if (m_settingsWindow == nullptr)
     {
         m_settingsWindow = new SettingsWindow();

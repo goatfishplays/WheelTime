@@ -18,6 +18,7 @@
 
 #include "App/App.hpp"
 #include "App/Action.hpp"
+#include "App/SearchPaletteWidget.hpp"
 #include "App/SettingsWindow.hpp"
 
 using namespace Application;
@@ -108,6 +109,28 @@ Gui::Gui(QWidget *parent)
     m_settingsHostLayout->setSpacing(0);
     m_settingsHost->hide();
 
+    // Search palette shares the overlay shell as a third mode. Unlike the
+    // wheel it needs keyboard focus; App flips the native window out of
+    // no-activate mode while it is open, like it does for settings.
+    m_searchHost = new QWidget(this);
+    m_searchHost->setObjectName("searchOverlayHost");
+    m_searchHost->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    root->addWidget(m_searchHost);
+
+    auto *searchLayout = new QVBoxLayout(m_searchHost);
+    searchLayout->setContentsMargins(0, 0, 0, 0);
+    searchLayout->setSpacing(0);
+    m_searchPalette = new SearchPaletteWidget(m_searchHost);
+    auto *searchRow = new QHBoxLayout();
+    searchRow->addStretch();
+    searchRow->addWidget(m_searchPalette);
+    searchRow->addStretch();
+    // Upper-middle placement, walker/rofi style.
+    searchLayout->addStretch(1);
+    searchLayout->addLayout(searchRow);
+    searchLayout->addStretch(2);
+    m_searchHost->hide();
+
     enterDormantOverlay();
 }
 
@@ -118,6 +141,38 @@ void Gui::onSelectChange(int index)
 
 bool Gui::eventFilter(QObject *watched, QEvent *event)
 {
+    if (m_overlayMode == OverlayMode::Search)
+    {
+        if (event->type() == QEvent::MouseButtonPress)
+        {
+            auto *mouseEvent = static_cast<QMouseEvent *>(event);
+            if (mouseEvent->button() == Qt::RightButton)
+            {
+                // Right click anywhere dismisses, mirroring wheel behavior.
+                App::getInstance().hideSearchOverlay();
+                return true;
+            }
+            if (mouseEvent->button() == Qt::LeftButton && m_searchPalette != nullptr)
+            {
+                const QPoint globalPos = mouseEvent->globalPosition().toPoint();
+                const QPoint paletteLocal = m_searchPalette->mapFromGlobal(globalPos);
+                if (!m_searchPalette->rect().contains(paletteLocal))
+                {
+                    // Left click outside the palette panel dismisses.
+                    App::getInstance().hideSearchOverlay();
+                    return true;
+                }
+            }
+        }
+        else if (event->type() == QEvent::WindowDeactivate && watched == this)
+        {
+            // Alt-tab away closes the palette; the user picked a new focus
+            // target themselves, so do not fight it by restoring priors.
+            App::getInstance().hideSearchOverlay(/*restoreFocus=*/false);
+        }
+        return QWidget::eventFilter(watched, event);
+    }
+
     if (m_overlayMode != OverlayMode::Wheel)
     {
         return QWidget::eventFilter(watched, event);
@@ -189,6 +244,10 @@ void Gui::enterInteractiveOverlay()
     {
         m_settingsHost->hide();
     }
+    if (m_searchHost != nullptr)
+    {
+        m_searchHost->hide();
+    }
     if (m_overlayPanel != nullptr)
     {
         m_overlayPanel->show();
@@ -208,6 +267,10 @@ void Gui::enterDormantOverlay()
     {
         m_settingsHost->hide();
     }
+    if (m_searchHost != nullptr)
+    {
+        m_searchHost->hide();
+    }
 }
 
 void Gui::showSettingsPanel(SettingsWindow *settingsWindow)
@@ -221,6 +284,10 @@ void Gui::showSettingsPanel(SettingsWindow *settingsWindow)
     if (m_overlayPanel != nullptr)
     {
         m_overlayPanel->hide();
+    }
+    if (m_searchHost != nullptr)
+    {
+        m_searchHost->hide();
     }
 
     // A settings editor needs keyboard focus for text boxes and hotkey capture.
@@ -253,6 +320,55 @@ void Gui::hideSettingsPanel()
     }
 }
 
+void Gui::showSearchPanel(const SearchConfig &config)
+{
+    if (m_searchHost == nullptr || m_searchPalette == nullptr)
+    {
+        return;
+    }
+
+    m_overlayMode = OverlayMode::Search;
+    if (m_overlayPanel != nullptr)
+    {
+        m_overlayPanel->hide();
+    }
+    if (m_settingsHost != nullptr)
+    {
+        m_settingsHost->hide();
+    }
+
+    m_searchPalette->openWithConfig(config);
+    m_searchHost->show();
+}
+
+void Gui::hideSearchPanel()
+{
+    if (m_overlayMode == OverlayMode::Search)
+    {
+        m_overlayMode = OverlayMode::Dormant;
+    }
+    if (m_searchHost != nullptr)
+    {
+        m_searchHost->hide();
+    }
+}
+
+void Gui::focusSearchInput()
+{
+    if (m_searchPalette != nullptr)
+    {
+        m_searchPalette->focusInput();
+    }
+}
+
+void Gui::preloadSearchIndex()
+{
+    if (m_searchPalette != nullptr)
+    {
+        m_searchPalette->preloadIndex();
+    }
+}
+
 bool Gui::isLauncherVisible() const
 {
     return m_overlayMode == OverlayMode::Wheel;
@@ -261,6 +377,11 @@ bool Gui::isLauncherVisible() const
 bool Gui::isSettingsVisible() const
 {
     return m_overlayMode == OverlayMode::Settings;
+}
+
+bool Gui::isSearchVisible() const
+{
+    return m_overlayMode == OverlayMode::Search;
 }
 
 void Gui::refreshSelectionFromCursor()

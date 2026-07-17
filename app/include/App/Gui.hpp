@@ -24,10 +24,12 @@
 #include "App/Menu.hpp"
 #include "App/Action.hpp"
 #include "App/RadialMenuWidget.hpp"
+#include "App/SearchConfig.hpp"
 
 namespace Application
 {
     class SettingsWindow;
+    class SearchPaletteWidget;
 
     /**
      * @brief Hosts the wheel widget and top-level launcher controls.
@@ -54,10 +56,21 @@ namespace Application
         void showSettingsPanel(SettingsWindow *settingsWindow);
         /// @brief Hides the embedded settings editor without destroying it.
         void hideSettingsPanel();
+        /// @brief Shows the search palette inside the overlay shell.
+        void showSearchPanel(const SearchConfig &config);
+        /// @brief Hides the search palette without destroying it.
+        void hideSearchPanel();
+        /// @brief Puts keyboard focus in the search palette's input field.
+        void focusSearchInput();
+        /// @brief Kicks off the background program-index scan at startup so
+        /// the first search open is instant.
+        void preloadSearchIndex();
         /// @brief Whether the launcher visuals are currently visible.
         bool isLauncherVisible() const;
         /// @brief Whether the overlay is currently showing the embedded settings editor.
         bool isSettingsVisible() const;
+        /// @brief Whether the overlay is currently showing the search palette.
+        bool isSearchVisible() const;
         /// @brief Seeds Distance-mode selection from the current cursor position.
         void refreshSelectionFromCursor();
         /// @brief Currently selected wheel slot, or -1 when none.
@@ -76,10 +89,13 @@ namespace Application
         {
             Dormant,
             Wheel,
-            Settings
+            Settings,
+            Search
         };
 
         QWidget *m_overlayPanel{nullptr};
+        QWidget *m_searchHost{nullptr};
+        SearchPaletteWidget *m_searchPalette{nullptr};
         QWidget *m_settingsHost{nullptr};
         QGridLayout *m_settingsHostLayout{nullptr};
         QLabel *m_titleLabel{nullptr};

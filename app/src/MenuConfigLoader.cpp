@@ -189,6 +189,18 @@ namespace
                     cancelLevel,
                     static_cast<uint32_t>(itemObject.value("channel").toInt(0))));
             }
+            else if (type == "search")
+            {
+                SearchConfig config;
+                config.searchActions = itemObject.value("searchActions").toBool(true);
+                config.searchPrograms = itemObject.value("searchPrograms").toBool(true);
+                config.searchMenus = itemObject.value("searchMenus").toBool(true);
+                config.webSearch = itemObject.value("webSearch").toBool(true);
+                config.webSearchUrl = itemObject.value("webSearchUrl")
+                                          .toString("https://www.google.com/search?q={query}")
+                                          .toStdString();
+                items.push_back(std::make_unique<AI_Search>(std::move(config)));
+            }
             else if (type == "nth_recent")
             {
                 items.push_back(std::make_unique<AI_NthRecent>(itemObject.value("n").toInt(1)));
@@ -411,6 +423,17 @@ namespace
                 itemObject.insert("channel", static_cast<int>(cancel.channel));
                 break;
             }
+            break;
+        }
+        case ActionItemKind::Search:
+        {
+            const auto &search = static_cast<const AI_Search &>(item);
+            itemObject.insert("type", "search");
+            itemObject.insert("searchActions", search.config.searchActions);
+            itemObject.insert("searchPrograms", search.config.searchPrograms);
+            itemObject.insert("searchMenus", search.config.searchMenus);
+            itemObject.insert("webSearch", search.config.webSearch);
+            itemObject.insert("webSearchUrl", QString::fromStdString(search.config.webSearchUrl));
             break;
         }
         case ActionItemKind::NthRecent:

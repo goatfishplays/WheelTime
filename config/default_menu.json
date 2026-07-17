@@ -30,6 +30,7 @@
         },
         {
             "channel": 0,
+            "icon": "C:/Users/Torpin Pascual/Pictures/Screenshots/Screenshot 2026-07-15 144429.png",
             "id": "action-new-action",
             "items": [
                 {
@@ -67,6 +68,34 @@
                 }
             ],
             "name": "New Action"
+        },
+        {
+            "channel": 0,
+            "id": "action-search",
+            "items": [
+                {
+                    "searchActions": true,
+                    "searchMenus": true,
+                    "searchPrograms": true,
+                    "type": "search",
+                    "webSearch": true,
+                    "webSearchUrl": "https://www.google.com/search?q={query}"
+                }
+            ],
+            "name": "Search"
+        },
+        {
+            "channel": 0,
+            "icon": "C:/Users/Torpin Pascual/Pictures/Screenshots/Screenshot 2025-08-13 144050.png",
+            "id": "action-new-action-6",
+            "items": [
+                {
+                    "customTarget": "",
+                    "presetId": "calculator",
+                    "type": "launch_app"
+                }
+            ],
+            "name": "New Action"
         }
     ],
     "menus": [
@@ -75,7 +104,8 @@
                 "action-new-action-2",
                 "action-new-action-5",
                 "action-new-action",
-                "action-new-action-3"
+                "action-new-action-3",
+                "action-search"
             ],
             "centerMouseOnOpen": true,
             "executeOnRelease": true,
@@ -87,7 +117,9 @@
         },
         {
             "actionIds": [
-                "action-new-action-2"
+                "action-new-action-2",
+                "action-search",
+                "action-new-action-6"
             ],
             "centerMouseOnOpen": true,
             "executeOnRelease": false,

@@ -17,4 +17,5 @@
 #include "App/ActionItems/NthFrequent.hpp"
 #include "App/ActionItems/NthRecent.hpp"
 #include "App/ActionItems/Script.hpp"
+#include "App/ActionItems/Search.hpp"
 #include "App/ActionItems/Socket.hpp"
