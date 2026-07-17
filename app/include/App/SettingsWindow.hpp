@@ -115,6 +115,7 @@ namespace Application
         QWidget *m_actionEditor{nullptr};
 
         QPushButton *m_hotkeyRecordButton{nullptr};
+        QPushButton *m_hotkeyClearButton{nullptr};
 
         QLineEdit *m_menuNameEdit{nullptr};
         QCheckBox *m_executeOnReleaseCheck{nullptr};

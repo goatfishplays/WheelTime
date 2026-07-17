@@ -112,8 +112,8 @@
             "exitOnAction": true,
             "id": "menu-example",
             "name": "GAMBLING",
-            "triggerMod": 6,
-            "triggerVk": 9
+            "triggerMod": 0,
+            "triggerVk": 0
         },
         {
             "actionIds": [
@@ -126,8 +126,8 @@
             "exitOnAction": false,
             "id": "menu-new-menu",
             "name": "test 1",
-            "triggerMod": 2,
-            "triggerVk": 67
+            "triggerMod": 0,
+            "triggerVk": 0
         },
         {
             "actionIds": [
