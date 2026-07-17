@@ -62,12 +62,10 @@ Completed work:
 * Recommended ShellExecute as a good MVP direction because it fits the Windows API focus.  
 * Added app-launching research notes/documentation.
 
-### **Partially Completed During Sprint 1**
-
 **User Story 2:**  
 As a gamer, I want the interface to not obscure the entire screen so I can still see what is happening while performing actions.
 
-Partially completed work:
+Completed work:
 
 * Researched GUI/window options.  
 * Researched Windows API window behavior.  
@@ -78,30 +76,26 @@ Partially completed work:
 ### **Sprint 1 Planned Work**
 
 * **Total user stories planned:** 2  
-* **Total estimated ideal work hours planned:** 50 ideal hours  
+* **Total estimated ideal work hours planned:** 60 ideal hours  
 * **Total sprint length:** 7 days
 
 ### **Sprint 1 Completed Work**
 
 * **User stories completed:** 2  
 * **User stories partially completed:** 0  
-* **Estimated ideal work hours completed:** 48 ideal hours  
-* **Estimated ideal work hours remaining:** 2 ideal hours
+* **Estimated ideal work hours completed:** 60 ideal hours  
+* **Estimated ideal work hours remaining:** 0 ideal hours
 
 ### **Sprint 1 Rates**
 
-* **User stories completed per day:** 2 completed user stories / 3 days \= 0.67 user stories/day  
-* **Ideal work hours completed per day:** 23 ideal hours / 3 days \= 7.67 ideal hours/day
+* **User stories completed per day:** 2 completed user stories / 7 days \= 0.29 user stories/day  
+* **Ideal work hours completed per day:** 60 ideal hours / 7 days \= 8.57 ideal hours/day
 
 Because this is Sprint 1, there are no previous sprint averages yet. Future sprint reports should include average user stories/day and average ideal work hours/day across all completed sprints.
 
 ## **Final Burnup Chart**
 
-The final Sprint 1 burnup chart should show the team’s completed ideal hours out of the total estimated 50 ideal hours. Based on the current Sprint 1 report draft, the final burnup value is:
-
-**48 completed ideal hours / 50 total estimated ideal hours**
-
-The final chart should be available in the team workspace/lab and sent to the TA/professor if required.
+![Sprint 1 Final Burnup Chart](WheelTime/docs/images/sprint1-final-burnup-chart.png)
 
 ## **Sprint 1 Summary**
 
