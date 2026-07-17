@@ -96,11 +96,11 @@ The goal of Sprint 1 is to create the foundation for a basic Windows launcher pr
 
 ## Initial Task Assignment
 
-* **Ronan Wong:** User Story 2, create GitHub repo and help set up C++/CMake project
+* **Ronan Wong:** User Story 1 and 2, create GitHub repo and help set up C++/CMake project
 * **Aedan Benavides:** User Story 2, organize scrum board and track Sprint 1 task progress
 * **Ethan Jackson:** User Story 2, research GUI/window options and basic launcher window approach
 * **Muneeb Syed:** User Story 1 and User Story 2, write README/build steps and research app launching in C++
-* **Mithil Harish:** User Story 1, research Windows API basics and transparency/window behavior
+* **Mithil Harish:** User Story 1 and 2, research Windows API basics and transparency/window behavior
 
 ## Initial Burnup Chart
 
