@@ -12,6 +12,7 @@
 #include <QPixmap>
 #include <QRegularExpression>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QSignalBlocker>
 #include <QSplitter>
 #include <QVBoxLayout>
@@ -80,6 +81,29 @@ namespace
 
         return prefix + "-" + slug;
     }
+
+    /**
+     * @brief Wraps editor content in a transparent, vertical-only scroll area.
+     *
+     * The editor pages own their styled background; the scroll area must stay
+     * invisible so the rounded pane corners are not covered by an opaque
+     * rectangle.
+     */
+    QScrollArea *wrapInScrollArea(QWidget *content, QWidget *parent)
+    {
+        auto *scroll = new QScrollArea(parent);
+        scroll->setWidgetResizable(true);
+        scroll->setFrameShape(QFrame::NoFrame);
+        scroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        scroll->setAutoFillBackground(false);
+        scroll->viewport()->setAutoFillBackground(false);
+        scroll->setWidget(content);
+        // Must come after setWidget: QScrollArea::setWidget force-enables
+        // autoFillBackground, which paints an opaque palette-colored (dark in
+        // dark mode) rectangle behind the sections.
+        content->setAutoFillBackground(false);
+        return scroll;
+    }
 }
 
 SettingsWindow::SettingsWindow(QWidget *parent)
@@ -88,6 +112,10 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     setWindowTitle("WheelTime Settings");
     resize(1000, 620);
     setObjectName("settingsWindow");
+    // QWidget subclasses need this for QSS background/border painting;
+    // without it the styled rounded panel is never drawn and the dark
+    // overlay tint shows through between the group boxes.
+    setAttribute(Qt::WA_StyledBackground, true);
     setAttribute(Qt::WA_DeleteOnClose, false);
     setAttribute(Qt::WA_QuitOnClose, false);
 
@@ -150,6 +178,11 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     menuEditorLayout->setContentsMargins(12, 12, 12, 12);
     menuEditorLayout->setSpacing(12);
 
+    // Vertical splitter lets the user rebalance the sections; the scroll area
+    // takes over once the sections hit their minimum heights.
+    auto *menuEditorSplit = new QSplitter(Qt::Vertical);
+    menuEditorSplit->setChildrenCollapsible(false);
+
     auto *menuSettingsGroup = new QGroupBox("Menu Settings", m_menuEditor);
     auto *menuForm = new QFormLayout(menuSettingsGroup);
     m_menuNameEdit = new QLineEdit(menuSettingsGroup);
@@ -163,12 +196,13 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     menuForm->addRow("", m_executeOnReleaseCheck);
     menuForm->addRow("", m_exitOnActionCheck);
     menuForm->addRow("", m_centerMouseOnOpenCheck);
-    menuEditorLayout->addWidget(menuSettingsGroup);
+    menuEditorSplit->addWidget(menuSettingsGroup);
 
     auto *slotsGroup = new QGroupBox("Wheel Slots", m_menuEditor);
     auto *slotsLayout = new QVBoxLayout(slotsGroup);
     m_slotList = new QListWidget(slotsGroup);
     m_slotList->setObjectName("slotList");
+    m_slotList->setMinimumHeight(120);
     slotsLayout->addWidget(m_slotList, 1);
 
     auto *slotButtons = new QHBoxLayout();
@@ -185,13 +219,19 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_slotActionCombo = new QComboBox(slotsGroup);
     slotsLayout->addWidget(new QLabel("Assigned Action", slotsGroup));
     slotsLayout->addWidget(m_slotActionCombo);
-    menuEditorLayout->addWidget(slotsGroup, 1);
+    menuEditorSplit->addWidget(slotsGroup);
+    menuEditorSplit->setStretchFactor(0, 0);
+    menuEditorSplit->setStretchFactor(1, 1);
+    menuEditorLayout->addWidget(wrapInScrollArea(menuEditorSplit, m_menuEditor));
 
     m_actionEditor = new QWidget(m_editorStack);
     m_actionEditor->setObjectName("actionEditor");
     auto *actionEditorLayout = new QVBoxLayout(m_actionEditor);
     actionEditorLayout->setContentsMargins(12, 12, 12, 12);
     actionEditorLayout->setSpacing(12);
+
+    auto *actionEditorSplit = new QSplitter(Qt::Vertical);
+    actionEditorSplit->setChildrenCollapsible(false);
 
     auto *actionSettingsGroup = new QGroupBox("Action Settings", m_actionEditor);
     auto *actionForm = new QFormLayout(actionSettingsGroup);
@@ -229,12 +269,13 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_actionSequenceLabel = new QLabel(actionSettingsGroup);
     m_actionSequenceLabel->setWordWrap(true);
     actionForm->addRow("Sequence", m_actionSequenceLabel);
-    actionEditorLayout->addWidget(actionSettingsGroup);
+    actionEditorSplit->addWidget(actionSettingsGroup);
 
     auto *itemsGroup = new QGroupBox("Action Items", m_actionEditor);
     auto *itemsLayout = new QVBoxLayout(itemsGroup);
     m_actionItemList = new QListWidget(itemsGroup);
     m_actionItemList->setObjectName("actionItemList");
+    m_actionItemList->setMinimumHeight(140);
     itemsLayout->addWidget(m_actionItemList, 1);
 
     auto *itemButtons = new QHBoxLayout();
@@ -253,7 +294,8 @@ SettingsWindow::SettingsWindow(QWidget *parent)
          "Cancel All",
          "Nth Recent",
          "Nth Frequent",
-         "Socket Send"});
+         "Socket Send",
+         "Search Palette"});
     auto *addItemButton = new QPushButton("Add Item", itemsGroup);
     auto *removeItemButton = new QPushButton("Remove Item", itemsGroup);
     auto *moveItemUpButton = new QPushButton("Move Up", itemsGroup);
@@ -264,10 +306,14 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     itemButtons->addWidget(moveItemUpButton);
     itemButtons->addWidget(moveItemDownButton);
     itemsLayout->addLayout(itemButtons);
-    actionEditorLayout->addWidget(itemsGroup, 1);
+    actionEditorSplit->addWidget(itemsGroup);
 
     m_itemDetailStack = new QStackedWidget(m_actionEditor);
     m_itemDetailStack->setObjectName("itemDetailStack");
+    // Floor only; the splitter's surplus height gives the section a roomy
+    // default, and the user can shrink it down to this when they want a
+    // longer item list.
+    m_itemDetailStack->setMinimumHeight(160);
     m_itemNonePage = new QWidget(m_itemDetailStack);
     auto *noneLayout = new QVBoxLayout(m_itemNonePage);
     noneLayout->addWidget(new QLabel("Select an action item to edit its details.", m_itemNonePage));
@@ -419,6 +465,26 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     socketForm->addRow("HTTP Method", m_socketHttpMethodEdit);
     socketForm->addRow(m_socketHelpLabel);
 
+    m_itemSearchPage = new QWidget(m_itemDetailStack);
+    auto *searchForm = new QFormLayout(m_itemSearchPage);
+    m_searchActionsCheck = new QCheckBox("Search actions", m_itemSearchPage);
+    m_searchProgramsCheck = new QCheckBox("Search programs (Start Menu)", m_itemSearchPage);
+    m_searchMenusCheck = new QCheckBox("Search menus", m_itemSearchPage);
+    m_searchWebCheck = new QCheckBox("Web search fallback", m_itemSearchPage);
+    m_searchWebUrlEdit = new QLineEdit(m_itemSearchPage);
+    m_searchWebUrlEdit->setPlaceholderText("https://www.google.com/search?q={query}");
+    m_searchHelpLabel = new QLabel(m_itemSearchPage);
+    m_searchHelpLabel->setWordWrap(true);
+    m_searchHelpLabel->setText(
+        "Opens the search palette with these filters enabled (still toggleable "
+        "in the palette). {query} in the URL is replaced with the search text.");
+    searchForm->addRow("Filters", m_searchActionsCheck);
+    searchForm->addRow("", m_searchProgramsCheck);
+    searchForm->addRow("", m_searchMenusCheck);
+    searchForm->addRow("", m_searchWebCheck);
+    searchForm->addRow("Web Search URL", m_searchWebUrlEdit);
+    searchForm->addRow(m_searchHelpLabel);
+
     m_itemKeyReleasePage = new QWidget(m_itemDetailStack);
     auto *keyReleaseLayout = new QVBoxLayout(m_itemKeyReleasePage);
     m_keyReleaseHelpLabel = new QLabel(m_itemKeyReleasePage);
@@ -438,11 +504,21 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_itemDetailStack->addWidget(m_itemCancelPage);
     m_itemDetailStack->addWidget(m_itemNthPage);
     m_itemDetailStack->addWidget(m_itemSocketPage);
+    m_itemDetailStack->addWidget(m_itemSearchPage);
     m_itemDetailStack->addWidget(m_itemKeyReleasePage);
     auto *detailGroup = new QGroupBox("Item Details", m_actionEditor);
     auto *detailLayout = new QVBoxLayout(detailGroup);
     detailLayout->addWidget(m_itemDetailStack);
-    actionEditorLayout->addWidget(detailGroup);
+    actionEditorSplit->addWidget(detailGroup);
+    actionEditorSplit->setStretchFactor(0, 0);
+    actionEditorSplit->setStretchFactor(1, 1);
+    actionEditorSplit->setStretchFactor(2, 1);
+    // Guarantee drag slack: keep the splitter taller than its sections'
+    // combined minimums, otherwise every section pins at its minimum and the
+    // handles cannot move. The scroll area absorbs the surplus height.
+    actionEditorSplit->setMinimumHeight(
+        actionEditorSplit->minimumSizeHint().height() + 240);
+    actionEditorLayout->addWidget(wrapInScrollArea(actionEditorSplit, m_actionEditor));
 
     m_editorStack->addWidget(m_emptyEditor);
     m_editorStack->addWidget(m_menuEditor);
@@ -750,6 +826,9 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 case 13:
                     item = std::make_unique<AI_Socket>(
                         Platform::SocketProtocol::Udp, "127.0.0.1:9000", "", "POST");
+                    break;
+                case 14:
+                    item = std::make_unique<AI_Search>();
                     break;
                 default:
                     return;
@@ -1082,6 +1161,43 @@ SettingsWindow::SettingsWindow(QWidget *parent)
             { socketEditorChanged(); });
     connect(m_socketHttpMethodEdit, &QLineEdit::textChanged, this, [socketEditorChanged](const QString &)
             { socketEditorChanged(); });
+    auto searchEditorChanged = [this]()
+    {
+        if (m_isRefreshing)
+        {
+            return;
+        }
+        const int actionIndex = currentActionIndex();
+        const int itemIndex = currentActionItemIndex();
+        auto *item = actionIndex >= 0 ? dynamic_cast<AI_Search *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+        if (item == nullptr)
+        {
+            return;
+        }
+        item->config.searchActions = m_searchActionsCheck->isChecked();
+        item->config.searchPrograms = m_searchProgramsCheck->isChecked();
+        item->config.searchMenus = m_searchMenusCheck->isChecked();
+        item->config.webSearch = m_searchWebCheck->isChecked();
+        std::string url = m_searchWebUrlEdit->text().trimmed().toStdString();
+        if (url.empty())
+        {
+            url = "https://www.google.com/search?q={query}";
+        }
+        item->config.webSearchUrl = url;
+        m_searchWebUrlEdit->setEnabled(item->config.webSearch);
+        refreshActionItemList();
+        refreshActionSummary();
+    };
+    connect(m_searchActionsCheck, &QCheckBox::toggled, this, [searchEditorChanged](bool)
+            { searchEditorChanged(); });
+    connect(m_searchProgramsCheck, &QCheckBox::toggled, this, [searchEditorChanged](bool)
+            { searchEditorChanged(); });
+    connect(m_searchMenusCheck, &QCheckBox::toggled, this, [searchEditorChanged](bool)
+            { searchEditorChanged(); });
+    connect(m_searchWebCheck, &QCheckBox::toggled, this, [searchEditorChanged](bool)
+            { searchEditorChanged(); });
+    connect(m_searchWebUrlEdit, &QLineEdit::textChanged, this, [searchEditorChanged](const QString &)
+            { searchEditorChanged(); });
     connect(m_delaySpin, qOverload<int>(&QSpinBox::valueChanged), this, [this](int value)
             {
                 const int actionIndex = currentActionIndex();
@@ -1667,6 +1783,23 @@ void SettingsWindow::refreshItemDetail()
         return;
     }
 
+    if (auto *search = dynamic_cast<AI_Search *>(item))
+    {
+        const QSignalBlocker actionsBlocker(m_searchActionsCheck);
+        const QSignalBlocker programsBlocker(m_searchProgramsCheck);
+        const QSignalBlocker menusBlocker(m_searchMenusCheck);
+        const QSignalBlocker webBlocker(m_searchWebCheck);
+        const QSignalBlocker urlBlocker(m_searchWebUrlEdit);
+        m_searchActionsCheck->setChecked(search->config.searchActions);
+        m_searchProgramsCheck->setChecked(search->config.searchPrograms);
+        m_searchMenusCheck->setChecked(search->config.searchMenus);
+        m_searchWebCheck->setChecked(search->config.webSearch);
+        m_searchWebUrlEdit->setText(QString::fromStdString(search->config.webSearchUrl));
+        m_searchWebUrlEdit->setEnabled(search->config.webSearch);
+        m_itemDetailStack->setCurrentWidget(m_itemSearchPage);
+        return;
+    }
+
     if (auto *release = dynamic_cast<AI_KeyRelease *>(item))
     {
         m_keyReleaseHelpLabel->setText(
@@ -1866,6 +1999,21 @@ QString SettingsWindow::describeActionItem(const ActionItem *item) const
     {
         const auto *release = static_cast<const AI_KeyRelease *>(item);
         return QString("Key Release: %1").arg(keyDisplayName(release->keycode));
+    }
+    case ActionItemKind::Search:
+    {
+        const auto *search = static_cast<const AI_Search *>(item);
+        QStringList filters;
+        if (search->config.searchActions)
+            filters << "Actions";
+        if (search->config.searchPrograms)
+            filters << "Programs";
+        if (search->config.searchMenus)
+            filters << "Menus";
+        if (search->config.webSearch)
+            filters << "Web";
+        return filters.isEmpty() ? "Search Palette: no filters enabled"
+                                 : QString("Search Palette: %1").arg(filters.join(", "));
     }
     default:
         return "Unsupported";
@@ -2311,6 +2459,16 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
                     errorMessage = QString(
                         "Socket Send item in '%1' needs host:port for UDP/TCP.")
                                        .arg(QString::fromStdString(action.getName()));
+                    return false;
+                }
+            }
+            else if (itemPtr->kind() == ActionItemKind::Search)
+            {
+                const auto *search = static_cast<const AI_Search *>(itemPtr.get());
+                if (!search->config.searchActions && !search->config.searchPrograms
+                    && !search->config.searchMenus && !search->config.webSearch)
+                {
+                    errorMessage = QString("Search Palette item in '%1' needs at least one filter enabled.").arg(QString::fromStdString(action.getName()));
                     return false;
                 }
             }

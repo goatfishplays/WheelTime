@@ -24,7 +24,11 @@ add_library(App
     src/ActionItems/MouseMove.cpp
     src/ActionItems/MouseButton.cpp
     src/ActionItems/Cancel.cpp
+    src/ActionItems/Search.cpp
     src/ActionHistory.cpp
+    src/FuzzyMatch.cpp
+    src/ProgramIndex.cpp
+    src/SearchPaletteWidget.cpp
     include/App/ActionItems.hpp
     include/App/ActionItems/ActionItem.hpp
     include/App/ActionItems/Delay.hpp
@@ -39,7 +43,12 @@ add_library(App
     include/App/ActionItems/MouseMove.hpp
     include/App/ActionItems/MouseButton.hpp
     include/App/ActionItems/Cancel.hpp
+    include/App/ActionItems/Search.hpp
     include/App/ActionHistory.hpp
+    include/App/FuzzyMatch.hpp
+    include/App/ProgramIndex.hpp
+    include/App/SearchConfig.hpp
+    include/App/SearchPaletteWidget.hpp
     src/ActionExecutionContext.cpp
     include/App/ActionExecutionContext.hpp
     src/ExecuteResult.cpp
@@ -198,6 +207,19 @@ target_link_libraries(action_history_smoke
         App
 )
 target_compile_features(action_history_smoke
+    PRIVATE
+        cxx_std_20
+)
+
+# Search palette tests (fuzzy match, config round-trip, palette results).
+add_executable(search_palette_tests
+    tests/search_palette_tests.cpp
+)
+target_link_libraries(search_palette_tests
+    PRIVATE
+        App
+)
+target_compile_features(search_palette_tests
     PRIVATE
         cxx_std_20
 )

@@ -145,6 +145,7 @@ namespace Application
         QWidget *m_itemCancelPage{nullptr};
         QWidget *m_itemNthPage{nullptr};
         QWidget *m_itemSocketPage{nullptr};
+        QWidget *m_itemSearchPage{nullptr};
         QWidget *m_itemKeyReleasePage{nullptr};
         QLabel *m_keyReleaseHelpLabel{nullptr};
         QComboBox *m_launchPresetCombo{nullptr};
@@ -180,6 +181,12 @@ namespace Application
         QLineEdit *m_socketMessageEdit{nullptr};
         QLineEdit *m_socketHttpMethodEdit{nullptr};
         QLabel *m_socketHelpLabel{nullptr};
+        QCheckBox *m_searchActionsCheck{nullptr};
+        QCheckBox *m_searchProgramsCheck{nullptr};
+        QCheckBox *m_searchMenusCheck{nullptr};
+        QCheckBox *m_searchWebCheck{nullptr};
+        QLineEdit *m_searchWebUrlEdit{nullptr};
+        QLabel *m_searchHelpLabel{nullptr};
         QLabel *m_actionSequenceLabel{nullptr};
     };
 }

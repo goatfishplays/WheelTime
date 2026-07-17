@@ -33,7 +33,8 @@ enum class ActionItemKind
     MouseMove,
     MouseButton,
     MouseButtonRelease,
-    Cancel
+    Cancel,
+    Search
 };
 
 /// @brief Short console label for @p kind (e.g. "cancel", "hotkey").

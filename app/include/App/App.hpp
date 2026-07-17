@@ -17,6 +17,7 @@
 #include "App/Gui.hpp"
 #include "App/Menu.hpp"
 #include "App/Scheduler.hpp"
+#include "App/SearchConfig.hpp"
 
 #include <memory>
 
@@ -83,8 +84,26 @@ namespace Application
         void showGui(Menu *menu);
         /// @brief Hides the radial launcher and restores prior focus/mouse state.
         void hideGui();
+        /**
+         * @brief Shows the search palette overlay with the given filter set.
+         *
+         * Unlike the wheel this takes real keyboard focus; the prior foreground
+         * window is captured first and restored by hideSearchOverlay.
+         */
+        void showSearchOverlay(const SearchConfig &config);
+        /**
+         * @brief Hides the search palette and re-applies dormant overlay styles.
+         * @param restoreFocus Give focus back to the previously active window.
+         * Pass false when the user chose a new focus target themselves (alt-tab)
+         * or when another WheelTime surface takes over (settings).
+         */
+        void hideSearchOverlay(bool restoreFocus = true);
         /// @brief Executes the action referenced by the selected slot index.
         void executeAction(int actionInd);
+        /// @brief Records usage and schedules a library action by stable ID.
+        void executeActionById(const std::string &actionId);
+        /// @brief True for history/cancel helper actions excluded from MRU/MFU.
+        static bool isHistoryMetaAction(const Action &action);
         /**
          * @brief Library Action at 1-based recent rank @p n, or nullptr.
          *
