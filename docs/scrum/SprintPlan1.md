@@ -135,8 +135,8 @@ The burnup chart tracks the total Sprint 1 scope compared to the amount of work 
 
 The team will meet/check in at least three times during the sprint:
 
-* **Monday:** 8:00 PM - Discord meeting
-* **Tuesday:** 5:30 PM - Discord meeting
-* **Thursday:** 5:30 PM - Sprint wrap-up / task board update meeting
+* **Wednesday:** 8:00 PM - Discord meeting
+* **Friday:** 5:30 PM - Discord meeting
+* **Tuesday:** 5:30 PM - Sprint wrap-up / task board update meeting
 
 **TA/Tutor Visit:** Not planned for Sprint 1. TA/tutor visits will begin in Sprint 2.
