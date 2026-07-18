@@ -95,7 +95,7 @@ Because this is Sprint 1, there are no previous sprint averages yet. Future spri
 
 ## **Final Burnup Chart**
 
-![Sprint 1 Final Burnup Chart](images/final-burnup-chart-s1.png)
+![Sprint 1 Final Burnup Chart](https://raw.githubusercontent.com/goatfishplays/WheelTime/refs/heads/main/docs/scrum/sprint1-burnup-chart.png)
 
 ## **Sprint 1 Summary**
 
