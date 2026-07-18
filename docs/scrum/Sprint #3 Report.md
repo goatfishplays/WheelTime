@@ -87,7 +87,7 @@ Create settings dialog/window using Win32 API or QT - 5 hours
 The final burnup chart for Sprint 3 shows 62 completed ideal hours out of 64 total estimated ideal hours at the end of the sprint.
 
 **62 completed ideal hours / 64 total estimated ideal hours**  
-![alt text](image-1.png)
+![Sprint 3 Burnup Chart](https://raw.githubusercontent.com/goatfishplays/WheelTime/refs/heads/main/docs/scrum/sprint3-burnup-chart.png)
 
 ## **Sprint 3 Summary**
 
