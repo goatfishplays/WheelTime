@@ -5,13 +5,49 @@
 \DoxyCodeLine{00001\ }
 \DoxyCodeLine{00011\ }
 \DoxyCodeLine{00012\ \textcolor{preprocessor}{\#pragma\ once}}
-\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{_inputs_8hpp}{Platform/Inputs.hpp}}>}}
-\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <string>}}
-\DoxyCodeLine{00015\ }
-\DoxyCodeLine{00016\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_platform}{Platform}}}
-\DoxyCodeLine{00017\ \{}
-\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_platform_a6be5d118b9973d15f1243cd405ae4743}{executeKey}}(\doxymbox{\hyperlink{struct_platform_1_1_hotkey}{Hotkey}}\ key);}
-\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{namespace_platform_a98f1294d6df2d7bdd996a0b37c025133}{executeScript}}(std::string\ filepath);}
-\DoxyCodeLine{00020\ \}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_inputs_8hpp}{Platform/Inputs.hpp}}"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_platform}{Platform}}}
+\DoxyCodeLine{00018\ \{}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{enum\ class}\ \doxymbox{\hyperlink{namespace_platform_a687988ed6d020d281c8c9cc66e9837f5}{SocketProtocol}}}
+\DoxyCodeLine{00021\ \ \ \ \ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_platform_a687988ed6d020d281c8c9cc66e9837f5a81baba40274ccb30f9fdfa2c73cf0482}{Udp}},}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_platform_a687988ed6d020d281c8c9cc66e9837f5a30b7fdeebc36988717d0e274cc2e7520}{Tcp}},}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_platform_a687988ed6d020d281c8c9cc66e9837f5a9d4d43de68f0b3555d5a5ef5dc05bb95}{Http}},}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_platform_a687988ed6d020d281c8c9cc66e9837f5a45edc1b96407d9d213dd1135962a32a0}{WebSocket}}}
+\DoxyCodeLine{00026\ \ \ \ \ \};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_platform_1_1_socket_send_request}{SocketSendRequest}}}
+\DoxyCodeLine{00035\ \ \ \ \ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_platform_a687988ed6d020d281c8c9cc66e9837f5}{SocketProtocol}}\ \doxymbox{\hyperlink{struct_platform_1_1_socket_send_request_a71d5f806a0756fb27db5f9cd9f8a342c}{protocol}}\ =\ \doxymbox{\hyperlink{namespace_platform_a687988ed6d020d281c8c9cc66e9837f5a81baba40274ccb30f9fdfa2c73cf0482}{SocketProtocol::Udp}};}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ std::string\ \doxymbox{\hyperlink{struct_platform_1_1_socket_send_request_ac5e419a2815afb1cdab91a88bdb842e7}{destination}};}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ std::string\ \doxymbox{\hyperlink{struct_platform_1_1_socket_send_request_ab1a19f8510297d0048734bcf5cef4b5e}{message}};}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ std::string\ \doxymbox{\hyperlink{struct_platform_1_1_socket_send_request_af1d1ad00da92c01116d33d20ea500a53}{httpMethod}}\ =\ \textcolor{stringliteral}{"{}POST"{}};}
+\DoxyCodeLine{00040\ \ \ \ \ \};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_platform_1_1_executor_a59859cde6f1a56663b95e78d9ed2e068}{Executor}}}
+\DoxyCodeLine{00043\ \ \ \ \ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_platform_1_1_executor_a59859cde6f1a56663b95e78d9ed2e068}{Executor}}();}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_platform_1_1_executor_a784e38d0dc2b28604ee432d64512c789}{\string~Executor}}();}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_platform_1_1_executor_a0471c71e08e6d83c288fd6009b82f1a2}{setMousePos}}(\textcolor{keywordtype}{int}\ x,\ \textcolor{keywordtype}{int}\ y);}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_platform_1_1_executor_adaee2e65b23afa132f86a2f34b324539}{executeKey}}(\doxymbox{\hyperlink{struct_platform_1_1_input_bind}{InputBind}}\ key);}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_platform_1_1_executor_a4514e260610e972df8900c57b5f6e73a}{keyDown}}(\doxymbox{\hyperlink{struct_platform_1_1_input_bind}{InputBind}}\ key);}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_platform_1_1_executor_a19d1bed741b70f9f3bf5b8988a97691d}{keyUp}}(\doxymbox{\hyperlink{struct_platform_1_1_input_bind}{InputBind}}\ key);}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_platform_1_1_executor_adc4839d2498d76d306852e66bb2fcf4f}{modifiersDown}}(\textcolor{keywordtype}{int}\ mod);}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_platform_1_1_executor_a22f837d029d1dbfb8f39289ccd13a676}{modifiersUp}}(\textcolor{keywordtype}{int}\ mod);}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_platform_1_1_executor_a811466b8a9415dded9c5fbacc4874c5f}{mouseButton}}(\textcolor{keywordtype}{int}\ button,\ \textcolor{keywordtype}{bool}\ down);}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_platform_1_1_executor_ae1dda416e435481f301fe57371f19821}{executeScript}}(std::string\ filepath);}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_platform_1_1_executor_afe9e45a3969b402d69af12d416870f3f}{executeLaunchPreset}}(std::string\ presetId);}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_platform_1_1_executor_adce73f184117d232943487ab693f390f}{sendSocket}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_platform_1_1_socket_send_request}{SocketSendRequest}}\ \&request);}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_platform_1_1_executor_1_1_impl}{Impl}};}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ std::unique\_ptr<Impl>\ m\_impl;}
+\DoxyCodeLine{00079\ \ \ \ \ \};}
+\DoxyCodeLine{00080\ \}}
 
 \end{DoxyCode}

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['menu_0',['Menu',['../classApp_1_1Menu.html',1,'App']]]
+  ['fuzzyresult_0',['FuzzyResult',['../struct_application_1_1_fuzzy_result.html',1,'Application']]]
 ];

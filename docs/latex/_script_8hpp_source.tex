@@ -1,0 +1,30 @@
+\doxysection{Script.\+hpp}
+\hypertarget{_script_8hpp_source}{}\label{_script_8hpp_source}\index{E:/Github/WheelTime/app/include/App/ActionItems/Script.hpp@{E:/Github/WheelTime/app/include/App/ActionItems/Script.hpp}}
+\doxymbox{\hyperlink{_script_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_action_item_8hpp}{App/ActionItems/ActionItem.hpp}}"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00013\ \{}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_a_i___script_a2cd2d3a983c7a06dfc292a6ad687983c}{AI\_Script}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{ActionItem}}}
+\DoxyCodeLine{00017\ \{}
+\DoxyCodeLine{00018\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{explicit}\ \doxymbox{\hyperlink{class_application_1_1_a_i___script_a2cd2d3a983c7a06dfc292a6ad687983c}{AI\_Script}}(std::string\ \doxymbox{\hyperlink{class_application_1_1_a_i___script_adb27f5dfd23566be2d003ccaa4345472}{filepath}}\ =\ \{\});}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_application_1_1_a_i___script_adb27f5dfd23566be2d003ccaa4345472}{filepath}};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ std::unique\_ptr<ActionItem>\ \doxymbox{\hyperlink{class_application_1_1_a_i___script_a540a29dbe4768e324b478014c4b7a8a5}{clone}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00024\ \ \ \ \ \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{ActionItemKind}}\ \doxymbox{\hyperlink{class_application_1_1_a_i___script_a507daf6e8a29328cb784ca39e08cec3c}{kind}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00025\ \ \ \ \ [[nodiscard]]\ \doxymbox{\hyperlink{class_application_1_1_execute_result}{ExecuteResult}}\ \doxymbox{\hyperlink{class_application_1_1_a_i___script_ad788a0cd7c8992d932c061fcecb10cf5}{execute}}(\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{ActionExecutionContext}}\ \&context)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00026\ \};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \}\ \textcolor{comment}{//\ namespace\ Application}}
+
+\end{DoxyCode}

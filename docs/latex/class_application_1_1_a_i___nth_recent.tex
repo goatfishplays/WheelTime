@@ -1,0 +1,110 @@
+\doxysection{Application::\+AI\+\_\+\+Nth\+Recent Class Reference}
+\hypertarget{class_application_1_1_a_i___nth_recent}{}\label{class_application_1_1_a_i___nth_recent}\index{Application::AI\_NthRecent@{Application::AI\_NthRecent}}
+
+
+Schedules a copy of the nth most recently wheel-\/launched \doxylink{class_application_1_1_action}{Action} (1-\/based).  
+
+
+
+
+{\ttfamily \+\#include $<$Nth\+Recent.\+hpp$>$}
+
+Inheritance diagram for Application::\+AI\+\_\+\+Nth\+Recent:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_application_1_1_a_i___nth_recent}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_a_i___nth_recent_aab71458aa2aa61e474ad2700620d21fb}{AI\+\_\+\+Nth\+Recent}} (int n=1)
+\item 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} $>$ \doxymbox{\hyperlink{class_application_1_1_a_i___nth_recent_a0fd72aa3e1f0c5671e9922a3eaa3d83d}{clone}} () const override
+\item 
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} \doxymbox{\hyperlink{class_application_1_1_a_i___nth_recent_aa5e759400c31d9b557db15d9598ccded}{kind}} () const override
+\item 
+\doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}} \doxymbox{\hyperlink{class_application_1_1_a_i___nth_recent_a945f46e277785d5a88ee9f144dd1063d}{execute}} (\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&context) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{class_application_1_1_action_item}{Application::\+\+Action\+Item}}}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} ()=default
+\item 
+virtual \doxymbox{\hyperlink{class_application_1_1_action_item_a475b8d6aff3774c90b9f0a4512959bf5}{\texorpdfstring{$\sim$}{\string~}\+Action\+Item}} ()=default
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{class_application_1_1_a_i___nth_recent_a23500e20ab801ada7b58c62f1f70971c}{n}} = 1
+\begin{DoxyCompactList}\small\item\em 1 = most recent. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Schedules a copy of the nth most recently wheel-\/launched \doxylink{class_application_1_1_action}{Action} (1-\/based). 
+
+\label{class_application_1_1_a_i___nth_recent_doc-constructors}
+\Hypertarget{class_application_1_1_a_i___nth_recent_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_a_i___nth_recent_aab71458aa2aa61e474ad2700620d21fb}\index{Application::AI\_NthRecent@{Application::AI\_NthRecent}!AI\_NthRecent@{AI\_NthRecent}}
+\index{AI\_NthRecent@{AI\_NthRecent}!Application::AI\_NthRecent@{Application::AI\_NthRecent}}
+\doxysubsubsection{\texorpdfstring{AI\_NthRecent()}{AI\_NthRecent()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___nth_recent_aab71458aa2aa61e474ad2700620d21fb} 
+Application::\+\+AI\+\_\+\+Nth\+Recent::\+\+AI\+\_\+\+Nth\+Recent (\begin{DoxyParamCaption}\item[{int}]{n}{ = {\ttfamily 1}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+\label{class_application_1_1_a_i___nth_recent_doc-func-members}
+\Hypertarget{class_application_1_1_a_i___nth_recent_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_a_i___nth_recent_a0fd72aa3e1f0c5671e9922a3eaa3d83d}\index{Application::AI\_NthRecent@{Application::AI\_NthRecent}!clone@{clone}}
+\index{clone@{clone}!Application::AI\_NthRecent@{Application::AI\_NthRecent}}
+\doxysubsubsection{\texorpdfstring{clone()}{clone()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___nth_recent_a0fd72aa3e1f0c5671e9922a3eaa3d83d} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} $>$ Application::\+\+AI\+\_\+\+Nth\+Recent::\+clone (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_afd400c3edd7ad9e074a28d462421789c}{Application::\+\+Action\+Item}}.
+
+\Hypertarget{class_application_1_1_a_i___nth_recent_a945f46e277785d5a88ee9f144dd1063d}\index{Application::AI\_NthRecent@{Application::AI\_NthRecent}!execute@{execute}}
+\index{execute@{execute}!Application::AI\_NthRecent@{Application::AI\_NthRecent}}
+\doxysubsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___nth_recent_a945f46e277785d5a88ee9f144dd1063d} 
+\doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}} Application::\+\+AI\+\_\+\+Nth\+Recent::\+execute (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&}]{context}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_aeeaf1c44a2f6741be0fdaad53da67e54}{Application::\+\+Action\+Item}}.
+
+\Hypertarget{class_application_1_1_a_i___nth_recent_aa5e759400c31d9b557db15d9598ccded}\index{Application::AI\_NthRecent@{Application::AI\_NthRecent}!kind@{kind}}
+\index{kind@{kind}!Application::AI\_NthRecent@{Application::AI\_NthRecent}}
+\doxysubsubsection{\texorpdfstring{kind()}{kind()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___nth_recent_aa5e759400c31d9b557db15d9598ccded} 
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} Application::\+\+AI\+\_\+\+Nth\+Recent::\+kind (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_ab51b1298eb1b325512ca99d2f090fa75}{Application::\+\+Action\+Item}}.
+
+
+
+\label{class_application_1_1_a_i___nth_recent_doc-variable-members}
+\Hypertarget{class_application_1_1_a_i___nth_recent_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_application_1_1_a_i___nth_recent_a23500e20ab801ada7b58c62f1f70971c}\index{Application::AI\_NthRecent@{Application::AI\_NthRecent}!n@{n}}
+\index{n@{n}!Application::AI\_NthRecent@{Application::AI\_NthRecent}}
+\doxysubsubsection{\texorpdfstring{n}{n}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___nth_recent_a23500e20ab801ada7b58c62f1f70971c} 
+int Application::\+\+AI\+\_\+\+Nth\+Recent::\+n = 1}
+
+
+
+1 = most recent. 
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\+Action\+Items/\+\doxymbox{\hyperlink{_nth_recent_8hpp}{Nth\+Recent.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\+Action\+Items/\+\doxymbox{\hyperlink{_nth_recent_8cpp}{Nth\+Recent.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,38 @@
+\doxysection{Cancel.\+hpp}
+\hypertarget{_cancel_8hpp_source}{}\label{_cancel_8hpp_source}\index{E:/Github/WheelTime/app/include/App/ActionItems/Cancel.hpp@{E:/Github/WheelTime/app/include/App/ActionItems/Cancel.hpp}}
+\doxymbox{\hyperlink{_cancel_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_action_item_8hpp}{App/ActionItems/ActionItem.hpp}}"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00013\ \{}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{enum\ class}\ \doxymbox{\hyperlink{namespace_application_a13c194e769eb89db90390486ad604ab9}{CancelLevel}}}
+\DoxyCodeLine{00017\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \doxymbox{\hyperlink{namespace_application_a13c194e769eb89db90390486ad604ab9a1f7eef9de38738e79be7905c6067c98f}{MostRecent}},}
+\DoxyCodeLine{00024\ \ \ \ \ \doxymbox{\hyperlink{namespace_application_a13c194e769eb89db90390486ad604ab9a781dc97dc62331eec3ea9ec4373a3ca8}{Channel}},}
+\DoxyCodeLine{00026\ \ \ \ \ \doxymbox{\hyperlink{namespace_application_a13c194e769eb89db90390486ad604ab9ab1c94ca2fbc3e78fc30069c8d0f01680}{All}}}
+\DoxyCodeLine{00027\ \};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_a_i___cancel_aaba7e7001ae56814f08979b2b51b5fb3}{AI\_Cancel}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{ActionItem}}}
+\DoxyCodeLine{00037\ \{}
+\DoxyCodeLine{00038\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{explicit}\ \doxymbox{\hyperlink{class_application_1_1_a_i___cancel_aaba7e7001ae56814f08979b2b51b5fb3}{AI\_Cancel}}(\doxymbox{\hyperlink{namespace_application_a13c194e769eb89db90390486ad604ab9}{CancelLevel}}\ \doxymbox{\hyperlink{class_application_1_1_a_i___cancel_ad64b60c7eb427a9215d0244d2c341112}{level}}\ =\ \doxymbox{\hyperlink{namespace_application_a13c194e769eb89db90390486ad604ab9a1f7eef9de38738e79be7905c6067c98f}{CancelLevel::MostRecent}},\ uint32\_t\ \doxymbox{\hyperlink{class_application_1_1_a_i___cancel_adcde8719423f75e8cde00354f45e3b03}{channel}}\ =\ 0);}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \doxymbox{\hyperlink{namespace_application_a13c194e769eb89db90390486ad604ab9}{CancelLevel}}\ \doxymbox{\hyperlink{class_application_1_1_a_i___cancel_ad64b60c7eb427a9215d0244d2c341112}{level}}\ =\ \doxymbox{\hyperlink{namespace_application_a13c194e769eb89db90390486ad604ab9a1f7eef9de38738e79be7905c6067c98f}{CancelLevel::MostRecent}};}
+\DoxyCodeLine{00049\ \ \ \ \ uint32\_t\ \doxymbox{\hyperlink{class_application_1_1_a_i___cancel_adcde8719423f75e8cde00354f45e3b03}{channel}}\ =\ 0;}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ std::unique\_ptr<ActionItem>\ \doxymbox{\hyperlink{class_application_1_1_a_i___cancel_a22cdc3e7afe07f995dadaceaf1491c9d}{clone}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00052\ \ \ \ \ \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{ActionItemKind}}\ \doxymbox{\hyperlink{class_application_1_1_a_i___cancel_aaf5a74a49f50a3ced2bd38976fcc738a}{kind}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00053\ \ \ \ \ [[nodiscard]]\ \doxymbox{\hyperlink{class_application_1_1_execute_result}{ExecuteResult}}\ \doxymbox{\hyperlink{class_application_1_1_a_i___cancel_a767df940ece1bb58921275cf8f43fc9d}{execute}}(\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{ActionExecutionContext}}\ \&context)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00054\ \};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \}\ \textcolor{comment}{//\ namespace\ Application}}
+
+\end{DoxyCode}

@@ -1,0 +1,165 @@
+\doxysection{Application::\+Delay\+Queue Class Reference}
+\hypertarget{class_application_1_1_delay_queue}{}\label{class_application_1_1_delay_queue}\index{Application::DelayQueue@{Application::DelayQueue}}
+
+
+Min-\/heap of contexts waiting until a steady-\/clock wake time.  
+
+
+
+
+{\ttfamily \+\#include $<$Delay\+Queue.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_delay_queue_a05751b781058eba26b094520c12545b4}{Delay\+Queue}} ()=default
+\item 
+\doxymbox{\hyperlink{class_application_1_1_delay_queue_abf2048e0d1ed0eb0c9c1dd01cc4b1835}{Delay\+Queue}} (const Delay\+Queue \&)=delete
+\item 
+\doxymbox{\hyperlink{class_application_1_1_delay_queue_a05751b781058eba26b094520c12545b4}{Delay\+Queue}} \& \doxymbox{\hyperlink{class_application_1_1_delay_queue_a3054eb8f0fbef900eec17285478dce54}{operator=}} (const \doxymbox{\hyperlink{class_application_1_1_delay_queue_a05751b781058eba26b094520c12545b4}{Delay\+Queue}} \&)=delete
+\item 
+\doxymbox{\hyperlink{class_application_1_1_delay_queue_a3f6196efa8d786bf9eaaa8b033876ff6}{Delay\+Queue}} (Delay\+Queue \&\&) noexcept=default
+\item 
+\doxymbox{\hyperlink{class_application_1_1_delay_queue_a05751b781058eba26b094520c12545b4}{Delay\+Queue}} \& \doxymbox{\hyperlink{class_application_1_1_delay_queue_aa2c724dbace159c2484d4a6f9175ca99}{operator=}} (\doxymbox{\hyperlink{class_application_1_1_delay_queue_a05751b781058eba26b094520c12545b4}{Delay\+Queue}} \&\&) noexcept=default
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_delay_queue_ab0e9023f55cb6abcc284313a3060b5b2}{push}} (std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point wake\+Time, std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} $>$ context)
+\begin{DoxyCompactList}\small\item\em Parks {\ttfamily context} until {\ttfamily wake\+Time} (earliest-\/first ordering). Ignored if {\ttfamily context} is null. \end{DoxyCompactList}\item 
+std::\+vector$<$ std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} $>$ $>$ \doxymbox{\hyperlink{class_application_1_1_delay_queue_af115b66596bc502e06a2594a154392b1}{pop\+Due}} (std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point now)
+\begin{DoxyCompactList}\small\item\em Removes and returns every context whose wake time is \texorpdfstring{$<$}{<}= {\ttfamily now}. Results are ordered earliest wake first (stable for equal times). \end{DoxyCompactList}\item 
+std::\+vector$<$ std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} $>$ $>$ \doxymbox{\hyperlink{class_application_1_1_delay_queue_aec6d4fd8d2ad24d0a0745511463b72c3}{remove\+If}} (const std::\+function$<$ bool(const \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&)$>$ \&predicate)
+\begin{DoxyCompactList}\small\item\em Removes every parked context for which {\ttfamily predicate} returns true. \end{DoxyCompactList}\item 
+std::\+optional$<$ std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point $>$ \doxymbox{\hyperlink{class_application_1_1_delay_queue_a97841bbcfffe1e2dc73836ff5a51f9c0}{next\+Wake\+Time}} () const
+\begin{DoxyCompactList}\small\item\em Earliest pending wake time, if the queue is non-\/empty. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_delay_queue_a9493255fea2287b2c627a34b2dee7a73}{empty}} () const noexcept
+\item 
+std::\+size\+\_\+t \doxymbox{\hyperlink{class_application_1_1_delay_queue_ae011f3f4c171408c3d401aee5d9c4fa8}{size}} () const noexcept
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_delay_queue_a080c9508bf6b1e3051d2d99fb8534d83}{clear}} () noexcept
+\begin{DoxyCompactList}\small\item\em Drops all parked contexts. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_delay_queue_a89f0023bb31185c577d1a078a9f24732}{shift\+All}} (std::\+chrono::\+steady\+\_\+clock::\+duration delta)
+\begin{DoxyCompactList}\small\item\em Adds {\ttfamily delta} to every parked wake time (used when resuming from pause). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Min-\/heap of contexts waiting until a steady-\/clock wake time. 
+
+Used by the \doxylink{class_application_1_1_scheduler}{Scheduler} so workers never sleep for delays. The scheduler parks Delayed (or not-\/yet-\/started) contexts here and sleeps on its mailbox until the earliest wake, a new event, or stop.
+
+Not thread-\/safe — owned and used only by the scheduler thread. 
+
+\label{class_application_1_1_delay_queue_doc-constructors}
+\Hypertarget{class_application_1_1_delay_queue_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_delay_queue_a05751b781058eba26b094520c12545b4}\index{Application::DelayQueue@{Application::DelayQueue}!DelayQueue@{DelayQueue}}
+\index{DelayQueue@{DelayQueue}!Application::DelayQueue@{Application::DelayQueue}}
+\doxysubsubsection{\texorpdfstring{DelayQueue()}{DelayQueue()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{class_application_1_1_delay_queue_a05751b781058eba26b094520c12545b4} 
+Application::\+\+Delay\+Queue::\+\+Delay\+Queue (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+\Hypertarget{class_application_1_1_delay_queue_abf2048e0d1ed0eb0c9c1dd01cc4b1835}\index{Application::DelayQueue@{Application::DelayQueue}!DelayQueue@{DelayQueue}}
+\index{DelayQueue@{DelayQueue}!Application::DelayQueue@{Application::DelayQueue}}
+\doxysubsubsection{\texorpdfstring{DelayQueue()}{DelayQueue()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{class_application_1_1_delay_queue_abf2048e0d1ed0eb0c9c1dd01cc4b1835} 
+Application::\+\+Delay\+Queue::\+\+Delay\+Queue (\begin{DoxyParamCaption}\item[{const Delay\+Queue \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_application_1_1_delay_queue_a3f6196efa8d786bf9eaaa8b033876ff6}\index{Application::DelayQueue@{Application::DelayQueue}!DelayQueue@{DelayQueue}}
+\index{DelayQueue@{DelayQueue}!Application::DelayQueue@{Application::DelayQueue}}
+\doxysubsubsection{\texorpdfstring{DelayQueue()}{DelayQueue()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{class_application_1_1_delay_queue_a3f6196efa8d786bf9eaaa8b033876ff6} 
+Application::\+\+Delay\+Queue::\+\+Delay\+Queue (\begin{DoxyParamCaption}\item[{Delay\+Queue \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+
+
+\label{class_application_1_1_delay_queue_doc-func-members}
+\Hypertarget{class_application_1_1_delay_queue_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_delay_queue_a080c9508bf6b1e3051d2d99fb8534d83}\index{Application::DelayQueue@{Application::DelayQueue}!clear@{clear}}
+\index{clear@{clear}!Application::DelayQueue@{Application::DelayQueue}}
+\doxysubsubsection{\texorpdfstring{clear()}{clear()}}
+{\footnotesize\ttfamily \label{class_application_1_1_delay_queue_a080c9508bf6b1e3051d2d99fb8534d83} 
+void Application::\+\+Delay\+Queue::\+clear (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+Drops all parked contexts. 
+
+\Hypertarget{class_application_1_1_delay_queue_a9493255fea2287b2c627a34b2dee7a73}\index{Application::DelayQueue@{Application::DelayQueue}!empty@{empty}}
+\index{empty@{empty}!Application::DelayQueue@{Application::DelayQueue}}
+\doxysubsubsection{\texorpdfstring{empty()}{empty()}}
+{\footnotesize\ttfamily \label{class_application_1_1_delay_queue_a9493255fea2287b2c627a34b2dee7a73} 
+bool Application::\+\+Delay\+Queue::\+empty (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{class_application_1_1_delay_queue_a97841bbcfffe1e2dc73836ff5a51f9c0}\index{Application::DelayQueue@{Application::DelayQueue}!nextWakeTime@{nextWakeTime}}
+\index{nextWakeTime@{nextWakeTime}!Application::DelayQueue@{Application::DelayQueue}}
+\doxysubsubsection{\texorpdfstring{nextWakeTime()}{nextWakeTime()}}
+{\footnotesize\ttfamily \label{class_application_1_1_delay_queue_a97841bbcfffe1e2dc73836ff5a51f9c0} 
+std::\+optional$<$ std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point $>$ Application::\+\+Delay\+Queue::\+next\+Wake\+Time (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Earliest pending wake time, if the queue is non-\/empty. 
+
+\Hypertarget{class_application_1_1_delay_queue_a3054eb8f0fbef900eec17285478dce54}\index{Application::DelayQueue@{Application::DelayQueue}!operator=@{operator=}}
+\index{operator=@{operator=}!Application::DelayQueue@{Application::DelayQueue}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_delay_queue_a3054eb8f0fbef900eec17285478dce54} 
+\doxymbox{\hyperlink{class_application_1_1_delay_queue_a05751b781058eba26b094520c12545b4}{Delay\+Queue}} \& Application::\+\+Delay\+Queue::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_application_1_1_delay_queue_a05751b781058eba26b094520c12545b4}{Delay\+Queue}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_application_1_1_delay_queue_aa2c724dbace159c2484d4a6f9175ca99}\index{Application::DelayQueue@{Application::DelayQueue}!operator=@{operator=}}
+\index{operator=@{operator=}!Application::DelayQueue@{Application::DelayQueue}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_delay_queue_aa2c724dbace159c2484d4a6f9175ca99} 
+\doxymbox{\hyperlink{class_application_1_1_delay_queue_a05751b781058eba26b094520c12545b4}{Delay\+Queue}} \& Application::\+\+Delay\+Queue::\+operator= (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_application_1_1_delay_queue_a05751b781058eba26b094520c12545b4}{Delay\+Queue}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{class_application_1_1_delay_queue_af115b66596bc502e06a2594a154392b1}\index{Application::DelayQueue@{Application::DelayQueue}!popDue@{popDue}}
+\index{popDue@{popDue}!Application::DelayQueue@{Application::DelayQueue}}
+\doxysubsubsection{\texorpdfstring{popDue()}{popDue()}}
+{\footnotesize\ttfamily \label{class_application_1_1_delay_queue_af115b66596bc502e06a2594a154392b1} 
+std::\+vector$<$ std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} $>$ $>$ Application::\+\+Delay\+Queue::\+pop\+Due (\begin{DoxyParamCaption}\item[{std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point}]{now}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Removes and returns every context whose wake time is \texorpdfstring{$<$}{<}= {\ttfamily now}. Results are ordered earliest wake first (stable for equal times). 
+
+\Hypertarget{class_application_1_1_delay_queue_ab0e9023f55cb6abcc284313a3060b5b2}\index{Application::DelayQueue@{Application::DelayQueue}!push@{push}}
+\index{push@{push}!Application::DelayQueue@{Application::DelayQueue}}
+\doxysubsubsection{\texorpdfstring{push()}{push()}}
+{\footnotesize\ttfamily \label{class_application_1_1_delay_queue_ab0e9023f55cb6abcc284313a3060b5b2} 
+void Application::\+\+Delay\+Queue::\+push (\begin{DoxyParamCaption}\item[{std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point}]{wake\+Time}{, }\item[{std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} $>$}]{context}{}\end{DoxyParamCaption})}
+
+
+
+Parks {\ttfamily context} until {\ttfamily wake\+Time} (earliest-\/first ordering). Ignored if {\ttfamily context} is null. 
+
+\Hypertarget{class_application_1_1_delay_queue_aec6d4fd8d2ad24d0a0745511463b72c3}\index{Application::DelayQueue@{Application::DelayQueue}!removeIf@{removeIf}}
+\index{removeIf@{removeIf}!Application::DelayQueue@{Application::DelayQueue}}
+\doxysubsubsection{\texorpdfstring{removeIf()}{removeIf()}}
+{\footnotesize\ttfamily \label{class_application_1_1_delay_queue_aec6d4fd8d2ad24d0a0745511463b72c3} 
+std::\+vector$<$ std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} $>$ $>$ Application::\+\+Delay\+Queue::\+remove\+If (\begin{DoxyParamCaption}\item[{const std::\+function$<$ bool(const \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&)$>$ \&}]{predicate}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Removes every parked context for which {\ttfamily predicate} returns true. 
+
+\Hypertarget{class_application_1_1_delay_queue_a89f0023bb31185c577d1a078a9f24732}\index{Application::DelayQueue@{Application::DelayQueue}!shiftAll@{shiftAll}}
+\index{shiftAll@{shiftAll}!Application::DelayQueue@{Application::DelayQueue}}
+\doxysubsubsection{\texorpdfstring{shiftAll()}{shiftAll()}}
+{\footnotesize\ttfamily \label{class_application_1_1_delay_queue_a89f0023bb31185c577d1a078a9f24732} 
+void Application::\+\+Delay\+Queue::\+shift\+All (\begin{DoxyParamCaption}\item[{std::\+chrono::\+steady\+\_\+clock::\+duration}]{delta}{}\end{DoxyParamCaption})}
+
+
+
+Adds {\ttfamily delta} to every parked wake time (used when resuming from pause). 
+
+\Hypertarget{class_application_1_1_delay_queue_ae011f3f4c171408c3d401aee5d9c4fa8}\index{Application::DelayQueue@{Application::DelayQueue}!size@{size}}
+\index{size@{size}!Application::DelayQueue@{Application::DelayQueue}}
+\doxysubsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily \label{class_application_1_1_delay_queue_ae011f3f4c171408c3d401aee5d9c4fa8} 
+std::\+size\+\_\+t Application::\+\+Delay\+Queue::\+size (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_delay_queue_8hpp}{Delay\+Queue.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\doxymbox{\hyperlink{_delay_queue_8cpp}{Delay\+Queue.\+cpp}}\end{DoxyCompactItemize}

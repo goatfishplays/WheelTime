@@ -1,0 +1,47 @@
+\doxysection{E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\+Scheduler.hpp File Reference}
+\hypertarget{_scheduler_8hpp}{}\label{_scheduler_8hpp}\index{E:/Github/WheelTime/app/include/App/Scheduler.hpp@{E:/Github/WheelTime/app/include/App/Scheduler.hpp}}
+
+
+Scheduler thread:\+ owns contexts, channels, delays, cancel, pause, and worker dispatch.  
+
+
+{\ttfamily \+\#include $<$atomic$>$}\newline
+{\ttfamily \+\#include $<$chrono$>$}\newline
+{\ttfamily \+\#include $<$cstddef$>$}\newline
+{\ttfamily \+\#include $<$cstdint$>$}\newline
+{\ttfamily \+\#include $<$memory$>$}\newline
+{\ttfamily \+\#include $<$thread$>$}\newline
+{\ttfamily \+\#include $<$unordered\+\_\+map$>$}\newline
+{\ttfamily \+\#include $<$utility$>$}\newline
+{\ttfamily \+\#include $<$variant$>$}\newline
+{\ttfamily \+\#include $<$vector$>$}\newline
+{\ttfamily \+\#include "{}App/\+\+Action.\+hpp"{}}\newline
+{\ttfamily \+\#include "{}App/\+\+Action\+Execution\+Context.\+hpp"{}}\newline
+{\ttfamily \+\#include "{}App/\+\+Channel\+Manager.\+hpp"{}}\newline
+{\ttfamily \+\#include "{}App/\+\+Delay\+Queue.\+hpp"{}}\newline
+{\ttfamily \+\#include "{}App/\+\+Thread\+Safe\+Queue.\+hpp"{}}\newline
+{\ttfamily \+\#include "{}App/\+\+Worker\+Pool.\+hpp"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{class_application_1_1_scheduler}{Application::\+\+Scheduler}}
+\begin{DoxyCompactList}\small\item\em Accepts Actions and runs them via \doxylink{class_application_1_1_worker_pool}{Worker\+Pool} with channel + delay policy. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \doxymbox{\hyperlink{namespace_application}{Application}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \doxymbox{\hyperlink{namespace_application_a0bd7905d0366206ab29532d46e81cc97}{Application::\+\+Scheduler\+Request\+Type}} \{ \doxymbox{\hyperlink{namespace_application_a0bd7905d0366206ab29532d46e81cc97a16142c6a6e6e9ff3e72bc091306030aa}{Application::\+\+Schedule\+Action}}
+, \doxymbox{\hyperlink{namespace_application_a0bd7905d0366206ab29532d46e81cc97a189998eb7e0dd4030baea2418cd8d76b}{Application::\+\+Cancel\+Most\+Recent}}
+, \doxymbox{\hyperlink{namespace_application_a0bd7905d0366206ab29532d46e81cc97affc0ebed221da9843afa27f673ddfcb3}{Application::\+\+Cancel\+Channel}}
+, \doxymbox{\hyperlink{namespace_application_a0bd7905d0366206ab29532d46e81cc97a7e5c559435d1bacef48591d43fd36494}{Application::\+\+Cancel\+All}}
+ \}
+\begin{DoxyCompactList}\small\item\em Kinds of requests Action\+Items may record for the scheduler. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Scheduler thread:\+ owns contexts, channels, delays, cancel, pause, and worker dispatch. 
+

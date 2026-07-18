@@ -1,0 +1,179 @@
+\doxysection{Scheduler.\+hpp}
+\hypertarget{_scheduler_8hpp_source}{}\label{_scheduler_8hpp_source}\index{E:/Github/WheelTime/app/include/App/Scheduler.hpp@{E:/Github/WheelTime/app/include/App/Scheduler.hpp}}
+\doxymbox{\hyperlink{_scheduler_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <variant>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_action_8hpp}{App/Action.hpp}}"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_action_execution_context_8hpp}{App/ActionExecutionContext.hpp}}"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_channel_manager_8hpp}{App/ChannelManager.hpp}}"{}}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_delay_queue_8hpp}{App/DelayQueue.hpp}}"{}}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_thread_safe_queue_8hpp}{App/ThreadSafeQueue.hpp}}"{}}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_worker_pool_8hpp}{App/WorkerPool.hpp}}"{}}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00027\ \{}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{enum\ class}\ \doxymbox{\hyperlink{namespace_application_a0bd7905d0366206ab29532d46e81cc97}{SchedulerRequestType}}}
+\DoxyCodeLine{00033\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \doxymbox{\hyperlink{namespace_application_a0bd7905d0366206ab29532d46e81cc97a16142c6a6e6e9ff3e72bc091306030aa}{ScheduleAction}},}
+\DoxyCodeLine{00035\ \ \ \ \ \doxymbox{\hyperlink{namespace_application_a0bd7905d0366206ab29532d46e81cc97a189998eb7e0dd4030baea2418cd8d76b}{CancelMostRecent}},}
+\DoxyCodeLine{00036\ \ \ \ \ \doxymbox{\hyperlink{namespace_application_a0bd7905d0366206ab29532d46e81cc97affc0ebed221da9843afa27f673ddfcb3}{CancelChannel}},}
+\DoxyCodeLine{00037\ \ \ \ \ \doxymbox{\hyperlink{namespace_application_a0bd7905d0366206ab29532d46e81cc97a7e5c559435d1bacef48591d43fd36494}{CancelAll}}}
+\DoxyCodeLine{00038\ \};}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00076\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_scheduler_a53d465b72fbd2cc7d6835725e0142b3a}{Scheduler}}}
+\DoxyCodeLine{00077\ \{}
+\DoxyCodeLine{00078\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{explicit}\ \doxymbox{\hyperlink{class_application_1_1_scheduler_a53d465b72fbd2cc7d6835725e0142b3a}{Scheduler}}(std::size\_t\ workerCount\ =\ 2);}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00088\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_scheduler_a2af0890a1a61dd9ba7b2b7237c575f89}{\string~Scheduler}}();}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_scheduler_a415432278438b56d22c1dcb8bf5fa67c}{Scheduler}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_application_1_1_scheduler_a53d465b72fbd2cc7d6835725e0142b3a}{Scheduler}}\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00091\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_scheduler_a53d465b72fbd2cc7d6835725e0142b3a}{Scheduler}}\ \&\doxymbox{\hyperlink{class_application_1_1_scheduler_aa3da0d10bc12058a8c69e43f67f5eb20}{operator=}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_application_1_1_scheduler_a53d465b72fbd2cc7d6835725e0142b3a}{Scheduler}}\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00102\ \ \ \ \ uint64\_t\ \doxymbox{\hyperlink{class_application_1_1_scheduler_a921201151e3c6dbcb9b17af6eaad944b}{submit}}(std::unique\_ptr<Action>\ action);}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00111\ \ \ \ \ uint64\_t\ \doxymbox{\hyperlink{class_application_1_1_scheduler_a921201151e3c6dbcb9b17af6eaad944b}{submit}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_application_1_1_action}{Action}}\ \&action);}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00120\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_scheduler_afe6e59ac8a768f11e4aabed85859d1b5}{cancelAction}}(uint64\_t\ actionId);}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_scheduler_a8c8776249c9550e292b87aae9e1e33df}{cancelChannel}}(uint32\_t\ channel);}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_scheduler_a61a305f5345ed515b594f99e02f09ab3}{cancelAll}}();}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_scheduler_a80cbf8adf69eb5df907c5a96f1361bda}{pause}}();}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_scheduler_ab270fdc73ccee0a476cb7ff1e48fb1fb}{resume}}();}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00153\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_scheduler_a21499200cc2aa28fcb1e39dbc5183869}{isPaused}}()\ const\ noexcept;}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_scheduler_a8dd6f7e7d158ba78794eab45de259864}{stop}}();}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00162\ private:}
+\DoxyCodeLine{00166\ \ \ \ \ struct\ SubmitRequest}
+\DoxyCodeLine{00167\ \ \ \ \ \{}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ std::unique\_ptr<Action>\ action;}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ std::chrono::steady\_clock::time\_point\ earliestStart\{\};}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ uint64\_t\ actionId\ =\ 0;}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ uint64\_t\ parentActionId\ =\ 0;}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ removeIfParentCancelled\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ forceDispatch\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ isCancelFlush\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00181\ \ \ \ \ \};}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00184\ \ \ \ \ \textcolor{keyword}{struct\ }CancelActionRequest}
+\DoxyCodeLine{00185\ \ \ \ \ \{}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ uint64\_t\ actionId\ =\ 0;}
+\DoxyCodeLine{00187\ \ \ \ \ \};}
+\DoxyCodeLine{00188\ }
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{keyword}{struct\ }CancelChannelRequest}
+\DoxyCodeLine{00191\ \ \ \ \ \{}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ uint32\_t\ channel\ =\ 0;}
+\DoxyCodeLine{00193\ \ \ \ \ \};}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00196\ \ \ \ \ \textcolor{keyword}{struct\ }CancelAllRequest}
+\DoxyCodeLine{00197\ \ \ \ \ \{}
+\DoxyCodeLine{00198\ \ \ \ \ \};}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00201\ \ \ \ \ \textcolor{keyword}{struct\ }PauseRequest}
+\DoxyCodeLine{00202\ \ \ \ \ \{}
+\DoxyCodeLine{00203\ \ \ \ \ \};}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00206\ \ \ \ \ \textcolor{keyword}{struct\ }ResumeRequest}
+\DoxyCodeLine{00207\ \ \ \ \ \{}
+\DoxyCodeLine{00208\ \ \ \ \ \};}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00211\ \ \ \ \ \textcolor{keyword}{using\ }SchedulerEvent\ =\ std::variant<}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ SubmitRequest,}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ WorkerResult,}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ CancelActionRequest,}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ CancelChannelRequest,}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ CancelAllRequest,}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ PauseRequest,}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ ResumeRequest>;}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{keywordtype}{void}\ threadMain();}
+\DoxyCodeLine{00222\ }
+\DoxyCodeLine{00224\ \ \ \ \ \textcolor{keywordtype}{void}\ handleSubmit(SubmitRequest\ request);}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keywordtype}{void}\ handleResult(WorkerResult\ result);}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keywordtype}{void}\ handleCancelAction(uint64\_t\ actionId);}
+\DoxyCodeLine{00233\ }
+\DoxyCodeLine{00235\ \ \ \ \ \textcolor{keywordtype}{void}\ handleCancelChannel(uint32\_t\ channel);}
+\DoxyCodeLine{00236\ }
+\DoxyCodeLine{00238\ \ \ \ \ \textcolor{keywordtype}{void}\ handleCancelAll();}
+\DoxyCodeLine{00239\ }
+\DoxyCodeLine{00245\ \ \ \ \ \textcolor{keywordtype}{void}\ handleCancelMostRecent(uint32\_t\ channel,\ uint64\_t\ excludeActionId);}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00248\ \ \ \ \ \textcolor{keywordtype}{void}\ handlePause();}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00251\ \ \ \ \ \textcolor{keywordtype}{void}\ handleResume();}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00257\ \ \ \ \ \textcolor{keywordtype}{void}\ applyDispatch(ChannelDispatch\ dispatch,\ \textcolor{keywordtype}{bool}\ forceDispatch\ =\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00263\ \ \ \ \ \textcolor{keywordtype}{void}\ dispatchToWorker(std::unique\_ptr<ActionExecutionContext>\ context,\ \textcolor{keywordtype}{bool}\ force\ =\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00264\ }
+\DoxyCodeLine{00266\ \ \ \ \ \textcolor{keywordtype}{void}\ processDueDelays();}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00271\ \ \ \ \ \textcolor{keywordtype}{void}\ ingestScheduledActions(ActionExecutionContext\ \&context);}
+\DoxyCodeLine{00272\ }
+\DoxyCodeLine{00276\ \ \ \ \ \textcolor{keywordtype}{void}\ ingestCancelFlushes(ActionExecutionContext\ \&context);}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00281\ \ \ \ \ \textcolor{keywordtype}{void}\ ingestCancelRequests(ActionExecutionContext\ \&context);}
+\DoxyCodeLine{00282\ }
+\DoxyCodeLine{00284\ \ \ \ \ \textcolor{keywordtype}{void}\ registerContext(\textcolor{keyword}{const}\ ActionExecutionContext\ \&context);}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00287\ \ \ \ \ \textcolor{keywordtype}{void}\ unregisterContext(uint64\_t\ actionId);}
+\DoxyCodeLine{00288\ }
+\DoxyCodeLine{00290\ \ \ \ \ \textcolor{keywordtype}{void}\ noteSubmitOrder(uint64\_t\ actionId);}
+\DoxyCodeLine{00291\ }
+\DoxyCodeLine{00293\ \ \ \ \ \textcolor{keywordtype}{void}\ forgetSubmitOrder(uint64\_t\ actionId);}
+\DoxyCodeLine{00294\ }
+\DoxyCodeLine{00296\ \ \ \ \ \textcolor{keywordtype}{void}\ flushCleanups(uint64\_t\ actionId);}
+\DoxyCodeLine{00297\ }
+\DoxyCodeLine{00301\ \ \ \ \ \textcolor{keywordtype}{void}\ discardContext(std::unique\_ptr<ActionExecutionContext>\ context,\ \textcolor{keywordtype}{bool}\ releaseChannel);}
+\DoxyCodeLine{00302\ }
+\DoxyCodeLine{00304\ \ \ \ \ \textcolor{keywordtype}{void}\ discardPausedReady(uint64\_t\ actionId);}
+\DoxyCodeLine{00305\ }
+\DoxyCodeLine{00307\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ isCancelableAction(uint64\_t\ actionId)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00308\ }
+\DoxyCodeLine{00310\ \ \ \ \ [[nodiscard]]\ uint64\_t\ allocateActionId();}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \ \ \ \ ThreadSafeQueue<SchedulerEvent>\ m\_mailbox;}
+\DoxyCodeLine{00313\ \ \ \ \ WorkerPool\ m\_workers;}
+\DoxyCodeLine{00314\ \ \ \ \ std::jthread\ m\_thread;}
+\DoxyCodeLine{00315\ \ \ \ \ std::atomic<uint64\_t>\ m\_nextActionId\{1\};}
+\DoxyCodeLine{00316\ \ \ \ \ std::atomic<bool>\ m\_pausedFlag\{\textcolor{keyword}{false}\};}
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00318\ \ \ \ \ \textcolor{comment}{//\ Touched\ only\ by\ the\ scheduler\ thread:}}
+\DoxyCodeLine{00319\ \ \ \ \ ChannelManager\ m\_channels;}
+\DoxyCodeLine{00320\ \ \ \ \ DelayQueue\ m\_delayQueue;}
+\DoxyCodeLine{00321\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_paused\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00322\ \ \ \ \ std::chrono::steady\_clock::time\_point\ m\_pausedAt\{\};}
+\DoxyCodeLine{00324\ \ \ \ \ std::vector<std::unique\_ptr<ActionExecutionContext>>\ m\_pausedReady;}
+\DoxyCodeLine{00326\ \ \ \ \ std::unordered\_map<uint64\_t,\ std::shared\_ptr<std::atomic<bool>>>\ m\_cancelFlags;}
+\DoxyCodeLine{00328\ \ \ \ \ std::unordered\_map<uint64\_t,\ bool>\ m\_cancelableById;}
+\DoxyCodeLine{00330\ \ \ \ \ std::unordered\_map<uint64\_t,\ uint32\_t>\ m\_logicalChannelById;}
+\DoxyCodeLine{00332\ \ \ \ \ std::vector<uint64\_t>\ m\_submitOrder;}
+\DoxyCodeLine{00334\ \ \ \ \ std::unordered\_map<uint64\_t,\ std::vector<std::unique\_ptr<Action>>>\ m\_flushActions;}
+\DoxyCodeLine{00336\ \ \ \ \ std::unordered\_map<uint64\_t,\ std::vector<uint64\_t>>\ m\_linkedDelayedByParent;}
+\DoxyCodeLine{00337\ \};}
+\DoxyCodeLine{00338\ }
+\DoxyCodeLine{00339\ \}\ \textcolor{comment}{//\ namespace\ Application}}
+
+\end{DoxyCode}

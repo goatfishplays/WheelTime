@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['ui_0',['&lt;b&gt;Stop hardcoding logic into the UI&lt;/b&gt;',['../md_scrum_2_sprint_01_0g2_01_report.html#autotoc_md34',1,'']]],
+  ['unit_20tests_20made_1',['-Does your work pass all unit tests made',['../md__acceptance_01_criteria.html#autotoc_md9',1,'']]],
+  ['unregister_2',['Unregister',['../md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics.html#autotoc_md149',1,'']]],
+  ['updating_20each_20other_20often_20on_20what_20s_20currently_20being_20worked_20on_3',['&lt;b&gt;Not updating each other often on what&apos;s currently being worked on&lt;/b&gt;',['../md_scrum_2_sprint_01_0g3_01_report.html#autotoc_md52',1,'']]],
+  ['updating_20the_20scrum_20board_20more_20often_4',['&lt;b&gt;Start updating the scrum board more often&lt;/b&gt;',['../md_scrum_2_sprint_01_report_01_0g1.html#autotoc_md73',1,'']]],
+  ['uploaded_20and_20functional_20in_20the_20git_20repository_5',['-Is your code fully uploaded and functional in the Git Repository?',['../md__acceptance_01_criteria.html#autotoc_md5',1,'']]],
+  ['user_20stories_6',['User Stories',['../md_scrum_2_release_01_plan.html#autotoc_md26',1,'']]],
+  ['user_20stories_20to_20organize_20work_7',['&lt;b&gt;Keep using user stories to organize work&lt;/b&gt;',['../md_scrum_2_sprint_01_report_01_0g1.html#autotoc_md79',1,'']]],
+  ['user_20story_8',['User Story',['../md_scrum_2_sprint_plan_01_0g2.html#autotoc_md91',1,'&lt;b&gt;Task Listing by User Story&lt;/b&gt;'],['../md_scrum_2_sprint_plan_01_0g3.html#autotoc_md106',1,'&lt;b&gt;Task Listing by User Story&lt;/b&gt;'],['../md_scrum_2_sprint_plan_01_0g4.html#autotoc_md119',1,'&lt;b&gt;Task Listing by User Story&lt;/b&gt;'],['../md_scrum_2_sprint_plan1.html#autotoc_md133',1,'&lt;b&gt;Task Listing by User Story&lt;/b&gt;']]],
+  ['user_20story_9',['-Does your finished part fulfill all the specified needs of the user story?',['../md__acceptance_01_criteria.html#autotoc_md3',1,'']]],
+  ['user_20story_201_20—_20high_20priority_10',['&lt;b&gt;User Story 1 — High Priority&lt;/b&gt;',['../md_scrum_2_sprint_plan1.html#autotoc_md134',1,'']]],
+  ['user_20story_201_20medium_20high_20priority_11',['User Story 1 Medium High Priority',['../md_scrum_2_sprint_plan_01_0g2.html#autotoc_md92',1,'&lt;b&gt;User Story 1 - Medium-High Priority&lt;/b&gt;'],['../md_scrum_2_sprint_plan_01_0g3.html#autotoc_md107',1,'&lt;b&gt;User Story 1 - Medium-High Priority&lt;/b&gt;']]],
+  ['user_20story_201_20medium_20low_20priority_12',['&lt;b&gt;User Story 1 - Medium-Low Priority&lt;/b&gt;',['../md_scrum_2_sprint_plan_01_0g4.html#autotoc_md120',1,'']]],
+  ['user_20story_202_20—_20high_20priority_13',['&lt;b&gt;User Story 2 — High Priority&lt;/b&gt;',['../md_scrum_2_sprint_plan1.html#autotoc_md135',1,'']]],
+  ['user_20story_202_20medium_20high_20priority_14',['User Story 2 Medium High Priority',['../md_scrum_2_sprint_plan_01_0g2.html#autotoc_md93',1,'&lt;b&gt;User Story 2 - Medium-High Priority&lt;/b&gt;'],['../md_scrum_2_sprint_plan_01_0g3.html#autotoc_md108',1,'&lt;b&gt;User Story 2 - Medium-High Priority&lt;/b&gt;']]],
+  ['user_20story_202_20medium_20priority_15',['&lt;b&gt;User Story 2 - Medium Priority&lt;/b&gt;',['../md_scrum_2_sprint_plan_01_0g4.html#autotoc_md121',1,'']]],
+  ['user_20story_203_20—_20low_20priority_16',['&lt;b&gt;User Story 3 — Low Priority&lt;/b&gt;',['../md_scrum_2_sprint_plan1.html#autotoc_md136',1,'']]],
+  ['user_20story_203_20high_20priority_17',['&lt;b&gt;User Story 3 - High Priority&lt;/b&gt;',['../md_scrum_2_sprint_plan_01_0g2.html#autotoc_md94',1,'']]],
+  ['user_20story_203_20medium_20priority_18',['&lt;b&gt;User Story 3 - Medium Priority&lt;/b&gt;',['../md_scrum_2_sprint_plan_01_0g4.html#autotoc_md122',1,'']]],
+  ['user_20story_204_20low_20priority_20backlog_19',['&lt;b&gt;User Story 4 - Low Priority (Backlog)&lt;/b&gt;',['../md_scrum_2_sprint_plan_01_0g2.html#autotoc_md95',1,'']]],
+  ['user_20story_20done_20workflow_20',['&lt;b&gt;Start strictly enforcing the &quot;User Story Done&quot; workflow&lt;/b&gt;',['../md_scrum_2_sprint_01_0g3_01_report.html#autotoc_md54',1,'']]],
+  ['using_20abstraction_20for_20modular_20code_21',['&lt;b&gt;Keep using abstraction for modular code&lt;/b&gt;',['../md_scrum_2_sprint_01_0g2_01_report.html#autotoc_md39',1,'']]],
+  ['using_20headers_20and_20separate_20implementation_20structures_22',['&lt;b&gt;Keep using headers and separate implementation structures&lt;/b&gt;',['../md_scrum_2_sprint_01_0g3_01_report.html#autotoc_md56',1,'']]],
+  ['using_20the_20trello_20board_23',['&lt;b&gt;Keep actively using the Trello board&lt;/b&gt;',['../md_scrum_2_sprint_01_0g2_01_report.html#autotoc_md38',1,'']]],
+  ['using_20user_20stories_20to_20organize_20work_24',['&lt;b&gt;Keep using user stories to organize work&lt;/b&gt;',['../md_scrum_2_sprint_01_report_01_0g1.html#autotoc_md79',1,'']]]
+];

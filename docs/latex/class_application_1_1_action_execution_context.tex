@@ -1,0 +1,414 @@
+\doxysection{Application::\+Action\+Execution\+Context Class Reference}
+\hypertarget{class_application_1_1_action_execution_context}{}\label{class_application_1_1_action_execution_context}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+
+
+Owns an \doxylink{class_application_1_1_action}{Action} and tracks progress while workers run its items.  
+
+
+
+
+{\ttfamily \+\#include $<$Action\+Execution\+Context.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_execution_context_a40beeeb81e9bf3638ad3c9d35a7a2bb8}{Action\+Execution\+Context}} (std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$ action, uint64\+\_\+t action\+Id=0)
+\begin{DoxyCompactList}\small\item\em Takes ownership of {\ttfamily action}. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_application_1_1_action_execution_context_ac2a812271e71a0f1e033204ef451f35d}{Action\+Execution\+Context}} (const Action\+Execution\+Context \&)=delete
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_execution_context_a40beeeb81e9bf3638ad3c9d35a7a2bb8}{Action\+Execution\+Context}} \& \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a70ce2eab04e713fefbc2800af1ccf238}{operator=}} (const \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a40beeeb81e9bf3638ad3c9d35a7a2bb8}{Action\+Execution\+Context}} \&)=delete
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_execution_context_a9734f7f6bf6bd754d7460dfa2c46c4e5}{Action\+Execution\+Context}} (Action\+Execution\+Context \&\&) noexcept=default
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_execution_context_a40beeeb81e9bf3638ad3c9d35a7a2bb8}{Action\+Execution\+Context}} \& \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a49938ac1c9ded9e2121523bd932ca5a0}{operator=}} (\doxymbox{\hyperlink{class_application_1_1_action_execution_context_a40beeeb81e9bf3638ad3c9d35a7a2bb8}{Action\+Execution\+Context}} \&\&) noexcept=default
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_execution_context_afca75fa866f47f94e74914b440706c9c}{\texorpdfstring{$\sim$}{\string~}\+Action\+Execution\+Context}} ()=default
+\item 
+uint64\+\_\+t \doxymbox{\hyperlink{class_application_1_1_action_execution_context_ad8bcee18289846b3e85fd442163f4ac8}{action\+Id}} () const noexcept
+\begin{DoxyCompactList}\small\item\em Runtime instance id (distinct from \doxylink{class_application_1_1_action}{Action}\textquotesingle{}s config/\+library string id). \end{DoxyCompactList}\item 
+uint32\+\_\+t \doxymbox{\hyperlink{class_application_1_1_action_execution_context_aa6f585cdb1416e77a8ce3228c3a8990c}{channel}} () const noexcept
+\begin{DoxyCompactList}\small\item\em Forwards \doxylink{class_application_1_1_action_a2526833ca8645544b3e55a47d2b9ae1d}{Action::\+channel()} for the owned \doxylink{class_application_1_1_action}{Action}. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_action_execution_context_acd5682dc087a0399d0d441d9cea41aec}{is\+Cancelable}} () const noexcept
+\begin{DoxyCompactList}\small\item\em Forwards \doxylink{class_application_1_1_action_a38412b00e3c31308f323832905beda4f}{Action::\+cancelable()}. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a622023494d9ec7d2a996ecdb5a4ba2f4}{is\+Cancelled}} () const noexcept
+\begin{DoxyCompactList}\small\item\em Whether \doxylink{class_application_1_1_action_execution_context_acfcdebd069612faacd8b2428063fe940}{cancel()} was requested; checked between Action\+Items. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_action_execution_context_acfcdebd069612faacd8b2428063fe940}{cancel}} () noexcept
+\begin{DoxyCompactList}\small\item\em Marks this execution cancelled. Takes effect between Action\+Items. \end{DoxyCompactList}\item 
+std::\+shared\+\_\+ptr$<$ std::\+atomic$<$ bool $>$ $>$ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a5dba2da3a5362a72d78a44cfaaf14b4e}{cancel\+Flag}} () const noexcept
+\begin{DoxyCompactList}\small\item\em Shared flag so the scheduler can cancel while a worker owns this context. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_application_1_1_action}{Action}} \& \doxymbox{\hyperlink{class_application_1_1_action_execution_context_aa05e84ddd8d6d63b5e2950750b52b6de}{action}} () noexcept
+\item 
+const \doxymbox{\hyperlink{class_application_1_1_action}{Action}} \& \doxymbox{\hyperlink{class_application_1_1_action_execution_context_abb2ed072ecb607f93cd2b6da81c264d0}{action}} () const noexcept
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_item}{Action\+Item}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_application_1_1_action_execution_context_ae6e6520d08bed635398df82124bf6b77}{current\+Item}} () noexcept
+\begin{DoxyCompactList}\small\item\em Item at the current index, or nullptr if \doxylink{class_application_1_1_action_execution_context_ae04b1a4235f60ec115c6b8a69a89801e}{finished()}. \end{DoxyCompactList}\item 
+const \doxymbox{\hyperlink{class_application_1_1_action_item}{Action\+Item}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a2104c63123ed11b2f3ac7157f2dd4647}{current\+Item}} () const noexcept
+\item 
+size\+\_\+t \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a84c659062945839ec0ddab08d897d68e}{current\+Index}} () const noexcept
+\begin{DoxyCompactList}\small\item\em Zero-\/based index of the next/\+current \doxylink{class_application_1_1_action_item}{Action\+Item}. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_action_execution_context_aaa86ab3e66156c9b645e70466821f248}{advance}} () noexcept
+\begin{DoxyCompactList}\small\item\em Advances to the next item without executing it. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_action_execution_context_ae04b1a4235f60ec115c6b8a69a89801e}{finished}} () const noexcept
+\begin{DoxyCompactList}\small\item\em True when the current index is past the last item. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a9bde69e5887b05935ba12198c1a63a16}{schedule\+Action}} (std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$ action, std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point wake\+Time, bool remove\+If\+Parent\+Cancelled=false)
+\begin{DoxyCompactList}\small\item\em Records an \doxylink{class_application_1_1_action}{Action} for the scheduler to pick up after execute() returns. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a0bacf48bdbce109a232e2b0dedb6072b}{set\+Cancel\+Flush}} (std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$ action)
+\begin{DoxyCompactList}\small\item\em Registers cleanup to run immediately when this \doxylink{class_application_1_1_action}{Action} is cancelled. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_action_execution_context_ac9fef8b606b6256220123846731e4067}{request\+Cancel\+Most\+Recent}} (uint32\+\_\+t channel)
+\begin{DoxyCompactList}\small\item\em Requests cancel of the most recent \doxylink{class_application_1_1_action}{Action} on {\ttfamily channel} (0 = any). \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a0962f48b138434427258f64247a360a6}{request\+Cancel\+Channel}} (uint32\+\_\+t channel)
+\begin{DoxyCompactList}\small\item\em Requests cancel\+Channel({\ttfamily channel}) after execute() returns. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a398141c7197313b7de3b9dbbb0849542}{request\+Cancel\+All}} ()
+\begin{DoxyCompactList}\small\item\em Requests cancel\+All() after execute() returns. \end{DoxyCompactList}\item 
+const std::\+vector$<$ \doxymbox{\hyperlink{struct_application_1_1_scheduled_action}{Scheduled\+Action}} $>$ \& \doxymbox{\hyperlink{class_application_1_1_action_execution_context_aeb1637a6196e31acd68b9cfa6cf04867}{scheduled\+Actions}} () const noexcept
+\begin{DoxyCompactList}\small\item\em Pending nested submits (scheduler should prefer \doxylink{class_application_1_1_action_execution_context_a06c424b47da8c3a1a7af15146c685adc}{take\+Scheduled\+Actions()}). \end{DoxyCompactList}\item 
+std::\+vector$<$ \doxymbox{\hyperlink{struct_application_1_1_scheduled_action}{Scheduled\+Action}} $>$ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a06c424b47da8c3a1a7af15146c685adc}{take\+Scheduled\+Actions}} () noexcept
+\begin{DoxyCompactList}\small\item\em Moves out all pending schedule requests and clears the list. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a0ba488c04724edd02a4161a4aee06991}{clear\+Scheduled\+Actions}} () noexcept
+\begin{DoxyCompactList}\small\item\em Drops pending nested submits without returning them. \end{DoxyCompactList}\item 
+std::\+vector$<$ std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$ $>$ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a34fc50e2ff890d56f9d0700b79a9394a}{take\+Cancel\+Flushes}} () noexcept
+\begin{DoxyCompactList}\small\item\em Moves out cancel-\/flush Actions and clears the list. \end{DoxyCompactList}\item 
+std::\+vector$<$ \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request}{Pending\+Cancel\+Request}} $>$ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a18677eef2b55f44cd509b694e1c3f43e}{take\+Cancel\+Requests}} () noexcept
+\begin{DoxyCompactList}\small\item\em Moves out pending cancel requests and clears the list. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_action_execution_context_ad8501c567ba2bc26057c465ca664b06d}{has\+Pending\+Scheduler\+Requests}} () const noexcept
+\begin{DoxyCompactList}\small\item\em True if schedule\+Action /\+ set\+Cancel\+Flush /\+ cancel requests are pending. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_action_execution_context_aff0f094f27a689b6b6055348f44bf4e8}{mark\+Cancel\+Flush}} () noexcept
+\begin{DoxyCompactList}\small\item\em Marks this context as a cancel-\/flush cleanup \doxylink{class_application_1_1_action}{Action}. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a1b7c1edc4237308167ee3a39a162eb5b}{is\+Cancel\+Flush}} () const noexcept
+\begin{DoxyCompactList}\small\item\em True if this \doxylink{class_application_1_1_action}{Action} was submitted as cancel-\/flush cleanup. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Owns an \doxylink{class_application_1_1_action}{Action} and tracks progress while workers run its items. 
+
+Workers execute contexts, not bare Actions. This type holds:\+
+\begin{DoxyItemize}
+\item the \doxylink{class_application_1_1_action}{Action} (ownership),
+\item the current \doxylink{class_application_1_1_action_item}{Action\+Item} index,
+\item shared cancel state (so the scheduler can cancel an in-\/flight \doxylink{class_application_1_1_action}{Action}),
+\item pending \doxylink{struct_application_1_1_scheduled_action}{Scheduled\+Action} requests,
+\item pending cancel requests (cancel\+Action /\+ cancel\+Channel /\+ cancel\+All),
+\item cancel-\/flush Actions (run immediately when this \doxylink{class_application_1_1_action}{Action} is cancelled). 
+\end{DoxyItemize}
+
+\label{class_application_1_1_action_execution_context_doc-constructors}
+\Hypertarget{class_application_1_1_action_execution_context_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_action_execution_context_a40beeeb81e9bf3638ad3c9d35a7a2bb8}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!ActionExecutionContext@{ActionExecutionContext}}
+\index{ActionExecutionContext@{ActionExecutionContext}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{ActionExecutionContext()}{ActionExecutionContext()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_a40beeeb81e9bf3638ad3c9d35a7a2bb8} 
+Application::\+\+Action\+Execution\+Context::\+\+Action\+Execution\+Context (\begin{DoxyParamCaption}\item[{std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$}]{action}{, }\item[{uint64\+\_\+t}]{action\+Id}{ = {\ttfamily 0}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Takes ownership of {\ttfamily action}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em action\+Id} & Preassigned runtime id; if 0, a new id is allocated. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std::\+invalid\+\_\+argument} & if {\ttfamily action} is null. \\
+\hline
+\end{DoxyExceptions}
+\Hypertarget{class_application_1_1_action_execution_context_ac2a812271e71a0f1e033204ef451f35d}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!ActionExecutionContext@{ActionExecutionContext}}
+\index{ActionExecutionContext@{ActionExecutionContext}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{ActionExecutionContext()}{ActionExecutionContext()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_ac2a812271e71a0f1e033204ef451f35d} 
+Application::\+\+Action\+Execution\+Context::\+\+Action\+Execution\+Context (\begin{DoxyParamCaption}\item[{const Action\+Execution\+Context \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_application_1_1_action_execution_context_a9734f7f6bf6bd754d7460dfa2c46c4e5}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!ActionExecutionContext@{ActionExecutionContext}}
+\index{ActionExecutionContext@{ActionExecutionContext}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{ActionExecutionContext()}{ActionExecutionContext()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_a9734f7f6bf6bd754d7460dfa2c46c4e5} 
+Application::\+\+Action\+Execution\+Context::\+\+Action\+Execution\+Context (\begin{DoxyParamCaption}\item[{Action\+Execution\+Context \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{class_application_1_1_action_execution_context_afca75fa866f47f94e74914b440706c9c}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!````~ActionExecutionContext@{\texorpdfstring{$\sim$}{\string~}ActionExecutionContext}}
+\index{````~ActionExecutionContext@{\texorpdfstring{$\sim$}{\string~}ActionExecutionContext}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}ActionExecutionContext()}{\string~ActionExecutionContext()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_afca75fa866f47f94e74914b440706c9c} 
+Application::\+\+Action\+Execution\+Context::\+\texorpdfstring{$\sim$}{\string~}\+Action\+Execution\+Context (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+
+
+\label{class_application_1_1_action_execution_context_doc-func-members}
+\Hypertarget{class_application_1_1_action_execution_context_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_action_execution_context_abb2ed072ecb607f93cd2b6da81c264d0}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!action@{action}}
+\index{action@{action}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{action()}{action()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_abb2ed072ecb607f93cd2b6da81c264d0} 
+const \doxymbox{\hyperlink{class_application_1_1_action}{Action}} \& Application::\+\+Action\+Execution\+Context::\+action (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{class_application_1_1_action_execution_context_aa05e84ddd8d6d63b5e2950750b52b6de}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!action@{action}}
+\index{action@{action}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{action()}{action()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_aa05e84ddd8d6d63b5e2950750b52b6de} 
+\doxymbox{\hyperlink{class_application_1_1_action}{Action}} \& Application::\+\+Action\+Execution\+Context::\+action (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{class_application_1_1_action_execution_context_ad8bcee18289846b3e85fd442163f4ac8}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!actionId@{actionId}}
+\index{actionId@{actionId}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{actionId()}{actionId()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_ad8bcee18289846b3e85fd442163f4ac8} 
+uint64\+\_\+t Application::\+\+Action\+Execution\+Context::\+action\+Id (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Runtime instance id (distinct from \doxylink{class_application_1_1_action}{Action}\textquotesingle{}s config/\+library string id). 
+
+\Hypertarget{class_application_1_1_action_execution_context_aaa86ab3e66156c9b645e70466821f248}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!advance@{advance}}
+\index{advance@{advance}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{advance()}{advance()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_aaa86ab3e66156c9b645e70466821f248} 
+void Application::\+\+Action\+Execution\+Context::\+advance (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+Advances to the next item without executing it. 
+
+\Hypertarget{class_application_1_1_action_execution_context_acfcdebd069612faacd8b2428063fe940}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!cancel@{cancel}}
+\index{cancel@{cancel}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{cancel()}{cancel()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_acfcdebd069612faacd8b2428063fe940} 
+void Application::\+\+Action\+Execution\+Context::\+cancel (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+Marks this execution cancelled. Takes effect between Action\+Items. 
+
+\Hypertarget{class_application_1_1_action_execution_context_a5dba2da3a5362a72d78a44cfaaf14b4e}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!cancelFlag@{cancelFlag}}
+\index{cancelFlag@{cancelFlag}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{cancelFlag()}{cancelFlag()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_a5dba2da3a5362a72d78a44cfaaf14b4e} 
+std::\+shared\+\_\+ptr$<$ std::\+atomic$<$ bool $>$ $>$ Application::\+\+Action\+Execution\+Context::\+cancel\+Flag (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Shared flag so the scheduler can cancel while a worker owns this context. 
+
+\Hypertarget{class_application_1_1_action_execution_context_aa6f585cdb1416e77a8ce3228c3a8990c}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!channel@{channel}}
+\index{channel@{channel}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{channel()}{channel()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_aa6f585cdb1416e77a8ce3228c3a8990c} 
+uint32\+\_\+t Application::\+\+Action\+Execution\+Context::\+channel (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Forwards \doxylink{class_application_1_1_action_a2526833ca8645544b3e55a47d2b9ae1d}{Action::\+channel()} for the owned \doxylink{class_application_1_1_action}{Action}. 
+
+\Hypertarget{class_application_1_1_action_execution_context_a0ba488c04724edd02a4161a4aee06991}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!clearScheduledActions@{clearScheduledActions}}
+\index{clearScheduledActions@{clearScheduledActions}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{clearScheduledActions()}{clearScheduledActions()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_a0ba488c04724edd02a4161a4aee06991} 
+void Application::\+\+Action\+Execution\+Context::\+clear\+Scheduled\+Actions (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+Drops pending nested submits without returning them. 
+
+\Hypertarget{class_application_1_1_action_execution_context_a84c659062945839ec0ddab08d897d68e}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!currentIndex@{currentIndex}}
+\index{currentIndex@{currentIndex}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{currentIndex()}{currentIndex()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_a84c659062945839ec0ddab08d897d68e} 
+size\+\_\+t Application::\+\+Action\+Execution\+Context::\+current\+Index (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Zero-\/based index of the next/\+current \doxylink{class_application_1_1_action_item}{Action\+Item}. 
+
+\Hypertarget{class_application_1_1_action_execution_context_a2104c63123ed11b2f3ac7157f2dd4647}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!currentItem@{currentItem}}
+\index{currentItem@{currentItem}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{currentItem()}{currentItem()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_a2104c63123ed11b2f3ac7157f2dd4647} 
+const \doxymbox{\hyperlink{class_application_1_1_action_item}{Action\+Item}} \texorpdfstring{$\ast$}{*} Application::\+\+Action\+Execution\+Context::\+current\+Item (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{class_application_1_1_action_execution_context_ae6e6520d08bed635398df82124bf6b77}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!currentItem@{currentItem}}
+\index{currentItem@{currentItem}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{currentItem()}{currentItem()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_ae6e6520d08bed635398df82124bf6b77} 
+\doxymbox{\hyperlink{class_application_1_1_action_item}{Action\+Item}} \texorpdfstring{$\ast$}{*} Application::\+\+Action\+Execution\+Context::\+current\+Item (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Item at the current index, or nullptr if \doxylink{class_application_1_1_action_execution_context_ae04b1a4235f60ec115c6b8a69a89801e}{finished()}. 
+
+\Hypertarget{class_application_1_1_action_execution_context_ae04b1a4235f60ec115c6b8a69a89801e}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!finished@{finished}}
+\index{finished@{finished}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{finished()}{finished()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_ae04b1a4235f60ec115c6b8a69a89801e} 
+bool Application::\+\+Action\+Execution\+Context::\+finished (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+True when the current index is past the last item. 
+
+\Hypertarget{class_application_1_1_action_execution_context_ad8501c567ba2bc26057c465ca664b06d}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!hasPendingSchedulerRequests@{hasPendingSchedulerRequests}}
+\index{hasPendingSchedulerRequests@{hasPendingSchedulerRequests}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{hasPendingSchedulerRequests()}{hasPendingSchedulerRequests()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_ad8501c567ba2bc26057c465ca664b06d} 
+bool Application::\+\+Action\+Execution\+Context::\+has\+Pending\+Scheduler\+Requests (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+True if schedule\+Action /\+ set\+Cancel\+Flush /\+ cancel requests are pending. 
+
+\Hypertarget{class_application_1_1_action_execution_context_acd5682dc087a0399d0d441d9cea41aec}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!isCancelable@{isCancelable}}
+\index{isCancelable@{isCancelable}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{isCancelable()}{isCancelable()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_acd5682dc087a0399d0d441d9cea41aec} 
+bool Application::\+\+Action\+Execution\+Context::\+is\+Cancelable (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Forwards \doxylink{class_application_1_1_action_a38412b00e3c31308f323832905beda4f}{Action::\+cancelable()}. 
+
+\Hypertarget{class_application_1_1_action_execution_context_a1b7c1edc4237308167ee3a39a162eb5b}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!isCancelFlush@{isCancelFlush}}
+\index{isCancelFlush@{isCancelFlush}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{isCancelFlush()}{isCancelFlush()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_a1b7c1edc4237308167ee3a39a162eb5b} 
+bool Application::\+\+Action\+Execution\+Context::\+is\+Cancel\+Flush (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+True if this \doxylink{class_application_1_1_action}{Action} was submitted as cancel-\/flush cleanup. 
+
+\Hypertarget{class_application_1_1_action_execution_context_a622023494d9ec7d2a996ecdb5a4ba2f4}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!isCancelled@{isCancelled}}
+\index{isCancelled@{isCancelled}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{isCancelled()}{isCancelled()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_a622023494d9ec7d2a996ecdb5a4ba2f4} 
+bool Application::\+\+Action\+Execution\+Context::\+is\+Cancelled (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Whether \doxylink{class_application_1_1_action_execution_context_acfcdebd069612faacd8b2428063fe940}{cancel()} was requested; checked between Action\+Items. 
+
+\Hypertarget{class_application_1_1_action_execution_context_aff0f094f27a689b6b6055348f44bf4e8}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!markCancelFlush@{markCancelFlush}}
+\index{markCancelFlush@{markCancelFlush}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{markCancelFlush()}{markCancelFlush()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_aff0f094f27a689b6b6055348f44bf4e8} 
+void Application::\+\+Action\+Execution\+Context::\+mark\+Cancel\+Flush (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+
+
+Marks this context as a cancel-\/flush cleanup \doxylink{class_application_1_1_action}{Action}. 
+
+Set by the scheduler when submitting set\+Cancel\+Flush work so workers can log flush execution separately from normal runs. \Hypertarget{class_application_1_1_action_execution_context_a49938ac1c9ded9e2121523bd932ca5a0}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!operator=@{operator=}}
+\index{operator=@{operator=}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_a49938ac1c9ded9e2121523bd932ca5a0} 
+\doxymbox{\hyperlink{class_application_1_1_action_execution_context_a40beeeb81e9bf3638ad3c9d35a7a2bb8}{Action\+Execution\+Context}} \& Application::\+\+Action\+Execution\+Context::\+operator= (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_application_1_1_action_execution_context_a40beeeb81e9bf3638ad3c9d35a7a2bb8}{Action\+Execution\+Context}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{class_application_1_1_action_execution_context_a70ce2eab04e713fefbc2800af1ccf238}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!operator=@{operator=}}
+\index{operator=@{operator=}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_a70ce2eab04e713fefbc2800af1ccf238} 
+\doxymbox{\hyperlink{class_application_1_1_action_execution_context_a40beeeb81e9bf3638ad3c9d35a7a2bb8}{Action\+Execution\+Context}} \& Application::\+\+Action\+Execution\+Context::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a40beeeb81e9bf3638ad3c9d35a7a2bb8}{Action\+Execution\+Context}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_application_1_1_action_execution_context_a398141c7197313b7de3b9dbbb0849542}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!requestCancelAll@{requestCancelAll}}
+\index{requestCancelAll@{requestCancelAll}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{requestCancelAll()}{requestCancelAll()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_a398141c7197313b7de3b9dbbb0849542} 
+void Application::\+\+Action\+Execution\+Context::\+request\+Cancel\+All (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Requests cancel\+All() after execute() returns. 
+
+\Hypertarget{class_application_1_1_action_execution_context_a0962f48b138434427258f64247a360a6}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!requestCancelChannel@{requestCancelChannel}}
+\index{requestCancelChannel@{requestCancelChannel}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{requestCancelChannel()}{requestCancelChannel()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_a0962f48b138434427258f64247a360a6} 
+void Application::\+\+Action\+Execution\+Context::\+request\+Cancel\+Channel (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{channel}{}\end{DoxyParamCaption})}
+
+
+
+Requests cancel\+Channel({\ttfamily channel}) after execute() returns. 
+
+\Hypertarget{class_application_1_1_action_execution_context_ac9fef8b606b6256220123846731e4067}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!requestCancelMostRecent@{requestCancelMostRecent}}
+\index{requestCancelMostRecent@{requestCancelMostRecent}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{requestCancelMostRecent()}{requestCancelMostRecent()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_ac9fef8b606b6256220123846731e4067} 
+void Application::\+\+Action\+Execution\+Context::\+request\+Cancel\+Most\+Recent (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{channel}{}\end{DoxyParamCaption})}
+
+
+
+Requests cancel of the most recent \doxylink{class_application_1_1_action}{Action} on {\ttfamily channel} (0 = any). 
+
+The requesting \doxylink{class_application_1_1_action}{Action} (this context) is excluded so Cancel Latest never cancels itself. \Hypertarget{class_application_1_1_action_execution_context_a9bde69e5887b05935ba12198c1a63a16}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!scheduleAction@{scheduleAction}}
+\index{scheduleAction@{scheduleAction}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{scheduleAction()}{scheduleAction()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_a9bde69e5887b05935ba12198c1a63a16} 
+void Application::\+\+Action\+Execution\+Context::\+schedule\+Action (\begin{DoxyParamCaption}\item[{std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$}]{action}{, }\item[{std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point}]{wake\+Time}{, }\item[{bool}]{remove\+If\+Parent\+Cancelled}{ = {\ttfamily false}}\end{DoxyParamCaption})}
+
+
+
+Records an \doxylink{class_application_1_1_action}{Action} for the scheduler to pick up after execute() returns. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em action} & Nested work to submit (ignored if null). \\
+\hline
+{\em wake\+Time} & Earliest time the scheduler should start it. \\
+\hline
+{\em remove\+If\+Parent\+Cancelled} & If true, cancel of this context removes that child. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_application_1_1_action_execution_context_aeb1637a6196e31acd68b9cfa6cf04867}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!scheduledActions@{scheduledActions}}
+\index{scheduledActions@{scheduledActions}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{scheduledActions()}{scheduledActions()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_aeb1637a6196e31acd68b9cfa6cf04867} 
+const std::\+vector$<$ \doxymbox{\hyperlink{struct_application_1_1_scheduled_action}{Scheduled\+Action}} $>$ \& Application::\+\+Action\+Execution\+Context::\+scheduled\+Actions (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Pending nested submits (scheduler should prefer \doxylink{class_application_1_1_action_execution_context_a06c424b47da8c3a1a7af15146c685adc}{take\+Scheduled\+Actions()}). 
+
+\Hypertarget{class_application_1_1_action_execution_context_a0bacf48bdbce109a232e2b0dedb6072b}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!setCancelFlush@{setCancelFlush}}
+\index{setCancelFlush@{setCancelFlush}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{setCancelFlush()}{setCancelFlush()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_a0bacf48bdbce109a232e2b0dedb6072b} 
+void Application::\+\+Action\+Execution\+Context::\+set\+Cancel\+Flush (\begin{DoxyParamCaption}\item[{std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$}]{action}{}\end{DoxyParamCaption})}
+
+
+
+Registers cleanup to run immediately when this \doxylink{class_application_1_1_action}{Action} is cancelled. 
+
+Typical use:\+ Key\+Down schedules a delayed Key\+Up and also set\+Cancel\+Flush(\+Key\+Up) so cancel releases the key without waiting for the hold delay. \Hypertarget{class_application_1_1_action_execution_context_a34fc50e2ff890d56f9d0700b79a9394a}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!takeCancelFlushes@{takeCancelFlushes}}
+\index{takeCancelFlushes@{takeCancelFlushes}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{takeCancelFlushes()}{takeCancelFlushes()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_a34fc50e2ff890d56f9d0700b79a9394a} 
+std::\+vector$<$ std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$ $>$ Application::\+\+Action\+Execution\+Context::\+take\+Cancel\+Flushes (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Moves out cancel-\/flush Actions and clears the list. 
+
+\Hypertarget{class_application_1_1_action_execution_context_a18677eef2b55f44cd509b694e1c3f43e}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!takeCancelRequests@{takeCancelRequests}}
+\index{takeCancelRequests@{takeCancelRequests}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{takeCancelRequests()}{takeCancelRequests()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_a18677eef2b55f44cd509b694e1c3f43e} 
+std::\+vector$<$ \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request}{Pending\+Cancel\+Request}} $>$ Application::\+\+Action\+Execution\+Context::\+take\+Cancel\+Requests (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Moves out pending cancel requests and clears the list. 
+
+\Hypertarget{class_application_1_1_action_execution_context_a06c424b47da8c3a1a7af15146c685adc}\index{Application::ActionExecutionContext@{Application::ActionExecutionContext}!takeScheduledActions@{takeScheduledActions}}
+\index{takeScheduledActions@{takeScheduledActions}!Application::ActionExecutionContext@{Application::ActionExecutionContext}}
+\doxysubsubsection{\texorpdfstring{takeScheduledActions()}{takeScheduledActions()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_execution_context_a06c424b47da8c3a1a7af15146c685adc} 
+std::\+vector$<$ \doxymbox{\hyperlink{struct_application_1_1_scheduled_action}{Scheduled\+Action}} $>$ Application::\+\+Action\+Execution\+Context::\+take\+Scheduled\+Actions (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Moves out all pending schedule requests and clears the list. 
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_action_execution_context_8hpp}{Action\+Execution\+Context.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\doxymbox{\hyperlink{_action_execution_context_8cpp}{Action\+Execution\+Context.\+cpp}}\end{DoxyCompactItemize}

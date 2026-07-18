@@ -1,0 +1,41 @@
+\doxysection{Execute\+Result.\+hpp}
+\hypertarget{_execute_result_8hpp_source}{}\label{_execute_result_8hpp_source}\index{E:/Github/WheelTime/app/include/App/ExecuteResult.hpp@{E:/Github/WheelTime/app/include/App/ExecuteResult.hpp}}
+\doxymbox{\hyperlink{_execute_result_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00011\ \{}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }ExecuteResult}
+\DoxyCodeLine{00024\ \{}
+\DoxyCodeLine{00025\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{enum\ class}\ \doxymbox{\hyperlink{class_application_1_1_execute_result_a49ecdbf2b9adb0b4902a9b9dc7a78d41}{Type}}}
+\DoxyCodeLine{00027\ \ \ \ \ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_execute_result_af4cb1d5b5d7317f4ab2e23314bbacced}{Continue}},\ \ }
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_execute_result_aa1fa4181b276f43d88aaec9ade72b41c}{DelayUntil}}\ }
+\DoxyCodeLine{00030\ \ \ \ \ \};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00033\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{class_application_1_1_execute_result}{ExecuteResult}}\ \doxymbox{\hyperlink{class_application_1_1_execute_result_af4cb1d5b5d7317f4ab2e23314bbacced}{Continue}}();}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00039\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \doxymbox{\hyperlink{class_application_1_1_execute_result}{ExecuteResult}}\ \doxymbox{\hyperlink{class_application_1_1_execute_result_aa1fa4181b276f43d88aaec9ade72b41c}{DelayUntil}}(}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ std::chrono::steady\_clock::time\_point\ \doxymbox{\hyperlink{class_application_1_1_execute_result_acd6b2b6c0ee410b9bc3fecd8ed25bba0}{wakeTime}});}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ [[nodiscard]]\ \doxymbox{\hyperlink{class_application_1_1_execute_result_a49ecdbf2b9adb0b4902a9b9dc7a78d41}{Type}}\ \doxymbox{\hyperlink{class_application_1_1_execute_result_a56eac187744059307b76375a19d9908c}{type}}()\ const\ noexcept;}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00047\ \ \ \ \ [[nodiscard]]\ std::chrono::steady\_clock::time\_point\ \doxymbox{\hyperlink{class_application_1_1_execute_result_acd6b2b6c0ee410b9bc3fecd8ed25bba0}{wakeTime}}()\ const\ noexcept;}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ private:}
+\DoxyCodeLine{00050\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_execute_result}{ExecuteResult}}(\doxymbox{\hyperlink{class_application_1_1_execute_result_a49ecdbf2b9adb0b4902a9b9dc7a78d41}{Type}}\ \doxymbox{\hyperlink{class_application_1_1_execute_result_a56eac187744059307b76375a19d9908c}{type}},\ std::chrono::steady\_clock::time\_point\ \doxymbox{\hyperlink{class_application_1_1_execute_result_acd6b2b6c0ee410b9bc3fecd8ed25bba0}{wakeTime}})\ noexcept;}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_execute_result_a49ecdbf2b9adb0b4902a9b9dc7a78d41}{Type}}\ m\_type;}
+\DoxyCodeLine{00053\ \ \ \ \ std::chrono::steady\_clock::time\_point\ m\_wakeTime;}
+\DoxyCodeLine{00054\ \};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \}\ \textcolor{comment}{//\ namespace\ Application}}
+
+\end{DoxyCode}

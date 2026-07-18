@@ -1,0 +1,47 @@
+\chapter{App\+Launching\+Research }
+\hypertarget{md__e_1_2_github_2_wheel_time_2notes_2_app_launching_research}{}\label{md__e_1_2_github_2_wheel_time_2notes_2_app_launching_research}\index{AppLaunchingResearch@{AppLaunchingResearch}}
+{\bfseries{Research:\+ App Launching in C++}}
+
+{\bfseries{Overview}} ~\newline
+ This document contains the proof-\/of-\/concept for launching external applications using C++ and the Windows API. This directly fulfills our MVP requirement to allow the launcher to open external programs/\+scripts.
+
+{\bfseries{How it Works}} ~\newline
+ To launch apps, we are using the Shell\+ExecuteA function from the Windows API (\texorpdfstring{$<$}{<}windows.\+h\texorpdfstring{$>$}{>})
+
+
+\begin{DoxyItemize}
+\item It takes the name of the executable (e.\+g., \`{}"{}calc.\+exe"{}\`{} or \`{}"{}notepad.\+exe"{}\`{}). ~\newline
+
+\item The "{}open"{} parameter tells Windows to execute it. ~\newline
+
+\item SW\+\_\+\+SHOWNORMAL tells Windows to open the app in its default, visible state. ~\newline
+
+\item If the function returns a value greater than 32, it means the launch was successful.
+\end{DoxyItemize}
+
+{\bfseries{Prototype Code}} ~\newline
+ \#include \texorpdfstring{$<$}{<}windows.\+h\texorpdfstring{$>$}{>} ~\newline
+ \#include \texorpdfstring{$<$}{<}iostream\texorpdfstring{$>$}{>} ~\newline
+ /\+/\+ this is the reusable test function ~\newline
+ bool launch\+App\+Test(const char\texorpdfstring{$\ast$}{*} app\+Name) \{ ~\newline
+ std::\+cout \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} "{}\+Testing launch for:\+ "{} \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} app\+Name \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} "{}..."{} \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} std::\+endl; ~\newline
+
+
+/\+/\+ attempt to open the application ~\newline
+ HINSTANCE result = Shell\+ExecuteA(NULL, "{}open"{}, app\+Name, NULL, NULL, SW\+\_\+\+SHOWNORMAL); ~\newline
+ /\+/\+ according to windows API, if the return value is greater than 32, it was successful ~\newline
+ if (reinterpret\+\_\+cast\texorpdfstring{$<$}{<}intptr\+\_\+t\texorpdfstring{$>$}{>}(result) \texorpdfstring{$>$}{>} 32) \{ ~\newline
+ std::\+cout \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} "{}\+SUCCESS:\+ "{} \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} app\+Name \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} "{} is running\textbackslash{}!\textbackslash{}\textbackslash{}n"{} \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} std::\+endl; ~\newline
+ return true; ~\newline
+ \} else \{ ~\newline
+ std::\+cout \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} "{}\+FAILED:\+ Could not launch "{} \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} app\+Name \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} "{}.\textbackslash{}\textbackslash{}n"{} \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} std::\+endl; ~\newline
+ return false; ~\newline
+ \} ~\newline
+ \} ~\newline
+ int \doxylink{phase10__scheduler__tests_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}{main()} \{ ~\newline
+ /\+/\+ run the test for calculator ~\newline
+ launch\+App\+Test("{}calc.\+exe"{}); ~\newline
+ /\+/\+ run the test for notepad ~\newline
+ launch\+App\+Test("{}notepad.\+exe"{}); ~\newline
+ return 0; ~\newline
+ \} 

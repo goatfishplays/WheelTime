@@ -1,0 +1,54 @@
+\doxysection{E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\+Action\+Items/\+\+Action\+Item.hpp File Reference}
+\hypertarget{_action_item_8hpp}{}\label{_action_item_8hpp}\index{E:/Github/WheelTime/app/include/App/ActionItems/ActionItem.hpp@{E:/Github/WheelTime/app/include/App/ActionItems/ActionItem.hpp}}
+
+
+Base Action\+Item type and kind enum.  
+
+
+{\ttfamily \+\#include $<$memory$>$}\newline
+{\ttfamily \+\#include "{}App/\+\+Execute\+Result.\+hpp"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{class_application_1_1_action_item}{Application::\+\+Action\+Item}}
+\begin{DoxyCompactList}\small\item\em One executable step inside an \doxylink{class_application_1_1_action}{Action}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \doxymbox{\hyperlink{namespace_application}{Application}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Application::\+\+Action\+Item\+Kind}} \{ \newline
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca095a1b43effec73955e31e790438de49}{Application::\+\+Base}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcab6af583ac5792096651fa6932aec72bf}{Application::\+\+Launch\+App}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcaf907e651164789346ae0a1e257c462d8}{Application::\+\+Script}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca8f497c1a3d15af9e0c215019f26b887d}{Application::\+\+Delay}}
+, \newline
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcab61541208db7fa7dba42c85224405911}{Application::\+\+Menu}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcad3d2e617335f08df83599665eef8a418}{Application::\+\+Close}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcaf11133be74689ed6f9bec61d15f87416}{Application::\+\+Keystroke}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca17ee17cec34ff017c382ba1ce8dc4cdc}{Application::\+\+Key\+Release}}
+, \newline
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca69f69b59aae6f4ee1a47bbc1086ecdb4}{Application::\+\+Socket}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca474eee957cdd984d21c925046bfb30e2}{Application::\+\+Nth\+Recent}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcaab30a63773cff3850c3c732fb0e7727e}{Application::\+\+Nth\+Frequent}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcafd060c0c157323f1e43e0704d4f3ffc8}{Application::\+\+Mouse\+Move}}
+, \newline
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca49dabe49d62a3521f7c10400138c38d5}{Application::\+\+Mouse\+Button}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca0454cf68f3693ae05d696580e3751ddb}{Application::\+\+Mouse\+Button\+Release}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcaea4788705e6873b424c65e91c2846b19}{Application::\+\+Cancel}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca13348442cc6a27032d2b4aa28b75a5d3}{Application::\+\+Search}}
+ \}
+\begin{DoxyCompactList}\small\item\em Runtime/\+editor discriminator for supported action item types. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+const char \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{namespace_application_aa30e3c0a29294cf16688643a477dfd3a}{Application::\+action\+Item\+Kind\+Name}} (\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} kind) noexcept
+\begin{DoxyCompactList}\small\item\em Short console label for {\ttfamily kind} (e.\+g. "{}cancel"{}, "{}hotkey"{}). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Base Action\+Item type and kind enum. 
+

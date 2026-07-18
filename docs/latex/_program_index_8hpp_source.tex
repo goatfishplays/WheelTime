@@ -1,0 +1,57 @@
+\doxysection{Program\+Index.\+hpp}
+\hypertarget{_program_index_8hpp_source}{}\label{_program_index_8hpp_source}\index{E:/Github/WheelTime/app/include/App/ProgramIndex.hpp@{E:/Github/WheelTime/app/include/App/ProgramIndex.hpp}}
+\doxymbox{\hyperlink{_program_index_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <QFileIconProvider>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <QHash>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <QIcon>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <QMutex>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <QString>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <QVector>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00019\ \{}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_application_1_1_program_entry}{ProgramEntry}}}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ QString\ \doxymbox{\hyperlink{struct_application_1_1_program_entry_ab39e377f5610debb5f0e69e5c0025bce}{name}};}
+\DoxyCodeLine{00026\ \ \ \ \ QString\ \doxymbox{\hyperlink{struct_application_1_1_program_entry_a828444e2ad94d6490b7fc17a11df3744}{path}};}
+\DoxyCodeLine{00027\ \};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_program_index}{ProgramIndex}}}
+\DoxyCodeLine{00039\ \{}
+\DoxyCodeLine{00040\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00041\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_program_index_adeab619bc310a0625fb66ffb74c4e41f}{\string~ProgramIndex}}();}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00044\ \ \ \ \ QVector<ProgramEntry>\ \doxymbox{\hyperlink{class_application_1_1_program_index_aba5541fb2e9a02fddd10c653c58f00ac}{entries}}();}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_program_index_ab4b62ecc8d91ff790c5ee7d197a98627}{refreshAsync}}();}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00051\ \ \ \ \ QIcon\ \doxymbox{\hyperlink{class_application_1_1_program_index_a60b826a4ac85a7aaf0b23718dd38d729}{iconFor}}(\textcolor{keyword}{const}\ QString\ \&path);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00055\ \ \ \ \ [[nodiscard]]\ QIcon\ \doxymbox{\hyperlink{class_application_1_1_program_index_a05eee6895c7055316004e4e9db065f0c}{cachedIconFor}}(\textcolor{keyword}{const}\ QString\ \&path)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{static}\ QVector<ProgramEntry>\ scanShortcutFolders();}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{void}\ joinRefreshThread();}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{mutable}\ QMutex\ m\_mutex;}
+\DoxyCodeLine{00062\ \ \ \ \ QVector<ProgramEntry>\ m\_entries;}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_everScanned\{\textcolor{keyword}{false}\};}
+\DoxyCodeLine{00064\ \ \ \ \ std::atomic<bool>\ m\_refreshInProgress\{\textcolor{keyword}{false}\};}
+\DoxyCodeLine{00065\ \ \ \ \ std::thread\ m\_refreshThread;}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ QFileIconProvider\ m\_iconProvider;}
+\DoxyCodeLine{00068\ \ \ \ \ QHash<QString,\ QIcon>\ m\_iconCache;}
+\DoxyCodeLine{00069\ \};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \}\ \textcolor{comment}{//\ namespace\ Application}}
+
+\end{DoxyCode}

@@ -1,0 +1,35 @@
+\doxysection{E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\+Thread\+Safe\+Queue.hpp File Reference}
+\hypertarget{_thread_safe_queue_8hpp}{}\label{_thread_safe_queue_8hpp}\index{E:/Github/WheelTime/app/include/App/ThreadSafeQueue.hpp@{E:/Github/WheelTime/app/include/App/ThreadSafeQueue.hpp}}
+
+
+Reusable MPMC blocking queue for Worker\+Pool /\+ Scheduler.  
+
+
+{\ttfamily \+\#include $<$chrono$>$}\newline
+{\ttfamily \+\#include $<$condition\+\_\+variable$>$}\newline
+{\ttfamily \+\#include $<$mutex$>$}\newline
+{\ttfamily \+\#include $<$queue$>$}\newline
+{\ttfamily \+\#include $<$utility$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue}{Application::\+\+Thread\+Safe\+Queue$<$ T $>$}}
+\begin{DoxyCompactList}\small\item\em Multi-\/producer /\+ multi-\/consumer FIFO queue. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \doxymbox{\hyperlink{namespace_application}{Application}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \doxymbox{\hyperlink{namespace_application_ad2d1ed0244481076d95377449bf660ec}{Application::\+\+Queue\+Wait\+Status}} \{ \doxymbox{\hyperlink{namespace_application_ad2d1ed0244481076d95377449bf660eca7d74f3b92b19da5e606d737d339a9679}{Application::\+\+Item}}
+, \doxymbox{\hyperlink{namespace_application_ad2d1ed0244481076d95377449bf660ecac85a251cc457840f1e032f1b733e9398}{Application::\+\+Timeout}}
+, \doxymbox{\hyperlink{namespace_application_ad2d1ed0244481076d95377449bf660ecac23e2b09ebe6bf4cb5e2a9abe85c0be2}{Application::\+\+Stopped}}
+ \}
+\begin{DoxyCompactList}\small\item\em Result of a timed pop on \doxylink{class_application_1_1_thread_safe_queue}{Thread\+Safe\+Queue}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Reusable MPMC blocking queue for Worker\+Pool /\+ Scheduler. 
+

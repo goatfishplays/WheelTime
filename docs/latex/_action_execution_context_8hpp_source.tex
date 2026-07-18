@@ -1,0 +1,123 @@
+\doxysection{Action\+Execution\+Context.\+hpp}
+\hypertarget{_action_execution_context_8hpp_source}{}\label{_action_execution_context_8hpp_source}\index{E:/Github/WheelTime/app/include/App/ActionExecutionContext.hpp@{E:/Github/WheelTime/app/include/App/ActionExecutionContext.hpp}}
+\doxymbox{\hyperlink{_action_execution_context_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_action_8hpp}{App/Action.hpp}}"{}}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00018\ \{}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_action_item}{ActionItem}};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_application_1_1_scheduled_action}{ScheduledAction}}}
+\DoxyCodeLine{00030\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ std::unique\_ptr<Action>\ \doxymbox{\hyperlink{struct_application_1_1_scheduled_action_a273159e9f4624ba545ea43a375bd8cbf}{action}};}
+\DoxyCodeLine{00032\ \ \ \ \ std::chrono::steady\_clock::time\_point\ \doxymbox{\hyperlink{struct_application_1_1_scheduled_action_a8412b2cb1517a74dc125c856011c46b1}{wakeTime}};}
+\DoxyCodeLine{00034\ \ \ \ \ uint64\_t\ \doxymbox{\hyperlink{struct_application_1_1_scheduled_action_a05d48a293a5ff47a312e0dfe20a8c205}{parentActionId}}\ =\ 0;}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{struct_application_1_1_scheduled_action_a44d17f8f60c42bd58a0e69222b6f7ae1}{removeIfParentCancelled}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00037\ \};}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request}{PendingCancelRequest}}}
+\DoxyCodeLine{00046\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{enum\ class}\ \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fff}{Level}}}
+\DoxyCodeLine{00048\ \ \ \ \ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fffa1f7eef9de38738e79be7905c6067c98f}{MostRecent}},}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fffa781dc97dc62331eec3ea9ec4373a3ca8}{Channel}},}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fffab1c94ca2fbc3e78fc30069c8d0f01680}{All}}}
+\DoxyCodeLine{00053\ \ \ \ \ \};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fff}{Level}}\ \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_ad2148361b58f084858380783edafd63a}{level}}\ =\ \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fffa1f7eef9de38738e79be7905c6067c98f}{Level::MostRecent}};}
+\DoxyCodeLine{00057\ \ \ \ \ uint64\_t\ \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_a06bdb28259de6b2c65bb41b4df0f401d}{excludeActionId}}\ =\ 0;}
+\DoxyCodeLine{00059\ \ \ \ \ uint32\_t\ \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_a7596d28bb350b411a98db2a151d58b5e}{channel}}\ =\ 0;}
+\DoxyCodeLine{00060\ \};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00073\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_action_execution_context_a40beeeb81e9bf3638ad3c9d35a7a2bb8}{ActionExecutionContext}}}
+\DoxyCodeLine{00074\ \{}
+\DoxyCodeLine{00075\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00081\ \ \ \ \ \textcolor{keyword}{explicit}\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a40beeeb81e9bf3638ad3c9d35a7a2bb8}{ActionExecutionContext}}(std::unique\_ptr<Action>\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_aa05e84ddd8d6d63b5e2950750b52b6de}{action}},\ uint64\_t\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_ad8bcee18289846b3e85fd442163f4ac8}{actionId}}\ =\ 0);}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_ac2a812271e71a0f1e033204ef451f35d}{ActionExecutionContext}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a40beeeb81e9bf3638ad3c9d35a7a2bb8}{ActionExecutionContext}}\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00084\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a40beeeb81e9bf3638ad3c9d35a7a2bb8}{ActionExecutionContext}}\ \&\doxymbox{\hyperlink{class_application_1_1_action_execution_context_a70ce2eab04e713fefbc2800af1ccf238}{operator=}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a40beeeb81e9bf3638ad3c9d35a7a2bb8}{ActionExecutionContext}}\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a9734f7f6bf6bd754d7460dfa2c46c4e5}{ActionExecutionContext}}(\doxymbox{\hyperlink{class_application_1_1_action_execution_context_a40beeeb81e9bf3638ad3c9d35a7a2bb8}{ActionExecutionContext}}\ \&\&)\ noexcept\ =\ default;}
+\DoxyCodeLine{00087\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a40beeeb81e9bf3638ad3c9d35a7a2bb8}{ActionExecutionContext}}\ \&operator=(\doxymbox{\hyperlink{class_application_1_1_action_execution_context_a40beeeb81e9bf3638ad3c9d35a7a2bb8}{ActionExecutionContext}}\ \&\&)\ noexcept\ =\ default;}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \string~\doxymbox{\hyperlink{class_application_1_1_action_execution_context_a40beeeb81e9bf3638ad3c9d35a7a2bb8}{ActionExecutionContext}}()\ =\ default;}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00092\ \ \ \ \ [[nodiscard]]\ uint64\_t\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_ad8bcee18289846b3e85fd442163f4ac8}{actionId}}()\ const\ noexcept;}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00095\ \ \ \ \ [[nodiscard]]\ uint32\_t\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_aa6f585cdb1416e77a8ce3228c3a8990c}{channel}}()\ const\ noexcept;}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00098\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_acd5682dc087a0399d0d441d9cea41aec}{isCancelable}}()\ const\ noexcept;}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00101\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a622023494d9ec7d2a996ecdb5a4ba2f4}{isCancelled}}()\ const\ noexcept;}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_acfcdebd069612faacd8b2428063fe940}{cancel}}()\ noexcept;}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00107\ \ \ \ \ [[nodiscard]]\ std::shared\_ptr<std::atomic<\textcolor{keywordtype}{bool}>>\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a5dba2da3a5362a72d78a44cfaaf14b4e}{cancelFlag}}()\ const\ noexcept;}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ [[nodiscard]]\ \doxymbox{\hyperlink{class_application_1_1_action}{Action}}\ \&\doxymbox{\hyperlink{class_application_1_1_action_execution_context_aa05e84ddd8d6d63b5e2950750b52b6de}{action}}()\ noexcept;}
+\DoxyCodeLine{00110\ \ \ \ \ [[nodiscard]]\ const\ \doxymbox{\hyperlink{class_application_1_1_action}{Action}}\ \&\doxymbox{\hyperlink{class_application_1_1_action_execution_context_aa05e84ddd8d6d63b5e2950750b52b6de}{action}}()\ const\ noexcept;}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00115\ \ \ \ \ [[nodiscard]]\ \doxymbox{\hyperlink{class_application_1_1_action_item}{ActionItem}}\ *\doxymbox{\hyperlink{class_application_1_1_action_execution_context_ae6e6520d08bed635398df82124bf6b77}{currentItem}}()\ noexcept;}
+\DoxyCodeLine{00116\ \ \ \ \ [[nodiscard]]\ const\ \doxymbox{\hyperlink{class_application_1_1_action_item}{ActionItem}}\ *\doxymbox{\hyperlink{class_application_1_1_action_execution_context_ae6e6520d08bed635398df82124bf6b77}{currentItem}}()\ const\ noexcept;}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00119\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{size\_t}\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a84c659062945839ec0ddab08d897d68e}{currentIndex}}()\ const\ noexcept;}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_aaa86ab3e66156c9b645e70466821f248}{advance}}()\ noexcept;}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00125\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_ae04b1a4235f60ec115c6b8a69a89801e}{finished}}()\ const\ noexcept;}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a9bde69e5887b05935ba12198c1a63a16}{scheduleAction}}(std::unique\_ptr<\doxymbox{\hyperlink{class_application_1_1_action}{Action}}>\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_aa05e84ddd8d6d63b5e2950750b52b6de}{action}},}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::chrono::steady\_clock::time\_point\ wakeTime,}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ removeIfParentCancelled\ =\ false);}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a0bacf48bdbce109a232e2b0dedb6072b}{setCancelFlush}}(std::unique\_ptr<\doxymbox{\hyperlink{class_application_1_1_action}{Action}}>\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_aa05e84ddd8d6d63b5e2950750b52b6de}{action}});}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_ac9fef8b606b6256220123846731e4067}{requestCancelMostRecent}}(uint32\_t\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_aa6f585cdb1416e77a8ce3228c3a8990c}{channel}});}
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a0962f48b138434427258f64247a360a6}{requestCancelChannel}}(uint32\_t\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_aa6f585cdb1416e77a8ce3228c3a8990c}{channel}});}
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00155\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a398141c7197313b7de3b9dbbb0849542}{requestCancelAll}}();}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00158\ \ \ \ \ [[nodiscard]]\ const\ std::vector<\doxymbox{\hyperlink{struct_application_1_1_scheduled_action}{ScheduledAction}}>\ \&\doxymbox{\hyperlink{class_application_1_1_action_execution_context_aeb1637a6196e31acd68b9cfa6cf04867}{scheduledActions}}()\ const\ noexcept;}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00161\ \ \ \ \ [[nodiscard]]\ std::vector<\doxymbox{\hyperlink{struct_application_1_1_scheduled_action}{ScheduledAction}}>\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a06c424b47da8c3a1a7af15146c685adc}{takeScheduledActions}}()\ noexcept;}
+\DoxyCodeLine{00162\ }
+\DoxyCodeLine{00164\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a0ba488c04724edd02a4161a4aee06991}{clearScheduledActions}}()\ noexcept;}
+\DoxyCodeLine{00165\ }
+\DoxyCodeLine{00167\ \ \ \ \ [[nodiscard]]\ std::vector<std::unique\_ptr<\doxymbox{\hyperlink{class_application_1_1_action}{Action}}>>\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a34fc50e2ff890d56f9d0700b79a9394a}{takeCancelFlushes}}()\ noexcept;}
+\DoxyCodeLine{00168\ }
+\DoxyCodeLine{00170\ \ \ \ \ [[nodiscard]]\ std::vector<\doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request}{PendingCancelRequest}}>\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a18677eef2b55f44cd509b694e1c3f43e}{takeCancelRequests}}()\ noexcept;}
+\DoxyCodeLine{00171\ }
+\DoxyCodeLine{00173\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_ad8501c567ba2bc26057c465ca664b06d}{hasPendingSchedulerRequests}}()\ const\ noexcept;}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_aff0f094f27a689b6b6055348f44bf4e8}{markCancelFlush}}()\ noexcept;}
+\DoxyCodeLine{00182\ }
+\DoxyCodeLine{00184\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context_a1b7c1edc4237308167ee3a39a162eb5b}{isCancelFlush}}()\ const\ noexcept;}
+\DoxyCodeLine{00185\ }
+\DoxyCodeLine{00186\ private:}
+\DoxyCodeLine{00187\ \ \ \ \ std::unique\_ptr<\doxymbox{\hyperlink{class_application_1_1_action}{Action}}>\ m\_action;}
+\DoxyCodeLine{00188\ \ \ \ \ uint64\_t\ m\_actionId\ =\ 0;}
+\DoxyCodeLine{00189\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ m\_currentIndex\ =\ 0;}
+\DoxyCodeLine{00190\ \ \ \ \ std::shared\_ptr<std::atomic<\textcolor{keywordtype}{bool}>>\ m\_cancelFlag;}
+\DoxyCodeLine{00191\ \ \ \ \ std::vector<\doxymbox{\hyperlink{struct_application_1_1_scheduled_action}{ScheduledAction}}>\ m\_scheduledActions;}
+\DoxyCodeLine{00192\ \ \ \ \ std::vector<std::unique\_ptr<\doxymbox{\hyperlink{class_application_1_1_action}{Action}}>>\ m\_cancelFlushes;}
+\DoxyCodeLine{00193\ \ \ \ \ std::vector<\doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request}{PendingCancelRequest}}>\ m\_cancelRequests;}
+\DoxyCodeLine{00194\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_isCancelFlush\ =\ false;}
+\DoxyCodeLine{00195\ \};}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ \}\ \textcolor{comment}{//\ namespace\ Application}}
+
+\end{DoxyCode}

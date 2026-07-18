@@ -1,0 +1,374 @@
+\doxysection{Application Namespace Reference}
+\hypertarget{namespace_application}{}\label{namespace_application}\index{Application@{Application}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{class_application_1_1_action}{Action}}
+\begin{DoxyCompactList}\small\item\em Represents one reusable macro/\+action in the shared action library. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}}
+\begin{DoxyCompactList}\small\item\em Owns an \doxylink{class_application_1_1_action}{Action} and tracks progress while workers run its items. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_action_history}{Action\+History}}
+\begin{DoxyCompactList}\small\item\em Tracks which library Actions the user has launched from the wheel. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_action_item}{Action\+Item}}
+\begin{DoxyCompactList}\small\item\em One executable step inside an \doxylink{class_application_1_1_action}{Action}. \end{DoxyCompactList}\item 
+struct \doxymbox{\hyperlink{struct_application_1_1_action_slot_visual}{Action\+Slot\+Visual}}
+\begin{DoxyCompactList}\small\item\em Display data for one radial-\/menu /\+ settings slot preview. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_a_i___cancel}{AI\+\_\+\+Cancel}}
+\begin{DoxyCompactList}\small\item\em Records a cancel request for the scheduler (does not call \doxylink{class_application_1_1_scheduler}{Scheduler} directly). \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_a_i___close}{AI\+\_\+\+Close}}
+\begin{DoxyCompactList}\small\item\em Closes the currently visible launcher UI. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_a_i___delay}{AI\+\_\+\+Delay}}
+\begin{DoxyCompactList}\small\item\em Delays the current \doxylink{class_application_1_1_action}{Action} before the next item runs. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_a_i___key_release}{AI\+\_\+\+Key\+Release}}
+\begin{DoxyCompactList}\small\item\em Releases a previously held key (cleanup /\+ end of hold). \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke}{AI\+\_\+\+Keystroke}}
+\begin{DoxyCompactList}\small\item\em Simulates a hotkey with optional modifiers and hold behavior. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_a_i___launch_app}{AI\+\_\+\+Launch\+App}}
+\begin{DoxyCompactList}\small\item\em Launches a curated preset or a custom app target. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_a_i___menu}{AI\+\_\+\+Menu}}
+\begin{DoxyCompactList}\small\item\em Switches the launcher to another menu by stable menu ID. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button}{AI\+\_\+\+Mouse\+Button}}
+\begin{DoxyCompactList}\small\item\em Simulates a mouse button with optional modifiers and hold behavior. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_release}{AI\+\_\+\+Mouse\+Button\+Release}}
+\begin{DoxyCompactList}\small\item\em Releases a previously held mouse button (cleanup /\+ end of hold). \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_move}{AI\+\_\+\+Mouse\+Move}}
+\begin{DoxyCompactList}\small\item\em Moves the mouse cursor to an absolute screen position. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_a_i___nth_frequent}{AI\+\_\+\+Nth\+Frequent}}
+\begin{DoxyCompactList}\small\item\em Schedules a copy of the nth most frequently wheel-\/launched \doxylink{class_application_1_1_action}{Action} (1-\/based). \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_a_i___nth_recent}{AI\+\_\+\+Nth\+Recent}}
+\begin{DoxyCompactList}\small\item\em Schedules a copy of the nth most recently wheel-\/launched \doxylink{class_application_1_1_action}{Action} (1-\/based). \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_a_i___script}{AI\+\_\+\+Script}}
+\begin{DoxyCompactList}\small\item\em Launches an arbitrary app or script path. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_a_i___search}{AI\+\_\+\+Search}}
+\begin{DoxyCompactList}\small\item\em Opens the search palette overlay with a configured filter set. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_a_i___socket}{AI\+\_\+\+Socket}}
+\begin{DoxyCompactList}\small\item\em One-\/shot network send (UDP, TCP, HTTP, or Web\+Socket). \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_app}{App}}
+\begin{DoxyCompactList}\small\item\em Owns the long-\/lived runtime state for Wheel\+Time. \end{DoxyCompactList}\item 
+struct \doxymbox{\hyperlink{struct_application_1_1_app_config}{App\+Config}}
+\item 
+struct \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch}{Channel\+Dispatch}}
+\begin{DoxyCompactList}\small\item\em Result of admitting or promoting work on a channel. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_channel_manager}{Channel\+Manager}}
+\begin{DoxyCompactList}\small\item\em Enforces strict one-\/in-\/flight-\/per-\/channel FIFO (hold through delays). \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_delay_queue}{Delay\+Queue}}
+\begin{DoxyCompactList}\small\item\em Min-\/heap of contexts waiting until a steady-\/clock wake time. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}}
+\begin{DoxyCompactList}\small\item\em Small result telling the scheduler whether to continue or delay. \end{DoxyCompactList}\item 
+struct \doxymbox{\hyperlink{struct_application_1_1_fuzzy_result}{Fuzzy\+Result}}
+\item 
+class \doxymbox{\hyperlink{class_application_1_1_gui}{Gui}}
+\begin{DoxyCompactList}\small\item\em Hosts the wheel widget and top-\/level launcher controls. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_hover_button}{Hover\+Button}}
+\item 
+class \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}}
+\begin{DoxyCompactList}\small\item\em Represents one radial menu configuration. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_menu_config_loader}{Menu\+Config\+Loader}}
+\begin{DoxyCompactList}\small\item\em Converts between the JSON config file and runtime menu/\+action models. \end{DoxyCompactList}\item 
+struct \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request}{Pending\+Cancel\+Request}}
+\begin{DoxyCompactList}\small\item\em Cancel request recorded by Action\+Items for the scheduler to apply. \end{DoxyCompactList}\item 
+struct \doxymbox{\hyperlink{struct_application_1_1_program_entry}{Program\+Entry}}
+\item 
+class \doxymbox{\hyperlink{class_application_1_1_program_index}{Program\+Index}}
+\begin{DoxyCompactList}\small\item\em Indexes .lnk shortcuts from the user and common Start Menus plus the user and public desktops. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget}{Radial\+Menu\+Widget}}
+\item 
+struct \doxymbox{\hyperlink{struct_application_1_1_scheduled_action}{Scheduled\+Action}}
+\begin{DoxyCompactList}\small\item\em An \doxylink{class_application_1_1_action}{Action} recorded during execute() for the scheduler to submit later. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_scheduler}{Scheduler}}
+\begin{DoxyCompactList}\small\item\em Accepts Actions and runs them via \doxylink{class_application_1_1_worker_pool}{Worker\+Pool} with channel + delay policy. \end{DoxyCompactList}\item 
+struct \doxymbox{\hyperlink{struct_application_1_1_search_config}{Search\+Config}}
+\begin{DoxyCompactList}\small\item\em Initial filter set and websearch template for one search palette open. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_search_palette_widget}{Search\+Palette\+Widget}}
+\begin{DoxyCompactList}\small\item\em Search input + filter chips + ranked results list. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_settings_window}{Settings\+Window}}
+\begin{DoxyCompactList}\small\item\em Non-\/modal editor for the shared action library and wheel menus. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue}{Thread\+Safe\+Queue}}
+\begin{DoxyCompactList}\small\item\em Multi-\/producer /\+ multi-\/consumer FIFO queue. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_worker_pool}{Worker\+Pool}}
+\begin{DoxyCompactList}\small\item\em Worker thread pool with no scheduling policy. \end{DoxyCompactList}\item 
+struct \doxymbox{\hyperlink{struct_application_1_1_worker_result}{Worker\+Result}}
+\begin{DoxyCompactList}\small\item\em Outcome of a worker\textquotesingle{}s run over an \doxylink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum class \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} \{ \newline
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca095a1b43effec73955e31e790438de49}{Base}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcab6af583ac5792096651fa6932aec72bf}{Launch\+App}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcaf907e651164789346ae0a1e257c462d8}{Script}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca8f497c1a3d15af9e0c215019f26b887d}{Delay}}
+, \newline
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcab61541208db7fa7dba42c85224405911}{Menu}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcad3d2e617335f08df83599665eef8a418}{Close}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcaf11133be74689ed6f9bec61d15f87416}{Keystroke}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca17ee17cec34ff017c382ba1ce8dc4cdc}{Key\+Release}}
+, \newline
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca69f69b59aae6f4ee1a47bbc1086ecdb4}{Socket}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca474eee957cdd984d21c925046bfb30e2}{Nth\+Recent}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcaab30a63773cff3850c3c732fb0e7727e}{Nth\+Frequent}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcafd060c0c157323f1e43e0704d4f3ffc8}{Mouse\+Move}}
+, \newline
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca49dabe49d62a3521f7c10400138c38d5}{Mouse\+Button}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca0454cf68f3693ae05d696580e3751ddb}{Mouse\+Button\+Release}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcaea4788705e6873b424c65e91c2846b19}{Cancel}}
+, \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca13348442cc6a27032d2b4aa28b75a5d3}{Search}}
+ \}
+\begin{DoxyCompactList}\small\item\em Runtime/\+editor discriminator for supported action item types. \end{DoxyCompactList}\item 
+enum class \doxymbox{\hyperlink{namespace_application_a13c194e769eb89db90390486ad604ab9}{Cancel\+Level}} \{ \doxymbox{\hyperlink{namespace_application_a13c194e769eb89db90390486ad604ab9a1f7eef9de38738e79be7905c6067c98f}{Most\+Recent}}
+, \doxymbox{\hyperlink{namespace_application_a13c194e769eb89db90390486ad604ab9a781dc97dc62331eec3ea9ec4373a3ca8}{Channel}}
+, \doxymbox{\hyperlink{namespace_application_a13c194e769eb89db90390486ad604ab9ab1c94ca2fbc3e78fc30069c8d0f01680}{All}}
+ \}
+\begin{DoxyCompactList}\small\item\em Which scheduler cancel API an \doxylink{class_application_1_1_a_i___cancel}{AI\+\_\+\+Cancel} item invokes. \end{DoxyCompactList}\item 
+enum class \doxymbox{\hyperlink{namespace_application_a0bd7905d0366206ab29532d46e81cc97}{Scheduler\+Request\+Type}} \{ \doxymbox{\hyperlink{namespace_application_a0bd7905d0366206ab29532d46e81cc97a16142c6a6e6e9ff3e72bc091306030aa}{Schedule\+Action}}
+, \doxymbox{\hyperlink{namespace_application_a0bd7905d0366206ab29532d46e81cc97a189998eb7e0dd4030baea2418cd8d76b}{Cancel\+Most\+Recent}}
+, \doxymbox{\hyperlink{namespace_application_a0bd7905d0366206ab29532d46e81cc97affc0ebed221da9843afa27f673ddfcb3}{Cancel\+Channel}}
+, \doxymbox{\hyperlink{namespace_application_a0bd7905d0366206ab29532d46e81cc97a7e5c559435d1bacef48591d43fd36494}{Cancel\+All}}
+ \}
+\begin{DoxyCompactList}\small\item\em Kinds of requests Action\+Items may record for the scheduler. \end{DoxyCompactList}\item 
+enum class \doxymbox{\hyperlink{namespace_application_ad2d1ed0244481076d95377449bf660ec}{Queue\+Wait\+Status}} \{ \doxymbox{\hyperlink{namespace_application_ad2d1ed0244481076d95377449bf660eca7d74f3b92b19da5e606d737d339a9679}{Item}}
+, \doxymbox{\hyperlink{namespace_application_ad2d1ed0244481076d95377449bf660ecac85a251cc457840f1e032f1b733e9398}{Timeout}}
+, \doxymbox{\hyperlink{namespace_application_ad2d1ed0244481076d95377449bf660ecac23e2b09ebe6bf4cb5e2a9abe85c0be2}{Stopped}}
+ \}
+\begin{DoxyCompactList}\small\item\em Result of a timed pop on \doxylink{class_application_1_1_thread_safe_queue}{Thread\+Safe\+Queue}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+const char \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{namespace_application_aa30e3c0a29294cf16688643a477dfd3a}{action\+Item\+Kind\+Name}} (\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} kind) noexcept
+\begin{DoxyCompactList}\small\item\em Short console label for {\ttfamily kind} (e.\+g. "{}cancel"{}, "{}hotkey"{}). \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_application_1_1_fuzzy_result}{Fuzzy\+Result}} \doxymbox{\hyperlink{namespace_application_a034a9f7395e386a6d8621f27030e6c9a}{fuzzy\+Match}} (const QString \&pattern, const QString \&text)
+\begin{DoxyCompactList}\small\item\em Case-\/insensitive fuzzy subsequence match of {\ttfamily pattern} in {\ttfamily text}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{namespace_application_doc-enum-members}
+\Hypertarget{namespace_application_doc-enum-members}
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}\index{Application@{Application}!ActionItemKind@{ActionItemKind}}
+\index{ActionItemKind@{ActionItemKind}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{ActionItemKind}{ActionItemKind}}
+{\footnotesize\ttfamily \label{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc} 
+enum class \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Application::\+\+Action\+Item\+Kind}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Runtime/\+editor discriminator for supported action item types. 
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Base@{Base}!Application@{Application}}
+\index{Application@{Application}!Base@{Base}}
+}\Hypertarget{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca095a1b43effec73955e31e790438de49}\label{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca095a1b43effec73955e31e790438de49} 
+Base&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{LaunchApp@{LaunchApp}!Application@{Application}}
+\index{Application@{Application}!LaunchApp@{LaunchApp}}
+}\Hypertarget{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcab6af583ac5792096651fa6932aec72bf}\label{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcab6af583ac5792096651fa6932aec72bf} 
+Launch\+App&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Script@{Script}!Application@{Application}}
+\index{Application@{Application}!Script@{Script}}
+}\Hypertarget{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcaf907e651164789346ae0a1e257c462d8}\label{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcaf907e651164789346ae0a1e257c462d8} 
+Script&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Delay@{Delay}!Application@{Application}}
+\index{Application@{Application}!Delay@{Delay}}
+}\Hypertarget{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca8f497c1a3d15af9e0c215019f26b887d}\label{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca8f497c1a3d15af9e0c215019f26b887d} 
+Delay&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Menu@{Menu}!Application@{Application}}
+\index{Application@{Application}!Menu@{Menu}}
+}\Hypertarget{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcab61541208db7fa7dba42c85224405911}\label{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcab61541208db7fa7dba42c85224405911} 
+Menu&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Close@{Close}!Application@{Application}}
+\index{Application@{Application}!Close@{Close}}
+}\Hypertarget{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcad3d2e617335f08df83599665eef8a418}\label{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcad3d2e617335f08df83599665eef8a418} 
+Close&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Keystroke@{Keystroke}!Application@{Application}}
+\index{Application@{Application}!Keystroke@{Keystroke}}
+}\Hypertarget{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcaf11133be74689ed6f9bec61d15f87416}\label{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcaf11133be74689ed6f9bec61d15f87416} 
+Keystroke&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{KeyRelease@{KeyRelease}!Application@{Application}}
+\index{Application@{Application}!KeyRelease@{KeyRelease}}
+}\Hypertarget{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca17ee17cec34ff017c382ba1ce8dc4cdc}\label{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca17ee17cec34ff017c382ba1ce8dc4cdc} 
+Key\+Release&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Socket@{Socket}!Application@{Application}}
+\index{Application@{Application}!Socket@{Socket}}
+}\Hypertarget{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca69f69b59aae6f4ee1a47bbc1086ecdb4}\label{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca69f69b59aae6f4ee1a47bbc1086ecdb4} 
+Socket&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NthRecent@{NthRecent}!Application@{Application}}
+\index{Application@{Application}!NthRecent@{NthRecent}}
+}\Hypertarget{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca474eee957cdd984d21c925046bfb30e2}\label{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca474eee957cdd984d21c925046bfb30e2} 
+Nth\+Recent&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NthFrequent@{NthFrequent}!Application@{Application}}
+\index{Application@{Application}!NthFrequent@{NthFrequent}}
+}\Hypertarget{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcaab30a63773cff3850c3c732fb0e7727e}\label{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcaab30a63773cff3850c3c732fb0e7727e} 
+Nth\+Frequent&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MouseMove@{MouseMove}!Application@{Application}}
+\index{Application@{Application}!MouseMove@{MouseMove}}
+}\Hypertarget{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcafd060c0c157323f1e43e0704d4f3ffc8}\label{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcafd060c0c157323f1e43e0704d4f3ffc8} 
+Mouse\+Move&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MouseButton@{MouseButton}!Application@{Application}}
+\index{Application@{Application}!MouseButton@{MouseButton}}
+}\Hypertarget{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca49dabe49d62a3521f7c10400138c38d5}\label{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca49dabe49d62a3521f7c10400138c38d5} 
+Mouse\+Button&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MouseButtonRelease@{MouseButtonRelease}!Application@{Application}}
+\index{Application@{Application}!MouseButtonRelease@{MouseButtonRelease}}
+}\Hypertarget{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca0454cf68f3693ae05d696580e3751ddb}\label{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca0454cf68f3693ae05d696580e3751ddb} 
+Mouse\+Button\+Release&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Cancel@{Cancel}!Application@{Application}}
+\index{Application@{Application}!Cancel@{Cancel}}
+}\Hypertarget{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcaea4788705e6873b424c65e91c2846b19}\label{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bcaea4788705e6873b424c65e91c2846b19} 
+Cancel&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Search@{Search}!Application@{Application}}
+\index{Application@{Application}!Search@{Search}}
+}\Hypertarget{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca13348442cc6a27032d2b4aa28b75a5d3}\label{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca13348442cc6a27032d2b4aa28b75a5d3} 
+Search&\\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{namespace_application_a13c194e769eb89db90390486ad604ab9}\index{Application@{Application}!CancelLevel@{CancelLevel}}
+\index{CancelLevel@{CancelLevel}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{CancelLevel}{CancelLevel}}
+{\footnotesize\ttfamily \label{namespace_application_a13c194e769eb89db90390486ad604ab9} 
+enum class \doxymbox{\hyperlink{namespace_application_a13c194e769eb89db90390486ad604ab9}{Application::\+\+Cancel\+Level}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Which scheduler cancel API an \doxylink{class_application_1_1_a_i___cancel}{AI\+\_\+\+Cancel} item invokes. 
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MostRecent@{MostRecent}!Application@{Application}}
+\index{Application@{Application}!MostRecent@{MostRecent}}
+}\Hypertarget{namespace_application_a13c194e769eb89db90390486ad604ab9a1f7eef9de38738e79be7905c6067c98f}\label{namespace_application_a13c194e769eb89db90390486ad604ab9a1f7eef9de38738e79be7905c6067c98f} 
+Most\+Recent&Cancel the most recently submitted \doxylink{class_application_1_1_action}{Action} on \doxylink{class_application_1_1_a_i___cancel_adcde8719423f75e8cde00354f45e3b03}{AI\+\_\+\+Cancel::\+channel}. channel == 0 means the most recent \doxylink{class_application_1_1_action}{Action} on any channel. The \doxylink{class_application_1_1_action}{Action} that contains this item is never chosen (it would cancel itself). \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Channel@{Channel}!Application@{Application}}
+\index{Application@{Application}!Channel@{Channel}}
+}\Hypertarget{namespace_application_a13c194e769eb89db90390486ad604ab9a781dc97dc62331eec3ea9ec4373a3ca8}\label{namespace_application_a13c194e769eb89db90390486ad604ab9a781dc97dc62331eec3ea9ec4373a3ca8} 
+Channel&Cancel every cancelable \doxylink{class_application_1_1_action}{Action} on \doxylink{class_application_1_1_a_i___cancel_adcde8719423f75e8cde00354f45e3b03}{AI\+\_\+\+Cancel::\+channel}. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{All@{All}!Application@{Application}}
+\index{Application@{Application}!All@{All}}
+}\Hypertarget{namespace_application_a13c194e769eb89db90390486ad604ab9ab1c94ca2fbc3e78fc30069c8d0f01680}\label{namespace_application_a13c194e769eb89db90390486ad604ab9ab1c94ca2fbc3e78fc30069c8d0f01680} 
+All&Cancel every cancelable \doxylink{class_application_1_1_action}{Action}. \\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{namespace_application_ad2d1ed0244481076d95377449bf660ec}\index{Application@{Application}!QueueWaitStatus@{QueueWaitStatus}}
+\index{QueueWaitStatus@{QueueWaitStatus}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{QueueWaitStatus}{QueueWaitStatus}}
+{\footnotesize\ttfamily \label{namespace_application_ad2d1ed0244481076d95377449bf660ec} 
+enum class \doxymbox{\hyperlink{namespace_application_ad2d1ed0244481076d95377449bf660ec}{Application::\+\+Queue\+Wait\+Status}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Result of a timed pop on \doxylink{class_application_1_1_thread_safe_queue}{Thread\+Safe\+Queue}. 
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Item@{Item}!Application@{Application}}
+\index{Application@{Application}!Item@{Item}}
+}\Hypertarget{namespace_application_ad2d1ed0244481076d95377449bf660eca7d74f3b92b19da5e606d737d339a9679}\label{namespace_application_ad2d1ed0244481076d95377449bf660eca7d74f3b92b19da5e606d737d339a9679} 
+Item&An element was written to the out-\/parameter. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Timeout@{Timeout}!Application@{Application}}
+\index{Application@{Application}!Timeout@{Timeout}}
+}\Hypertarget{namespace_application_ad2d1ed0244481076d95377449bf660ecac85a251cc457840f1e032f1b733e9398}\label{namespace_application_ad2d1ed0244481076d95377449bf660ecac85a251cc457840f1e032f1b733e9398} 
+Timeout&Deadline passed with an empty queue. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stopped@{Stopped}!Application@{Application}}
+\index{Application@{Application}!Stopped@{Stopped}}
+}\Hypertarget{namespace_application_ad2d1ed0244481076d95377449bf660ecac23e2b09ebe6bf4cb5e2a9abe85c0be2}\label{namespace_application_ad2d1ed0244481076d95377449bf660ecac23e2b09ebe6bf4cb5e2a9abe85c0be2} 
+Stopped&Queue is stopped and empty. \\
+\hline
+
+\end{DoxyEnumFields}
+\Hypertarget{namespace_application_a0bd7905d0366206ab29532d46e81cc97}\index{Application@{Application}!SchedulerRequestType@{SchedulerRequestType}}
+\index{SchedulerRequestType@{SchedulerRequestType}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{SchedulerRequestType}{SchedulerRequestType}}
+{\footnotesize\ttfamily \label{namespace_application_a0bd7905d0366206ab29532d46e81cc97} 
+enum class \doxymbox{\hyperlink{namespace_application_a0bd7905d0366206ab29532d46e81cc97}{Application::\+\+Scheduler\+Request\+Type}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+Kinds of requests Action\+Items may record for the scheduler. 
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ScheduleAction@{ScheduleAction}!Application@{Application}}
+\index{Application@{Application}!ScheduleAction@{ScheduleAction}}
+}\Hypertarget{namespace_application_a0bd7905d0366206ab29532d46e81cc97a16142c6a6e6e9ff3e72bc091306030aa}\label{namespace_application_a0bd7905d0366206ab29532d46e81cc97a16142c6a6e6e9ff3e72bc091306030aa} 
+Schedule\+Action&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CancelMostRecent@{CancelMostRecent}!Application@{Application}}
+\index{Application@{Application}!CancelMostRecent@{CancelMostRecent}}
+}\Hypertarget{namespace_application_a0bd7905d0366206ab29532d46e81cc97a189998eb7e0dd4030baea2418cd8d76b}\label{namespace_application_a0bd7905d0366206ab29532d46e81cc97a189998eb7e0dd4030baea2418cd8d76b} 
+Cancel\+Most\+Recent&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CancelChannel@{CancelChannel}!Application@{Application}}
+\index{Application@{Application}!CancelChannel@{CancelChannel}}
+}\Hypertarget{namespace_application_a0bd7905d0366206ab29532d46e81cc97affc0ebed221da9843afa27f673ddfcb3}\label{namespace_application_a0bd7905d0366206ab29532d46e81cc97affc0ebed221da9843afa27f673ddfcb3} 
+Cancel\+Channel&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{CancelAll@{CancelAll}!Application@{Application}}
+\index{Application@{Application}!CancelAll@{CancelAll}}
+}\Hypertarget{namespace_application_a0bd7905d0366206ab29532d46e81cc97a7e5c559435d1bacef48591d43fd36494}\label{namespace_application_a0bd7905d0366206ab29532d46e81cc97a7e5c559435d1bacef48591d43fd36494} 
+Cancel\+All&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{namespace_application_doc-func-members}
+\Hypertarget{namespace_application_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespace_application_aa30e3c0a29294cf16688643a477dfd3a}\index{Application@{Application}!actionItemKindName@{actionItemKindName}}
+\index{actionItemKindName@{actionItemKindName}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{actionItemKindName()}{actionItemKindName()}}
+{\footnotesize\ttfamily \label{namespace_application_aa30e3c0a29294cf16688643a477dfd3a} 
+const char \texorpdfstring{$\ast$}{*} Application::\+action\+Item\+Kind\+Name (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}}}]{kind}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Short console label for {\ttfamily kind} (e.\+g. "{}cancel"{}, "{}hotkey"{}). 
+
+\Hypertarget{namespace_application_a034a9f7395e386a6d8621f27030e6c9a}\index{Application@{Application}!fuzzyMatch@{fuzzyMatch}}
+\index{fuzzyMatch@{fuzzyMatch}!Application@{Application}}
+\doxysubsubsection{\texorpdfstring{fuzzyMatch()}{fuzzyMatch()}}
+{\footnotesize\ttfamily \label{namespace_application_a034a9f7395e386a6d8621f27030e6c9a} 
+\doxymbox{\hyperlink{struct_application_1_1_fuzzy_result}{Fuzzy\+Result}} Application::\+fuzzy\+Match (\begin{DoxyParamCaption}\item[{const QString \&}]{pattern}{, }\item[{const QString \&}]{text}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Case-\/insensitive fuzzy subsequence match of {\ttfamily pattern} in {\ttfamily text}. 
+
+Every pattern character must appear in order inside the text. The score rewards consecutive runs, word-\/boundary hits, and matches near the start, and mildly penalizes unmatched text so shorter targets rank higher. An empty pattern matches everything with score 0. 

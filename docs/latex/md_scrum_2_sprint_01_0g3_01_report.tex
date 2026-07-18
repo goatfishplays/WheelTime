@@ -1,0 +1,75 @@
+\chapter{{\bfseries{Sprint 3 Report}} }
+\hypertarget{md_scrum_2_sprint_01_0g3_01_report}{}\label{md_scrum_2_sprint_01_0g3_01_report}\index{$<$strong$>$Sprint 3 Report$<$/strong$>$@{$<$strong$>$Sprint 3 Report$<$/strong$>$}}
+\label{md_scrum_2_sprint_01_0g3_01_report_autotoc_md50}%
+\Hypertarget{md_scrum_2_sprint_01_0g3_01_report_autotoc_md50}%
+
+
+{\bfseries{Product Name:\+}} Wheel Time ~\newline
+ {\bfseries{Team Name:\+}} Wheelest Wheels ~\newline
+ {\bfseries{Date:\+}} 7/\+14/\+26 ~\newline
+ {\bfseries{Sprint 3 Lead:\+}} Ethan Jackson\hypertarget{md_scrum_2_sprint_01_0g3_01_report_autotoc_md51}{}\doxysection{\texorpdfstring{{\bfseries{Actions to Stop Doing}}}{{\bfseries{Actions to Stop Doing}}}}\label{md_scrum_2_sprint_01_0g3_01_report_autotoc_md51}
+\hypertarget{md_scrum_2_sprint_01_0g3_01_report_autotoc_md52}{}\doxysubsection{\texorpdfstring{{\bfseries{Not updating each other often on what\textquotesingle{}s currently being worked on}}}{{\bfseries{Not updating each other often on what\textquotesingle{}s currently being worked on}}}}\label{md_scrum_2_sprint_01_0g3_01_report_autotoc_md52}
+The team should update each other more often on what we are working on. Doing so helps prevent conflicts where multiple people work on the same misc extra tasks.\hypertarget{md_scrum_2_sprint_01_0g3_01_report_autotoc_md53}{}\doxysection{\texorpdfstring{{\bfseries{Actions to Start Doing}}}{{\bfseries{Actions to Start Doing}}}}\label{md_scrum_2_sprint_01_0g3_01_report_autotoc_md53}
+\hypertarget{md_scrum_2_sprint_01_0g3_01_report_autotoc_md54}{}\doxysubsection{\texorpdfstring{{\bfseries{Start strictly enforcing the "{}\+User Story Done"{} workflow}}}{{\bfseries{Start strictly enforcing the "{}\+User Story Done"{} workflow}}}}\label{md_scrum_2_sprint_01_0g3_01_report_autotoc_md54}
+The team needs to transition fully to the new Trello process established at the beginning of this sprint, so that we mark users stories that are fully completed off in the new User Story Done column.\hypertarget{md_scrum_2_sprint_01_0g3_01_report_autotoc_md55}{}\doxysection{\texorpdfstring{{\bfseries{Actions to Keep Doing}}}{{\bfseries{Actions to Keep Doing}}}}\label{md_scrum_2_sprint_01_0g3_01_report_autotoc_md55}
+\hypertarget{md_scrum_2_sprint_01_0g3_01_report_autotoc_md56}{}\doxysubsection{\texorpdfstring{{\bfseries{Keep using headers and separate implementation structures}}}{{\bfseries{Keep using headers and separate implementation structures}}}}\label{md_scrum_2_sprint_01_0g3_01_report_autotoc_md56}
+Continuing the practice from Sprint 2, the team successfully maintained clean separation between class declarations (.hpp) and logic (.cpp). This prevented massive merge conflict overhead during the complex UI additions this sprint.\hypertarget{md_scrum_2_sprint_01_0g3_01_report_autotoc_md57}{}\doxysubsection{\texorpdfstring{{\bfseries{Keep building modular abstraction structures}}}{{\bfseries{Keep building modular abstraction structures}}}}\label{md_scrum_2_sprint_01_0g3_01_report_autotoc_md57}
+The separation of underlying calls from interface handlers (like our radial layers) continues to keep the platform code modular and easily adaptable to other platforms for when the time comes.\hypertarget{md_scrum_2_sprint_01_0g3_01_report_autotoc_md58}{}\doxysubsection{\texorpdfstring{{\bfseries{Keep holding regular Discord checkins}}}{{\bfseries{Keep holding regular Discord checkins}}}}\label{md_scrum_2_sprint_01_0g3_01_report_autotoc_md58}
+The Monday, Tuesday, and Thursday meetings remain highly effective for blocking out technical challenges early and preparing for TA meetings.\hypertarget{md_scrum_2_sprint_01_0g3_01_report_autotoc_md59}{}\doxysection{\texorpdfstring{{\bfseries{Work Completed /\+ Not Completed}}}{{\bfseries{Work Completed /\+ Not Completed}}}}\label{md_scrum_2_sprint_01_0g3_01_report_autotoc_md59}
+\hypertarget{md_scrum_2_sprint_01_0g3_01_report_autotoc_md60}{}\doxysubsection{\texorpdfstring{{\bfseries{Completed During Sprint 3}}}{{\bfseries{Completed During Sprint 3}}}}\label{md_scrum_2_sprint_01_0g3_01_report_autotoc_md60}
+{\bfseries{User Story 1:\+}} As a general computer user, I want to have a settings menu so I can easily control how the app works and add new buttons without having to modify a text file.
+
+
+\begin{DoxyItemize}
+\item Design settings window layout -\/ 3 hours Create settings dialog/\+window using Win32 API or QT -\/ 5 hours
+\item Create basic setting button -\/ 2 hours
+\item Load current settings into UI controls -\/ 3 hours
+\item Save settings when user clicks Apply/\+\+OK -\/ 3 hours
+\item Research logging keystrokes with win api for hotkey recording -\/ 3 hours
+\item Add a setting to change the default hotkey -\/ 3 hours
+\item Validate user settings before saving/\+applying -\/ 3 hours
+\item Connect settings to main application -\/ 4 hours
+\item Add default restore settings button -\/ 2 hours
+\item Implement cancel/\+discard changes -\/ 2 hours
+\item Testing the functionality with configurations we add -\/ 5 hours
+\end{DoxyItemize}
+
+{\bfseries{User Story 2:\+}} As a user, I want to customize my launcher actions so I can choose the programs/\+scripts I use most often.
+
+
+\begin{DoxyItemize}
+\item Implement custom launcher action management -\/ 4 hours
+\item Research secure launching of executables and scripts from C++ -\/ 3 hours
+\item Add executable/\+script file picker -\/ 3 hours
+\item Validate selected file/\+script -\/ 2 hours
+\item Save and load launcher configurations -\/ 2 hours
+\item Integrate actions with the radial menu -\/ 3 hours
+\item Handle launch errors -\/ 3 hours
+\item Ability to delete launcher actions -\/ 3 hours
+\item Test the launch integration with running applications -\/ 3 hours
+\end{DoxyItemize}\hypertarget{md_scrum_2_sprint_01_0g3_01_report_autotoc_md61}{}\doxysection{\texorpdfstring{{\bfseries{Work Completion Rate}}}{{\bfseries{Work Completion Rate}}}}\label{md_scrum_2_sprint_01_0g3_01_report_autotoc_md61}
+\hypertarget{md_scrum_2_sprint_01_0g3_01_report_autotoc_md62}{}\doxysubsection{\texorpdfstring{{\bfseries{Sprint 3 Planned Work}}}{{\bfseries{Sprint 3 Planned Work}}}}\label{md_scrum_2_sprint_01_0g3_01_report_autotoc_md62}
+
+\begin{DoxyItemize}
+\item {\bfseries{Total user stories planned:\+}} 2 new sprint targets
+\item {\bfseries{Total estimated ideal work hours planned:\+}} 64 ideal hours (21 story points) ~\newline
+
+\item {\bfseries{Sprint length:\+}} 7 days
+\end{DoxyItemize}\hypertarget{md_scrum_2_sprint_01_0g3_01_report_autotoc_md63}{}\doxysubsection{\texorpdfstring{{\bfseries{Sprint 3 Completed Work}}}{{\bfseries{Sprint 3 Completed Work}}}}\label{md_scrum_2_sprint_01_0g3_01_report_autotoc_md63}
+
+\begin{DoxyItemize}
+\item {\bfseries{User stories completed:\+}} 2
+\item {\bfseries{User stories partially completed:\+}} 0
+\item {\bfseries{Estimated ideal work hours completed:\+}} 62 ideal hours
+\item {\bfseries{Estimated ideal work hours remaining:\+}} 2 ideal hours
+\end{DoxyItemize}\hypertarget{md_scrum_2_sprint_01_0g3_01_report_autotoc_md64}{}\doxysubsection{\texorpdfstring{{\bfseries{Sprint 3 Rates}}}{{\bfseries{Sprint 3 Rates}}}}\label{md_scrum_2_sprint_01_0g3_01_report_autotoc_md64}
+
+\begin{DoxyItemize}
+\item {\bfseries{User stories completed per day:\+}} 2 completed user stories /\+ 7 days = 0.\+29 user stories/\+day
+\item {\bfseries{Ideal work hours completed per day:\+}} 62 ideal hours /\+ 7 days = 8.\+8 ideal hours/\+day
+\end{DoxyItemize}\hypertarget{md_scrum_2_sprint_01_0g3_01_report_autotoc_md65}{}\doxysection{\texorpdfstring{{\bfseries{Final Burnup Chart}}}{{\bfseries{Final Burnup Chart}}}}\label{md_scrum_2_sprint_01_0g3_01_report_autotoc_md65}
+The final burnup chart for Sprint 3 shows 62 completed ideal hours out of 64 total estimated ideal hours at the end of the sprint.
+
+{\bfseries{62 completed ideal hours /\+ 64 total estimated ideal hours}} ~\newline
+ \hypertarget{md_scrum_2_sprint_01_0g3_01_report_autotoc_md66}{}\doxysection{\texorpdfstring{{\bfseries{Sprint 3 Summary}}}{{\bfseries{Sprint 3 Summary}}}}\label{md_scrum_2_sprint_01_0g3_01_report_autotoc_md66}
+Sprint 3 pushed {\itshape Wheel Time} from a rigid prototype containing hardcoded strings into a truly modular tool managed with an active settings platform. By adding file pickers and wiring configuration saving parameters, the app no longer relies on code rewrites or text editing for simple changes. Also, the team successfully closed out a focus window bug from Sprint 2, creating a seamless open-\/and-\/close loop that won\textquotesingle{}t disrupt gaming sessions. While configuration features are operational, final radial context integrations and script launch errors require additional testing before this is marked fully completed. Moving into Sprint 4, the focus will turn toward ironing out remaining launch edge cases, looking into any performance impovements, and implementing a more extensive testing suite. 

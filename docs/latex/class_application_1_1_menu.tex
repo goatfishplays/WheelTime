@@ -1,0 +1,223 @@
+\doxysection{Application::\+Menu Class Reference}
+\hypertarget{class_application_1_1_menu}{}\label{class_application_1_1_menu}\index{Application::Menu@{Application::Menu}}
+
+
+Represents one radial menu configuration.  
+
+
+
+
+{\ttfamily \+\#include $<$Menu.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_menu_a6f089945d075ca54c7df91f77a02f1e2}{Menu}} (int trigger\+Mod=0, int trigger\+Vk=0, bool execute\+On\+Release=false, bool exit\+On\+Action=false, bool center\+Mouse\+On\+Open=true, std::\+string name="{}Unnamed Menu"{}, std::\+vector$<$ std::\+string $>$ action\+Ids=\{\}, std::\+string id="{}"{})
+\item 
+\doxymbox{\hyperlink{class_application_1_1_menu_a894dd69ef0257e36e54259d813bff7fd}{\texorpdfstring{$\sim$}{\string~}\+Menu}} ()
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_menu_a4607f62d94ae80b3f67a0727d129d828}{add\+Action\+Id}} (int index, const std::\+string \&action\+Id)
+\begin{DoxyCompactList}\small\item\em Inserts an action reference at {\ttfamily index}, or appends when out of range. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_menu_a96a20b3ad5e18ec261f8802324d81332}{remove\+Action}} (int index)
+\begin{DoxyCompactList}\small\item\em Removes the action reference at {\ttfamily index} when in range. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{class_application_1_1_menu_a89749d8d602463c8e09b39ad0004ee61}{action\+Count}} () const
+\begin{DoxyCompactList}\small\item\em Number of action slots in this menu. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_application_1_1_menu_a6455c604b42080258a3eebed3af18e49}{get\+Id}} () const
+\begin{DoxyCompactList}\small\item\em Stable config ID used by menu references and serialization. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_application_1_1_menu_a9cad2d934107fd2da69709d8e023b313}{get\+Name}} () const
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_menu_ad402bb8ebdc40f0ccc83d7b2898e350e}{set\+Id}} (const std::\+string \&new\+Id)
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_menu_aa98a1191d78c31a405f0ff52a1318ab0}{set\+Name}} (const std::\+string \&new\+Name)
+\item 
+const std::\+vector$<$ std::\+string $>$ \& \doxymbox{\hyperlink{class_application_1_1_menu_a2bcbccf2f8f271404f9aca7bfda7dda7}{get\+Action\+Ids}} () const
+\begin{DoxyCompactList}\small\item\em Ordered action references used as wheel slots. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_application_1_1_menu_a584be0b0c59cfef842a5a187b846b23b}{get\+Action\+Id}} (int index) const
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_menu_a2359af94f53a2e0050e00cd82b2a824d}{set\+Action\+Id}} (int index, const std::\+string \&action\+Id)
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_menu_acc5824454fba255830536a09ed2170d0}{move\+Action\+Id}} (int from\+Index, int to\+Index)
+\begin{DoxyCompactList}\small\item\em Reorders a slot reference inside this menu. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{class_application_1_1_menu_a24f99959054149ad1ba34c539fd72a07}{trigger\+Mod}} = 0
+\item 
+int \doxymbox{\hyperlink{class_application_1_1_menu_a4dbc9cf799a4ccf82e0070c5e8be0d71}{trigger\+Vk}} = 0
+\item 
+bool \doxymbox{\hyperlink{class_application_1_1_menu_ad84115920f6762b9c2a3c1c3900a5409}{execute\+On\+Release}} = false
+\begin{DoxyCompactList}\small\item\em On hotkey release, execute the action under the mouse. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_menu_af780b95f93145d39eee3e5eab545c412}{exit\+On\+Action}} = false
+\begin{DoxyCompactList}\small\item\em Exit the menu after performing an action. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_menu_a533501124985971d3ebdb0df56bdfb8e}{center\+Mouse\+On\+Open}} = true
+\begin{DoxyCompactList}\small\item\em Move the cursor to the monitor center when this menu opens. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents one radial menu configuration. 
+
+Menus keep an ordered list of action IDs so the same action can be reused in multiple menus and edited centrally from the action library. 
+
+\label{class_application_1_1_menu_doc-constructors}
+\Hypertarget{class_application_1_1_menu_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_menu_a6f089945d075ca54c7df91f77a02f1e2}\index{Application::Menu@{Application::Menu}!Menu@{Menu}}
+\index{Menu@{Menu}!Application::Menu@{Application::Menu}}
+\doxysubsubsection{\texorpdfstring{Menu()}{Menu()}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_a6f089945d075ca54c7df91f77a02f1e2} 
+Application::\+\+Menu::\+\+Menu (\begin{DoxyParamCaption}\item[{int}]{trigger\+Mod}{ = {\ttfamily 0}, }\item[{int}]{trigger\+Vk}{ = {\ttfamily 0}, }\item[{bool}]{execute\+On\+Release}{ = {\ttfamily false}, }\item[{bool}]{exit\+On\+Action}{ = {\ttfamily false}, }\item[{bool}]{center\+Mouse\+On\+Open}{ = {\ttfamily true}, }\item[{std::\+string}]{name}{ = {\ttfamily "{}Unnamed~Menu"{}}, }\item[{std::\+vector$<$ std::\+string $>$}]{action\+Ids}{ = {\ttfamily \{\}}, }\item[{std::\+string}]{id}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})}
+
+\Hypertarget{class_application_1_1_menu_a894dd69ef0257e36e54259d813bff7fd}\index{Application::Menu@{Application::Menu}!````~Menu@{\texorpdfstring{$\sim$}{\string~}Menu}}
+\index{````~Menu@{\texorpdfstring{$\sim$}{\string~}Menu}!Application::Menu@{Application::Menu}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}Menu()}{\string~Menu()}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_a894dd69ef0257e36e54259d813bff7fd} 
+Application::\+\+Menu::\+\texorpdfstring{$\sim$}{\string~}\+Menu (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+
+
+\label{class_application_1_1_menu_doc-func-members}
+\Hypertarget{class_application_1_1_menu_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_menu_a89749d8d602463c8e09b39ad0004ee61}\index{Application::Menu@{Application::Menu}!actionCount@{actionCount}}
+\index{actionCount@{actionCount}!Application::Menu@{Application::Menu}}
+\doxysubsubsection{\texorpdfstring{actionCount()}{actionCount()}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_a89749d8d602463c8e09b39ad0004ee61} 
+int Application::\+\+Menu::\+action\+Count (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Number of action slots in this menu. 
+
+\Hypertarget{class_application_1_1_menu_a4607f62d94ae80b3f67a0727d129d828}\index{Application::Menu@{Application::Menu}!addActionId@{addActionId}}
+\index{addActionId@{addActionId}!Application::Menu@{Application::Menu}}
+\doxysubsubsection{\texorpdfstring{addActionId()}{addActionId()}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_a4607f62d94ae80b3f67a0727d129d828} 
+void Application::\+\+Menu::\+add\+Action\+Id (\begin{DoxyParamCaption}\item[{int}]{index}{, }\item[{const std::\+string \&}]{action\+Id}{}\end{DoxyParamCaption})}
+
+
+
+Inserts an action reference at {\ttfamily index}, or appends when out of range. 
+
+\Hypertarget{class_application_1_1_menu_a584be0b0c59cfef842a5a187b846b23b}\index{Application::Menu@{Application::Menu}!getActionId@{getActionId}}
+\index{getActionId@{getActionId}!Application::Menu@{Application::Menu}}
+\doxysubsubsection{\texorpdfstring{getActionId()}{getActionId()}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_a584be0b0c59cfef842a5a187b846b23b} 
+std::\+string Application::\+\+Menu::\+get\+Action\+Id (\begin{DoxyParamCaption}\item[{int}]{index}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{class_application_1_1_menu_a2bcbccf2f8f271404f9aca7bfda7dda7}\index{Application::Menu@{Application::Menu}!getActionIds@{getActionIds}}
+\index{getActionIds@{getActionIds}!Application::Menu@{Application::Menu}}
+\doxysubsubsection{\texorpdfstring{getActionIds()}{getActionIds()}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_a2bcbccf2f8f271404f9aca7bfda7dda7} 
+const std::\+vector$<$ std::\+string $>$ \& Application::\+\+Menu::\+get\+Action\+Ids (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Ordered action references used as wheel slots. 
+
+\Hypertarget{class_application_1_1_menu_a6455c604b42080258a3eebed3af18e49}\index{Application::Menu@{Application::Menu}!getId@{getId}}
+\index{getId@{getId}!Application::Menu@{Application::Menu}}
+\doxysubsubsection{\texorpdfstring{getId()}{getId()}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_a6455c604b42080258a3eebed3af18e49} 
+std::\+string Application::\+\+Menu::\+get\+Id (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Stable config ID used by menu references and serialization. 
+
+\Hypertarget{class_application_1_1_menu_a9cad2d934107fd2da69709d8e023b313}\index{Application::Menu@{Application::Menu}!getName@{getName}}
+\index{getName@{getName}!Application::Menu@{Application::Menu}}
+\doxysubsubsection{\texorpdfstring{getName()}{getName()}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_a9cad2d934107fd2da69709d8e023b313} 
+std::\+string Application::\+\+Menu::\+get\+Name (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{class_application_1_1_menu_acc5824454fba255830536a09ed2170d0}\index{Application::Menu@{Application::Menu}!moveActionId@{moveActionId}}
+\index{moveActionId@{moveActionId}!Application::Menu@{Application::Menu}}
+\doxysubsubsection{\texorpdfstring{moveActionId()}{moveActionId()}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_acc5824454fba255830536a09ed2170d0} 
+void Application::\+\+Menu::\+move\+Action\+Id (\begin{DoxyParamCaption}\item[{int}]{from\+Index}{, }\item[{int}]{to\+Index}{}\end{DoxyParamCaption})}
+
+
+
+Reorders a slot reference inside this menu. 
+
+\Hypertarget{class_application_1_1_menu_a96a20b3ad5e18ec261f8802324d81332}\index{Application::Menu@{Application::Menu}!removeAction@{removeAction}}
+\index{removeAction@{removeAction}!Application::Menu@{Application::Menu}}
+\doxysubsubsection{\texorpdfstring{removeAction()}{removeAction()}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_a96a20b3ad5e18ec261f8802324d81332} 
+void Application::\+\+Menu::\+remove\+Action (\begin{DoxyParamCaption}\item[{int}]{index}{}\end{DoxyParamCaption})}
+
+
+
+Removes the action reference at {\ttfamily index} when in range. 
+
+\Hypertarget{class_application_1_1_menu_a2359af94f53a2e0050e00cd82b2a824d}\index{Application::Menu@{Application::Menu}!setActionId@{setActionId}}
+\index{setActionId@{setActionId}!Application::Menu@{Application::Menu}}
+\doxysubsubsection{\texorpdfstring{setActionId()}{setActionId()}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_a2359af94f53a2e0050e00cd82b2a824d} 
+void Application::\+\+Menu::\+set\+Action\+Id (\begin{DoxyParamCaption}\item[{int}]{index}{, }\item[{const std::\+string \&}]{action\+Id}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_application_1_1_menu_ad402bb8ebdc40f0ccc83d7b2898e350e}\index{Application::Menu@{Application::Menu}!setId@{setId}}
+\index{setId@{setId}!Application::Menu@{Application::Menu}}
+\doxysubsubsection{\texorpdfstring{setId()}{setId()}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_ad402bb8ebdc40f0ccc83d7b2898e350e} 
+void Application::\+\+Menu::\+set\+Id (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{new\+Id}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_application_1_1_menu_aa98a1191d78c31a405f0ff52a1318ab0}\index{Application::Menu@{Application::Menu}!setName@{setName}}
+\index{setName@{setName}!Application::Menu@{Application::Menu}}
+\doxysubsubsection{\texorpdfstring{setName()}{setName()}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_aa98a1191d78c31a405f0ff52a1318ab0} 
+void Application::\+\+Menu::\+set\+Name (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{new\+Name}{}\end{DoxyParamCaption})}
+
+
+
+\label{class_application_1_1_menu_doc-variable-members}
+\Hypertarget{class_application_1_1_menu_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_application_1_1_menu_a533501124985971d3ebdb0df56bdfb8e}\index{Application::Menu@{Application::Menu}!centerMouseOnOpen@{centerMouseOnOpen}}
+\index{centerMouseOnOpen@{centerMouseOnOpen}!Application::Menu@{Application::Menu}}
+\doxysubsubsection{\texorpdfstring{centerMouseOnOpen}{centerMouseOnOpen}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_a533501124985971d3ebdb0df56bdfb8e} 
+bool Application::\+\+Menu::\+center\+Mouse\+On\+Open = true}
+
+
+
+Move the cursor to the monitor center when this menu opens. 
+
+\Hypertarget{class_application_1_1_menu_ad84115920f6762b9c2a3c1c3900a5409}\index{Application::Menu@{Application::Menu}!executeOnRelease@{executeOnRelease}}
+\index{executeOnRelease@{executeOnRelease}!Application::Menu@{Application::Menu}}
+\doxysubsubsection{\texorpdfstring{executeOnRelease}{executeOnRelease}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_ad84115920f6762b9c2a3c1c3900a5409} 
+bool Application::\+\+Menu::\+execute\+On\+Release = false}
+
+
+
+On hotkey release, execute the action under the mouse. 
+
+\Hypertarget{class_application_1_1_menu_af780b95f93145d39eee3e5eab545c412}\index{Application::Menu@{Application::Menu}!exitOnAction@{exitOnAction}}
+\index{exitOnAction@{exitOnAction}!Application::Menu@{Application::Menu}}
+\doxysubsubsection{\texorpdfstring{exitOnAction}{exitOnAction}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_af780b95f93145d39eee3e5eab545c412} 
+bool Application::\+\+Menu::\+exit\+On\+Action = false}
+
+
+
+Exit the menu after performing an action. 
+
+\Hypertarget{class_application_1_1_menu_a24f99959054149ad1ba34c539fd72a07}\index{Application::Menu@{Application::Menu}!triggerMod@{triggerMod}}
+\index{triggerMod@{triggerMod}!Application::Menu@{Application::Menu}}
+\doxysubsubsection{\texorpdfstring{triggerMod}{triggerMod}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_a24f99959054149ad1ba34c539fd72a07} 
+int Application::\+\+Menu::\+trigger\+Mod = 0}
+
+\Hypertarget{class_application_1_1_menu_a4dbc9cf799a4ccf82e0070c5e8be0d71}\index{Application::Menu@{Application::Menu}!triggerVk@{triggerVk}}
+\index{triggerVk@{triggerVk}!Application::Menu@{Application::Menu}}
+\doxysubsubsection{\texorpdfstring{triggerVk}{triggerVk}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_a4dbc9cf799a4ccf82e0070c5e8be0d71} 
+int Application::\+\+Menu::\+trigger\+Vk = 0}
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_menu_8hpp}{Menu.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\doxymbox{\hyperlink{_menu_8cpp}{Menu.\+cpp}}\end{DoxyCompactItemize}

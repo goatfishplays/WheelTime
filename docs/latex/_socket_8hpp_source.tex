@@ -1,0 +1,38 @@
+\doxysection{Socket.\+hpp}
+\hypertarget{_socket_8hpp_source}{}\label{_socket_8hpp_source}\index{E:/Github/WheelTime/app/include/App/ActionItems/Socket.hpp@{E:/Github/WheelTime/app/include/App/ActionItems/Socket.hpp}}
+\doxymbox{\hyperlink{_socket_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <\doxymbox{\hyperlink{_execute_8hpp}{Platform/Execute.hpp}}>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_action_item_8hpp}{App/ActionItems/ActionItem.hpp}}"{}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00015\ \{}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_a_i___socket_a943cbac034fd0c8d5388aa31050177e2}{AI\_Socket}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{ActionItem}}}
+\DoxyCodeLine{00019\ \{}
+\DoxyCodeLine{00020\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00021\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_a_i___socket_a943cbac034fd0c8d5388aa31050177e2}{AI\_Socket}}(\doxymbox{\hyperlink{namespace_platform_a687988ed6d020d281c8c9cc66e9837f5}{Platform::SocketProtocol}}\ \doxymbox{\hyperlink{class_application_1_1_a_i___socket_adc6e361f6eb8be4f1e76540342799449}{protocol}}\ =\ \doxymbox{\hyperlink{namespace_platform_a687988ed6d020d281c8c9cc66e9837f5a81baba40274ccb30f9fdfa2c73cf0482}{Platform::SocketProtocol::Udp}},}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ destination\ =\ \{\},}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ message\ =\ \{\},}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_application_1_1_a_i___socket_a391a7383a109dd318b657fb45c28005e}{httpMethod}}\ =\ \textcolor{stringliteral}{"{}POST"{}});}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \doxymbox{\hyperlink{namespace_platform_a687988ed6d020d281c8c9cc66e9837f5}{Platform::SocketProtocol}}\ \doxymbox{\hyperlink{class_application_1_1_a_i___socket_adc6e361f6eb8be4f1e76540342799449}{protocol}}\ =\ \doxymbox{\hyperlink{namespace_platform_a687988ed6d020d281c8c9cc66e9837f5a81baba40274ccb30f9fdfa2c73cf0482}{Platform::SocketProtocol::Udp}};}
+\DoxyCodeLine{00027\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_application_1_1_a_i___socket_ab3121896d50946e0797089a527d329be}{outputDst}};\ \ \ }
+\DoxyCodeLine{00028\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_application_1_1_a_i___socket_a23093c135f87ddd1ddcdecdd33fcde78}{socketMsg}};\ \ \ }
+\DoxyCodeLine{00029\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_application_1_1_a_i___socket_a391a7383a109dd318b657fb45c28005e}{httpMethod}}\ =\ \textcolor{stringliteral}{"{}POST"{}};\ }
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ std::unique\_ptr<ActionItem>\ \doxymbox{\hyperlink{class_application_1_1_a_i___socket_abbf5c80e54242bb83535f97f8700143e}{clone}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00032\ \ \ \ \ \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{ActionItemKind}}\ \doxymbox{\hyperlink{class_application_1_1_a_i___socket_acef11a50d2e16c22443961e8c87c391c}{kind}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00033\ \ \ \ \ [[nodiscard]]\ \doxymbox{\hyperlink{class_application_1_1_execute_result}{ExecuteResult}}\ \doxymbox{\hyperlink{class_application_1_1_a_i___socket_aacbfb11b46acc7afa5d451d867e19e3b}{execute}}(\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{ActionExecutionContext}}\ \&context)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \}\ \textcolor{comment}{//\ namespace\ Application}}
+
+\end{DoxyCode}

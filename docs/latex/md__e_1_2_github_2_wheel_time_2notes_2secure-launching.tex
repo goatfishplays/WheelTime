@@ -1,0 +1,91 @@
+\chapter{Secure Process Launching }
+\hypertarget{md__e_1_2_github_2_wheel_time_2notes_2secure-launching}{}\label{md__e_1_2_github_2_wheel_time_2notes_2secure-launching}\index{Secure Process Launching@{Secure Process Launching}}
+\label{md__e_1_2_github_2_wheel_time_2notes_2secure-launching_autotoc_md153}%
+\Hypertarget{md__e_1_2_github_2_wheel_time_2notes_2secure-launching_autotoc_md153}%
+
+
+For running other exe\textquotesingle{}s securely on Windows, we should avoid {\ttfamily system()} at all costs. It\textquotesingle{}s incredibly unsafe because it passes strings directly to the command interpreter ({\ttfamily cmd.\+exe}), opening us up to command injection.
+
+We should use {\ttfamily Create\+ProcessW} from {\ttfamily processthreadsapi.\+h}.
+
+Syntax:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{BOOL\ CreateProcessW(}
+\DoxyCodeLine{\ \ [in,\ optional]\ \ \ \ \ \ LPCWSTR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lpApplicationName,}
+\DoxyCodeLine{\ \ [in,\ out,\ optional]\ LPWSTR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lpCommandLine,}
+\DoxyCodeLine{\ \ [in,\ optional]\ \ \ \ \ \ LPSECURITY\_ATTRIBUTES\ lpProcessAttributes,}
+\DoxyCodeLine{\ \ [in,\ optional]\ \ \ \ \ \ LPSECURITY\_ATTRIBUTES\ lpThreadAttributes,}
+\DoxyCodeLine{\ \ [in]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ BOOL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ bInheritHandles,}
+\DoxyCodeLine{\ \ [in]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DWORD\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ dwCreationFlags,}
+\DoxyCodeLine{\ \ [in,\ optional]\ \ \ \ \ \ LPVOID\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lpEnvironment,}
+\DoxyCodeLine{\ \ [in,\ optional]\ \ \ \ \ \ LPCWSTR\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lpCurrentDirectory,}
+\DoxyCodeLine{\ \ [in]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ LPSTARTUPINFOW\ \ \ \ \ \ \ \ lpStartupInfo,}
+\DoxyCodeLine{\ \ [out]\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ LPPROCESS\_INFORMATION\ lpProcessInformation}
+\DoxyCodeLine{);}
+
+\end{DoxyCode}
+\hypertarget{md__e_1_2_github_2_wheel_time_2notes_2secure-launching_autotoc_md154}{}\doxysubsection{\texorpdfstring{Params \& Security Considerations}{Params \& Security Considerations}}\label{md__e_1_2_github_2_wheel_time_2notes_2secure-launching_autotoc_md154}
+
+\begin{DoxyItemize}
+\item {\ttfamily lp\+Application\+Name} vs {\ttfamily lp\+Command\+Line}
+\item This is a massive security issue. If we pass {\ttfamily NULL} to {\ttfamily lp\+Application\+Name} and pass a spaces-\/containing path in {\ttfamily lp\+Command\+Line} (like {\ttfamily C:\+\textbackslash{}Program Files\textbackslash{}App\textbackslash{}test.\+exe}), Windows might try to execute {\ttfamily C:\+\textbackslash{}Program.\+exe} first if it\textquotesingle{}s not quoted properly.
+\item Always pass the absolute path directly to {\ttfamily lp\+Application\+Name}, OR wrap the executable path in double quotes inside {\ttfamily lp\+Command\+Line}.
+\item {\ttfamily b\+Inherit\+Handles}
+\item Set this to {\ttfamily FALSE} unless we explicitly need the child process to inherit open files, sockets, or pipes from our parent process. Leaving this {\ttfamily TRUE} by default is a privilege leak risk.
+\item {\ttfamily dw\+Creation\+Flags}
+\item We can use {\ttfamily CREATE\+\_\+\+NO\+\_\+\+WINDOW} if we are running background scripts/\+tools and don\textquotesingle{}t want a random console window popping up and interrupting the user.
+\end{DoxyItemize}\hypertarget{md__e_1_2_github_2_wheel_time_2notes_2secure-launching_autotoc_md155}{}\doxysection{\texorpdfstring{Running Scripts Safely (Powershell /\+ Batch)}{Running Scripts Safely (Powershell /\+ Batch)}}\label{md__e_1_2_github_2_wheel_time_2notes_2secure-launching_autotoc_md155}
+We shouldn\textquotesingle{}t launch scripts directly. We have to spin up the interpreter ({\ttfamily powershell.\+exe} or {\ttfamily cmd.\+exe}) and pass the script path as an argument.\hypertarget{md__e_1_2_github_2_wheel_time_2notes_2secure-launching_autotoc_md156}{}\doxysubsection{\texorpdfstring{Powershell Best Practices}{Powershell Best Practices}}\label{md__e_1_2_github_2_wheel_time_2notes_2secure-launching_autotoc_md156}
+
+\begin{DoxyItemize}
+\item By default, Windows blocks script execution. We have to bypass it, but we should do it strictly for our process scope, not system-\/wide.
+\item If the script path or arguments come from user input, we have to sanitize them to prevent injection.
+\end{DoxyItemize}
+
+For example:\+ 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{comment}{//\ point\ to\ the\ system\ powershell\ executable\ to\ prevent\ dll\ hijacking}}
+\DoxyCodeLine{std::wstring\ psPath\ =\ L\textcolor{stringliteral}{"{}C:\(\backslash\)\(\backslash\)Windows\(\backslash\)\(\backslash\)System32\(\backslash\)\(\backslash\)WindowsPowerShell\(\backslash\)\(\backslash\)v1.0\(\backslash\)\(\backslash\)powershell.exe"{}};}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{//\ Use\ -\/NoProfile\ and\ -\/ExecutionPolicy\ Bypass\ for\ a\ clean,\ isolated\ run}}
+\DoxyCodeLine{std::wstring\ args\ =\ L\textcolor{stringliteral}{"{}\ -\/NoProfile\ -\/ExecutionPolicy\ Bypass\ -\/File\ \(\backslash\)"{}C:\(\backslash\)\(\backslash\)path\(\backslash\)\(\backslash\)to\(\backslash\)\(\backslash\)our\(\backslash\)\(\backslash\)script.ps1\(\backslash\)"{}"{}};}
+\DoxyCodeLine{}
+\DoxyCodeLine{STARTUPINFOW\ si\ =\ \{\ \textcolor{keyword}{sizeof}(si)\ \};}
+\DoxyCodeLine{PROCESS\_INFORMATION\ pi;}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{//\ lpCommandLine\ must\ be\ a\ modifiable\ string,\ so\ copy\ it\ to\ a\ buffer}}
+\DoxyCodeLine{std::vector<wchar\_t>\ cmdBuffer(args.begin(),\ args.end());}
+\DoxyCodeLine{cmdBuffer.push\_back(L\textcolor{charliteral}{'\(\backslash\)0'});}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordflow}{if}\ (CreateProcessW(psPath.c\_str(),\ cmdBuffer.data(),\ NULL,\ NULL,\ FALSE,\ CREATE\_NO\_WINDOW,\ NULL,\ NULL,\ \&si,\ \&pi))\ \{}
+\DoxyCodeLine{\ \ \ \ \textcolor{comment}{//\ wait\ for\ it\ to\ finish\ if\ we\ need\ to\ block,\ otherwise\ close\ handles\ immediately}}
+\DoxyCodeLine{\ \ \ \ WaitForSingleObject(pi.hProcess,\ INFINITE);}
+\DoxyCodeLine{\ \ \ \ CloseHandle(pi.hProcess);}
+\DoxyCodeLine{\ \ \ \ CloseHandle(pi.hThread);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md__e_1_2_github_2_wheel_time_2notes_2secure-launching_autotoc_md157}{}\doxysection{\texorpdfstring{Handling Process Outputs}{Handling Process Outputs}}\label{md__e_1_2_github_2_wheel_time_2notes_2secure-launching_autotoc_md157}
+
+\begin{DoxyItemize}
+\item We have to use anonymous pipes. We can use {\ttfamily Create\+Pipe} to get read/\+write handles.
+\item Pass the write handle to the child\textquotesingle{}s {\ttfamily h\+Std\+Output} and {\ttfamily h\+Std\+Error} inside {\ttfamily STARTUPINFOW} (which requires setting the {\ttfamily STARTF\+\_\+\+USESTDHANDLES} flag).
+\item Ensure only the write handle is inherited ({\ttfamily Set\+Handle\+Information} with {\ttfamily HANDLE\+\_\+\+FLAG\+\_\+\+INHERIT}), otherwise the child process might hang waiting for the pipe to close.
+\end{DoxyItemize}\hypertarget{md__e_1_2_github_2_wheel_time_2notes_2secure-launching_autotoc_md158}{}\doxysection{\texorpdfstring{Sandbox /\+ Integrity Levels}{Sandbox /\+ Integrity Levels}}\label{md__e_1_2_github_2_wheel_time_2notes_2secure-launching_autotoc_md158}
+By default, the launched process runs with the same privileges as our app.
+
+
+\begin{DoxyItemize}
+\item We could look into token restriction APIs ({\ttfamily Create\+Process\+As\+UserW} or using App\+Container isolation) to drop privileges to a low integrity level, but that\textquotesingle{}s probably overkill since the user is explicitly trusting us.
+\end{DoxyItemize}\hypertarget{md__e_1_2_github_2_wheel_time_2notes_2secure-launching_autotoc_md159}{}\doxysection{\texorpdfstring{Error Handling \& Cleanup}{Error Handling \& Cleanup}}\label{md__e_1_2_github_2_wheel_time_2notes_2secure-launching_autotoc_md159}
+
+\begin{DoxyItemize}
+\item Always check the return value of {\ttfamily Create\+ProcessW} (returns zero on failure).
+\item Use {\ttfamily Get\+Last\+Error()} to diagnose. Common issues:\+
+\begin{DoxyItemize}
+\item {\ttfamily ERROR\+\_\+\+FILE\+\_\+\+NOT\+\_\+\+FOUND} (typo in path or missing interpreter)
+\item {\ttfamily ERROR\+\_\+\+ACCESS\+\_\+\+DENIED} (permissions issue or antivirus blocking)
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+We have to call {\ttfamily Close\+Handle} on both {\ttfamily pi.\+h\+Process} and {\ttfamily pi.\+h\+Thread} as soon as we are done with them, even if the process is still running. Apparently Windows keeps the process object alive in memory until all handles are closed. 

@@ -1,0 +1,116 @@
+\doxysection{Application::\+AI\+\_\+\+Launch\+App Class Reference}
+\hypertarget{class_application_1_1_a_i___launch_app}{}\label{class_application_1_1_a_i___launch_app}\index{Application::AI\_LaunchApp@{Application::AI\_LaunchApp}}
+
+
+Launches a curated preset or a custom app target.  
+
+
+
+
+{\ttfamily \+\#include $<$Launch\+App.\+hpp$>$}
+
+Inheritance diagram for Application::\+AI\+\_\+\+Launch\+App:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_application_1_1_a_i___launch_app}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_a_i___launch_app_a04b0a6a615877e87e89af27ca53e39e1}{AI\+\_\+\+Launch\+App}} (std::\+string preset\+Id="{}custom"{}, std::\+string custom\+Target=\{\})
+\item 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} $>$ \doxymbox{\hyperlink{class_application_1_1_a_i___launch_app_a8e88b6fffc7ccd84d45b2b7c441e4044}{clone}} () const override
+\item 
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} \doxymbox{\hyperlink{class_application_1_1_a_i___launch_app_a3519a465cd907306115fe5d36f7997a6}{kind}} () const override
+\item 
+\doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}} \doxymbox{\hyperlink{class_application_1_1_a_i___launch_app_a6b7e33705c65f3a52869e24ab93f0b1f}{execute}} (\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&context) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{class_application_1_1_action_item}{Application::\+\+Action\+Item}}}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} ()=default
+\item 
+virtual \doxymbox{\hyperlink{class_application_1_1_action_item_a475b8d6aff3774c90b9f0a4512959bf5}{\texorpdfstring{$\sim$}{\string~}\+Action\+Item}} ()=default
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std::\+string \doxymbox{\hyperlink{class_application_1_1_a_i___launch_app_a3b9fb9c1a7fea2753a9917c170875dbf}{preset\+Id}}
+\item 
+std::\+string \doxymbox{\hyperlink{class_application_1_1_a_i___launch_app_a30c88de7c5805f3a3672c39c6b13af46}{custom\+Target}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Launches a curated preset or a custom app target. 
+
+{\ttfamily \doxylink{class_application_1_1_a_i___launch_app_a3b9fb9c1a7fea2753a9917c170875dbf}{preset\+Id} == "{}custom"{}} means launch {\ttfamily \doxylink{class_application_1_1_a_i___launch_app_a30c88de7c5805f3a3672c39c6b13af46}{custom\+Target}} instead. 
+
+\label{class_application_1_1_a_i___launch_app_doc-constructors}
+\Hypertarget{class_application_1_1_a_i___launch_app_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_a_i___launch_app_a04b0a6a615877e87e89af27ca53e39e1}\index{Application::AI\_LaunchApp@{Application::AI\_LaunchApp}!AI\_LaunchApp@{AI\_LaunchApp}}
+\index{AI\_LaunchApp@{AI\_LaunchApp}!Application::AI\_LaunchApp@{Application::AI\_LaunchApp}}
+\doxysubsubsection{\texorpdfstring{AI\_LaunchApp()}{AI\_LaunchApp()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___launch_app_a04b0a6a615877e87e89af27ca53e39e1} 
+Application::\+\+AI\+\_\+\+Launch\+App::\+\+AI\+\_\+\+Launch\+App (\begin{DoxyParamCaption}\item[{std::\+string}]{preset\+Id}{ = {\ttfamily "{}custom"{}}, }\item[{std::\+string}]{custom\+Target}{ = {\ttfamily \{\}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+\label{class_application_1_1_a_i___launch_app_doc-func-members}
+\Hypertarget{class_application_1_1_a_i___launch_app_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_a_i___launch_app_a8e88b6fffc7ccd84d45b2b7c441e4044}\index{Application::AI\_LaunchApp@{Application::AI\_LaunchApp}!clone@{clone}}
+\index{clone@{clone}!Application::AI\_LaunchApp@{Application::AI\_LaunchApp}}
+\doxysubsubsection{\texorpdfstring{clone()}{clone()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___launch_app_a8e88b6fffc7ccd84d45b2b7c441e4044} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} $>$ Application::\+\+AI\+\_\+\+Launch\+App::\+clone (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_afd400c3edd7ad9e074a28d462421789c}{Application::\+\+Action\+Item}}.
+
+\Hypertarget{class_application_1_1_a_i___launch_app_a6b7e33705c65f3a52869e24ab93f0b1f}\index{Application::AI\_LaunchApp@{Application::AI\_LaunchApp}!execute@{execute}}
+\index{execute@{execute}!Application::AI\_LaunchApp@{Application::AI\_LaunchApp}}
+\doxysubsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___launch_app_a6b7e33705c65f3a52869e24ab93f0b1f} 
+\doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}} Application::\+\+AI\+\_\+\+Launch\+App::\+execute (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&}]{context}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_aeeaf1c44a2f6741be0fdaad53da67e54}{Application::\+\+Action\+Item}}.
+
+\Hypertarget{class_application_1_1_a_i___launch_app_a3519a465cd907306115fe5d36f7997a6}\index{Application::AI\_LaunchApp@{Application::AI\_LaunchApp}!kind@{kind}}
+\index{kind@{kind}!Application::AI\_LaunchApp@{Application::AI\_LaunchApp}}
+\doxysubsubsection{\texorpdfstring{kind()}{kind()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___launch_app_a3519a465cd907306115fe5d36f7997a6} 
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} Application::\+\+AI\+\_\+\+Launch\+App::\+kind (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_ab51b1298eb1b325512ca99d2f090fa75}{Application::\+\+Action\+Item}}.
+
+
+
+\label{class_application_1_1_a_i___launch_app_doc-variable-members}
+\Hypertarget{class_application_1_1_a_i___launch_app_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_application_1_1_a_i___launch_app_a30c88de7c5805f3a3672c39c6b13af46}\index{Application::AI\_LaunchApp@{Application::AI\_LaunchApp}!customTarget@{customTarget}}
+\index{customTarget@{customTarget}!Application::AI\_LaunchApp@{Application::AI\_LaunchApp}}
+\doxysubsubsection{\texorpdfstring{customTarget}{customTarget}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___launch_app_a30c88de7c5805f3a3672c39c6b13af46} 
+std::\+string Application::\+\+AI\+\_\+\+Launch\+App::\+custom\+Target}
+
+\Hypertarget{class_application_1_1_a_i___launch_app_a3b9fb9c1a7fea2753a9917c170875dbf}\index{Application::AI\_LaunchApp@{Application::AI\_LaunchApp}!presetId@{presetId}}
+\index{presetId@{presetId}!Application::AI\_LaunchApp@{Application::AI\_LaunchApp}}
+\doxysubsubsection{\texorpdfstring{presetId}{presetId}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___launch_app_a3b9fb9c1a7fea2753a9917c170875dbf} 
+std::\+string Application::\+\+AI\+\_\+\+Launch\+App::\+preset\+Id}
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\+Action\+Items/\+\doxymbox{\hyperlink{_launch_app_8hpp}{Launch\+App.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\+Action\+Items/\+\doxymbox{\hyperlink{_launch_app_8cpp}{Launch\+App.\+cpp}}\end{DoxyCompactItemize}

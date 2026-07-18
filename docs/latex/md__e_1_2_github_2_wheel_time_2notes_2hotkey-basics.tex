@@ -1,7 +1,7 @@
 \chapter{Register\+Hot\+Key }
 \hypertarget{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics}{}\label{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics}\index{RegisterHotKey@{RegisterHotKey}}
-\label{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md3}%
-\Hypertarget{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md3}%
+\label{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md146}%
+\Hypertarget{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md146}%
 
 
 For hotkeys on Windows, we should use {\ttfamily Register\+Hot\+Key} from {\ttfamily winuser.\+h}.
@@ -16,7 +16,7 @@ Syntax:\+
 \DoxyCodeLine{);}
 
 \end{DoxyCode}
-\hypertarget{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md4}{}\doxysubsection{\texorpdfstring{Params}{Params}}\label{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md4}
+\hypertarget{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md147}{}\doxysubsection{\texorpdfstring{Params}{Params}}\label{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md147}
 
 \begin{DoxyItemize}
 \item {\ttfamily h\+Wnd}
@@ -46,7 +46,7 @@ Syntax:\+
 \item Virtual key code (e.\+g. {\ttfamily VK\+\_\+\+SPACE}, {\ttfamily VK\+\_\+O}, etc)
 \item We would have to collect the keypresses from the user and then convert them to virtual key codes
 \end{DoxyItemize}
-\end{DoxyItemize}\hypertarget{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md5}{}\doxysection{\texorpdfstring{Receiving the Hotkey}{Receiving the Hotkey}}\label{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md5}
+\end{DoxyItemize}\hypertarget{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md148}{}\doxysection{\texorpdfstring{Receiving the Hotkey}{Receiving the Hotkey}}\label{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md148}
 When triggered, Windows sends {\ttfamily WM\+\_\+\+HOTKEY} and we will need a message loop to capture it:\+ 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{MSG\ msg;}
@@ -62,13 +62,13 @@ When triggered, Windows sends {\ttfamily WM\+\_\+\+HOTKEY} and we will need a me
 \DoxyCodeLine{\}}
 
 \end{DoxyCode}
-\hypertarget{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md6}{}\doxysection{\texorpdfstring{Unregister}{Unregister}}\label{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md6}
+\hypertarget{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md149}{}\doxysection{\texorpdfstring{Unregister}{Unregister}}\label{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md149}
 Unregistering hotkeys is pretty simple:\+ 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{UnregisterHotKey(NULL,\ \textcolor{keywordtype}{id});}
 
 \end{DoxyCode}
-\hypertarget{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md7}{}\doxysection{\texorpdfstring{Window Focus Info}{Window Focus Info}}\label{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md7}
+\hypertarget{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md150}{}\doxysection{\texorpdfstring{Window Focus Info}{Window Focus Info}}\label{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md150}
 To bring launcher forward we can use:\+
 \begin{DoxyItemize}
 \item {\ttfamily Show\+Window(hwnd, SW\+\_\+\+SHOW)}
@@ -76,8 +76,8 @@ To bring launcher forward we can use:\+
 \item {\ttfamily Set\+Focus(hwnd)}
 \end{DoxyItemize}
 
-I don\textquotesingle{}t know yet which one is optimial for our use case. Apparenly Windows blocks focus stealing sometimes, so we may need to use {\ttfamily Attach\+Thread\+Input} or {\ttfamily Allow\+Set\+Foreground\+Window}, but we will see.\hypertarget{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md8}{}\doxysection{\texorpdfstring{Threading Note}{Threading Note}}\label{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md8}
-To keep the main thread free, we will probably have to put this loop on a separate thread so it keeps everything else responsive.\hypertarget{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md9}{}\doxysection{\texorpdfstring{Error Handling}{Error Handling}}\label{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md9}
+I don\textquotesingle{}t know yet which one is optimial for our use case. Apparenly Windows blocks focus stealing sometimes, so we may need to use {\ttfamily Attach\+Thread\+Input} or {\ttfamily Allow\+Set\+Foreground\+Window}, but we will see.\hypertarget{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md151}{}\doxysection{\texorpdfstring{Threading Note}{Threading Note}}\label{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md151}
+To keep the main thread free, we will probably have to put this loop on a separate thread so it keeps everything else responsive.\hypertarget{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md152}{}\doxysection{\texorpdfstring{Error Handling}{Error Handling}}\label{md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics_autotoc_md152}
 
 \begin{DoxyItemize}
 \item Hotkey fails if already registered by another app

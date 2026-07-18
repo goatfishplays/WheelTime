@@ -1,0 +1,100 @@
+\doxysection{Application::\+Pending\+Cancel\+Request Struct Reference}
+\hypertarget{struct_application_1_1_pending_cancel_request}{}\label{struct_application_1_1_pending_cancel_request}\index{Application::PendingCancelRequest@{Application::PendingCancelRequest}}
+
+
+Cancel request recorded by Action\+Items for the scheduler to apply.  
+
+
+
+
+{\ttfamily \+\#include $<$Action\+Execution\+Context.\+hpp$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum class \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fff}{Level}} \{ \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fffa1f7eef9de38738e79be7905c6067c98f}{Most\+Recent}}
+, \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fffa781dc97dc62331eec3ea9ec4373a3ca8}{Channel}}
+, \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fffab1c94ca2fbc3e78fc30069c8d0f01680}{All}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fff}{Level}} \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_ad2148361b58f084858380783edafd63a}{level}} = \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fffa1f7eef9de38738e79be7905c6067c98f}{Level::\+\+Most\+Recent}}
+\item 
+uint64\+\_\+t \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_a06bdb28259de6b2c65bb41b4df0f401d}{exclude\+Action\+Id}} = 0
+\begin{DoxyCompactList}\small\item\em Runtime id to skip when level == Most\+Recent (usually the requester). \end{DoxyCompactList}\item 
+uint32\+\_\+t \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_a7596d28bb350b411a98db2a151d58b5e}{channel}} = 0
+\begin{DoxyCompactList}\small\item\em Channel filter:\+ for Most\+Recent, 0 = any channel; for Channel, the target. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Cancel request recorded by Action\+Items for the scheduler to apply. 
+
+Mirrors \doxylink{class_application_1_1_scheduler}{Scheduler} cancel APIs. Action\+Items must not call the \doxylink{class_application_1_1_scheduler}{Scheduler} directly; they enqueue these and yield. 
+
+\label{struct_application_1_1_pending_cancel_request_doc-enum-members}
+\Hypertarget{struct_application_1_1_pending_cancel_request_doc-enum-members}
+\doxysubsection{Member Enumeration Documentation}
+\Hypertarget{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fff}\index{Application::PendingCancelRequest@{Application::PendingCancelRequest}!Level@{Level}}
+\index{Level@{Level}!Application::PendingCancelRequest@{Application::PendingCancelRequest}}
+\doxysubsubsection{\texorpdfstring{Level}{Level}}
+{\footnotesize\ttfamily \label{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fff} 
+enum class \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fff}{Application::\+\+Pending\+Cancel\+Request::\+\+Level}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MostRecent@{MostRecent}!Application::PendingCancelRequest@{Application::PendingCancelRequest}}
+\index{Application::PendingCancelRequest@{Application::PendingCancelRequest}!MostRecent@{MostRecent}}
+}\Hypertarget{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fffa1f7eef9de38738e79be7905c6067c98f}\label{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fffa1f7eef9de38738e79be7905c6067c98f} 
+Most\+Recent&Cancel the most recently submitted \doxylink{class_application_1_1_action}{Action} (see channel /\+ exclude\+Action\+Id). \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Channel@{Channel}!Application::PendingCancelRequest@{Application::PendingCancelRequest}}
+\index{Application::PendingCancelRequest@{Application::PendingCancelRequest}!Channel@{Channel}}
+}\Hypertarget{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fffa781dc97dc62331eec3ea9ec4373a3ca8}\label{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fffa781dc97dc62331eec3ea9ec4373a3ca8} 
+Channel&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{All@{All}!Application::PendingCancelRequest@{Application::PendingCancelRequest}}
+\index{Application::PendingCancelRequest@{Application::PendingCancelRequest}!All@{All}}
+}\Hypertarget{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fffab1c94ca2fbc3e78fc30069c8d0f01680}\label{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fffab1c94ca2fbc3e78fc30069c8d0f01680} 
+All&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{struct_application_1_1_pending_cancel_request_doc-variable-members}
+\Hypertarget{struct_application_1_1_pending_cancel_request_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_application_1_1_pending_cancel_request_a7596d28bb350b411a98db2a151d58b5e}\index{Application::PendingCancelRequest@{Application::PendingCancelRequest}!channel@{channel}}
+\index{channel@{channel}!Application::PendingCancelRequest@{Application::PendingCancelRequest}}
+\doxysubsubsection{\texorpdfstring{channel}{channel}}
+{\footnotesize\ttfamily \label{struct_application_1_1_pending_cancel_request_a7596d28bb350b411a98db2a151d58b5e} 
+uint32\+\_\+t Application::\+\+Pending\+Cancel\+Request::\+channel = 0}
+
+
+
+Channel filter:\+ for Most\+Recent, 0 = any channel; for Channel, the target. 
+
+\Hypertarget{struct_application_1_1_pending_cancel_request_a06bdb28259de6b2c65bb41b4df0f401d}\index{Application::PendingCancelRequest@{Application::PendingCancelRequest}!excludeActionId@{excludeActionId}}
+\index{excludeActionId@{excludeActionId}!Application::PendingCancelRequest@{Application::PendingCancelRequest}}
+\doxysubsubsection{\texorpdfstring{excludeActionId}{excludeActionId}}
+{\footnotesize\ttfamily \label{struct_application_1_1_pending_cancel_request_a06bdb28259de6b2c65bb41b4df0f401d} 
+uint64\+\_\+t Application::\+\+Pending\+Cancel\+Request::\+exclude\+Action\+Id = 0}
+
+
+
+Runtime id to skip when level == Most\+Recent (usually the requester). 
+
+\Hypertarget{struct_application_1_1_pending_cancel_request_ad2148361b58f084858380783edafd63a}\index{Application::PendingCancelRequest@{Application::PendingCancelRequest}!level@{level}}
+\index{level@{level}!Application::PendingCancelRequest@{Application::PendingCancelRequest}}
+\doxysubsubsection{\texorpdfstring{level}{level}}
+{\footnotesize\ttfamily \label{struct_application_1_1_pending_cancel_request_ad2148361b58f084858380783edafd63a} 
+\doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fff}{Level}} Application::\+\+Pending\+Cancel\+Request::\+level = \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request_aedd396828bc478bb454250f904dd2fffa1f7eef9de38738e79be7905c6067c98f}{Level::\+\+Most\+Recent}}}
+
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_action_execution_context_8hpp}{Action\+Execution\+Context.\+hpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,230 @@
+\doxysection{Application::\+Scheduler Class Reference}
+\hypertarget{class_application_1_1_scheduler}{}\label{class_application_1_1_scheduler}\index{Application::Scheduler@{Application::Scheduler}}
+
+
+Accepts Actions and runs them via \doxylink{class_application_1_1_worker_pool}{Worker\+Pool} with channel + delay policy.  
+
+
+
+
+{\ttfamily \+\#include $<$Scheduler.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_scheduler_a53d465b72fbd2cc7d6835725e0142b3a}{Scheduler}} (std::\+size\+\_\+t worker\+Count=2)
+\begin{DoxyCompactList}\small\item\em Starts the scheduler thread and an owned \doxylink{class_application_1_1_worker_pool}{Worker\+Pool}. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_application_1_1_scheduler_a2af0890a1a61dd9ba7b2b7237c575f89}{\texorpdfstring{$\sim$}{\string~}\+Scheduler}} ()
+\begin{DoxyCompactList}\small\item\em Stops workers and the scheduler thread, then joins. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_application_1_1_scheduler_a415432278438b56d22c1dcb8bf5fa67c}{Scheduler}} (const Scheduler \&)=delete
+\item 
+\doxymbox{\hyperlink{class_application_1_1_scheduler_a53d465b72fbd2cc7d6835725e0142b3a}{Scheduler}} \& \doxymbox{\hyperlink{class_application_1_1_scheduler_aa3da0d10bc12058a8c69e43f67f5eb20}{operator=}} (const \doxymbox{\hyperlink{class_application_1_1_scheduler_a53d465b72fbd2cc7d6835725e0142b3a}{Scheduler}} \&)=delete
+\item 
+uint64\+\_\+t \doxymbox{\hyperlink{class_application_1_1_scheduler_a921201151e3c6dbcb9b17af6eaad944b}{submit}} (std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$ action)
+\begin{DoxyCompactList}\small\item\em Enqueues {\ttfamily action} for scheduling (thread-\/safe). \end{DoxyCompactList}\item 
+uint64\+\_\+t \doxymbox{\hyperlink{class_application_1_1_scheduler_aff58724a2bf819ced96c696b3c3a9940}{submit}} (const \doxymbox{\hyperlink{class_application_1_1_action}{Action}} \&action)
+\begin{DoxyCompactList}\small\item\em Copies {\ttfamily action} into a new owned \doxylink{class_application_1_1_action}{Action} and submits it. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_scheduler_afe6e59ac8a768f11e4aabed85859d1b5}{cancel\+Action}} (uint64\+\_\+t action\+Id)
+\begin{DoxyCompactList}\small\item\em Cancels one \doxylink{class_application_1_1_action}{Action} by runtime id. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_scheduler_a8c8776249c9550e292b87aae9e1e33df}{cancel\+Channel}} (uint32\+\_\+t channel)
+\begin{DoxyCompactList}\small\item\em Cancels every cancelable \doxylink{class_application_1_1_action}{Action} whose \doxylink{class_application_1_1_action_a2526833ca8645544b3e55a47d2b9ae1d}{Action::\+channel()} equals {\ttfamily channel}. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_scheduler_a61a305f5345ed515b594f99e02f09ab3}{cancel\+All}} ()
+\begin{DoxyCompactList}\small\item\em Cancels every cancelable \doxylink{class_application_1_1_action}{Action} and runs registered cancel-\/flush cleanups. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_scheduler_a80cbf8adf69eb5df907c5a96f1361bda}{pause}} ()
+\begin{DoxyCompactList}\small\item\em Stops dispatching new work; freezes delay progress (thread-\/safe). \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_scheduler_ab270fdc73ccee0a476cb7ff1e48fb1fb}{resume}} ()
+\begin{DoxyCompactList}\small\item\em Resumes dispatch and delay progress after \doxylink{class_application_1_1_scheduler_a80cbf8adf69eb5df907c5a96f1361bda}{pause()} (thread-\/safe). \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_scheduler_a21499200cc2aa28fcb1e39dbc5183869}{is\+Paused}} () const noexcept
+\begin{DoxyCompactList}\small\item\em Whether \doxylink{class_application_1_1_scheduler_a80cbf8adf69eb5df907c5a96f1361bda}{pause()} is in effect (approximate; safe from any thread). \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_scheduler_a8dd6f7e7d158ba78794eab45de259864}{stop}} ()
+\begin{DoxyCompactList}\small\item\em Stops accepting new worker results, drains the mailbox, and joins. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Accepts Actions and runs them via \doxylink{class_application_1_1_worker_pool}{Worker\+Pool} with channel + delay policy. 
+
+The scheduler is the only component that makes scheduling decisions. Callers submit work from any thread; a dedicated scheduler thread owns every \doxylink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}, enforces channel FIFO via \doxylink{class_application_1_1_channel_manager}{Channel\+Manager}, parks Delayed contexts on \doxylink{class_application_1_1_delay_queue}{Delay\+Queue}, and dispatches runnable work to \doxylink{class_application_1_1_worker_pool}{Worker\+Pool}.
+
+Channel rules:\+
+\begin{DoxyItemize}
+\item At most one \doxylink{class_application_1_1_action}{Action} in-\/flight per channel key.
+\item Delayed Actions {\bfseries{hold}} their channel until wake (strict sequentialness).
+\item Waiting Actions preserve earliest\+Start (nested future schedules stay correct).
+\item Channel 0 assigns a private key per \doxylink{class_application_1_1_action}{Action} so those Actions never block one another.
+\end{DoxyItemize}
+
+Delay rules:\+
+\begin{DoxyItemize}
+\item Workers never sleep; Delay\+Until returns the context to the scheduler.
+\item The scheduler thread waits on its mailbox until a new event, the earliest \doxylink{class_application_1_1_delay_queue}{Delay\+Queue} wake time, or stop.
+\item While paused, due delays are not dispatched; on resume, pending wake times are shifted forward by the pause duration so remaining delay is preserved.
+\end{DoxyItemize}
+
+Cancellation:\+
+\begin{DoxyItemize}
+\item cancel\+Action /\+ cancel\+Channel /\+ cancel\+All (thread-\/safe).
+\item Only between Action\+Items; the current item always finishes.
+\item Actions with cancelable()==false are skipped.
+\item set\+Cancel\+Flush Actions run immediately on cancel (e.\+g. Key\+Up).
+\item schedule\+Action(..., remove\+If\+Parent\+Cancelled=true) links delayed cleanup that is discarded when the parent is cancelled (after flush).
+\item Cancel-\/flush bypasses pause so hardware cleanup can still run.
+\end{DoxyItemize}
+
+Pause/\+resume:\+
+\begin{DoxyItemize}
+\item \doxylink{class_application_1_1_scheduler_a80cbf8adf69eb5df907c5a96f1361bda}{pause()} stops dispatch of new work; submits are still admitted.
+\item Delayed Actions stop progressing (virtual clock).
+\item Workers finish the current \doxylink{class_application_1_1_action_item}{Action\+Item} then sleep until resume. 
+\end{DoxyItemize}
+
+\label{class_application_1_1_scheduler_doc-constructors}
+\Hypertarget{class_application_1_1_scheduler_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_scheduler_a53d465b72fbd2cc7d6835725e0142b3a}\index{Application::Scheduler@{Application::Scheduler}!Scheduler@{Scheduler}}
+\index{Scheduler@{Scheduler}!Application::Scheduler@{Application::Scheduler}}
+\doxysubsubsection{\texorpdfstring{Scheduler()}{Scheduler()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_scheduler_a53d465b72fbd2cc7d6835725e0142b3a} 
+Application::\+\+Scheduler::\+\+Scheduler (\begin{DoxyParamCaption}\item[{std::\+size\+\_\+t}]{worker\+Count}{ = {\ttfamily 2}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Starts the scheduler thread and an owned \doxylink{class_application_1_1_worker_pool}{Worker\+Pool}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em worker\+Count} & Number of worker threads used for \doxylink{class_application_1_1_action_item}{Action\+Item} execution. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_application_1_1_scheduler_a2af0890a1a61dd9ba7b2b7237c575f89}\index{Application::Scheduler@{Application::Scheduler}!````~Scheduler@{\texorpdfstring{$\sim$}{\string~}Scheduler}}
+\index{````~Scheduler@{\texorpdfstring{$\sim$}{\string~}Scheduler}!Application::Scheduler@{Application::Scheduler}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}Scheduler()}{\string~Scheduler()}}
+{\footnotesize\ttfamily \label{class_application_1_1_scheduler_a2af0890a1a61dd9ba7b2b7237c575f89} 
+Application::\+\+Scheduler::\+\texorpdfstring{$\sim$}{\string~}\+Scheduler (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Stops workers and the scheduler thread, then joins. 
+
+\Hypertarget{class_application_1_1_scheduler_a415432278438b56d22c1dcb8bf5fa67c}\index{Application::Scheduler@{Application::Scheduler}!Scheduler@{Scheduler}}
+\index{Scheduler@{Scheduler}!Application::Scheduler@{Application::Scheduler}}
+\doxysubsubsection{\texorpdfstring{Scheduler()}{Scheduler()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_scheduler_a415432278438b56d22c1dcb8bf5fa67c} 
+Application::\+\+Scheduler::\+\+Scheduler (\begin{DoxyParamCaption}\item[{const Scheduler \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+\label{class_application_1_1_scheduler_doc-func-members}
+\Hypertarget{class_application_1_1_scheduler_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_scheduler_afe6e59ac8a768f11e4aabed85859d1b5}\index{Application::Scheduler@{Application::Scheduler}!cancelAction@{cancelAction}}
+\index{cancelAction@{cancelAction}!Application::Scheduler@{Application::Scheduler}}
+\doxysubsubsection{\texorpdfstring{cancelAction()}{cancelAction()}}
+{\footnotesize\ttfamily \label{class_application_1_1_scheduler_afe6e59ac8a768f11e4aabed85859d1b5} 
+void Application::\+\+Scheduler::\+cancel\+Action (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{action\+Id}{}\end{DoxyParamCaption})}
+
+
+
+Cancels one \doxylink{class_application_1_1_action}{Action} by runtime id. 
+
+No-\/op if unknown or uncancelable. Queued work is dropped; delayed work is discarded (channel freed); executing work finishes the current item then stops. Works while paused. Cancel-\/flush cleanups still run immediately. \Hypertarget{class_application_1_1_scheduler_a61a305f5345ed515b594f99e02f09ab3}\index{Application::Scheduler@{Application::Scheduler}!cancelAll@{cancelAll}}
+\index{cancelAll@{cancelAll}!Application::Scheduler@{Application::Scheduler}}
+\doxysubsubsection{\texorpdfstring{cancelAll()}{cancelAll()}}
+{\footnotesize\ttfamily \label{class_application_1_1_scheduler_a61a305f5345ed515b594f99e02f09ab3} 
+void Application::\+\+Scheduler::\+cancel\+All (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Cancels every cancelable \doxylink{class_application_1_1_action}{Action} and runs registered cancel-\/flush cleanups. 
+
+Uncancelable Actions (e.\+g. delayed Key\+Up safety nets) are not cancelled. \Hypertarget{class_application_1_1_scheduler_a8c8776249c9550e292b87aae9e1e33df}\index{Application::Scheduler@{Application::Scheduler}!cancelChannel@{cancelChannel}}
+\index{cancelChannel@{cancelChannel}!Application::Scheduler@{Application::Scheduler}}
+\doxysubsubsection{\texorpdfstring{cancelChannel()}{cancelChannel()}}
+{\footnotesize\ttfamily \label{class_application_1_1_scheduler_a8c8776249c9550e292b87aae9e1e33df} 
+void Application::\+\+Scheduler::\+cancel\+Channel (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{channel}{}\end{DoxyParamCaption})}
+
+
+
+Cancels every cancelable \doxylink{class_application_1_1_action}{Action} whose \doxylink{class_application_1_1_action_a2526833ca8645544b3e55a47d2b9ae1d}{Action::\+channel()} equals {\ttfamily channel}. 
+
+Channel 0 cancels all logical channel-\/0 Actions (each has a private key). Uncancelable Actions on that channel are left alone. \Hypertarget{class_application_1_1_scheduler_a21499200cc2aa28fcb1e39dbc5183869}\index{Application::Scheduler@{Application::Scheduler}!isPaused@{isPaused}}
+\index{isPaused@{isPaused}!Application::Scheduler@{Application::Scheduler}}
+\doxysubsubsection{\texorpdfstring{isPaused()}{isPaused()}}
+{\footnotesize\ttfamily \label{class_application_1_1_scheduler_a21499200cc2aa28fcb1e39dbc5183869} 
+bool Application::\+\+Scheduler::\+is\+Paused (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Whether \doxylink{class_application_1_1_scheduler_a80cbf8adf69eb5df907c5a96f1361bda}{pause()} is in effect (approximate; safe from any thread). 
+
+\Hypertarget{class_application_1_1_scheduler_aa3da0d10bc12058a8c69e43f67f5eb20}\index{Application::Scheduler@{Application::Scheduler}!operator=@{operator=}}
+\index{operator=@{operator=}!Application::Scheduler@{Application::Scheduler}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \label{class_application_1_1_scheduler_aa3da0d10bc12058a8c69e43f67f5eb20} 
+\doxymbox{\hyperlink{class_application_1_1_scheduler_a53d465b72fbd2cc7d6835725e0142b3a}{Scheduler}} \& Application::\+\+Scheduler::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_application_1_1_scheduler_a53d465b72fbd2cc7d6835725e0142b3a}{Scheduler}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_application_1_1_scheduler_a80cbf8adf69eb5df907c5a96f1361bda}\index{Application::Scheduler@{Application::Scheduler}!pause@{pause}}
+\index{pause@{pause}!Application::Scheduler@{Application::Scheduler}}
+\doxysubsubsection{\texorpdfstring{pause()}{pause()}}
+{\footnotesize\ttfamily \label{class_application_1_1_scheduler_a80cbf8adf69eb5df907c5a96f1361bda} 
+void Application::\+\+Scheduler::\+pause (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Stops dispatching new work; freezes delay progress (thread-\/safe). 
+
+In-\/flight Action\+Items finish; workers then sleep. Submits are still admitted but do not start until \doxylink{class_application_1_1_scheduler_ab270fdc73ccee0a476cb7ff1e48fb1fb}{resume()}. Idempotent. \Hypertarget{class_application_1_1_scheduler_ab270fdc73ccee0a476cb7ff1e48fb1fb}\index{Application::Scheduler@{Application::Scheduler}!resume@{resume}}
+\index{resume@{resume}!Application::Scheduler@{Application::Scheduler}}
+\doxysubsubsection{\texorpdfstring{resume()}{resume()}}
+{\footnotesize\ttfamily \label{class_application_1_1_scheduler_ab270fdc73ccee0a476cb7ff1e48fb1fb} 
+void Application::\+\+Scheduler::\+resume (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Resumes dispatch and delay progress after \doxylink{class_application_1_1_scheduler_a80cbf8adf69eb5df907c5a96f1361bda}{pause()} (thread-\/safe). 
+
+Idempotent if not paused. \Hypertarget{class_application_1_1_scheduler_a8dd6f7e7d158ba78794eab45de259864}\index{Application::Scheduler@{Application::Scheduler}!stop@{stop}}
+\index{stop@{stop}!Application::Scheduler@{Application::Scheduler}}
+\doxysubsubsection{\texorpdfstring{stop()}{stop()}}
+{\footnotesize\ttfamily \label{class_application_1_1_scheduler_a8dd6f7e7d158ba78794eab45de259864} 
+void Application::\+\+Scheduler::\+stop (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Stops accepting new worker results, drains the mailbox, and joins. 
+
+Safe to call multiple times. Invoked automatically from the destructor. \Hypertarget{class_application_1_1_scheduler_aff58724a2bf819ced96c696b3c3a9940}\index{Application::Scheduler@{Application::Scheduler}!submit@{submit}}
+\index{submit@{submit}!Application::Scheduler@{Application::Scheduler}}
+\doxysubsubsection{\texorpdfstring{submit()}{submit()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_scheduler_aff58724a2bf819ced96c696b3c3a9940} 
+uint64\+\_\+t Application::\+\+Scheduler::\+submit (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_application_1_1_action}{Action}} \&}]{action}{}\end{DoxyParamCaption})}
+
+
+
+Copies {\ttfamily action} into a new owned \doxylink{class_application_1_1_action}{Action} and submits it. 
+
+Intended for library Actions that must remain in the caller\textquotesingle{}s store.
+
+\begin{DoxyReturn}{Returns}
+Runtime action id used with \doxylink{class_application_1_1_scheduler_afe6e59ac8a768f11e4aabed85859d1b5}{cancel\+Action()}. 
+\end{DoxyReturn}
+\Hypertarget{class_application_1_1_scheduler_a921201151e3c6dbcb9b17af6eaad944b}\index{Application::Scheduler@{Application::Scheduler}!submit@{submit}}
+\index{submit@{submit}!Application::Scheduler@{Application::Scheduler}}
+\doxysubsubsection{\texorpdfstring{submit()}{submit()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_scheduler_a921201151e3c6dbcb9b17af6eaad944b} 
+uint64\+\_\+t Application::\+\+Scheduler::\+submit (\begin{DoxyParamCaption}\item[{std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$}]{action}{}\end{DoxyParamCaption})}
+
+
+
+Enqueues {\ttfamily action} for scheduling (thread-\/safe). 
+
+Takes ownership. The \doxylink{class_application_1_1_action}{Action} is wrapped in an \doxylink{class_application_1_1_action_execution_context}{Action\+Execution\+Context} on the scheduler thread. While paused, the \doxylink{class_application_1_1_action}{Action} is admitted but will not start until \doxylink{class_application_1_1_scheduler_ab270fdc73ccee0a476cb7ff1e48fb1fb}{resume()}.
+
+\begin{DoxyReturn}{Returns}
+Runtime action id used with \doxylink{class_application_1_1_scheduler_afe6e59ac8a768f11e4aabed85859d1b5}{cancel\+Action()}. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_scheduler_8hpp}{Scheduler.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\doxymbox{\hyperlink{_scheduler_8cpp}{Scheduler.\+cpp}}\end{DoxyCompactItemize}

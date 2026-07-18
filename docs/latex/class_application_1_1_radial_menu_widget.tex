@@ -1,0 +1,282 @@
+\doxysection{Application::\+Radial\+Menu\+Widget Class Reference}
+\hypertarget{class_application_1_1_radial_menu_widget}{}\label{class_application_1_1_radial_menu_widget}\index{Application::RadialMenuWidget@{Application::RadialMenuWidget}}
+
+
+{\ttfamily \+\#include $<$Radial\+Menu\+Widget.\+hpp$>$}
+
+Inheritance diagram for Application::\+Radial\+Menu\+Widget:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_application_1_1_radial_menu_widget}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum class \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1be}{Activation\+Mode}} \{ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1bea0aa6f4210bf373c95eda00232e93cd98}{Distance}}
+, \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1bea45f4ce6c3306644b1efe333f4f8d6929}{Angle}}
+, \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1bea1649aed298f99d587e2eb30c1db5946b}{Exact}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_a9594585955166b6e57fa2cd8793ff26b}{selected\+Index\+Changed}} (int index)
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_acff7066baf0ebb603065a46bce10d352}{button\+Triggered}} (int index)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ab27ecc3a11425dcb4abe35e174612439}{Radial\+Menu\+Widget}} (QWidget \texorpdfstring{$\ast$}{*}parent=nullptr)
+\item 
+\doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_a914544967bf76ea43fc085fb52a0ea4f}{Radial\+Menu\+Widget}} (const \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \&menu, QWidget \texorpdfstring{$\ast$}{*}parent=nullptr)
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_a881d98eb893d1a1ee623cd9449503435}{set\+Menu}} (const \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \&menu, const std::\+vector$<$ \doxymbox{\hyperlink{struct_application_1_1_action_slot_visual}{Action\+Slot\+Visual}} $>$ \&slot\+Visuals)
+\begin{DoxyCompactList}\small\item\em Set the menu model and visible slot visuals, then rebuild the wheel. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ace7ade05d4a157520158f0b99d09ce1c}{set\+Center\+Text}} (const QString \&text)
+\begin{DoxyCompactList}\small\item\em Set the Center Text object. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_a2b87a9f8cc90126bc27d1f6240b980b8}{set\+Button\+Radius\+Fraction}} (double fraction)
+\begin{DoxyCompactList}\small\item\em Set the button ring radius as a fraction of the shorter widget side. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_a2f245790bf8bac9956de6186eab5c9a3}{set\+Button\+Radius}} (int radius)
+\begin{DoxyCompactList}\small\item\em Set a fixed pixel radius (disables size-\/based scaling until set\+Button\+Radius\+Fraction is called again). \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_a6cfc6ae33da31951eba943eaf0075015}{set\+Activation\+Mode}} (\doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1be}{Activation\+Mode}} mode)
+\begin{DoxyCompactList}\small\item\em Set the Activation mode TODO:\+ closest Angle can probs be removed and just use closest distance. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ad9c1175a1cc1143e497c34c1e94d840e}{set\+Max\+Distance}} (double max\+Distance)
+\begin{DoxyCompactList}\small\item\em Set the max radius a button will be considered for (selection set to -\/1 if out of all radii). \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_a64e7ed7e247acf95593bda6b504aa9f6}{get\+Selected\+Index}} () const
+\begin{DoxyCompactList}\small\item\em Get the index of the selected action. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_a51ea6a3975dbb04e01527819600bb9f8}{set\+Selected\+Index}} (int new\+Val)
+\begin{DoxyCompactList}\small\item\em Set the index of the selected action. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ab226a686aa64657eb61b1350562cdb8e}{update\+Selection\+From\+Global\+Mouse\+Position}} (const QPoint \&global\+Pos)
+\begin{DoxyCompactList}\small\item\em updates the selection based on the global mouse position \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_a117f792d25487edb46e06455ba21d965}{resize\+Event}} (QResize\+Event \texorpdfstring{$\ast$}{*}event) override
+\item 
+bool \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_a162d8abfa62ff6f4257e615fc3059037}{event\+Filter}} (QObject \texorpdfstring{$\ast$}{*}watched, QEvent \texorpdfstring{$\ast$}{*}event) override
+\end{DoxyCompactItemize}
+
+
+\label{class_application_1_1_radial_menu_widget_doc-enum-members}
+\Hypertarget{class_application_1_1_radial_menu_widget_doc-enum-members}
+\doxysubsection{Member Enumeration Documentation}
+\Hypertarget{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1be}\index{Application::RadialMenuWidget@{Application::RadialMenuWidget}!ActivationMode@{ActivationMode}}
+\index{ActivationMode@{ActivationMode}!Application::RadialMenuWidget@{Application::RadialMenuWidget}}
+\doxysubsubsection{\texorpdfstring{ActivationMode}{ActivationMode}}
+{\footnotesize\ttfamily \label{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1be} 
+enum class \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1be}{Application::\+\+Radial\+Menu\+Widget::\+\+Activation\+Mode}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Distance@{Distance}!Application::RadialMenuWidget@{Application::RadialMenuWidget}}
+\index{Application::RadialMenuWidget@{Application::RadialMenuWidget}!Distance@{Distance}}
+}\Hypertarget{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1bea0aa6f4210bf373c95eda00232e93cd98}\label{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1bea0aa6f4210bf373c95eda00232e93cd98} 
+Distance&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Angle@{Angle}!Application::RadialMenuWidget@{Application::RadialMenuWidget}}
+\index{Application::RadialMenuWidget@{Application::RadialMenuWidget}!Angle@{Angle}}
+}\Hypertarget{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1bea45f4ce6c3306644b1efe333f4f8d6929}\label{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1bea45f4ce6c3306644b1efe333f4f8d6929} 
+Angle&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Exact@{Exact}!Application::RadialMenuWidget@{Application::RadialMenuWidget}}
+\index{Application::RadialMenuWidget@{Application::RadialMenuWidget}!Exact@{Exact}}
+}\Hypertarget{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1bea1649aed298f99d587e2eb30c1db5946b}\label{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1bea1649aed298f99d587e2eb30c1db5946b} 
+Exact&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{class_application_1_1_radial_menu_widget_doc-constructors}
+\Hypertarget{class_application_1_1_radial_menu_widget_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_radial_menu_widget_ab27ecc3a11425dcb4abe35e174612439}\index{Application::RadialMenuWidget@{Application::RadialMenuWidget}!RadialMenuWidget@{RadialMenuWidget}}
+\index{RadialMenuWidget@{RadialMenuWidget}!Application::RadialMenuWidget@{Application::RadialMenuWidget}}
+\doxysubsubsection{\texorpdfstring{RadialMenuWidget()}{RadialMenuWidget()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_radial_menu_widget_ab27ecc3a11425dcb4abe35e174612439} 
+Radial\+Menu\+Widget::\+\+Radial\+Menu\+Widget (\begin{DoxyParamCaption}\item[{QWidget \texorpdfstring{$\ast$}{*}}]{parent}{ = {\ttfamily nullptr}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+\Hypertarget{class_application_1_1_radial_menu_widget_a914544967bf76ea43fc085fb52a0ea4f}\index{Application::RadialMenuWidget@{Application::RadialMenuWidget}!RadialMenuWidget@{RadialMenuWidget}}
+\index{RadialMenuWidget@{RadialMenuWidget}!Application::RadialMenuWidget@{Application::RadialMenuWidget}}
+\doxysubsubsection{\texorpdfstring{RadialMenuWidget()}{RadialMenuWidget()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_radial_menu_widget_a914544967bf76ea43fc085fb52a0ea4f} 
+Radial\+Menu\+Widget::\+\+Radial\+Menu\+Widget (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \&}]{menu}{, }\item[{QWidget \texorpdfstring{$\ast$}{*}}]{parent}{ = {\ttfamily nullptr}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+\label{class_application_1_1_radial_menu_widget_doc-func-members}
+\Hypertarget{class_application_1_1_radial_menu_widget_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_radial_menu_widget_acff7066baf0ebb603065a46bce10d352}\index{Application::RadialMenuWidget@{Application::RadialMenuWidget}!buttonTriggered@{buttonTriggered}}
+\index{buttonTriggered@{buttonTriggered}!Application::RadialMenuWidget@{Application::RadialMenuWidget}}
+\doxysubsubsection{\texorpdfstring{buttonTriggered}{buttonTriggered}}
+{\footnotesize\ttfamily \label{class_application_1_1_radial_menu_widget_acff7066baf0ebb603065a46bce10d352} 
+void Application::\+\+Radial\+Menu\+Widget::\+button\+Triggered (\begin{DoxyParamCaption}\item[{int}]{index}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [signal]}}
+
+\Hypertarget{class_application_1_1_radial_menu_widget_a162d8abfa62ff6f4257e615fc3059037}\index{Application::RadialMenuWidget@{Application::RadialMenuWidget}!eventFilter@{eventFilter}}
+\index{eventFilter@{eventFilter}!Application::RadialMenuWidget@{Application::RadialMenuWidget}}
+\doxysubsubsection{\texorpdfstring{eventFilter()}{eventFilter()}}
+{\footnotesize\ttfamily \label{class_application_1_1_radial_menu_widget_a162d8abfa62ff6f4257e615fc3059037} 
+bool Radial\+Menu\+Widget::\+event\+Filter (\begin{DoxyParamCaption}\item[{QObject \texorpdfstring{$\ast$}{*}}]{watched}{, }\item[{QEvent \texorpdfstring{$\ast$}{*}}]{event}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}}
+
+\Hypertarget{class_application_1_1_radial_menu_widget_a64e7ed7e247acf95593bda6b504aa9f6}\index{Application::RadialMenuWidget@{Application::RadialMenuWidget}!getSelectedIndex@{getSelectedIndex}}
+\index{getSelectedIndex@{getSelectedIndex}!Application::RadialMenuWidget@{Application::RadialMenuWidget}}
+\doxysubsubsection{\texorpdfstring{getSelectedIndex()}{getSelectedIndex()}}
+{\footnotesize\ttfamily \label{class_application_1_1_radial_menu_widget_a64e7ed7e247acf95593bda6b504aa9f6} 
+int Radial\+Menu\+Widget::\+get\+Selected\+Index (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Get the index of the selected action. 
+
+\begin{DoxyReturn}{Returns}
+int 
+\end{DoxyReturn}
+\Hypertarget{class_application_1_1_radial_menu_widget_a117f792d25487edb46e06455ba21d965}\index{Application::RadialMenuWidget@{Application::RadialMenuWidget}!resizeEvent@{resizeEvent}}
+\index{resizeEvent@{resizeEvent}!Application::RadialMenuWidget@{Application::RadialMenuWidget}}
+\doxysubsubsection{\texorpdfstring{resizeEvent()}{resizeEvent()}}
+{\footnotesize\ttfamily \label{class_application_1_1_radial_menu_widget_a117f792d25487edb46e06455ba21d965} 
+void Radial\+Menu\+Widget::\+resize\+Event (\begin{DoxyParamCaption}\item[{QResize\+Event \texorpdfstring{$\ast$}{*}}]{event}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}}
+
+\Hypertarget{class_application_1_1_radial_menu_widget_a9594585955166b6e57fa2cd8793ff26b}\index{Application::RadialMenuWidget@{Application::RadialMenuWidget}!selectedIndexChanged@{selectedIndexChanged}}
+\index{selectedIndexChanged@{selectedIndexChanged}!Application::RadialMenuWidget@{Application::RadialMenuWidget}}
+\doxysubsubsection{\texorpdfstring{selectedIndexChanged}{selectedIndexChanged}}
+{\footnotesize\ttfamily \label{class_application_1_1_radial_menu_widget_a9594585955166b6e57fa2cd8793ff26b} 
+void Application::\+\+Radial\+Menu\+Widget::\+selected\+Index\+Changed (\begin{DoxyParamCaption}\item[{int}]{index}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [signal]}}
+
+\Hypertarget{class_application_1_1_radial_menu_widget_a6cfc6ae33da31951eba943eaf0075015}\index{Application::RadialMenuWidget@{Application::RadialMenuWidget}!setActivationMode@{setActivationMode}}
+\index{setActivationMode@{setActivationMode}!Application::RadialMenuWidget@{Application::RadialMenuWidget}}
+\doxysubsubsection{\texorpdfstring{setActivationMode()}{setActivationMode()}}
+{\footnotesize\ttfamily \label{class_application_1_1_radial_menu_widget_a6cfc6ae33da31951eba943eaf0075015} 
+void Radial\+Menu\+Widget::\+set\+Activation\+Mode (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1be}{Activation\+Mode}}}]{mode}{}\end{DoxyParamCaption})}
+
+
+
+Set the Activation mode TODO:\+ closest Angle can probs be removed and just use closest distance. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mode} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_application_1_1_radial_menu_widget_a2f245790bf8bac9956de6186eab5c9a3}\index{Application::RadialMenuWidget@{Application::RadialMenuWidget}!setButtonRadius@{setButtonRadius}}
+\index{setButtonRadius@{setButtonRadius}!Application::RadialMenuWidget@{Application::RadialMenuWidget}}
+\doxysubsubsection{\texorpdfstring{setButtonRadius()}{setButtonRadius()}}
+{\footnotesize\ttfamily \label{class_application_1_1_radial_menu_widget_a2f245790bf8bac9956de6186eab5c9a3} 
+void Radial\+Menu\+Widget::\+set\+Button\+Radius (\begin{DoxyParamCaption}\item[{int}]{radius}{}\end{DoxyParamCaption})}
+
+
+
+Set a fixed pixel radius (disables size-\/based scaling until set\+Button\+Radius\+Fraction is called again). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em radius} & Absolute distance from center to button centers \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_application_1_1_radial_menu_widget_a2b87a9f8cc90126bc27d1f6240b980b8}\index{Application::RadialMenuWidget@{Application::RadialMenuWidget}!setButtonRadiusFraction@{setButtonRadiusFraction}}
+\index{setButtonRadiusFraction@{setButtonRadiusFraction}!Application::RadialMenuWidget@{Application::RadialMenuWidget}}
+\doxysubsubsection{\texorpdfstring{setButtonRadiusFraction()}{setButtonRadiusFraction()}}
+{\footnotesize\ttfamily \label{class_application_1_1_radial_menu_widget_a2b87a9f8cc90126bc27d1f6240b980b8} 
+void Radial\+Menu\+Widget::\+set\+Button\+Radius\+Fraction (\begin{DoxyParamCaption}\item[{double}]{fraction}{}\end{DoxyParamCaption})}
+
+
+
+Set the button ring radius as a fraction of the shorter widget side. 
+
+Values are clamped to a usable range; the effective pixel radius is recomputed on resize so the wheel scales with the monitor/\+panel size.
+
+
+\begin{DoxyParams}{Parameters}
+{\em fraction} & Typically \texorpdfstring{$\sim$}{\string~}0.25–0.40 (default 0.\+32) \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_application_1_1_radial_menu_widget_ace7ade05d4a157520158f0b99d09ce1c}\index{Application::RadialMenuWidget@{Application::RadialMenuWidget}!setCenterText@{setCenterText}}
+\index{setCenterText@{setCenterText}!Application::RadialMenuWidget@{Application::RadialMenuWidget}}
+\doxysubsubsection{\texorpdfstring{setCenterText()}{setCenterText()}}
+{\footnotesize\ttfamily \label{class_application_1_1_radial_menu_widget_ace7ade05d4a157520158f0b99d09ce1c} 
+void Radial\+Menu\+Widget::\+set\+Center\+Text (\begin{DoxyParamCaption}\item[{const QString \&}]{text}{}\end{DoxyParamCaption})}
+
+
+
+Set the Center Text object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em text} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_application_1_1_radial_menu_widget_ad9c1175a1cc1143e497c34c1e94d840e}\index{Application::RadialMenuWidget@{Application::RadialMenuWidget}!setMaxDistance@{setMaxDistance}}
+\index{setMaxDistance@{setMaxDistance}!Application::RadialMenuWidget@{Application::RadialMenuWidget}}
+\doxysubsubsection{\texorpdfstring{setMaxDistance()}{setMaxDistance()}}
+{\footnotesize\ttfamily \label{class_application_1_1_radial_menu_widget_ad9c1175a1cc1143e497c34c1e94d840e} 
+void Radial\+Menu\+Widget::\+set\+Max\+Distance (\begin{DoxyParamCaption}\item[{double}]{max\+Distance}{}\end{DoxyParamCaption})}
+
+
+
+Set the max radius a button will be considered for (selection set to -\/1 if out of all radii). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em max\+Distance} & max distance from button to consider, negative for no limit \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_application_1_1_radial_menu_widget_a881d98eb893d1a1ee623cd9449503435}\index{Application::RadialMenuWidget@{Application::RadialMenuWidget}!setMenu@{setMenu}}
+\index{setMenu@{setMenu}!Application::RadialMenuWidget@{Application::RadialMenuWidget}}
+\doxysubsubsection{\texorpdfstring{setMenu()}{setMenu()}}
+{\footnotesize\ttfamily \label{class_application_1_1_radial_menu_widget_a881d98eb893d1a1ee623cd9449503435} 
+void Radial\+Menu\+Widget::\+set\+Menu (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \&}]{menu}{, }\item[{const std::\+vector$<$ \doxymbox{\hyperlink{struct_application_1_1_action_slot_visual}{Action\+Slot\+Visual}} $>$ \&}]{slot\+Visuals}{}\end{DoxyParamCaption})}
+
+
+
+Set the menu model and visible slot visuals, then rebuild the wheel. 
+
+{\ttfamily menu} still supplies slot count and selection behavior, while {\ttfamily slot\+Visuals} lets the wheel render names/\+icons resolved from the shared action library rather than assuming the menu owns full {\ttfamily \doxylink{class_application_1_1_action}{Action}}s.
+
+
+\begin{DoxyParams}{Parameters}
+{\em menu} & Active menu model \\
+\hline
+{\em slot\+Visuals} & Display label + optional icon path for each slot \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_application_1_1_radial_menu_widget_a51ea6a3975dbb04e01527819600bb9f8}\index{Application::RadialMenuWidget@{Application::RadialMenuWidget}!setSelectedIndex@{setSelectedIndex}}
+\index{setSelectedIndex@{setSelectedIndex}!Application::RadialMenuWidget@{Application::RadialMenuWidget}}
+\doxysubsubsection{\texorpdfstring{setSelectedIndex()}{setSelectedIndex()}}
+{\footnotesize\ttfamily \label{class_application_1_1_radial_menu_widget_a51ea6a3975dbb04e01527819600bb9f8} 
+void Radial\+Menu\+Widget::\+set\+Selected\+Index (\begin{DoxyParamCaption}\item[{int}]{new\+Val}{}\end{DoxyParamCaption})}
+
+
+
+Set the index of the selected action. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+Val} & \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_application_1_1_radial_menu_widget_ab226a686aa64657eb61b1350562cdb8e}\index{Application::RadialMenuWidget@{Application::RadialMenuWidget}!updateSelectionFromGlobalMousePosition@{updateSelectionFromGlobalMousePosition}}
+\index{updateSelectionFromGlobalMousePosition@{updateSelectionFromGlobalMousePosition}!Application::RadialMenuWidget@{Application::RadialMenuWidget}}
+\doxysubsubsection{\texorpdfstring{updateSelectionFromGlobalMousePosition()}{updateSelectionFromGlobalMousePosition()}}
+{\footnotesize\ttfamily \label{class_application_1_1_radial_menu_widget_ab226a686aa64657eb61b1350562cdb8e} 
+void Radial\+Menu\+Widget::\+update\+Selection\+From\+Global\+Mouse\+Position (\begin{DoxyParamCaption}\item[{const QPoint \&}]{global\+Pos}{}\end{DoxyParamCaption})}
+
+
+
+updates the selection based on the global mouse position 
+
+
+\begin{DoxyParams}{Parameters}
+{\em global\+Pos} & \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_radial_menu_widget_8hpp}{Radial\+Menu\+Widget.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\doxymbox{\hyperlink{_radial_menu_widget_8cpp}{Radial\+Menu\+Widget.\+cpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+build/\+app/\+\+App\+\_\+autogen/\+\+OIU322\+L6\+L6/\+\doxymbox{\hyperlink{moc___radial_menu_widget_8cpp}{moc\+\_\+\+Radial\+Menu\+Widget.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,146 @@
+\doxysection{Thread\+Safe\+Queue.\+hpp}
+\hypertarget{_thread_safe_queue_8hpp_source}{}\label{_thread_safe_queue_8hpp_source}\index{E:/Github/WheelTime/app/include/App/ThreadSafeQueue.hpp@{E:/Github/WheelTime/app/include/App/ThreadSafeQueue.hpp}}
+\doxymbox{\hyperlink{_thread_safe_queue_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <condition\_variable>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <queue>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00015\ \{}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{enum\ class}\ \doxymbox{\hyperlink{namespace_application_ad2d1ed0244481076d95377449bf660ec}{QueueWaitStatus}}}
+\DoxyCodeLine{00021\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \doxymbox{\hyperlink{namespace_application_ad2d1ed0244481076d95377449bf660eca7d74f3b92b19da5e606d737d339a9679}{Item}},\ \ \ \ }
+\DoxyCodeLine{00023\ \ \ \ \ \doxymbox{\hyperlink{namespace_application_ad2d1ed0244481076d95377449bf660ecac85a251cc457840f1e032f1b733e9398}{Timeout}},\ }
+\DoxyCodeLine{00024\ \ \ \ \ \doxymbox{\hyperlink{namespace_application_ad2d1ed0244481076d95377449bf660ecac23e2b09ebe6bf4cb5e2a9abe85c0be2}{Stopped}}\ \ }
+\DoxyCodeLine{00025\ \};}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00039\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_af45207558b0c6b3b110ba35424c7b28d}{ThreadSafeQueue}}}
+\DoxyCodeLine{00040\ \{}
+\DoxyCodeLine{00041\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00042\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_af45207558b0c6b3b110ba35424c7b28d}{ThreadSafeQueue}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_abf15d4efc97a505a5bf0886d865d002d}{ThreadSafeQueue}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_af45207558b0c6b3b110ba35424c7b28d}{ThreadSafeQueue}}\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00045\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_af45207558b0c6b3b110ba35424c7b28d}{ThreadSafeQueue}}\ \&\doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_a0b7b29586d4f7857bdf49b5eef6c748c}{operator=}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_af45207558b0c6b3b110ba35424c7b28d}{ThreadSafeQueue}}\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_a95be21b53187837d16f248ffbc05538c}{ThreadSafeQueue}}(\doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_af45207558b0c6b3b110ba35424c7b28d}{ThreadSafeQueue}}\ \&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00048\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_af45207558b0c6b3b110ba35424c7b28d}{ThreadSafeQueue}}\ \&\doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_a7c8718f55d3522b1423d4261f24b08dc}{operator=}}(\doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_af45207558b0c6b3b110ba35424c7b28d}{ThreadSafeQueue}}\ \&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_a30ee67e6ef7e1b46879213dfa2e418a4}{\string~ThreadSafeQueue}}()}
+\DoxyCodeLine{00051\ \ \ \ \ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_ab96cd24a1ffe6bcc62ab10c76357a91e}{stop}}();}
+\DoxyCodeLine{00053\ \ \ \ \ \}}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_ac6d515e0f2ccfd91e7f4394cfaaf36e7}{push}}(T\ value)}
+\DoxyCodeLine{00060\ \ \ \ \ \{}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard\ lock\{m\_mutex\};}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_stopped)}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ m\_queue.push(std::move(value));}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ m\_cv.notify\_one();}
+\DoxyCodeLine{00070\ \ \ \ \ \}}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00077\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_af59fea1a8e680ffdf6f6d4a228010f22}{pop}}(T\ \&out)}
+\DoxyCodeLine{00078\ \ \ \ \ \{}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ std::unique\_lock\ lock\{m\_mutex\};}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ m\_cv.wait(lock,\ [\textcolor{keyword}{this}]\ \{\ \textcolor{keywordflow}{return}\ !m\_queue.empty()\ ||\ m\_stopped;\ \});}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_queue.empty())}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ out\ =\ std::move(m\_queue.front());}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ m\_queue.pop();}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00090\ \ \ \ \ \}}
+\DoxyCodeLine{00091\ }
+\DoxyCodeLine{00097\ \ \ \ \ [[nodiscard]]\ \doxymbox{\hyperlink{namespace_application_ad2d1ed0244481076d95377449bf660ec}{QueueWaitStatus}}\ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_aa31aa9499fd42c797afb060e1543bcfc}{popWaitUntil}}(}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ T\ \&out,}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ std::chrono::steady\_clock::time\_point\ deadline)}
+\DoxyCodeLine{00100\ \ \ \ \ \{}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ std::unique\_lock\ lock\{m\_mutex\};}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (m\_queue.empty()\ \&\&\ !m\_stopped)}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_cv.wait\_until(lock,\ deadline)\ ==\ std::cv\_status::timeout)}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!m\_queue.empty())}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{namespace_application_ad2d1ed0244481076d95377449bf660ecac85a251cc457840f1e032f1b733e9398}{QueueWaitStatus::Timeout}};}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_queue.empty())}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{namespace_application_ad2d1ed0244481076d95377449bf660ecac23e2b09ebe6bf4cb5e2a9abe85c0be2}{QueueWaitStatus::Stopped}};}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ out\ =\ std::move(m\_queue.front());}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ m\_queue.pop();}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \doxymbox{\hyperlink{namespace_application_ad2d1ed0244481076d95377449bf660eca7d74f3b92b19da5e606d737d339a9679}{QueueWaitStatus::Item}};}
+\DoxyCodeLine{00122\ \ \ \ \ \}}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00128\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_a1be9bdb2d196ceb99309d7dbb83a0d9a}{tryPop}}(T\ \&out)}
+\DoxyCodeLine{00129\ \ \ \ \ \{}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ std::lock\_guard\ lock\{m\_mutex\};}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_queue.empty())}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ out\ =\ std::move(m\_queue.front());}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ m\_queue.pop();}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00138\ \ \ \ \ \}}
+\DoxyCodeLine{00139\ }
+\DoxyCodeLine{00141\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_a17b5a31b1c132ce8ea7e5171be6a3cc3}{empty}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00142\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ std::lock\_guard\ lock\{m\_mutex\};}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_queue.empty();}
+\DoxyCodeLine{00145\ \ \ \ \ \}}
+\DoxyCodeLine{00146\ }
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_a29ab143c781412ccf8b68f50301fb327}{clear}}()}
+\DoxyCodeLine{00152\ \ \ \ \ \{}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ std::lock\_guard\ lock\{m\_mutex\};}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ std::queue<T>\ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_a17b5a31b1c132ce8ea7e5171be6a3cc3}{empty}};}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ m\_queue.swap(\doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_a17b5a31b1c132ce8ea7e5171be6a3cc3}{empty}});}
+\DoxyCodeLine{00156\ \ \ \ \ \}}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_ab96cd24a1ffe6bcc62ab10c76357a91e}{stop}}()}
+\DoxyCodeLine{00163\ \ \ \ \ \{}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ \ \ \ \ std::lock\_guard\ lock\{m\_mutex\};}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \ \ \ \ m\_stopped\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ m\_cv.notify\_all();}
+\DoxyCodeLine{00169\ \ \ \ \ \}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00172\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue_a4c75a3a772412c8b2fcbc9fd136423c0}{stopped}}()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00173\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ std::lock\_guard\ lock\{m\_mutex\};}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ m\_stopped;}
+\DoxyCodeLine{00176\ \ \ \ \ \}}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00179\ \ \ \ \ \textcolor{keyword}{mutable}\ std::mutex\ m\_mutex;}
+\DoxyCodeLine{00180\ \ \ \ \ std::condition\_variable\ m\_cv;}
+\DoxyCodeLine{00181\ \ \ \ \ std::queue<T>\ m\_queue;}
+\DoxyCodeLine{00182\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_stopped\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00183\ \};}
+\DoxyCodeLine{00184\ }
+\DoxyCodeLine{00185\ \}\ \textcolor{comment}{//\ namespace\ Application}}
+
+\end{DoxyCode}

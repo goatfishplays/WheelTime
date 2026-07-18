@@ -1,0 +1,267 @@
+\doxysection{Application::\+Action Class Reference}
+\hypertarget{class_application_1_1_action}{}\label{class_application_1_1_action}\index{Application::Action@{Application::Action}}
+
+
+Represents one reusable macro/\+action in the shared action library.  
+
+
+
+
+{\ttfamily \+\#include $<$Action.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_a9e53d30ea2b48941c85b44e275c7bda6}{Action}} (std::\+vector$<$ std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item}{Action\+Item}} $>$ $>$ sequence=\{\}, std::\+string name="{}Unnamed Action"{}, std::\+string icon\+Filepath="{}"{}, std::\+string id="{}"{}, uint32\+\_\+t channel=0)
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_af243ea770637deeb57d5c3b3c70d40f6}{Action}} (const Action \&other)
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_a9e53d30ea2b48941c85b44e275c7bda6}{Action}} \& \doxymbox{\hyperlink{class_application_1_1_action_a2df2064326d947c2b136d4f6d797d085}{operator=}} (const \doxymbox{\hyperlink{class_application_1_1_action_a9e53d30ea2b48941c85b44e275c7bda6}{Action}} \&other)
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_a11630fb08a4724af3b230248e9db0372}{Action}} (Action \&\&other) noexcept
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_a9e53d30ea2b48941c85b44e275c7bda6}{Action}} \& \doxymbox{\hyperlink{class_application_1_1_action_a025ba7995aa6dac8297ab4c959859467}{operator=}} (\doxymbox{\hyperlink{class_application_1_1_action_a9e53d30ea2b48941c85b44e275c7bda6}{Action}} \&\&other) noexcept
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_af129c13c7430f834aedb2f5e66be9cc4}{\texorpdfstring{$\sim$}{\string~}\+Action}} ()
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_action_aa41348a1a93d8402756694afca53f1cd}{add\+Item}} (int index, std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item}{Action\+Item}} $>$ ai)
+\begin{DoxyCompactList}\small\item\em Inserts {\ttfamily ai} at {\ttfamily index}, or appends when out of range. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_action_a0aac34d7df5e9946bf94612c8b97ec09}{remove\+Item}} (int index)
+\begin{DoxyCompactList}\small\item\em Removes the item at {\ttfamily index} when in range. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{class_application_1_1_action_a2b46ad07bd1d4ab0fc868f445f7a0ec3}{item\+Count}} () const
+\begin{DoxyCompactList}\small\item\em Number of Action\+Items in the sequence. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_application_1_1_action_a6dc829d61ee50598d52cd3562692fe5e}{get\+Id}} () const
+\begin{DoxyCompactList}\small\item\em Stable config ID used by menus and serialization. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_application_1_1_action_ae02e338bae048df958f2e75a2e107674}{get\+Name}} () const
+\item 
+std::\+string \doxymbox{\hyperlink{class_application_1_1_action_a20b30bd056d6f6c8ceb64726be9c72c3}{get\+Icon\+Filepath}} () const
+\begin{DoxyCompactList}\small\item\em Optional image shown above the action name on the wheel. \end{DoxyCompactList}\item 
+const std::\+vector$<$ std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item}{Action\+Item}} $>$ $>$ \& \doxymbox{\hyperlink{class_application_1_1_action_aefd95dd99f2efd4801004f920807b465}{get\+Items}} () const
+\begin{DoxyCompactList}\small\item\em Exposes the item sequence for settings editing/\+serialization. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_application_1_1_action_item}{Action\+Item}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_application_1_1_action_a2f31c36f9b89271d4600e144a5a8df3e}{get\+Item}} (int index)
+\item 
+const \doxymbox{\hyperlink{class_application_1_1_action_item}{Action\+Item}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_application_1_1_action_af2d366e224300985ba6728592dab0c5d}{get\+Item}} (int index) const
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_action_a4458b54c0bf16e8e6bde538e4ee108ae}{set\+Name}} (const std::\+string \&new\+Name)
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_action_a1b3a8483522e67e44e04aeee27522fa1}{set\+Id}} (const std::\+string \&new\+Id)
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_action_a11de54ada00a513d259bd6d29b3ddb43}{set\+Icon\+Filepath}} (const std::\+string \&new\+Icon\+Filepath)
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_action_a538690404ad65cfe762d143fdb78f822}{set\+Items}} (std::\+vector$<$ std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item}{Action\+Item}} $>$ $>$ new\+Items)
+\begin{DoxyCompactList}\small\item\em Replaces the full item sequence, preserving ownership safety. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_action_a665193a9dcaf7d451527c58bd3fdad34}{move\+Item}} (int from\+Index, int to\+Index)
+\begin{DoxyCompactList}\small\item\em Moves an item within the sequence while preserving order. \end{DoxyCompactList}\item 
+uint32\+\_\+t \doxymbox{\hyperlink{class_application_1_1_action_a2526833ca8645544b3e55a47d2b9ae1d}{channel}} () const
+\begin{DoxyCompactList}\small\item\em Returns the channel this action will run on. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_action_acaee299065e85ccfa60be06930540534}{set\+Channel}} (uint32\+\_\+t channel) noexcept
+\item 
+bool \doxymbox{\hyperlink{class_application_1_1_action_a38412b00e3c31308f323832905beda4f}{cancelable}} () const noexcept
+\begin{DoxyCompactList}\small\item\em Whether cancel\+Action/\+\+Channel/\+\+All may stop this \doxylink{class_application_1_1_action}{Action}. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_action_a6482782f1a8513dc4ce3167a50f96b08}{set\+Cancelable}} (bool cancelable) noexcept
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents one reusable macro/\+action in the shared action library. 
+
+Each {\ttfamily \doxylink{class_application_1_1_action}{Action}} owns an ordered sequence of polymorphic {\ttfamily \doxylink{class_application_1_1_action_item}{Action\+Item}}s. Menus reference actions by stable ID instead of embedding action copies. 
+
+\label{class_application_1_1_action_doc-constructors}
+\Hypertarget{class_application_1_1_action_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_action_a9e53d30ea2b48941c85b44e275c7bda6}\index{Application::Action@{Application::Action}!Action@{Action}}
+\index{Action@{Action}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{Action()}{Action()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_a9e53d30ea2b48941c85b44e275c7bda6} 
+Application::\+\+Action::\+\+Action (\begin{DoxyParamCaption}\item[{std::\+vector$<$ std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item}{Action\+Item}} $>$ $>$}]{sequence}{ = {\ttfamily \{\}}, }\item[{std::\+string}]{name}{ = {\ttfamily "{}Unnamed~Action"{}}, }\item[{std::\+string}]{icon\+Filepath}{ = {\ttfamily "{}"{}}, }\item[{std::\+string}]{id}{ = {\ttfamily "{}"{}}, }\item[{uint32\+\_\+t}]{channel}{ = {\ttfamily 0}}\end{DoxyParamCaption})}
+
+\Hypertarget{class_application_1_1_action_af243ea770637deeb57d5c3b3c70d40f6}\index{Application::Action@{Application::Action}!Action@{Action}}
+\index{Action@{Action}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{Action()}{Action()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_af243ea770637deeb57d5c3b3c70d40f6} 
+Application::\+\+Action::\+\+Action (\begin{DoxyParamCaption}\item[{const Action \&}]{other}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_application_1_1_action_a11630fb08a4724af3b230248e9db0372}\index{Application::Action@{Application::Action}!Action@{Action}}
+\index{Action@{Action}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{Action()}{Action()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_a11630fb08a4724af3b230248e9db0372} 
+Application::\+\+Action::\+\+Action (\begin{DoxyParamCaption}\item[{Action \&\&}]{other}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{class_application_1_1_action_af129c13c7430f834aedb2f5e66be9cc4}\index{Application::Action@{Application::Action}!````~Action@{\texorpdfstring{$\sim$}{\string~}Action}}
+\index{````~Action@{\texorpdfstring{$\sim$}{\string~}Action}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}Action()}{\string~Action()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_af129c13c7430f834aedb2f5e66be9cc4} 
+Application::\+\+Action::\+\texorpdfstring{$\sim$}{\string~}\+Action (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+
+
+\label{class_application_1_1_action_doc-func-members}
+\Hypertarget{class_application_1_1_action_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_action_aa41348a1a93d8402756694afca53f1cd}\index{Application::Action@{Application::Action}!addItem@{addItem}}
+\index{addItem@{addItem}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{addItem()}{addItem()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_aa41348a1a93d8402756694afca53f1cd} 
+void Application::\+\+Action::\+add\+Item (\begin{DoxyParamCaption}\item[{int}]{index}{, }\item[{std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item}{Action\+Item}} $>$}]{ai}{}\end{DoxyParamCaption})}
+
+
+
+Inserts {\ttfamily ai} at {\ttfamily index}, or appends when out of range. 
+
+\Hypertarget{class_application_1_1_action_a38412b00e3c31308f323832905beda4f}\index{Application::Action@{Application::Action}!cancelable@{cancelable}}
+\index{cancelable@{cancelable}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{cancelable()}{cancelable()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_a38412b00e3c31308f323832905beda4f} 
+bool Application::\+\+Action::\+cancelable (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Whether cancel\+Action/\+\+Channel/\+\+All may stop this \doxylink{class_application_1_1_action}{Action}. 
+
+Default true. Cleanup Actions (e.\+g. delayed Key\+Up) should be false so they survive cancel\+All and cannot leave hardware in a bad state. \Hypertarget{class_application_1_1_action_a2526833ca8645544b3e55a47d2b9ae1d}\index{Application::Action@{Application::Action}!channel@{channel}}
+\index{channel@{channel}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{channel()}{channel()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_a2526833ca8645544b3e55a47d2b9ae1d} 
+uint32\+\_\+t Application::\+\+Action::\+channel (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Returns the channel this action will run on. 
+
+0 = independent (scheduler assigns a private key; does not block peers). \texorpdfstring{$>$}{>}0 = shared FIFO with other Actions on the same channel. \Hypertarget{class_application_1_1_action_a20b30bd056d6f6c8ceb64726be9c72c3}\index{Application::Action@{Application::Action}!getIconFilepath@{getIconFilepath}}
+\index{getIconFilepath@{getIconFilepath}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{getIconFilepath()}{getIconFilepath()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_a20b30bd056d6f6c8ceb64726be9c72c3} 
+std::\+string Application::\+\+Action::\+get\+Icon\+Filepath (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Optional image shown above the action name on the wheel. 
+
+\Hypertarget{class_application_1_1_action_a6dc829d61ee50598d52cd3562692fe5e}\index{Application::Action@{Application::Action}!getId@{getId}}
+\index{getId@{getId}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{getId()}{getId()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_a6dc829d61ee50598d52cd3562692fe5e} 
+std::\+string Application::\+\+Action::\+get\+Id (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Stable config ID used by menus and serialization. 
+
+\Hypertarget{class_application_1_1_action_a2f31c36f9b89271d4600e144a5a8df3e}\index{Application::Action@{Application::Action}!getItem@{getItem}}
+\index{getItem@{getItem}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{getItem()}{getItem()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_a2f31c36f9b89271d4600e144a5a8df3e} 
+\doxymbox{\hyperlink{class_application_1_1_action_item}{Action\+Item}} \texorpdfstring{$\ast$}{*} Application::\+\+Action::\+get\+Item (\begin{DoxyParamCaption}\item[{int}]{index}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{class_application_1_1_action_af2d366e224300985ba6728592dab0c5d}\index{Application::Action@{Application::Action}!getItem@{getItem}}
+\index{getItem@{getItem}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{getItem()}{getItem()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_af2d366e224300985ba6728592dab0c5d} 
+const \doxymbox{\hyperlink{class_application_1_1_action_item}{Action\+Item}} \texorpdfstring{$\ast$}{*} Application::\+\+Action::\+get\+Item (\begin{DoxyParamCaption}\item[{int}]{index}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{class_application_1_1_action_aefd95dd99f2efd4801004f920807b465}\index{Application::Action@{Application::Action}!getItems@{getItems}}
+\index{getItems@{getItems}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{getItems()}{getItems()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_aefd95dd99f2efd4801004f920807b465} 
+const std::\+vector$<$ std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item}{Action\+Item}} $>$ $>$ \& Application::\+\+Action::\+get\+Items (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Exposes the item sequence for settings editing/\+serialization. 
+
+\Hypertarget{class_application_1_1_action_ae02e338bae048df958f2e75a2e107674}\index{Application::Action@{Application::Action}!getName@{getName}}
+\index{getName@{getName}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{getName()}{getName()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_ae02e338bae048df958f2e75a2e107674} 
+std::\+string Application::\+\+Action::\+get\+Name (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{class_application_1_1_action_a2b46ad07bd1d4ab0fc868f445f7a0ec3}\index{Application::Action@{Application::Action}!itemCount@{itemCount}}
+\index{itemCount@{itemCount}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{itemCount()}{itemCount()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_a2b46ad07bd1d4ab0fc868f445f7a0ec3} 
+int Application::\+\+Action::\+item\+Count (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Number of Action\+Items in the sequence. 
+
+\Hypertarget{class_application_1_1_action_a665193a9dcaf7d451527c58bd3fdad34}\index{Application::Action@{Application::Action}!moveItem@{moveItem}}
+\index{moveItem@{moveItem}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{moveItem()}{moveItem()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_a665193a9dcaf7d451527c58bd3fdad34} 
+void Application::\+\+Action::\+move\+Item (\begin{DoxyParamCaption}\item[{int}]{from\+Index}{, }\item[{int}]{to\+Index}{}\end{DoxyParamCaption})}
+
+
+
+Moves an item within the sequence while preserving order. 
+
+\Hypertarget{class_application_1_1_action_a025ba7995aa6dac8297ab4c959859467}\index{Application::Action@{Application::Action}!operator=@{operator=}}
+\index{operator=@{operator=}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_a025ba7995aa6dac8297ab4c959859467} 
+\doxymbox{\hyperlink{class_application_1_1_action_a9e53d30ea2b48941c85b44e275c7bda6}{Action}} \& Application::\+\+Action::\+operator= (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_application_1_1_action_a9e53d30ea2b48941c85b44e275c7bda6}{Action}} \&\&}]{other}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{class_application_1_1_action_a2df2064326d947c2b136d4f6d797d085}\index{Application::Action@{Application::Action}!operator=@{operator=}}
+\index{operator=@{operator=}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_a2df2064326d947c2b136d4f6d797d085} 
+\doxymbox{\hyperlink{class_application_1_1_action_a9e53d30ea2b48941c85b44e275c7bda6}{Action}} \& Application::\+\+Action::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_application_1_1_action_a9e53d30ea2b48941c85b44e275c7bda6}{Action}} \&}]{other}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_application_1_1_action_a0aac34d7df5e9946bf94612c8b97ec09}\index{Application::Action@{Application::Action}!removeItem@{removeItem}}
+\index{removeItem@{removeItem}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{removeItem()}{removeItem()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_a0aac34d7df5e9946bf94612c8b97ec09} 
+void Application::\+\+Action::\+remove\+Item (\begin{DoxyParamCaption}\item[{int}]{index}{}\end{DoxyParamCaption})}
+
+
+
+Removes the item at {\ttfamily index} when in range. 
+
+\Hypertarget{class_application_1_1_action_a6482782f1a8513dc4ce3167a50f96b08}\index{Application::Action@{Application::Action}!setCancelable@{setCancelable}}
+\index{setCancelable@{setCancelable}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{setCancelable()}{setCancelable()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_a6482782f1a8513dc4ce3167a50f96b08} 
+void Application::\+\+Action::\+set\+Cancelable (\begin{DoxyParamCaption}\item[{bool}]{cancelable}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{class_application_1_1_action_acaee299065e85ccfa60be06930540534}\index{Application::Action@{Application::Action}!setChannel@{setChannel}}
+\index{setChannel@{setChannel}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{setChannel()}{setChannel()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_acaee299065e85ccfa60be06930540534} 
+void Application::\+\+Action::\+set\+Channel (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{channel}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [noexcept]}}
+
+\Hypertarget{class_application_1_1_action_a11de54ada00a513d259bd6d29b3ddb43}\index{Application::Action@{Application::Action}!setIconFilepath@{setIconFilepath}}
+\index{setIconFilepath@{setIconFilepath}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{setIconFilepath()}{setIconFilepath()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_a11de54ada00a513d259bd6d29b3ddb43} 
+void Application::\+\+Action::\+set\+Icon\+Filepath (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{new\+Icon\+Filepath}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_application_1_1_action_a1b3a8483522e67e44e04aeee27522fa1}\index{Application::Action@{Application::Action}!setId@{setId}}
+\index{setId@{setId}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{setId()}{setId()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_a1b3a8483522e67e44e04aeee27522fa1} 
+void Application::\+\+Action::\+set\+Id (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{new\+Id}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_application_1_1_action_a538690404ad65cfe762d143fdb78f822}\index{Application::Action@{Application::Action}!setItems@{setItems}}
+\index{setItems@{setItems}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{setItems()}{setItems()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_a538690404ad65cfe762d143fdb78f822} 
+void Application::\+\+Action::\+set\+Items (\begin{DoxyParamCaption}\item[{std::\+vector$<$ std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item}{Action\+Item}} $>$ $>$}]{new\+Items}{}\end{DoxyParamCaption})}
+
+
+
+Replaces the full item sequence, preserving ownership safety. 
+
+\Hypertarget{class_application_1_1_action_a4458b54c0bf16e8e6bde538e4ee108ae}\index{Application::Action@{Application::Action}!setName@{setName}}
+\index{setName@{setName}!Application::Action@{Application::Action}}
+\doxysubsubsection{\texorpdfstring{setName()}{setName()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_a4458b54c0bf16e8e6bde538e4ee108ae} 
+void Application::\+\+Action::\+set\+Name (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{new\+Name}{}\end{DoxyParamCaption})}
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_action_8hpp}{Action.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\doxymbox{\hyperlink{_action_8cpp}{Action.\+cpp}}\end{DoxyCompactItemize}

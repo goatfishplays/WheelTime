@@ -259,7 +259,8 @@ QToolButton#wheelActionButton {
     padding: 8px 10px;
     min-width: 96px;
     min-height: 72px;
-    qproperty-iconSize: 40px 40px;
+    /* qproperty-iconSize: 40px 40px; */
+    qproperty-iconSize: 64px 64px;
 }
 
 QToolButton#wheelActionButton:hover {

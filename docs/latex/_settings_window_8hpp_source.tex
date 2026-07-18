@@ -1,0 +1,182 @@
+\doxysection{Settings\+Window.\+hpp}
+\hypertarget{_settings_window_8hpp_source}{}\label{_settings_window_8hpp_source}\index{E:/Github/WheelTime/app/include/App/SettingsWindow.hpp@{E:/Github/WheelTime/app/include/App/SettingsWindow.hpp}}
+\doxymbox{\hyperlink{_settings_window_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <QCheckBox>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <QCloseEvent>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <QComboBox>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <QDoubleSpinBox>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <QGroupBox>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <QLabel>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <QLineEdit>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <QListWidget>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <QPushButton>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <QSpinBox>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <QStackedWidget>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <QWidget>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_app_8hpp}{App/App.hpp}}"{}}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_action_8hpp}{App/Action.hpp}}"{}}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_menu_8hpp}{App/Menu.hpp}}"{}}}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00028\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_settings_window_ad1e0f4254dc44e9efadee40b8602fe5a}{SettingsWindow}}\ :\ \textcolor{keyword}{public}\ QWidget}
+\DoxyCodeLine{00037\ \ \ \ \ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ Q\_OBJECT}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_settings_window_a2eedfa512686c6658050b684724a4c9b}{eventFilter}}(QObject\ *obj,\ QEvent\ *event)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keyword}{explicit}\ \doxymbox{\hyperlink{class_application_1_1_settings_window_ad1e0f4254dc44e9efadee40b8602fe5a}{SettingsWindow}}(QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_settings_window_a598169088f9d94df7f24cfa03482f731}{loadWorkingCopy}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_application_1_1_app_config}{AppConfig}}\ \&appConfig,\ \textcolor{keyword}{const}\ std::vector<Action>\ \&actions,\ \textcolor{keyword}{const}\ std::vector<Menu>\ \&menus);}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_settings_window_adbea9858738138c1772aecd46f7e23cf}{exportWorkingCopy}}(\doxymbox{\hyperlink{struct_application_1_1_app_config}{AppConfig}}\ \&appConfig,\ std::vector<Action>\ \&actions,\ std::vector<Menu>\ \&menus)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ signals:}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_settings_window_a2e6491589506b7beb8633b2161a06ead}{saveRequested}}();}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_settings_window_af68c25274d085bbb23df97a4fb54b281}{windowClosed}}();}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_settings_window_ad3aa936394fd5872023e634182a1bc65}{closeEvent}}(QCloseEvent\ *event)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum\ class}\ SelectionKind}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ None,}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}},}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_action}{Action}}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ refreshLists();}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ refreshMenuList();}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ refreshActionList();}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ refreshEditors();}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ refreshMenuEditor();}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ refreshActionEditor();}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ refreshSlotList();}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ refreshActionItemList();}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ refreshActionSummary();}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ refreshActionIconPreview();}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ refreshSlotActionCombo();}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ refreshMenuTargetCombo();}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ refreshItemDetail();}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ updateHotkeyButtonText();}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ QString\ describeActionItem(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_application_1_1_action_item}{ActionItem}}\ *item)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ QString\ launchPresetDisplayName(\textcolor{keyword}{const}\ std::string\ \&presetId)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ QString\ launchPresetTarget(\textcolor{keyword}{const}\ std::string\ \&presetId)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ QString\ keyDisplayName(\textcolor{keywordtype}{int}\ vk)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ populateLaunchPresetCombo();}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ populateHotkeyKeyCombo();}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ setSelectedMenu(\textcolor{keywordtype}{int}\ index);}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ setSelectedAction(\textcolor{keywordtype}{int}\ index);}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ currentMenuIndex()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ currentActionIndex()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ currentActionItemIndex()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ deleteActionReferences(\textcolor{keyword}{const}\ std::string\ \&actionId);}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ clearMenuReferences(\textcolor{keyword}{const}\ std::string\ \&menuId);}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ std::string\ makeUniqueActionId(\textcolor{keyword}{const}\ QString\ \&seed)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ std::string\ makeUniqueMenuId(\textcolor{keyword}{const}\ QString\ \&seed)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ validateWorkingCopy(QString\ \&errorMessage)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_application_1_1_app_config}{AppConfig}}\ m\_appConfig;}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ std::vector<Action>\ m\_actions;}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ std::vector<Menu>\ m\_menus;}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_isRefreshing\{\textcolor{keyword}{false}\};}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ SelectionKind\ m\_selectionKind\{SelectionKind::None\};}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_isRecordingHotkey\{\textcolor{keyword}{false}\};}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ QListWidget\ *m\_menuList\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ QListWidget\ *m\_actionList\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ QStackedWidget\ *m\_editorStack\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ QWidget\ *m\_emptyEditor\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ QWidget\ *m\_menuEditor\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ QWidget\ *m\_actionEditor\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ QPushButton\ *m\_hotkeyRecordButton\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ QPushButton\ *m\_hotkeyClearButton\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ QLineEdit\ *m\_menuNameEdit\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ QCheckBox\ *m\_executeOnReleaseCheck\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ QCheckBox\ *m\_exitOnActionCheck\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ QCheckBox\ *m\_centerMouseOnOpenCheck\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ QListWidget\ *m\_slotList\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ QComboBox\ *m\_slotActionCombo\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ QLineEdit\ *m\_actionNameEdit\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ QLineEdit\ *m\_actionIconEdit\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ QPushButton\ *m\_browseActionIconButton\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ QPushButton\ *m\_clearActionIconButton\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ QLabel\ *m\_actionIconPreview\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ QSpinBox\ *m\_actionChannelSpin\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ QLabel\ *m\_actionChannelHelpLabel\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ QListWidget\ *m\_actionItemList\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ QComboBox\ *m\_newItemTypeCombo\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ QStackedWidget\ *m\_itemDetailStack\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ QWidget\ *m\_itemNonePage\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ QWidget\ *m\_itemLaunchAppPage\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ QWidget\ *m\_itemScriptPage\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ QWidget\ *m\_itemDelayPage\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ QWidget\ *m\_itemClosePage\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ QWidget\ *m\_itemMenuPage\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ QWidget\ *m\_itemHotkeyPage\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ QWidget\ *m\_itemMouseMovePage\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ QWidget\ *m\_itemMouseButtonPage\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ QWidget\ *m\_itemCancelPage\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ QWidget\ *m\_itemNthPage\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ QWidget\ *m\_itemSocketPage\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ QWidget\ *m\_itemSearchPage\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ QWidget\ *m\_itemKeyReleasePage\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ QLabel\ *m\_keyReleaseHelpLabel\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ QComboBox\ *m\_launchPresetCombo\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ QLineEdit\ *m\_launchCustomPathEdit\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ QPushButton\ *m\_browseLaunchAppButton\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ QLineEdit\ *m\_scriptPathEdit\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ QPushButton\ *m\_browseScriptButton\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ QSpinBox\ *m\_delaySpin\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ QComboBox\ *m\_menuTargetCombo\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ QCheckBox\ *m\_hotkeyCtrlCheck\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ QCheckBox\ *m\_hotkeyAltCheck\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ QCheckBox\ *m\_hotkeyShiftCheck\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ QCheckBox\ *m\_hotkeyWinCheck\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ QComboBox\ *m\_hotkeyKeyCombo\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ QDoubleSpinBox\ *m\_hotkeyHoldSpin\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ QCheckBox\ *m\_hotkeyProceedCheck\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ QSpinBox\ *m\_mouseMoveXSpin\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ QSpinBox\ *m\_mouseMoveYSpin\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ QComboBox\ *m\_mouseButtonCombo\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ QCheckBox\ *m\_mouseButtonCtrlCheck\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ QCheckBox\ *m\_mouseButtonAltCheck\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ QCheckBox\ *m\_mouseButtonShiftCheck\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ QCheckBox\ *m\_mouseButtonWinCheck\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ QDoubleSpinBox\ *m\_mouseButtonHoldSpin\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ QCheckBox\ *m\_mouseButtonProceedCheck\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ QComboBox\ *m\_cancelLevelCombo\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ QSpinBox\ *m\_cancelChannelSpin\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ QLabel\ *m\_cancelHelpLabel\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ QSpinBox\ *m\_nthSpin\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ QLabel\ *m\_nthHelpLabel\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ QComboBox\ *m\_socketProtocolCombo\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ QLineEdit\ *m\_socketDestinationEdit\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ QLineEdit\ *m\_socketMessageEdit\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ QLineEdit\ *m\_socketHttpMethodEdit\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ QLabel\ *m\_socketHelpLabel\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ QCheckBox\ *m\_searchActionsCheck\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ QCheckBox\ *m\_searchProgramsCheck\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ QCheckBox\ *m\_searchMenusCheck\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ QCheckBox\ *m\_searchWebCheck\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ QLineEdit\ *m\_searchWebUrlEdit\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ QLabel\ *m\_searchHelpLabel\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ QLabel\ *m\_actionSequenceLabel\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00192\ \ \ \ \ \};}
+\DoxyCodeLine{00193\ \}}
+
+\end{DoxyCode}

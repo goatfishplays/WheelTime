@@ -1,0 +1,116 @@
+\doxysection{Application::\+AI\+\_\+\+Key\+Release Class Reference}
+\hypertarget{class_application_1_1_a_i___key_release}{}\label{class_application_1_1_a_i___key_release}\index{Application::AI\_KeyRelease@{Application::AI\_KeyRelease}}
+
+
+Releases a previously held key (cleanup /\+ end of hold).  
+
+
+
+
+{\ttfamily \+\#include $<$Keystroke.\+hpp$>$}
+
+Inheritance diagram for Application::\+AI\+\_\+\+Key\+Release:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_application_1_1_a_i___key_release}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_a_i___key_release_abc5b633aebbfe5e804e56f5ea29cc337}{AI\+\_\+\+Key\+Release}} (int keycode=0, int modifiers=0)
+\item 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} $>$ \doxymbox{\hyperlink{class_application_1_1_a_i___key_release_a512c3f388729b4a37c38e88941e631bd}{clone}} () const override
+\item 
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} \doxymbox{\hyperlink{class_application_1_1_a_i___key_release_a7c1f3e247d74f80af42149b4b5967343}{kind}} () const override
+\item 
+\doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}} \doxymbox{\hyperlink{class_application_1_1_a_i___key_release_a0d111fa0e2bcfadf4473b2ced07f502a}{execute}} (\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&context) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{class_application_1_1_action_item}{Application::\+\+Action\+Item}}}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} ()=default
+\item 
+virtual \doxymbox{\hyperlink{class_application_1_1_action_item_a475b8d6aff3774c90b9f0a4512959bf5}{\texorpdfstring{$\sim$}{\string~}\+Action\+Item}} ()=default
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{class_application_1_1_a_i___key_release_acff9900d8982bf48305e3525f1fc0171}{keycode}} = 0
+\item 
+int \doxymbox{\hyperlink{class_application_1_1_a_i___key_release_a22e90deec59cf39cffaa471f8dae8666}{modifiers}} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Releases a previously held key (cleanup /\+ end of hold). 
+
+Used by \doxylink{class_application_1_1_a_i___keystroke}{AI\+\_\+\+Keystroke} cancel-\/flush and delayed release Actions. Not shown in the settings item picker. 
+
+\label{class_application_1_1_a_i___key_release_doc-constructors}
+\Hypertarget{class_application_1_1_a_i___key_release_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_a_i___key_release_abc5b633aebbfe5e804e56f5ea29cc337}\index{Application::AI\_KeyRelease@{Application::AI\_KeyRelease}!AI\_KeyRelease@{AI\_KeyRelease}}
+\index{AI\_KeyRelease@{AI\_KeyRelease}!Application::AI\_KeyRelease@{Application::AI\_KeyRelease}}
+\doxysubsubsection{\texorpdfstring{AI\_KeyRelease()}{AI\_KeyRelease()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___key_release_abc5b633aebbfe5e804e56f5ea29cc337} 
+Application::\+\+AI\+\_\+\+Key\+Release::\+\+AI\+\_\+\+Key\+Release (\begin{DoxyParamCaption}\item[{int}]{keycode}{ = {\ttfamily 0}, }\item[{int}]{modifiers}{ = {\ttfamily 0}}\end{DoxyParamCaption})}
+
+
+
+\label{class_application_1_1_a_i___key_release_doc-func-members}
+\Hypertarget{class_application_1_1_a_i___key_release_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_a_i___key_release_a512c3f388729b4a37c38e88941e631bd}\index{Application::AI\_KeyRelease@{Application::AI\_KeyRelease}!clone@{clone}}
+\index{clone@{clone}!Application::AI\_KeyRelease@{Application::AI\_KeyRelease}}
+\doxysubsubsection{\texorpdfstring{clone()}{clone()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___key_release_a512c3f388729b4a37c38e88941e631bd} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} $>$ Application::\+\+AI\+\_\+\+Key\+Release::\+clone (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_afd400c3edd7ad9e074a28d462421789c}{Application::\+\+Action\+Item}}.
+
+\Hypertarget{class_application_1_1_a_i___key_release_a0d111fa0e2bcfadf4473b2ced07f502a}\index{Application::AI\_KeyRelease@{Application::AI\_KeyRelease}!execute@{execute}}
+\index{execute@{execute}!Application::AI\_KeyRelease@{Application::AI\_KeyRelease}}
+\doxysubsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___key_release_a0d111fa0e2bcfadf4473b2ced07f502a} 
+\doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}} Application::\+\+AI\+\_\+\+Key\+Release::\+execute (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&}]{context}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_aeeaf1c44a2f6741be0fdaad53da67e54}{Application::\+\+Action\+Item}}.
+
+\Hypertarget{class_application_1_1_a_i___key_release_a7c1f3e247d74f80af42149b4b5967343}\index{Application::AI\_KeyRelease@{Application::AI\_KeyRelease}!kind@{kind}}
+\index{kind@{kind}!Application::AI\_KeyRelease@{Application::AI\_KeyRelease}}
+\doxysubsubsection{\texorpdfstring{kind()}{kind()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___key_release_a7c1f3e247d74f80af42149b4b5967343} 
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} Application::\+\+AI\+\_\+\+Key\+Release::\+kind (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_ab51b1298eb1b325512ca99d2f090fa75}{Application::\+\+Action\+Item}}.
+
+
+
+\label{class_application_1_1_a_i___key_release_doc-variable-members}
+\Hypertarget{class_application_1_1_a_i___key_release_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_application_1_1_a_i___key_release_acff9900d8982bf48305e3525f1fc0171}\index{Application::AI\_KeyRelease@{Application::AI\_KeyRelease}!keycode@{keycode}}
+\index{keycode@{keycode}!Application::AI\_KeyRelease@{Application::AI\_KeyRelease}}
+\doxysubsubsection{\texorpdfstring{keycode}{keycode}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___key_release_acff9900d8982bf48305e3525f1fc0171} 
+int Application::\+\+AI\+\_\+\+Key\+Release::\+keycode = 0}
+
+\Hypertarget{class_application_1_1_a_i___key_release_a22e90deec59cf39cffaa471f8dae8666}\index{Application::AI\_KeyRelease@{Application::AI\_KeyRelease}!modifiers@{modifiers}}
+\index{modifiers@{modifiers}!Application::AI\_KeyRelease@{Application::AI\_KeyRelease}}
+\doxysubsubsection{\texorpdfstring{modifiers}{modifiers}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___key_release_a22e90deec59cf39cffaa471f8dae8666} 
+int Application::\+\+AI\+\_\+\+Key\+Release::\+modifiers = 0}
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\+Action\+Items/\+\doxymbox{\hyperlink{_keystroke_8hpp}{Keystroke.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\+Action\+Items/\+\doxymbox{\hyperlink{_keystroke_8cpp}{Keystroke.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,33 @@
+\doxysection{E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\+Action\+Execution\+Context.hpp File Reference}
+\hypertarget{_action_execution_context_8hpp}{}\label{_action_execution_context_8hpp}\index{E:/Github/WheelTime/app/include/App/ActionExecutionContext.hpp@{E:/Github/WheelTime/app/include/App/ActionExecutionContext.hpp}}
+
+
+Runtime execution state for a single Action.  
+
+
+{\ttfamily \+\#include $<$atomic$>$}\newline
+{\ttfamily \+\#include $<$chrono$>$}\newline
+{\ttfamily \+\#include $<$cstdint$>$}\newline
+{\ttfamily \+\#include $<$memory$>$}\newline
+{\ttfamily \+\#include $<$utility$>$}\newline
+{\ttfamily \+\#include $<$vector$>$}\newline
+{\ttfamily \+\#include "{}App/\+\+Action.\+hpp"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_application_1_1_scheduled_action}{Application::\+\+Scheduled\+Action}}
+\begin{DoxyCompactList}\small\item\em An \doxylink{class_application_1_1_action}{Action} recorded during execute() for the scheduler to submit later. \end{DoxyCompactList}\item 
+struct \doxymbox{\hyperlink{struct_application_1_1_pending_cancel_request}{Application::\+\+Pending\+Cancel\+Request}}
+\begin{DoxyCompactList}\small\item\em Cancel request recorded by Action\+Items for the scheduler to apply. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Application::\+\+Action\+Execution\+Context}}
+\begin{DoxyCompactList}\small\item\em Owns an \doxylink{class_application_1_1_action}{Action} and tracks progress while workers run its items. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \doxymbox{\hyperlink{namespace_application}{Application}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Runtime execution state for a single Action. 
+

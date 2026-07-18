@@ -1,0 +1,44 @@
+\doxysection{Keystroke.\+hpp}
+\hypertarget{_keystroke_8hpp_source}{}\label{_keystroke_8hpp_source}\index{E:/Github/WheelTime/app/include/App/ActionItems/Keystroke.hpp@{E:/Github/WheelTime/app/include/App/ActionItems/Keystroke.hpp}}
+\doxymbox{\hyperlink{_keystroke_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_action_item_8hpp}{App/ActionItems/ActionItem.hpp}}"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00011\ \{}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_a4a5d0be8fea61cc1b1be89eabeeac56f}{AI\_Keystroke}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{ActionItem}}}
+\DoxyCodeLine{00019\ \{}
+\DoxyCodeLine{00020\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00021\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_a4a5d0be8fea61cc1b1be89eabeeac56f}{AI\_Keystroke}}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_a46f32dc6a5def31aa110d2a4cdf734de}{keycode}}\ =\ 0,\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_aedc1c3f5ce56a687c7c646386b62cd83}{modifiers}}\ =\ 0,\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_a1acf093c89b5a42bf5e1cdd9b5c6f3c1}{holdDuration}}\ =\ 0.0f,\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_ae5dc171ec203190580c400b5b7b0ec66}{proceed}}\ =\ \textcolor{keyword}{false});}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_a46f32dc6a5def31aa110d2a4cdf734de}{keycode}}\ =\ 0;}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_aedc1c3f5ce56a687c7c646386b62cd83}{modifiers}}\ =\ 0;}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_a1acf093c89b5a42bf5e1cdd9b5c6f3c1}{holdDuration}}\ =\ 0.0f;\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_ae5dc171ec203190580c400b5b7b0ec66}{proceed}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ std::unique\_ptr<ActionItem>\ \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_a35c6d9e013b8d7bb01e54de735a440b2}{clone}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00029\ \ \ \ \ \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{ActionItemKind}}\ \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_aa0afec9d626fbece88cf98f7c5b7c5da}{kind}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00030\ \ \ \ \ [[nodiscard]]\ \doxymbox{\hyperlink{class_application_1_1_execute_result}{ExecuteResult}}\ \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_ae76bef72f12f58244919419b6ccf534e}{execute}}(\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{ActionExecutionContext}}\ \&context)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00031\ \};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_a_i___key_release_abc5b633aebbfe5e804e56f5ea29cc337}{AI\_KeyRelease}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{ActionItem}}}
+\DoxyCodeLine{00040\ \{}
+\DoxyCodeLine{00041\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00042\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_a_i___key_release_abc5b633aebbfe5e804e56f5ea29cc337}{AI\_KeyRelease}}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_a_i___key_release_acff9900d8982bf48305e3525f1fc0171}{keycode}}\ =\ 0,\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_a_i___key_release_a22e90deec59cf39cffaa471f8dae8666}{modifiers}}\ =\ 0);}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_a_i___key_release_acff9900d8982bf48305e3525f1fc0171}{keycode}}\ =\ 0;}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_a_i___key_release_a22e90deec59cf39cffaa471f8dae8666}{modifiers}}\ =\ 0;}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ std::unique\_ptr<ActionItem>\ \doxymbox{\hyperlink{class_application_1_1_a_i___key_release_a512c3f388729b4a37c38e88941e631bd}{clone}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00048\ \ \ \ \ \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{ActionItemKind}}\ \doxymbox{\hyperlink{class_application_1_1_a_i___key_release_a7c1f3e247d74f80af42149b4b5967343}{kind}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00049\ \ \ \ \ [[nodiscard]]\ \doxymbox{\hyperlink{class_application_1_1_execute_result}{ExecuteResult}}\ \doxymbox{\hyperlink{class_application_1_1_a_i___key_release_a0d111fa0e2bcfadf4473b2ced07f502a}{execute}}(\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{ActionExecutionContext}}\ \&context)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00050\ \};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \}\ \textcolor{comment}{//\ namespace\ Application}}
+
+\end{DoxyCode}

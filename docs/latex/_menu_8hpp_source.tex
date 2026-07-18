@@ -1,0 +1,62 @@
+\doxysection{Menu.\+hpp}
+\hypertarget{_menu_8hpp_source}{}\label{_menu_8hpp_source}\index{E:/Github/WheelTime/app/include/App/Menu.hpp@{E:/Github/WheelTime/app/include/App/Menu.hpp}}
+\doxymbox{\hyperlink{_menu_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_action_8hpp}{App/Action.hpp}}"{}}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00014\ \{}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_menu_a6f089945d075ca54c7df91f77a02f1e2}{Menu}}}
+\DoxyCodeLine{00023\ \{}
+\DoxyCodeLine{00024\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_menu_a24f99959054149ad1ba34c539fd72a07}{triggerMod}}\ =\ 0;}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_menu_a4dbc9cf799a4ccf82e0070c5e8be0d71}{triggerVk}}\ =\ 0;}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_menu_ad84115920f6762b9c2a3c1c3900a5409}{executeOnRelease}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_menu_af780b95f93145d39eee3e5eab545c412}{exitOnAction}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_menu_a533501124985971d3ebdb0df56bdfb8e}{centerMouseOnOpen}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_menu_a6f089945d075ca54c7df91f77a02f1e2}{Menu}}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_menu_a24f99959054149ad1ba34c539fd72a07}{triggerMod}}\ =\ 0,}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_menu_a4dbc9cf799a4ccf82e0070c5e8be0d71}{triggerVk}}\ =\ 0,}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_menu_ad84115920f6762b9c2a3c1c3900a5409}{executeOnRelease}}\ =\ \textcolor{keyword}{false},}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_menu_af780b95f93145d39eee3e5eab545c412}{exitOnAction}}\ =\ \textcolor{keyword}{false},}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_menu_a533501124985971d3ebdb0df56bdfb8e}{centerMouseOnOpen}}\ =\ \textcolor{keyword}{true},}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ std::string\ name\ =\ \textcolor{stringliteral}{"{}Unnamed\ Menu"{}},}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ std::vector<std::string>\ actionIds\ =\ \{\},}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ std::string\ \textcolor{keywordtype}{id}\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00045\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_menu_a894dd69ef0257e36e54259d813bff7fd}{\string~Menu}}();}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_menu_a4607f62d94ae80b3f67a0727d129d828}{addActionId}}(\textcolor{keywordtype}{int}\ index,\ \textcolor{keyword}{const}\ std::string\ \&actionId);}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_menu_a96a20b3ad5e18ec261f8802324d81332}{removeAction}}(\textcolor{keywordtype}{int}\ index);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00054\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_menu_a89749d8d602463c8e09b39ad0004ee61}{actionCount}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00057\ \ \ \ \ [[nodiscard]]\ std::string\ \doxymbox{\hyperlink{class_application_1_1_menu_a6455c604b42080258a3eebed3af18e49}{getId}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00058\ \ \ \ \ [[nodiscard]]\ std::string\ \doxymbox{\hyperlink{class_application_1_1_menu_a9cad2d934107fd2da69709d8e023b313}{getName}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_menu_ad402bb8ebdc40f0ccc83d7b2898e350e}{setId}}(\textcolor{keyword}{const}\ std::string\ \&newId);}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_menu_aa98a1191d78c31a405f0ff52a1318ab0}{setName}}(\textcolor{keyword}{const}\ std::string\ \&newName);}
+\DoxyCodeLine{00062\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ std::vector<std::string>\ \&\doxymbox{\hyperlink{class_application_1_1_menu_a2bcbccf2f8f271404f9aca7bfda7dda7}{getActionIds}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00063\ \ \ \ \ [[nodiscard]]\ std::string\ \doxymbox{\hyperlink{class_application_1_1_menu_a584be0b0c59cfef842a5a187b846b23b}{getActionId}}(\textcolor{keywordtype}{int}\ index)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_menu_a2359af94f53a2e0050e00cd82b2a824d}{setActionId}}(\textcolor{keywordtype}{int}\ index,\ \textcolor{keyword}{const}\ std::string\ \&actionId);}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_menu_acc5824454fba255830536a09ed2170d0}{moveActionId}}(\textcolor{keywordtype}{int}\ fromIndex,\ \textcolor{keywordtype}{int}\ toIndex);}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00069\ \ \ \ \ std::string\ m\_name;}
+\DoxyCodeLine{00070\ \ \ \ \ std::string\ m\_id;}
+\DoxyCodeLine{00071\ \ \ \ \ std::vector<std::string>\ m\_actionIds;}
+\DoxyCodeLine{00072\ \};}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \}\ \textcolor{comment}{//\ namespace\ Application}}
+
+\end{DoxyCode}

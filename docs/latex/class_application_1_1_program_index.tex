@@ -1,0 +1,91 @@
+\doxysection{Application::\+Program\+Index Class Reference}
+\hypertarget{class_application_1_1_program_index}{}\label{class_application_1_1_program_index}\index{Application::ProgramIndex@{Application::ProgramIndex}}
+
+
+Indexes .lnk shortcuts from the user and common Start Menus plus the user and public desktops.  
+
+
+
+
+{\ttfamily \+\#include $<$Program\+Index.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_program_index_adeab619bc310a0625fb66ffb74c4e41f}{\texorpdfstring{$\sim$}{\string~}\+Program\+Index}} ()
+\item 
+QVector$<$ \doxymbox{\hyperlink{struct_application_1_1_program_entry}{Program\+Entry}} $>$ \doxymbox{\hyperlink{class_application_1_1_program_index_aba5541fb2e9a02fddd10c653c58f00ac}{entries}} ()
+\begin{DoxyCompactList}\small\item\em Cached entries; blocks on the first scan if none has completed. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_program_index_ab4b62ecc8d91ff790c5ee7d197a98627}{refresh\+Async}} ()
+\begin{DoxyCompactList}\small\item\em Rescans shortcut folders on a background thread (no-\/op while a refresh is already running). \end{DoxyCompactList}\item 
+QIcon \doxymbox{\hyperlink{class_application_1_1_program_index_a60b826a4ac85a7aaf0b23718dd38d729}{icon\+For}} (const QString \&path)
+\begin{DoxyCompactList}\small\item\em Icon for a shortcut path, extracting on first use. GUI thread only. \end{DoxyCompactList}\item 
+QIcon \doxymbox{\hyperlink{class_application_1_1_program_index_a05eee6895c7055316004e4e9db065f0c}{cached\+Icon\+For}} (const QString \&path) const
+\begin{DoxyCompactList}\small\item\em Already-\/extracted icon for a path, or a null icon. Never blocks on icon extraction, so it is safe in per-\/keystroke paths. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Indexes .lnk shortcuts from the user and common Start Menus plus the user and public desktops. 
+
+\doxylink{class_application_1_1_program_index_ab4b62ecc8d91ff790c5ee7d197a98627}{refresh\+Async()} scans on a background thread; call it at app startup to preload the index and once per palette open to pick up newly installed programs. \doxylink{class_application_1_1_program_index_aba5541fb2e9a02fddd10c653c58f00ac}{entries()} serves the cache, waiting for an in-\/flight first scan (or scanning synchronously) if the cache was never filled. 
+
+\label{class_application_1_1_program_index_doc-constructors}
+\Hypertarget{class_application_1_1_program_index_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_program_index_adeab619bc310a0625fb66ffb74c4e41f}\index{Application::ProgramIndex@{Application::ProgramIndex}!````~ProgramIndex@{\texorpdfstring{$\sim$}{\string~}ProgramIndex}}
+\index{````~ProgramIndex@{\texorpdfstring{$\sim$}{\string~}ProgramIndex}!Application::ProgramIndex@{Application::ProgramIndex}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}ProgramIndex()}{\string~ProgramIndex()}}
+{\footnotesize\ttfamily \label{class_application_1_1_program_index_adeab619bc310a0625fb66ffb74c4e41f} 
+Application::\+\+Program\+Index::\+\texorpdfstring{$\sim$}{\string~}\+Program\+Index (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+\label{class_application_1_1_program_index_doc-func-members}
+\Hypertarget{class_application_1_1_program_index_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_program_index_a05eee6895c7055316004e4e9db065f0c}\index{Application::ProgramIndex@{Application::ProgramIndex}!cachedIconFor@{cachedIconFor}}
+\index{cachedIconFor@{cachedIconFor}!Application::ProgramIndex@{Application::ProgramIndex}}
+\doxysubsubsection{\texorpdfstring{cachedIconFor()}{cachedIconFor()}}
+{\footnotesize\ttfamily \label{class_application_1_1_program_index_a05eee6895c7055316004e4e9db065f0c} 
+QIcon Application::\+\+Program\+Index::\+cached\+Icon\+For (\begin{DoxyParamCaption}\item[{const QString \&}]{path}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Already-\/extracted icon for a path, or a null icon. Never blocks on icon extraction, so it is safe in per-\/keystroke paths. 
+
+\Hypertarget{class_application_1_1_program_index_aba5541fb2e9a02fddd10c653c58f00ac}\index{Application::ProgramIndex@{Application::ProgramIndex}!entries@{entries}}
+\index{entries@{entries}!Application::ProgramIndex@{Application::ProgramIndex}}
+\doxysubsubsection{\texorpdfstring{entries()}{entries()}}
+{\footnotesize\ttfamily \label{class_application_1_1_program_index_aba5541fb2e9a02fddd10c653c58f00ac} 
+QVector$<$ \doxymbox{\hyperlink{struct_application_1_1_program_entry}{Program\+Entry}} $>$ Application::\+\+Program\+Index::\+entries (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Cached entries; blocks on the first scan if none has completed. 
+
+\Hypertarget{class_application_1_1_program_index_a60b826a4ac85a7aaf0b23718dd38d729}\index{Application::ProgramIndex@{Application::ProgramIndex}!iconFor@{iconFor}}
+\index{iconFor@{iconFor}!Application::ProgramIndex@{Application::ProgramIndex}}
+\doxysubsubsection{\texorpdfstring{iconFor()}{iconFor()}}
+{\footnotesize\ttfamily \label{class_application_1_1_program_index_a60b826a4ac85a7aaf0b23718dd38d729} 
+QIcon Application::\+\+Program\+Index::\+icon\+For (\begin{DoxyParamCaption}\item[{const QString \&}]{path}{}\end{DoxyParamCaption})}
+
+
+
+Icon for a shortcut path, extracting on first use. GUI thread only. 
+
+\Hypertarget{class_application_1_1_program_index_ab4b62ecc8d91ff790c5ee7d197a98627}\index{Application::ProgramIndex@{Application::ProgramIndex}!refreshAsync@{refreshAsync}}
+\index{refreshAsync@{refreshAsync}!Application::ProgramIndex@{Application::ProgramIndex}}
+\doxysubsubsection{\texorpdfstring{refreshAsync()}{refreshAsync()}}
+{\footnotesize\ttfamily \label{class_application_1_1_program_index_ab4b62ecc8d91ff790c5ee7d197a98627} 
+void Application::\+\+Program\+Index::\+refresh\+Async (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Rescans shortcut folders on a background thread (no-\/op while a refresh is already running). 
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_program_index_8hpp}{Program\+Index.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\doxymbox{\hyperlink{_program_index_8cpp}{Program\+Index.\+cpp}}\end{DoxyCompactItemize}

@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('md__e_1_2_gith
   <div class="headertitle"><div class="title">RegisterHotKey </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md3"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md146"></a></p>
 <p>For hotkeys on Windows, we should use <span class="tt">RegisterHotKey</span> from <span class="tt">winuser.h</span>.</p>
 <p>Syntax: </p><div class="fragment"><div class="line">BOOL RegisterHotKey(</div>
 <div class="line">  [in, optional] HWND hWnd,</div>
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('md__e_1_2_gith
 <div class="line">  [in]           UINT fsModifiers,</div>
 <div class="line">  [in]           UINT vk</div>
 <div class="line">);</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md147"></a>
 Params</h2>
 <ul>
 <li><span class="tt">hWnd</span><ul>
@@ -157,7 +157,7 @@ Params</h2>
 </ul>
 </li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md148"></a>
 Receiving the Hotkey</h1>
 <p>When triggered, Windows sends <span class="tt">WM_HOTKEY</span> and we will need a message loop to capture it: </p><div class="fragment"><div class="line">MSG msg;</div>
 <div class="line"><span class="keywordflow">while</span> (GetMessage(&amp;msg, NULL, 0, 0)) {</div>
@@ -170,10 +170,10 @@ Receiving the Hotkey</h1>
 <div class="line">    TranslateMessage(&amp;msg);</div>
 <div class="line">    DispatchMessage(&amp;msg);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md149"></a>
 Unregister</h1>
 <p>Unregistering hotkeys is pretty simple: </p><div class="fragment"><div class="line">UnregisterHotKey(NULL, <span class="keywordtype">id</span>);</div>
-</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+</div><!-- fragment --><h1 class="doxsection"><a class="anchor" id="autotoc_md150"></a>
 Window Focus Info</h1>
 <p>To bring launcher forward we can use:</p><ul>
 <li><span class="tt">ShowWindow(hwnd, SW_SHOW)</span></li>
@@ -181,10 +181,10 @@ Window Focus Info</h1>
 <li><span class="tt">SetFocus(hwnd)</span></li>
 </ul>
 <p>I don't know yet which one is optimial for our use case. Apparenly Windows blocks focus stealing sometimes, so we may need to use <span class="tt">AttachThreadInput</span> or <span class="tt">AllowSetForegroundWindow</span>, but we will see.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md151"></a>
 Threading Note</h1>
 <p>To keep the main thread free, we will probably have to put this loop on a separate thread so it keeps everything else responsive.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md152"></a>
 Error Handling</h1>
 <ul>
 <li>Hotkey fails if already registered by another app</li>

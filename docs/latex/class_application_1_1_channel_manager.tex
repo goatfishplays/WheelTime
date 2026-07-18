@@ -1,0 +1,163 @@
+\doxysection{Application::\+Channel\+Manager Class Reference}
+\hypertarget{class_application_1_1_channel_manager}{}\label{class_application_1_1_channel_manager}\index{Application::ChannelManager@{Application::ChannelManager}}
+
+
+Enforces strict one-\/in-\/flight-\/per-\/channel FIFO (hold through delays).  
+
+
+
+
+{\ttfamily \+\#include $<$Channel\+Manager.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_channel_manager_a2398f19cf73097d9a60a2600e0b2b9b5}{Channel\+Manager}} ()=default
+\item 
+\doxymbox{\hyperlink{class_application_1_1_channel_manager_aaf9867e9216aab7f6a108af3b0c66575}{Channel\+Manager}} (const Channel\+Manager \&)=delete
+\item 
+\doxymbox{\hyperlink{class_application_1_1_channel_manager_a2398f19cf73097d9a60a2600e0b2b9b5}{Channel\+Manager}} \& \doxymbox{\hyperlink{class_application_1_1_channel_manager_aa1fd892a77295288a7e9d36912b52ef8}{operator=}} (const \doxymbox{\hyperlink{class_application_1_1_channel_manager_a2398f19cf73097d9a60a2600e0b2b9b5}{Channel\+Manager}} \&)=delete
+\item 
+uint32\+\_\+t \doxymbox{\hyperlink{class_application_1_1_channel_manager_af4106222831397c403510b99c13df7c7}{resolve\+Key}} (const \doxymbox{\hyperlink{class_application_1_1_action}{Action}} \&action)
+\begin{DoxyCompactList}\small\item\em Maps \doxylink{class_application_1_1_action_a2526833ca8645544b3e55a47d2b9ae1d}{Action::\+channel()} to an internal key (private id for channel 0). \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_channel_manager_a8da6ba97fb97286d75effce4788f4049}{bind}} (uint64\+\_\+t action\+Id, uint32\+\_\+t channel\+Key)
+\begin{DoxyCompactList}\small\item\em Records which channel key owns {\ttfamily action\+Id}. \end{DoxyCompactList}\item 
+std::\+optional$<$ uint32\+\_\+t $>$ \doxymbox{\hyperlink{class_application_1_1_channel_manager_a870d42eff9a21d9c51f64d7bf713bfa9}{channel\+For}} (uint64\+\_\+t action\+Id) const
+\begin{DoxyCompactList}\small\item\em Channel key for a runtime action id, if still bound. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_channel_manager_a2632ba5c8c242e5fd630797a9ba289fa}{unbind}} (uint64\+\_\+t action\+Id)
+\begin{DoxyCompactList}\small\item\em Drops the action\+Id → channel binding. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_application_1_1_channel_dispatch}{Channel\+Dispatch}} \doxymbox{\hyperlink{class_application_1_1_channel_manager_ab56822f7633c1d83e7bea733acf4c71a}{admit}} (std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} $>$ context, std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point earliest\+Start, std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point now)
+\begin{DoxyCompactList}\small\item\em Admits {\ttfamily context} onto its channel. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_application_1_1_channel_dispatch}{Channel\+Dispatch}} \doxymbox{\hyperlink{class_application_1_1_channel_manager_ac2c64cccf6793481059f1923e8ba462c}{release\+And\+Take\+Next}} (uint32\+\_\+t channel\+Key, std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point now)
+\begin{DoxyCompactList}\small\item\em Marks the channel idle after Completed/\+\+Cancelled and promotes the next waiter. \end{DoxyCompactList}\item 
+std::\+vector$<$ std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} $>$ $>$ \doxymbox{\hyperlink{class_application_1_1_channel_manager_a33f6cdb4cdcc05e32105919b692538c0}{remove\+Waiting\+If}} (const std::\+function$<$ bool(const \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&)$>$ \&predicate)
+\begin{DoxyCompactList}\small\item\em Removes waiting contexts for which {\ttfamily predicate} returns true. Does not change busy state of channels. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_channel_manager_ab6aa075efc35ac3568562bd9b623787c}{shift\+Waiting\+Starts}} (std::\+chrono::\+steady\+\_\+clock::\+duration delta)
+\begin{DoxyCompactList}\small\item\em Adds {\ttfamily delta} to every waiter\textquotesingle{}s earliest\+Start (used when resuming from pause). \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_channel_manager_a5e443abaf5e50635c137410d5672e410}{is\+Busy}} (uint32\+\_\+t channel\+Key) const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Enforces strict one-\/in-\/flight-\/per-\/channel FIFO (hold through delays). 
+
+Channel 0 maps each \doxylink{class_application_1_1_action}{Action} to a private key so those Actions never block one another. Waiting entries preserve earliest\+Start so future wake times are not lost when the channel is busy. 
+
+\label{class_application_1_1_channel_manager_doc-constructors}
+\Hypertarget{class_application_1_1_channel_manager_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_channel_manager_a2398f19cf73097d9a60a2600e0b2b9b5}\index{Application::ChannelManager@{Application::ChannelManager}!ChannelManager@{ChannelManager}}
+\index{ChannelManager@{ChannelManager}!Application::ChannelManager@{Application::ChannelManager}}
+\doxysubsubsection{\texorpdfstring{ChannelManager()}{ChannelManager()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_channel_manager_a2398f19cf73097d9a60a2600e0b2b9b5} 
+Application::\+\+Channel\+Manager::\+\+Channel\+Manager (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+\Hypertarget{class_application_1_1_channel_manager_aaf9867e9216aab7f6a108af3b0c66575}\index{Application::ChannelManager@{Application::ChannelManager}!ChannelManager@{ChannelManager}}
+\index{ChannelManager@{ChannelManager}!Application::ChannelManager@{Application::ChannelManager}}
+\doxysubsubsection{\texorpdfstring{ChannelManager()}{ChannelManager()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_channel_manager_aaf9867e9216aab7f6a108af3b0c66575} 
+Application::\+\+Channel\+Manager::\+\+Channel\+Manager (\begin{DoxyParamCaption}\item[{const Channel\+Manager \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+\label{class_application_1_1_channel_manager_doc-func-members}
+\Hypertarget{class_application_1_1_channel_manager_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_channel_manager_ab56822f7633c1d83e7bea733acf4c71a}\index{Application::ChannelManager@{Application::ChannelManager}!admit@{admit}}
+\index{admit@{admit}!Application::ChannelManager@{Application::ChannelManager}}
+\doxysubsubsection{\texorpdfstring{admit()}{admit()}}
+{\footnotesize\ttfamily \label{class_application_1_1_channel_manager_ab56822f7633c1d83e7bea733acf4c71a} 
+\doxymbox{\hyperlink{struct_application_1_1_channel_dispatch}{Channel\+Dispatch}} Application::\+\+Channel\+Manager::\+admit (\begin{DoxyParamCaption}\item[{std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} $>$}]{context}{, }\item[{std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point}]{earliest\+Start}{, }\item[{std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point}]{now}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Admits {\ttfamily context} onto its channel. 
+
+If the channel is free:\+ marks busy and returns Run\+Now or Park\+Until. If busy:\+ queues \{context, earliest\+Start\} and returns None. \Hypertarget{class_application_1_1_channel_manager_a8da6ba97fb97286d75effce4788f4049}\index{Application::ChannelManager@{Application::ChannelManager}!bind@{bind}}
+\index{bind@{bind}!Application::ChannelManager@{Application::ChannelManager}}
+\doxysubsubsection{\texorpdfstring{bind()}{bind()}}
+{\footnotesize\ttfamily \label{class_application_1_1_channel_manager_a8da6ba97fb97286d75effce4788f4049} 
+void Application::\+\+Channel\+Manager::\+bind (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{action\+Id}{, }\item[{uint32\+\_\+t}]{channel\+Key}{}\end{DoxyParamCaption})}
+
+
+
+Records which channel key owns {\ttfamily action\+Id}. 
+
+\Hypertarget{class_application_1_1_channel_manager_a870d42eff9a21d9c51f64d7bf713bfa9}\index{Application::ChannelManager@{Application::ChannelManager}!channelFor@{channelFor}}
+\index{channelFor@{channelFor}!Application::ChannelManager@{Application::ChannelManager}}
+\doxysubsubsection{\texorpdfstring{channelFor()}{channelFor()}}
+{\footnotesize\ttfamily \label{class_application_1_1_channel_manager_a870d42eff9a21d9c51f64d7bf713bfa9} 
+std::\+optional$<$ uint32\+\_\+t $>$ Application::\+\+Channel\+Manager::\+channel\+For (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{action\+Id}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Channel key for a runtime action id, if still bound. 
+
+\Hypertarget{class_application_1_1_channel_manager_a5e443abaf5e50635c137410d5672e410}\index{Application::ChannelManager@{Application::ChannelManager}!isBusy@{isBusy}}
+\index{isBusy@{isBusy}!Application::ChannelManager@{Application::ChannelManager}}
+\doxysubsubsection{\texorpdfstring{isBusy()}{isBusy()}}
+{\footnotesize\ttfamily \label{class_application_1_1_channel_manager_a5e443abaf5e50635c137410d5672e410} 
+bool Application::\+\+Channel\+Manager::\+is\+Busy (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{channel\+Key}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{class_application_1_1_channel_manager_aa1fd892a77295288a7e9d36912b52ef8}\index{Application::ChannelManager@{Application::ChannelManager}!operator=@{operator=}}
+\index{operator=@{operator=}!Application::ChannelManager@{Application::ChannelManager}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \label{class_application_1_1_channel_manager_aa1fd892a77295288a7e9d36912b52ef8} 
+\doxymbox{\hyperlink{class_application_1_1_channel_manager_a2398f19cf73097d9a60a2600e0b2b9b5}{Channel\+Manager}} \& Application::\+\+Channel\+Manager::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_application_1_1_channel_manager_a2398f19cf73097d9a60a2600e0b2b9b5}{Channel\+Manager}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_application_1_1_channel_manager_ac2c64cccf6793481059f1923e8ba462c}\index{Application::ChannelManager@{Application::ChannelManager}!releaseAndTakeNext@{releaseAndTakeNext}}
+\index{releaseAndTakeNext@{releaseAndTakeNext}!Application::ChannelManager@{Application::ChannelManager}}
+\doxysubsubsection{\texorpdfstring{releaseAndTakeNext()}{releaseAndTakeNext()}}
+{\footnotesize\ttfamily \label{class_application_1_1_channel_manager_ac2c64cccf6793481059f1923e8ba462c} 
+\doxymbox{\hyperlink{struct_application_1_1_channel_dispatch}{Channel\+Dispatch}} Application::\+\+Channel\+Manager::\+release\+And\+Take\+Next (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{channel\+Key}{, }\item[{std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point}]{now}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Marks the channel idle after Completed/\+\+Cancelled and promotes the next waiter. 
+
+\Hypertarget{class_application_1_1_channel_manager_a33f6cdb4cdcc05e32105919b692538c0}\index{Application::ChannelManager@{Application::ChannelManager}!removeWaitingIf@{removeWaitingIf}}
+\index{removeWaitingIf@{removeWaitingIf}!Application::ChannelManager@{Application::ChannelManager}}
+\doxysubsubsection{\texorpdfstring{removeWaitingIf()}{removeWaitingIf()}}
+{\footnotesize\ttfamily \label{class_application_1_1_channel_manager_a33f6cdb4cdcc05e32105919b692538c0} 
+std::\+vector$<$ std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} $>$ $>$ Application::\+\+Channel\+Manager::\+remove\+Waiting\+If (\begin{DoxyParamCaption}\item[{const std::\+function$<$ bool(const \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&)$>$ \&}]{predicate}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Removes waiting contexts for which {\ttfamily predicate} returns true. Does not change busy state of channels. 
+
+\Hypertarget{class_application_1_1_channel_manager_af4106222831397c403510b99c13df7c7}\index{Application::ChannelManager@{Application::ChannelManager}!resolveKey@{resolveKey}}
+\index{resolveKey@{resolveKey}!Application::ChannelManager@{Application::ChannelManager}}
+\doxysubsubsection{\texorpdfstring{resolveKey()}{resolveKey()}}
+{\footnotesize\ttfamily \label{class_application_1_1_channel_manager_af4106222831397c403510b99c13df7c7} 
+uint32\+\_\+t Application::\+\+Channel\+Manager::\+resolve\+Key (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_application_1_1_action}{Action}} \&}]{action}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Maps \doxylink{class_application_1_1_action_a2526833ca8645544b3e55a47d2b9ae1d}{Action::\+channel()} to an internal key (private id for channel 0). 
+
+\Hypertarget{class_application_1_1_channel_manager_ab6aa075efc35ac3568562bd9b623787c}\index{Application::ChannelManager@{Application::ChannelManager}!shiftWaitingStarts@{shiftWaitingStarts}}
+\index{shiftWaitingStarts@{shiftWaitingStarts}!Application::ChannelManager@{Application::ChannelManager}}
+\doxysubsubsection{\texorpdfstring{shiftWaitingStarts()}{shiftWaitingStarts()}}
+{\footnotesize\ttfamily \label{class_application_1_1_channel_manager_ab6aa075efc35ac3568562bd9b623787c} 
+void Application::\+\+Channel\+Manager::\+shift\+Waiting\+Starts (\begin{DoxyParamCaption}\item[{std::\+chrono::\+steady\+\_\+clock::\+duration}]{delta}{}\end{DoxyParamCaption})}
+
+
+
+Adds {\ttfamily delta} to every waiter\textquotesingle{}s earliest\+Start (used when resuming from pause). 
+
+\Hypertarget{class_application_1_1_channel_manager_a2632ba5c8c242e5fd630797a9ba289fa}\index{Application::ChannelManager@{Application::ChannelManager}!unbind@{unbind}}
+\index{unbind@{unbind}!Application::ChannelManager@{Application::ChannelManager}}
+\doxysubsubsection{\texorpdfstring{unbind()}{unbind()}}
+{\footnotesize\ttfamily \label{class_application_1_1_channel_manager_a2632ba5c8c242e5fd630797a9ba289fa} 
+void Application::\+\+Channel\+Manager::\+unbind (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{action\+Id}{}\end{DoxyParamCaption})}
+
+
+
+Drops the action\+Id → channel binding. 
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_channel_manager_8hpp}{Channel\+Manager.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\doxymbox{\hyperlink{_channel_manager_8cpp}{Channel\+Manager.\+cpp}}\end{DoxyCompactItemize}

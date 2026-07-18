@@ -1,0 +1,120 @@
+\doxysection{Application::\+Settings\+Window Class Reference}
+\hypertarget{class_application_1_1_settings_window}{}\label{class_application_1_1_settings_window}\index{Application::SettingsWindow@{Application::SettingsWindow}}
+
+
+Non-\/modal editor for the shared action library and wheel menus.  
+
+
+
+
+{\ttfamily \+\#include $<$Settings\+Window.\+hpp$>$}
+
+Inheritance diagram for Application::\+Settings\+Window:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_application_1_1_settings_window}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_settings_window_a2e6491589506b7beb8633b2161a06ead}{save\+Requested}} ()
+\begin{DoxyCompactList}\small\item\em Emitted after the local working copy passes UI-\/level validation. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_settings_window_af68c25274d085bbb23df97a4fb54b281}{window\+Closed}} ()
+\begin{DoxyCompactList}\small\item\em Emitted when the settings window is closed (pause/\+resume hook). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_settings_window_ad1e0f4254dc44e9efadee40b8602fe5a}{Settings\+Window}} (QWidget \texorpdfstring{$\ast$}{*}parent=nullptr)
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_settings_window_a598169088f9d94df7f24cfa03482f731}{load\+Working\+Copy}} (const \doxymbox{\hyperlink{struct_application_1_1_app_config}{App\+Config}} \&app\+Config, const std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$ \&actions, const std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} $>$ \&menus)
+\begin{DoxyCompactList}\small\item\em Initializes the editor with a fresh working copy of runtime data. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_settings_window_adbea9858738138c1772aecd46f7e23cf}{export\+Working\+Copy}} (\doxymbox{\hyperlink{struct_application_1_1_app_config}{App\+Config}} \&app\+Config, std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$ \&actions, std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} $>$ \&menus) const
+\begin{DoxyCompactList}\small\item\em Exports the edited working copy back to the caller. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \doxymbox{\hyperlink{class_application_1_1_settings_window_a2eedfa512686c6658050b684724a4c9b}{event\+Filter}} (QObject \texorpdfstring{$\ast$}{*}obj, QEvent \texorpdfstring{$\ast$}{*}event) override
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_settings_window_ad3aa936394fd5872023e634182a1bc65}{close\+Event}} (QClose\+Event \texorpdfstring{$\ast$}{*}event) override
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Non-\/modal editor for the shared action library and wheel menus. 
+
+The window edits a working copy rather than mutating the live runtime objects directly. On save, the working copy is exported back to {\ttfamily \doxylink{class_application_1_1_app}{App}}, validated, written to JSON, and then applied to the active launcher state. 
+
+\label{class_application_1_1_settings_window_doc-constructors}
+\Hypertarget{class_application_1_1_settings_window_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_settings_window_ad1e0f4254dc44e9efadee40b8602fe5a}\index{Application::SettingsWindow@{Application::SettingsWindow}!SettingsWindow@{SettingsWindow}}
+\index{SettingsWindow@{SettingsWindow}!Application::SettingsWindow@{Application::SettingsWindow}}
+\doxysubsubsection{\texorpdfstring{SettingsWindow()}{SettingsWindow()}}
+{\footnotesize\ttfamily \label{class_application_1_1_settings_window_ad1e0f4254dc44e9efadee40b8602fe5a} 
+Settings\+Window::\+\+Settings\+Window (\begin{DoxyParamCaption}\item[{QWidget \texorpdfstring{$\ast$}{*}}]{parent}{ = {\ttfamily nullptr}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+\label{class_application_1_1_settings_window_doc-func-members}
+\Hypertarget{class_application_1_1_settings_window_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_settings_window_ad3aa936394fd5872023e634182a1bc65}\index{Application::SettingsWindow@{Application::SettingsWindow}!closeEvent@{closeEvent}}
+\index{closeEvent@{closeEvent}!Application::SettingsWindow@{Application::SettingsWindow}}
+\doxysubsubsection{\texorpdfstring{closeEvent()}{closeEvent()}}
+{\footnotesize\ttfamily \label{class_application_1_1_settings_window_ad3aa936394fd5872023e634182a1bc65} 
+void Settings\+Window::\+close\+Event (\begin{DoxyParamCaption}\item[{QClose\+Event \texorpdfstring{$\ast$}{*}}]{event}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}}
+
+\Hypertarget{class_application_1_1_settings_window_a2eedfa512686c6658050b684724a4c9b}\index{Application::SettingsWindow@{Application::SettingsWindow}!eventFilter@{eventFilter}}
+\index{eventFilter@{eventFilter}!Application::SettingsWindow@{Application::SettingsWindow}}
+\doxysubsubsection{\texorpdfstring{eventFilter()}{eventFilter()}}
+{\footnotesize\ttfamily \label{class_application_1_1_settings_window_a2eedfa512686c6658050b684724a4c9b} 
+bool Settings\+Window::\+event\+Filter (\begin{DoxyParamCaption}\item[{QObject \texorpdfstring{$\ast$}{*}}]{obj}{, }\item[{QEvent \texorpdfstring{$\ast$}{*}}]{event}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}}
+
+\Hypertarget{class_application_1_1_settings_window_adbea9858738138c1772aecd46f7e23cf}\index{Application::SettingsWindow@{Application::SettingsWindow}!exportWorkingCopy@{exportWorkingCopy}}
+\index{exportWorkingCopy@{exportWorkingCopy}!Application::SettingsWindow@{Application::SettingsWindow}}
+\doxysubsubsection{\texorpdfstring{exportWorkingCopy()}{exportWorkingCopy()}}
+{\footnotesize\ttfamily \label{class_application_1_1_settings_window_adbea9858738138c1772aecd46f7e23cf} 
+void Settings\+Window::\+export\+Working\+Copy (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_application_1_1_app_config}{App\+Config}} \&}]{app\+Config}{, }\item[{std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$ \&}]{actions}{, }\item[{std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} $>$ \&}]{menus}{}\end{DoxyParamCaption}) const}
+
+
+
+Exports the edited working copy back to the caller. 
+
+\Hypertarget{class_application_1_1_settings_window_a598169088f9d94df7f24cfa03482f731}\index{Application::SettingsWindow@{Application::SettingsWindow}!loadWorkingCopy@{loadWorkingCopy}}
+\index{loadWorkingCopy@{loadWorkingCopy}!Application::SettingsWindow@{Application::SettingsWindow}}
+\doxysubsubsection{\texorpdfstring{loadWorkingCopy()}{loadWorkingCopy()}}
+{\footnotesize\ttfamily \label{class_application_1_1_settings_window_a598169088f9d94df7f24cfa03482f731} 
+void Settings\+Window::\+load\+Working\+Copy (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{struct_application_1_1_app_config}{App\+Config}} \&}]{app\+Config}{, }\item[{const std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$ \&}]{actions}{, }\item[{const std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} $>$ \&}]{menus}{}\end{DoxyParamCaption})}
+
+
+
+Initializes the editor with a fresh working copy of runtime data. 
+
+\Hypertarget{class_application_1_1_settings_window_a2e6491589506b7beb8633b2161a06ead}\index{Application::SettingsWindow@{Application::SettingsWindow}!saveRequested@{saveRequested}}
+\index{saveRequested@{saveRequested}!Application::SettingsWindow@{Application::SettingsWindow}}
+\doxysubsubsection{\texorpdfstring{saveRequested}{saveRequested}}
+{\footnotesize\ttfamily \label{class_application_1_1_settings_window_a2e6491589506b7beb8633b2161a06ead} 
+void Application::\+\+Settings\+Window::\+save\+Requested (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [signal]}}
+
+
+
+Emitted after the local working copy passes UI-\/level validation. 
+
+\Hypertarget{class_application_1_1_settings_window_af68c25274d085bbb23df97a4fb54b281}\index{Application::SettingsWindow@{Application::SettingsWindow}!windowClosed@{windowClosed}}
+\index{windowClosed@{windowClosed}!Application::SettingsWindow@{Application::SettingsWindow}}
+\doxysubsubsection{\texorpdfstring{windowClosed}{windowClosed}}
+{\footnotesize\ttfamily \label{class_application_1_1_settings_window_af68c25274d085bbb23df97a4fb54b281} 
+void Application::\+\+Settings\+Window::\+window\+Closed (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [signal]}}
+
+
+
+Emitted when the settings window is closed (pause/\+resume hook). 
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_settings_window_8hpp}{Settings\+Window.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\doxymbox{\hyperlink{_settings_window_8cpp}{Settings\+Window.\+cpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+build/\+app/\+\+App\+\_\+autogen/\+\+OIU322\+L6\+L6/\+\doxymbox{\hyperlink{moc___settings_window_8cpp}{moc\+\_\+\+Settings\+Window.\+cpp}}\end{DoxyCompactItemize}

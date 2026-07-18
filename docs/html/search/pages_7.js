@@ -1,5 +1,27 @@
 var searchData=
 [
-  ['info_0',['Window Focus Info',['../md__2shr_2Github_2WheelTime_2notes_2hotkey-basics.html#autotoc_md7',1,'']]],
-  ['instructions_1',['Build Instructions',['../index.html#autotoc_md17',1,'']]]
+  ['debt_20fix_20toward_20this_20guide_20when_20touching_0',['Known debt (fix toward this guide when touching)',['../md__e_1_2_github_2_wheel_time_2_s_t_y_l_e.html#autotoc_md198',1,'']]],
+  ['declaration_3a_1',['Function Declaration:',['../md__c_09_09_01_coding_01_standards_01_document.html#autotoc_md15',1,'']]],
+  ['deliberately_20allows_2',['What this guide deliberately allows',['../md__e_1_2_github_2_wheel_time_2_s_t_y_l_e.html#autotoc_md196',1,'']]],
+  ['devices_3',['-Does your code work on other devices',['../md__acceptance_01_criteria.html#autotoc_md10',1,'']]],
+  ['did_20you_20build_20the_20right_20thing_4',['Did you build the right thing?',['../md__acceptance_01_criteria.html',1,'']]],
+  ['directories_5',['Files and directories',['../md__e_1_2_github_2_wheel_time_2_s_t_y_l_e.html#autotoc_md176',1,'']]],
+  ['discord_20check_20ins_6',['&lt;b&gt;Keep holding regular Discord check-ins&lt;/b&gt;',['../md_scrum_2_sprint_01_0g2_01_report.html#autotoc_md40',1,'']]],
+  ['discord_20checkins_7',['&lt;b&gt;Keep holding regular Discord checkins&lt;/b&gt;',['../md_scrum_2_sprint_01_0g3_01_report.html#autotoc_md58',1,'']]],
+  ['docs_8',['Comments and docs',['../md__e_1_2_github_2_wheel_time_2_s_t_y_l_e.html#autotoc_md188',1,'']]],
+  ['documentation_20for_20the_20code_20is_20completed_20and_20also_20pushed_20into_20the_20repository_9',['-Documentation for the code is completed and also pushed into the repository',['../md__acceptance_01_criteria.html#autotoc_md4',1,'']]],
+  ['documentation_20make_20sense_10',['-After being reviewed by one other, does the documentation make sense?',['../md__acceptance_01_criteria.html#autotoc_md11',1,'']]],
+  ['does_20it_20run_20correctly_11',['Does it run correctly?',['../md__acceptance_01_criteria.html#autotoc_md7',1,'']]],
+  ['does_20the_20documentation_20make_20sense_12',['-After being reviewed by one other, does the documentation make sense?',['../md__acceptance_01_criteria.html#autotoc_md11',1,'']]],
+  ['does_20the_20right_20thing_20based_20on_20the_20product_20owners_20vision_13',['-Product Owner had looked over the codes functionality (Not a code review, just checking if it does the right thing based on the Product Owners vision).',['../md__acceptance_01_criteria.html#autotoc_md6',1,'']]],
+  ['does_20your_20code_20compile_20correctly_14',['-Does your code compile correctly?',['../md__acceptance_01_criteria.html#autotoc_md8',1,'']]],
+  ['does_20your_20code_20work_20on_20other_20devices_15',['-Does your code work on other devices',['../md__acceptance_01_criteria.html#autotoc_md10',1,'']]],
+  ['does_20your_20finished_20part_20fulfill_20all_20the_20specified_20needs_20of_20the_20user_20story_16',['-Does your finished part fulfill all the specified needs of the user story?',['../md__acceptance_01_criteria.html#autotoc_md3',1,'']]],
+  ['does_20your_20work_20pass_20all_20unit_20tests_20made_17',['-Does your work pass all unit tests made',['../md__acceptance_01_criteria.html#autotoc_md9',1,'']]],
+  ['doing_18',['Doing',['../md_scrum_2_sprint_01_0g2_01_report.html#autotoc_md37',1,'&lt;b&gt;Actions to Keep Doing&lt;/b&gt;'],['../md_scrum_2_sprint_01_0g3_01_report.html#autotoc_md55',1,'&lt;b&gt;Actions to Keep Doing&lt;/b&gt;'],['../md_scrum_2_sprint_01_report_01_0g1.html#autotoc_md76',1,'&lt;b&gt;Actions to Keep Doing&lt;/b&gt;'],['../md_scrum_2_sprint_01_0g2_01_report.html#autotoc_md35',1,'&lt;b&gt;Actions to Start Doing&lt;/b&gt;'],['../md_scrum_2_sprint_01_0g3_01_report.html#autotoc_md53',1,'&lt;b&gt;Actions to Start Doing&lt;/b&gt;'],['../md_scrum_2_sprint_01_report_01_0g1.html#autotoc_md71',1,'&lt;b&gt;Actions to Start Doing&lt;/b&gt;'],['../md_scrum_2_sprint_01_0g2_01_report.html#autotoc_md33',1,'&lt;b&gt;Actions to Stop Doing&lt;/b&gt;'],['../md_scrum_2_sprint_01_0g3_01_report.html#autotoc_md51',1,'&lt;b&gt;Actions to Stop Doing&lt;/b&gt;'],['../md_scrum_2_sprint_01_report_01_0g1.html#autotoc_md68',1,'&lt;b&gt;Actions to Stop Doing&lt;/b&gt;']]],
+  ['domain_20vocabulary_19',['Domain vocabulary',['../md__e_1_2_github_2_wheel_time_2_s_t_y_l_e.html#autotoc_md182',1,'']]],
+  ['done_20workflow_20',['&lt;b&gt;Start strictly enforcing the &quot;User Story Done&quot; workflow&lt;/b&gt;',['../md_scrum_2_sprint_01_0g3_01_report.html#autotoc_md54',1,'']]],
+  ['during_20sprint_201_21',['During Sprint 1',['../md_scrum_2_sprint_01_report_01_0g1.html#autotoc_md81',1,'&lt;b&gt;Completed During Sprint 1&lt;/b&gt;'],['../md_scrum_2_sprint_01_report_01_0g1.html#autotoc_md82',1,'&lt;b&gt;Partially Completed During Sprint 1&lt;/b&gt;']]],
+  ['during_20sprint_202_22',['During Sprint 2',['../md_scrum_2_sprint_01_0g2_01_report.html#autotoc_md42',1,'&lt;b&gt;Completed During Sprint 2&lt;/b&gt;'],['../md_scrum_2_sprint_01_0g2_01_report.html#autotoc_md43',1,'&lt;b&gt;Partially Completed During Sprint 2&lt;/b&gt;']]],
+  ['during_20sprint_203_23',['&lt;b&gt;Completed During Sprint 3&lt;/b&gt;',['../md_scrum_2_sprint_01_0g3_01_report.html#autotoc_md60',1,'']]]
 ];

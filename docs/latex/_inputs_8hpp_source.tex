@@ -12,10 +12,10 @@
 \DoxyCodeLine{00017\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_platform}{Platform}}}
 \DoxyCodeLine{00018\ \{}
 \DoxyCodeLine{00019\ \ \ \ \ \textcolor{comment}{//\ TODO:\ Come\ up\ with\ legend\ for\ special\ keys,\ mouse\ buttons,\ midi,\ etc}}
-\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_platform_1_1_hotkey}{Hotkey}}}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_platform_1_1_input_bind}{InputBind}}}
 \DoxyCodeLine{00021\ \ \ \ \ \{}
-\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_platform_1_1_hotkey_a4884bccbc203cb7ee8cef97d9238d69b}{input}};}
-\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_platform_1_1_hotkey_a92a6c74f2cb9497d3f88509698975c21}{mod}};}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_platform_1_1_input_bind_ab78756f840eb22db110bef8dde038cd8}{input}};}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_platform_1_1_input_bind_abe0f6bb5b2e070810e7e57e7eaf496c3}{mod}};}
 \DoxyCodeLine{00024\ \ \ \ \ \};}
 \DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_platform_1_1_vec2}{Vec2}}}
 \DoxyCodeLine{00026\ \ \ \ \ \{}
@@ -23,22 +23,40 @@
 \DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{struct_platform_1_1_vec2_a6fadf85e596a53a103c0b42d53b68c5e}{y}};}
 \DoxyCodeLine{00029\ \ \ \ \ \};}
 \DoxyCodeLine{00030\ }
-\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_platform_1_1_input_rcvr_ab4515f10ee7adde317ee4d9a1556d399}{InputRcvr}}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_platform_1_1_input_rcvr_a7c537b9d919c1d65fc2797ffa926ade3}{InputRcvr}}}
 \DoxyCodeLine{00036\ \ \ \ \ \{}
 \DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_ab4515f10ee7adde317ee4d9a1556d399}{InputRcvr}}();}
-\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_aa8d43c61b8b55decf1e55c8d34dcfc32}{\string~InputRcvr}}();}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_a7c537b9d919c1d65fc2797ffa926ade3}{InputRcvr}}();}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_ab725ad346a56db864c9cdac182eb787a}{\string~InputRcvr}}();}
 \DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ Oh\ gosh\ I\ just\ realized\ multimonitor\ exists,\ I\ have\ no\ idea\ how\ that\ works,\ good\ luck\ :)}}
-\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_platform_1_1_vec2}{Vec2}}\ \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_a7876b5f6c8a133340fce671a742873db}{getAbsoluteMousePosition}}();}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_platform_1_1_vec2}{Vec2}}\ \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_a0676aa3593514ad5295eb4d26724fff7}{getAbsoluteMousePosition}}();}
 \DoxyCodeLine{00048\ }
-\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_platform_1_1_vec2}{Vec2}}\ \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_aeced2a888895a39a85974ab096a01f9a}{getRelativeMousePosition}}();}
-\DoxyCodeLine{00056\ }
-\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_addbec4b23b0cbb7f8d199943c7f00c7f}{registerInputBinding}}(\doxymbox{\hyperlink{struct_platform_1_1_hotkey}{Hotkey}});}
-\DoxyCodeLine{00064\ }
-\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{private}:}
-\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keyword}{class\ }Impl;}
-\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ std::unique\_ptr<Impl>\ m\_impl;}
-\DoxyCodeLine{00072\ \ \ \ \ \};}
-\DoxyCodeLine{00073\ \}}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_a561f308a6a45f67401126b9b2a45705a}{setAbsoluteMousePosition}}(\doxymbox{\hyperlink{struct_platform_1_1_vec2}{Vec2}}\ position);}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ /**}}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ *\ @brief\ Get\ mouse\ position\ relative\ to\ window,}}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ *}}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ *\ Note:\ Position\ is\ x:\ left\ to\ right,\ y:\ top\ to\ bottom}}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ *}}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ */}}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Vec2\ getRelativeMousePosition();}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_a787efab3f34947b839127756042eb960}{registerInputBinding}}(\doxymbox{\hyperlink{struct_platform_1_1_input_bind}{InputBind}});}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_ac4b52e195fe95c2fd7cdacfe7e870a93}{unregisterInputBinding}}(\doxymbox{\hyperlink{struct_platform_1_1_input_bind}{InputBind}});}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_ac83ac9c9974d67947c37c19e2a20b61e}{isHotkeyMessage}}(\textcolor{keywordtype}{void}*\ message,\ \textcolor{keywordtype}{int}\&\ hotkeyIdOut);}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_aa03f134c83216220e5a98f6da586c404}{isVirtualKeyDown}}(\textcolor{keywordtype}{int}\ vk)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_ae71c44aa55351e5bb4a0dbda9606ac82}{isChordHeld}}(\textcolor{keywordtype}{int}\ mod,\ \textcolor{keywordtype}{int}\ vk)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_a960d57eed94039b7f15ff49de200b09d}{isChordFullyReleased}}(\textcolor{keywordtype}{int}\ mod,\ \textcolor{keywordtype}{int}\ vk)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_input_rcvr_1_1_impl}{Impl}};}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ std::unique\_ptr<Impl>\ m\_impl;}
+\DoxyCodeLine{00108\ \ \ \ \ \};}
+\DoxyCodeLine{00109\ \}}
 
 \end{DoxyCode}

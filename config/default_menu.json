@@ -34,11 +34,9 @@
             "id": "action-new-action",
             "items": [
                 {
-                    "holdDuration": 0,
-                    "keycode": 69,
-                    "modifiers": 0,
-                    "proceed": false,
-                    "type": "hotkey"
+                    "type": "mouse_move",
+                    "x": 9999,
+                    "y": 9999
                 }
             ],
             "name": "Test Action"
@@ -75,27 +73,14 @@
             "items": [
                 {
                     "searchActions": true,
-                    "searchMenus": true,
-                    "searchPrograms": true,
+                    "searchMenus": false,
+                    "searchPrograms": false,
                     "type": "search",
                     "webSearch": true,
                     "webSearchUrl": "https://www.google.com/search?q={query}"
                 }
             ],
             "name": "Search"
-        },
-        {
-            "channel": 0,
-            "icon": "C:/Users/Torpin Pascual/Pictures/Screenshots/Screenshot 2025-08-13 144050.png",
-            "id": "action-new-action-6",
-            "items": [
-                {
-                    "customTarget": "",
-                    "presetId": "calculator",
-                    "type": "launch_app"
-                }
-            ],
-            "name": "New Action"
         }
     ],
     "menus": [
@@ -112,33 +97,8 @@
             "exitOnAction": true,
             "id": "menu-example",
             "name": "GAMBLING",
-            "triggerMod": 0,
-            "triggerVk": 0
-        },
-        {
-            "actionIds": [
-                "action-new-action-2",
-                "action-search",
-                "action-new-action-6"
-            ],
-            "centerMouseOnOpen": true,
-            "executeOnRelease": false,
-            "exitOnAction": false,
-            "id": "menu-new-menu",
-            "name": "test 1",
-            "triggerMod": 0,
-            "triggerVk": 0
-        },
-        {
-            "actionIds": [
-            ],
-            "centerMouseOnOpen": true,
-            "executeOnRelease": false,
-            "exitOnAction": false,
-            "id": "menu-new-menu-2",
-            "name": "New Menu",
-            "triggerMod": 0,
-            "triggerVk": 0
+            "triggerMod": 6,
+            "triggerVk": 192
         }
     ]
 }

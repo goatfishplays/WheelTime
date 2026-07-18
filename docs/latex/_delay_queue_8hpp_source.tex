@@ -1,0 +1,72 @@
+\doxysection{Delay\+Queue.\+hpp}
+\hypertarget{_delay_queue_8hpp_source}{}\label{_delay_queue_8hpp_source}\index{E:/Github/WheelTime/app/include/App/DelayQueue.hpp@{E:/Github/WheelTime/app/include/App/DelayQueue.hpp}}
+\doxymbox{\hyperlink{_delay_queue_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_action_execution_context_8hpp}{App/ActionExecutionContext.hpp}}"{}}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00019\ \{}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_delay_queue_a05751b781058eba26b094520c12545b4}{DelayQueue}}}
+\DoxyCodeLine{00031\ \{}
+\DoxyCodeLine{00032\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00033\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_delay_queue_a05751b781058eba26b094520c12545b4}{DelayQueue}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_delay_queue_abf2048e0d1ed0eb0c9c1dd01cc4b1835}{DelayQueue}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_application_1_1_delay_queue_a05751b781058eba26b094520c12545b4}{DelayQueue}}\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00036\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_delay_queue_a05751b781058eba26b094520c12545b4}{DelayQueue}}\ \&\doxymbox{\hyperlink{class_application_1_1_delay_queue_a3054eb8f0fbef900eec17285478dce54}{operator=}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_application_1_1_delay_queue_a05751b781058eba26b094520c12545b4}{DelayQueue}}\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_delay_queue_a3f6196efa8d786bf9eaaa8b033876ff6}{DelayQueue}}(\doxymbox{\hyperlink{class_application_1_1_delay_queue_a05751b781058eba26b094520c12545b4}{DelayQueue}}\ \&\&)\ noexcept\ =\ default;}
+\DoxyCodeLine{00039\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_delay_queue_a05751b781058eba26b094520c12545b4}{DelayQueue}}\ \&operator=(\doxymbox{\hyperlink{class_application_1_1_delay_queue_a05751b781058eba26b094520c12545b4}{DelayQueue}}\ \&\&)\ noexcept\ =\ default;}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_delay_queue_ab0e9023f55cb6abcc284313a3060b5b2}{push}}(std::chrono::steady\_clock::time\_point\ wakeTime,}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::unique\_ptr<\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{ActionExecutionContext}}>\ context);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00052\ \ \ \ \ [[nodiscard]]\ std::vector<std::unique\_ptr<\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{ActionExecutionContext}}>>\ \doxymbox{\hyperlink{class_application_1_1_delay_queue_af115b66596bc502e06a2594a154392b1}{popDue}}(}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ std::chrono::steady\_clock::time\_point\ now);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00058\ \ \ \ \ [[nodiscard]]\ std::vector<std::unique\_ptr<\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{ActionExecutionContext}}>>\ \doxymbox{\hyperlink{class_application_1_1_delay_queue_aec6d4fd8d2ad24d0a0745511463b72c3}{removeIf}}(}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ const\ std::function<\textcolor{keywordtype}{bool}(const\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{ActionExecutionContext}}\ \&)>\ \&predicate);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00062\ \ \ \ \ [[nodiscard]]\ std::optional<std::chrono::steady\_clock::time\_point>\ \doxymbox{\hyperlink{class_application_1_1_delay_queue_a97841bbcfffe1e2dc73836ff5a51f9c0}{nextWakeTime}}()\ const;}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_delay_queue_a9493255fea2287b2c627a34b2dee7a73}{empty}}()\ const\ noexcept;}
+\DoxyCodeLine{00065\ \ \ \ \ [[nodiscard]]\ std::\textcolor{keywordtype}{size\_t}\ \doxymbox{\hyperlink{class_application_1_1_delay_queue_ae011f3f4c171408c3d401aee5d9c4fa8}{size}}()\ const\ noexcept;}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_delay_queue_a080c9508bf6b1e3051d2d99fb8534d83}{clear}}()\ noexcept;}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_delay_queue_a89f0023bb31185c577d1a078a9f24732}{shiftAll}}(std::chrono::steady\_clock::duration\ delta);}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ private:}
+\DoxyCodeLine{00076\ \ \ \ \ struct\ Entry}
+\DoxyCodeLine{00077\ \ \ \ \ \{}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ std::chrono::steady\_clock::time\_point\ wakeTime\{\};}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ std::unique\_ptr<ActionExecutionContext>\ context;}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ std::uint64\_t\ sequence\ =\ 0;\ }
+\DoxyCodeLine{00081\ \ \ \ \ \};}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{struct\ }EarliestFirst}
+\DoxyCodeLine{00084\ \ \ \ \ \{}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ operator()(\textcolor{keyword}{const}\ Entry\ \&a,\ \textcolor{keyword}{const}\ Entry\ \&b)\ \textcolor{keyword}{const}\ \textcolor{keyword}{noexcept};}
+\DoxyCodeLine{00086\ \ \ \ \ \};}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{void}\ rebuildHeap();}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ std::vector<Entry>\ m\_heap;}
+\DoxyCodeLine{00091\ \ \ \ \ std::uint64\_t\ m\_nextSequence\ =\ 0;}
+\DoxyCodeLine{00092\ \};}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \}\ \textcolor{comment}{//\ namespace\ Application}}
+
+\end{DoxyCode}

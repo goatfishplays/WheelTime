@@ -1,17 +1,17 @@
 \chapter{Wheel Time }
 \hypertarget{index}{}\label{index}\index{Wheel Time@{Wheel Time}}
-\label{index_md__2shr_2Github_2WheelTime_2README}%
-\Hypertarget{index_md__2shr_2Github_2WheelTime_2README}%
+\label{index_md__e_1_2_github_2_wheel_time_2_r_e_a_d_m_e}%
+\Hypertarget{index_md__e_1_2_github_2_wheel_time_2_r_e_a_d_m_e}%
 
 
-Wheel Time is a real-\/time application launcher designed to help users quickly open programs, scripts, or macros without leaving their current workflow. The main target users are gamers and general computer users who want quick access to common actions without memorizing many hotkeys.\hypertarget{index_autotoc_md12}{}\doxysection{\texorpdfstring{Project Goals}{Project Goals}}\label{index_autotoc_md12}
+Wheel Time is a real-\/time application launcher designed to help users quickly open programs, scripts, or macros without leaving their current workflow. The main target users are gamers and general computer users who want quick access to common actions without memorizing many hotkeys.\hypertarget{index_autotoc_md162}{}\doxysection{\texorpdfstring{Project Goals}{Project Goals}}\label{index_autotoc_md162}
 
 \begin{DoxyItemize}
 \item Create a functional launcher interface
 \item Allow users to launch programs and scripts
 \item Support quick open/\+close behavior for low interruption
 \item Keep the interface lightweight and responsive
-\end{DoxyItemize}\hypertarget{index_autotoc_md13}{}\doxysection{\texorpdfstring{MVP}{MVP}}\label{index_autotoc_md13}
+\end{DoxyItemize}\hypertarget{index_autotoc_md163}{}\doxysection{\texorpdfstring{MVP}{MVP}}\label{index_autotoc_md163}
 The MVP is complete when:\+
 
 
@@ -23,15 +23,15 @@ The MVP is complete when:\+
 \item The launcher returns focus to the previous application
 \item The app builds and runs on at least two team members\textquotesingle{} Windows machines
 \item Basic usage is documented in the README
-\end{DoxyItemize}\hypertarget{index_autotoc_md14}{}\doxysection{\texorpdfstring{Tech Stack}{Tech Stack}}\label{index_autotoc_md14}
+\end{DoxyItemize}\hypertarget{index_autotoc_md164}{}\doxysection{\texorpdfstring{Tech Stack}{Tech Stack}}\label{index_autotoc_md164}
 
 \begin{DoxyItemize}
 \item Language:\+ C++
-\item Core Libraries:\+ Windows API, QT
+\item Core Libraries:\+ Windows API, Qt
 \item Build System:\+ CMake
 \item Development Tools:\+ VSCode, Cursor, Git/\+\+Git\+Hub, Doxygen
-\end{DoxyItemize}\hypertarget{index_autotoc_md15}{}\doxysection{\texorpdfstring{Sprint 1 Goal}{Sprint 1 Goal}}\label{index_autotoc_md15}
-Create a basic Windows launcher prototype with a simple interface.\hypertarget{index_autotoc_md16}{}\doxysection{\texorpdfstring{Sprint 1 Tasks}{Sprint 1 Tasks}}\label{index_autotoc_md16}
+\end{DoxyItemize}\hypertarget{index_autotoc_md165}{}\doxysection{\texorpdfstring{Sprint 1 Goal}{Sprint 1 Goal}}\label{index_autotoc_md165}
+Create a basic Windows launcher prototype with a simple interface.\hypertarget{index_autotoc_md166}{}\doxysection{\texorpdfstring{Sprint 1 Tasks}{Sprint 1 Tasks}}\label{index_autotoc_md166}
 
 \begin{DoxyItemize}
 \item Set up Git\+Hub repository
@@ -41,21 +41,32 @@ Create a basic Windows launcher prototype with a simple interface.\hypertarget{i
 \item Research Windows API basics
 \item Research GUI/\+window options
 \item Create basic launcher window
-\end{DoxyItemize}\hypertarget{index_autotoc_md17}{}\doxysection{\texorpdfstring{Build Instructions}{Build Instructions}}\label{index_autotoc_md17}
-To be updated once the CMake project structure is finalized.
+\end{DoxyItemize}\hypertarget{index_autotoc_md167}{}\doxysection{\texorpdfstring{Sprint 2 Goal}{Sprint 2 Goal}}\label{index_autotoc_md167}
+Allow the launcher to open and close quickly using a hotkey and run basic actions.\hypertarget{index_autotoc_md168}{}\doxysection{\texorpdfstring{Sprint 2 Tasks}{Sprint 2 Tasks}}\label{index_autotoc_md168}
 
-Expected general steps:\+
+\begin{DoxyItemize}
+\item Research Windows API {\ttfamily Register\+Hot\+Key}
+\item Implement global hotkey to open launcher
+\item Add Escape key listener to close launcher
+\item Research window focus behavior
+\item Restore focus to previous app after launcher closes
+\item Create placeholder macro/\+script action
+\item Connect GUI buttons to app launching actions
+\item Test launching Notepad and Calculator from GUI
+\item Add save/\+load functions for menu actions
+\item Improve mouse events for radial wheel selection
+\item Test launcher behavior over full-\/screen apps
+\item Log bugs and open issues in Git\+Hub
+\item Update README with hotkey usage instructions
+\end{DoxyItemize}\hypertarget{index_autotoc_md169}{}\doxysection{\texorpdfstring{Build Instructions}{Build Instructions}}\label{index_autotoc_md169}
+\hypertarget{index_autotoc_md170}{}\doxysubsection{\texorpdfstring{Requirements}{Requirements}}\label{index_autotoc_md170}
 
+\begin{DoxyItemize}
+\item Windows
+\item CMake 4.\+3+
+\item Visual Studio Build Tools 2022 with Desktop development for C++
+\item Qt 6 MSVC 2022 64-\/bit
+\end{DoxyItemize}\hypertarget{index_autotoc_md171}{}\doxysubsection{\texorpdfstring{Configure and Build}{Configure and Build}}\label{index_autotoc_md171}
+From the project root:\+
 
-\begin{DoxyCode}{0}
-\DoxyCodeLine{git\ clone\ <repo-\/url>}
-\DoxyCodeLine{cd\ Wheel-\/Time}
-\DoxyCodeLine{mkdir\ build}
-\DoxyCodeLine{cd\ build}
-\DoxyCodeLine{cmake\ ..}
-\DoxyCodeLine{cmake\ -\/-\/build\ .}
-\DoxyCodeLine{}
-\DoxyCodeLine{\#\#\ Document\ Regeneration}
-
-\end{DoxyCode}
- bash cd docs doxygen \`{}\`{}\`{} 
+\`{}\`{}\`{}powershell cmake -\/S . -\/B build -\/G "{}\+Visual Studio 17 2022"{} -\/A x64 -\/DCMAKE\+\_\+\+PREFIX\+\_\+\+PATH="{}\+C:\+\textbackslash{}\+Qt\textbackslash{}6.\+11.\+1\textbackslash{}msvc2022\+\_\+64"{} cmake --build build --config Debug 

@@ -1,0 +1,82 @@
+\doxysection{Worker\+Pool.\+hpp}
+\hypertarget{_worker_pool_8hpp_source}{}\label{_worker_pool_8hpp_source}\index{E:/Github/WheelTime/app/include/App/WorkerPool.hpp@{E:/Github/WheelTime/app/include/App/WorkerPool.hpp}}
+\doxymbox{\hyperlink{_worker_pool_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <condition\_variable>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <thread>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_action_execution_context_8hpp}{App/ActionExecutionContext.hpp}}"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_thread_safe_queue_8hpp}{App/ThreadSafeQueue.hpp}}"{}}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_application_1_1_worker_result}{WorkerResult}}}
+\DoxyCodeLine{00033\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{enum\ class}\ \doxymbox{\hyperlink{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1}{Status}}}
+\DoxyCodeLine{00035\ \ \ \ \ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1a07ca5050e697392c9ed47e6453f1453f}{Completed}},\ }
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1aa0bfb8e59e6c13fc8d990781f77694fe}{Continue}},\ \ }
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1a6e04a0730cfc0bca398610196b5f8467}{Delayed}},\ \ \ }
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1aa149e85a44aeec9140e92733d9ed694e}{Cancelled}}\ \ }
+\DoxyCodeLine{00040\ \ \ \ \ \};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ std::unique\_ptr<ActionExecutionContext>\ \doxymbox{\hyperlink{struct_application_1_1_worker_result_aefb7186849daff06ad20063e925ff279}{context}};}
+\DoxyCodeLine{00043\ \ \ \ \ \doxymbox{\hyperlink{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1}{Status}}\ \doxymbox{\hyperlink{struct_application_1_1_worker_result_a4b7a582ba7176d8c1cb0dbb50b370649}{status}}\ =\ \doxymbox{\hyperlink{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1a07ca5050e697392c9ed47e6453f1453f}{Status::Completed}};}
+\DoxyCodeLine{00045\ \ \ \ \ std::chrono::steady\_clock::time\_point\ \doxymbox{\hyperlink{struct_application_1_1_worker_result_a3d10f94bb411b03ac6d65a9a5e0fc107}{wakeTime}}\{\};}
+\DoxyCodeLine{00046\ \};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00060\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_worker_pool_a6890b2975494c276e17a2a6b0f140e8a}{WorkerPool}}}
+\DoxyCodeLine{00061\ \{}
+\DoxyCodeLine{00062\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keyword}{explicit}\ \doxymbox{\hyperlink{class_application_1_1_worker_pool_a6890b2975494c276e17a2a6b0f140e8a}{WorkerPool}}(std::size\_t\ workerCount);}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00074\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_worker_pool_a6890b2975494c276e17a2a6b0f140e8a}{WorkerPool}}(std::size\_t\ workerCount,\ std::function<\textcolor{keywordtype}{void}(\doxymbox{\hyperlink{struct_application_1_1_worker_result}{WorkerResult}})>\ resultHandler);}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00077\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_worker_pool_aee86388efdf100673065b4c8759235dc}{\string~WorkerPool}}();}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_worker_pool_a96d344a16343b1416f0af6c2119b4810}{WorkerPool}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_application_1_1_worker_pool_a6890b2975494c276e17a2a6b0f140e8a}{WorkerPool}}\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00080\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_worker_pool_a6890b2975494c276e17a2a6b0f140e8a}{WorkerPool}}\ \&\doxymbox{\hyperlink{class_application_1_1_worker_pool_ad5bf90677f343c68dd39b0735316f29d}{operator=}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_application_1_1_worker_pool_a6890b2975494c276e17a2a6b0f140e8a}{WorkerPool}}\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_worker_pool_a68e931d25ce8df6b4cf2239cec4c14fc}{submit}}(std::unique\_ptr<ActionExecutionContext>\ context);}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_worker_pool_aa1a921c091516a3e3904f77a5f963643}{submitUrgent}}(std::unique\_ptr<ActionExecutionContext>\ context);}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_worker_pool_ad18f24ddd61e712793441bfdcbfc4729}{setPaused}}(\textcolor{keywordtype}{bool}\ paused);}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00104\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_worker_pool_ab3e48c59d7fc6ff4801dcc59910e895b}{isPaused}}()\ const\ noexcept;}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00110\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_worker_pool_a9fb3d58ab4ecf62ba638991971bdaf75}{waitResult}}(\doxymbox{\hyperlink{struct_application_1_1_worker_result}{WorkerResult}}\ \&out);}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_worker_pool_a2bf1d8069fb9a16c1dd53592562982df}{stop}}();}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ private:}
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{keywordtype}{void}\ workerMain();}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00122\ \ \ \ \ \textcolor{keywordtype}{void}\ deliverResult(\doxymbox{\hyperlink{struct_application_1_1_worker_result}{WorkerResult}}\ result);}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue}{ThreadSafeQueue}}<std::unique\_ptr<\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{ActionExecutionContext}}>>\ m\_inbound;}
+\DoxyCodeLine{00125\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue}{ThreadSafeQueue}}<std::unique\_ptr<\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{ActionExecutionContext}}>>\ m\_urgent;}
+\DoxyCodeLine{00126\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue}{ThreadSafeQueue}}<\doxymbox{\hyperlink{struct_application_1_1_worker_result}{WorkerResult}}>\ m\_outbound;}
+\DoxyCodeLine{00127\ \ \ \ \ std::function<\textcolor{keywordtype}{void}(\doxymbox{\hyperlink{struct_application_1_1_worker_result}{WorkerResult}})>\ m\_resultHandler;}
+\DoxyCodeLine{00128\ \ \ \ \ std::vector<std::jthread>\ m\_workers;}
+\DoxyCodeLine{00129\ }
+\DoxyCodeLine{00130\ \ \ \ \ mutable\ std::mutex\ m\_pauseMutex;}
+\DoxyCodeLine{00131\ \ \ \ \ std::condition\_variable\ m\_pauseCv;}
+\DoxyCodeLine{00132\ \ \ \ \ std::atomic<\textcolor{keywordtype}{bool}>\ m\_paused\{\textcolor{keyword}{false}\};}
+\DoxyCodeLine{00133\ \};}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \}\ \textcolor{comment}{//\ namespace\ Application}}
+
+\end{DoxyCode}
