@@ -34,11 +34,9 @@
             "id": "action-new-action",
             "items": [
                 {
-                    "holdDuration": 0,
-                    "keycode": 69,
-                    "modifiers": 0,
-                    "proceed": false,
-                    "type": "hotkey"
+                    "customTarget": "notepad.exe",
+                    "presetId": "notepad",
+                    "type": "launch_app"
                 }
             ],
             "name": "Test Action"
@@ -56,18 +54,6 @@
                 }
             ],
             "name": "Media Pause"
-        },
-        {
-            "channel": 0,
-            "id": "action-new-action-4",
-            "items": [
-                {
-                    "customTarget": "",
-                    "presetId": "calculator",
-                    "type": "launch_app"
-                }
-            ],
-            "name": "New Action"
         },
         {
             "channel": 0,
@@ -90,9 +76,11 @@
             "id": "action-new-action-6",
             "items": [
                 {
-                    "customTarget": "",
-                    "presetId": "calculator",
-                    "type": "launch_app"
+                    "holdDuration": 0,
+                    "keycode": 69,
+                    "modifiers": 0,
+                    "proceed": false,
+                    "type": "hotkey"
                 }
             ],
             "name": "New Action"
@@ -112,8 +100,8 @@
             "exitOnAction": true,
             "id": "menu-example",
             "name": "GAMBLING",
-            "triggerMod": 0,
-            "triggerVk": 0
+            "triggerMod": 6,
+            "triggerVk": 192
         },
         {
             "actionIds": [
