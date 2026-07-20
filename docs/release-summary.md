@@ -21,11 +21,11 @@ As a computer user, I want to be able to launch programs and execute scripts qui
 
 **Acceptance Criteria:**
 
-- The user can open the launcher interface.
-- The user can select an action that launches an external program.
-- The system can successfully launch test applications such as Notepad, Calculator, or Firefox.
-- The launcher remains stable after launching an external program.
-- Program launching is handled through the action system rather than being hardcoded only for one specific app.
+- The team has researched at least two C++ methods for launching external programs or scripts.
+- The team has compared system(), ShellExecute, and CreateProcess.
+- The team has a working test or documented example for launching a basic Windows app such as Notepad or Calculator.
+- The recommended launching approach is documented in the repository.
+- The chosen approach is realistic for the MVP and can be built on in future sprints.
 
 ---
 
@@ -36,11 +36,12 @@ As a gamer, I want the interface to not obscure the entire screen so I can still
 
 **Acceptance Criteria:**
 
-- The launcher appears as an overlay or small interface instead of taking over the full screen.
-- The interface allows the user to still see what is behind it.
-- The visual layout is usable while another application is open.
-- The interface includes visible action items/buttons for the user to select.
-- The launcher can be opened and closed without disrupting the user’s workflow.
+- The launcher interface has a basic window or GUI skeleton.
+- The GUI does not take up the full screen.
+- The interface includes placeholder buttons or visible UI elements for future launcher actions.
+- The team has documented research on transparency, overlay behavior, or ways to avoid blocking the screen.
+- The GUI prototype can be shown through code, a screenshot, or a design sketch.
+- The interface is simple enough to be expanded in future sprints.
 
 ---
 
@@ -51,11 +52,9 @@ As a gamer, I want to be able to bring up the interface quickly so I don't have 
 
 **Acceptance Criteria:**
 
-- The application supports a global hotkey.
-- Pressing the assigned hotkey opens the launcher interface.
-- The launcher can appear while another application is focused.
-- The launcher appears quickly enough to feel low-latency to the user.
-- The hotkey behavior works while Wheel Time is running in the background.
+- The team has implemented a global hotkey listener using the Windows API.  
+- Pressing the designated hotkey successfully renders the launcher interface on the screen.  
+- The launcher overlay successfully renders on top of other active, full-screen applications.
 
 ---
 
@@ -66,11 +65,9 @@ As a gamer, I want to be able to exit the interface quickly so that if something
 
 **Acceptance Criteria:**
 
-- The user can close or hide the launcher quickly.
-- The launcher disappears from the screen when closed.
-- The user can close the launcher using an intended quick-exit action, such as right click or Escape.
-- After the launcher closes, the user can return to the previously active application.
-- Closing the launcher does not crash the program.
+- The user can instantly close or hide the launcher by pressing the Escape key.  
+- The launcher completely disappears from the screen when closed.  
+- Upon closing, the user's mouse position is restored, and the operating system immediately returns window focus to the previously active application.
 
 ---
 
@@ -81,11 +78,9 @@ As a computer user, I want to be able to run macros/hotkeys from a visual interf
 
 **Acceptance Criteria:**
 
-- The launcher displays visual action items.
-- Clicking or selecting an action item runs the correct action.
-- The system can simulate a test key or hotkey action, such as sending `e` to the underlying app.
-- The code uses an action/executor structure so execution logic is not fully hardcoded inside UI button handlers.
-- The action system can support multiple action types, such as launching apps and simulating keys.
+-  The codebase utilizes an abstraction layer (e.g. AppAction) so execution logic is not hardcoded directly inside UI button handlers.  
+- The user can successfully launch at least two test applications (Notepad and Calculator) by clicking buttons in the UI.  
+- The README is updated with instructions on how to use the hotkeys and trigger these actions.
 
 ---
 
@@ -112,58 +107,48 @@ As a user, I want to customize my launcher actions so I can choose the programs/
 
 **Acceptance Criteria:**
 
-- The user can create or add custom launcher actions.
-- Custom actions can be connected to the visual launcher menu.
-- The user can run a custom action from the launcher.
-- The user can remove or replace actions when needed.
-- The system handles invalid or failed actions without crashing.
-- The system supports recent actions, including re-running the most recent action.
+- The user can open the settings/action management menu.
+- The user can add a new launcher action without editing code directly.
+- The user can choose a program or script for the custom action.
+- The custom action can be saved to the user’s launcher configuration.
+- The custom action appears in the launcher menu after it is saved.
+- The user can run the custom action from the launcher interface.
+- The user can delete or remove a custom action from the launcher.
+- The system handles invalid or missing program/script paths without crashing.
 
 ---
 
-### User Story 8: Search-Based Program Launcher
-
-**User Story:**  
-As a Linux/general user, I want to be able to search for programs that I don’t have set on my interface so I don’t need a separate application launcher for more general usage.
-
-**Acceptance Criteria:**
-
-- The user can open the launcher menu.
-- The user can use a search action item or search mode.
-- The user can type a program name into search.
-- Matching programs are shown or selectable.
-- Selecting a program from search launches that program.
-- Search can be used for programs that are not already pinned to the main wheel interface.
-
----
-
-### User Story 9: Search-Based Action Launcher
+### User Story 8: Search-Based Action Launcher
 
 **User Story:**  
 As a general user, I want to be able to run any action from somewhere so if I forget what menu it is associated with I can still use it.
 
 **Acceptance Criteria:**
 
-- The user can open a search mode or search action item.
-- The user can search for an existing action.
-- Matching actions are shown or selectable.
-- Selecting an action from search runs the action.
-- Search helps users find actions without remembering which menu they are connected to.
+- The user can open the launcher menu.
+- The user can select a search action item or search mode.
+- The user can search for an existing action by name or keyword.
+- Matching actions are displayed or selectable.
+- Selecting a search result runs the correct action.
+- Search works for at least two action types, such as app launching and hotkey/key simulation.
+- The search behavior is documented in the repository.
 
 ---
 
-### User Story 10: Lightweight Interface
+### User Story 9: Lightweight Interface
 
 **User Story:**  
 As a gamer, I want the interface to be lightweight so I can run it without worrying about lowering my FPS.
 
 **Acceptance Criteria:**
 
-- Wheel Time can run in the background during normal computer use.
-- The launcher can open and close repeatedly without noticeable slowdown.
-- Running basic actions does not noticeably freeze or slow the system.
+- Wheel Time can run in the background without noticeable slowdown.
+- The launcher can open and close repeatedly without freezing.
+- Running common actions does not noticeably slow the system.
 - The interface remains responsive during normal use.
-- The application avoids unnecessary heavy UI or background behavior.
+- Major performance concerns or bugs are documented.
+- The codebase is cleaned up according to the team’s coding standards.
+- Final documents are updated for the release.
 
 ---
 
