@@ -146,10 +146,10 @@ The burnup chart tracks the total Sprint 4 scope compared to the amount of work 
 
 The team will meet/check in at least three times during the sprint:
 
-* **Tuesday:** 5:30 PM — Discord check-in / task distribution
-* **Thursday:** 5:30 PM — Sprint check-in / TA-tutor visit
-* **Sunday:** 5:30 PM — Sprint check-in / wrap-up preparation
-* **Monday:** 8:00 PM — Sprint conclusion / final review preparation
-* **Tuesday:** 8:00 PM — Final Presentation and Projecet Review Practice
+* **Tuesday:** 5:30 PM - Discord check-in / task distribution
+* **Thursday:** 5:30 PM - Sprint check-in / TA-tutor visit
+* **Sunday:** 5:30 PM - Sprint check-in / wrap-up preparation
+* **Monday:** 8:00 PM - Sprint conclusion / final review preparation
+* **Tuesday:** 8:00 PM - Final Presentation and Projecet Review Practice
 
 **TA/Tutor Visit:** During Tuesday and Thursday meetings.
