@@ -1,15 +1,16 @@
 # **Sprint 3 Report**
 
-**Product Name:** Wheel Time  
-**Team Name:** Wheelest Wheels  
-**Date:** 7/14/26  
+**Product Name:** Wheel Time
+**Team Name:** Wheelest Wheels
+**Date:** 7/14/26
+
 **Sprint 3 Lead:** Ethan Jackson
 
 ## **Actions to Stop Doing**
 
 ### **Not updating each other often on what's currently being worked on**
 
-The team should update each other more often on what we are working on. Doing so helps prevent conflicts where multiple people work on the same misc extra tasks. 
+The team should update each other more often on what we are working on. Doing so helps prevent conflicts where multiple people work on the same misc extra tasks.
 
 ## **Actions to Start Doing**
 
@@ -86,11 +87,12 @@ Create settings dialog/window using Win32 API or QT - 5 hours
 
 The final burnup chart for Sprint 3 shows 62 completed ideal hours out of 64 total estimated ideal hours at the end of the sprint.
 
-**62 completed ideal hours / 64 total estimated ideal hours**  
-![Sprint 3 Burnup Chart](https://raw.githubusercontent.com/goatfishplays/WheelTime/refs/heads/main/docs/scrum/sprint3-burnup-chart.png)
+**62 completed ideal hours / 64 total estimated ideal hours**
+
+![Sprint 3 Final Burnup Chart](https://raw.githubusercontent.com/goatfishplays/WheelTime/refs/heads/main/docs/scrum/sprint3-burnup-chart.png)
 
 ## **Sprint 3 Summary**
 
-Sprint 3 pushed *Wheel Time* from a rigid prototype containing hardcoded strings into a truly modular tool managed with an active settings platform. By adding file pickers and wiring configuration saving parameters, the app no longer relies on code rewrites or text editing for simple changes. Also, the team successfully closed out a focus window bug from Sprint 2, creating a seamless open-and-close loop that won't disrupt gaming sessions.
+Sprint 3 pushed the project from a rigid prototype containing hardcoded strings into a truly modular tool managed with an active settings platform. By adding file pickers and implementing serialization for configs, the app no longer relies on code rewrites or text editing for simple changes. Also, the team successfully closed out a focus window bug from Sprint 2, creating a seamless open-and-close loop that won't disrupt gaming sessions.
 While configuration features are operational, final radial context integrations and script launch errors require additional testing before this is marked fully completed. Moving into Sprint 4, the focus will turn toward ironing out remaining launch edge cases, looking into any performance impovements, and implementing a more extensive testing suite.
 
