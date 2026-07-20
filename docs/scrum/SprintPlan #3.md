@@ -33,6 +33,15 @@ Allow users to configure launcher actions without editing code.
 
 **Total for User Story 1:** **38 hours**
 
+**Acceptance Criteria:**
+
+* The user can open a settings menu from the launcher.
+* The settings menu allows the user to add a new action.
+* The user can add the new action to the menu.
+* The user can save settings changes.
+* After saving, the new action is visible when the launcher menu is opened again.
+* The user does not need to directly modify code or a text file to add the action.
+
 ### **User Story 2 \- Medium-High Priority**
 
 **As a user, I want to customize my launcher actions so I can choose the programs/scripts I use most often. (8 Points)**
@@ -50,6 +59,18 @@ Allow users to configure launcher actions without editing code.
 * Test the launch integration with running applications \- 3 hours
 
 **Total for User Story 2: 26 hours**
+
+**Acceptance Criteria:**
+
+* The user can open the settings/action management menu.
+* The user can add a new launcher action without editing code directly.
+* The user can choose a program or script for the custom action.
+* The custom action can be saved to the user’s launcher configuration.
+* The custom action appears in the launcher menu after it is saved.
+* The user can run the custom action from the launcher interface.
+* The user can delete or remove a custom action from the launcher.
+* The system handles invalid or missing program/script paths without crashing.
+
 
 ### **Sprint 3 Spikes**
 
