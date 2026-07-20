@@ -133,9 +133,9 @@ The initial burnup chart for Sprint 3 shows **0 completed ideal hours out of 64 
 
 The team will meet/check in at least three times during the sprint:
 
-* **Tuesday:** 5:30 PM — Discord check-in (full meeting)  
-* **Thursday:** 5:30 PM — Sprint check in / task distribution  
-* **Monday:** 8:00 PM — Sprint conclusion
+* **Tuesday:** 5:30 PM - Discord check-in (full meeting)  
+* **Thursday:** 5:30 PM - Sprint check in / task distribution  
+* **Monday:** 8:00 PM - Sprint conclusion
 
 **TA/Tutor Visit:** During Tuesday and Thursday meeting 
 
