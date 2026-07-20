@@ -80,39 +80,26 @@ Allow users to configure launcher actions without editing code.
 
 ## **Initial Task Assignment**
 
-* **Ronan Wong:**   
-* **Aedan Benavides:**   
-* **Ethan Jackson:**   
-* **Muneeb Syed:**   
-* **Mithil Harish:** 
+* **Ronan Wong:** User Story 2, parallel action execution with action item polishing
+* **Aedan Benavides:** User Story 1, documentation, create definition of done and acceptance criteria
+* **Ethan Jackson:** User Story 2, testing launcher, research secure execution, handle launch errors
+* **Muneeb Syed:** User Story 2, implement launcher base, integrate actions with radial menu
+* **Mithil Harish:** User Story 1, add settings base, add setting to change default hotkey
 
 ## **Initial Burnup Chart**
 
-The initial burnup chart for Sprint 3 should show **0 completed ideal hours out of 64 total estimated ideal hours** at the start of the sprint.
+The initial burnup chart for Sprint 3 shows **0 completed ideal hours out of 64 total estimated ideal hours** at the start of the sprint.
 
-The Sprint 3 burnup chart will be updated as tasks are completed and should be available in the team workspace/lab.
+![Sprint 3 Burnup Chart](https://raw.githubusercontent.com/goatfishplays/WheelTime/refs/heads/main/docs/scrum/sprint3-burnup-chart.png)
 
 ## **Initial Scrum Board**
 
-The Sprint 3 scrum board should be labeled:
-
-**Sprint 3 — Wheel Time**
-
-The board should include the following columns:
-
-1. **User Stories**  
-2. **Tasks Not Started**  
-3. **Tasks In Progress**  
-4. **Tasks Completed**
-
-Initial cards should include:
-
-**User Stories**
+### **User Stories**
 
 * Create a configurable settings menu  
 * Customize launcher actions
 
-**Tasks Not Started**
+### **Tasks Not Started**
 
 * Design settings UI  
 * Implement settings dialog  
@@ -120,14 +107,6 @@ Initial cards should include:
 * Implement launcher customization  
 * Integrate launcher actions  
 * Testing
-
-**Tasks In Progress**
-
-* 
-
-**Tasks Completed**
-
-* 
 
 ## **Scrum Times**
 
