@@ -40,6 +40,16 @@ bool isMediaVirtualKey(WORD vk)
     case VK_MEDIA_STOP:
     case VK_MEDIA_PLAY_PAUSE:
     case VK_LAUNCH_MEDIA_SELECT:
+    case VK_LAUNCH_MAIL:
+    case VK_LAUNCH_APP1:
+    case VK_LAUNCH_APP2:
+    case VK_BROWSER_BACK:
+    case VK_BROWSER_FORWARD:
+    case VK_BROWSER_REFRESH:
+    case VK_BROWSER_STOP:
+    case VK_BROWSER_SEARCH:
+    case VK_BROWSER_FAVORITES:
+    case VK_BROWSER_HOME:
         return true;
     default:
         return false;
@@ -67,6 +77,7 @@ bool isExtendedVirtualKey(WORD vk)
     case VK_LWIN:
     case VK_RWIN:
     case VK_APPS:
+    case VK_SNAPSHOT: // Print Screen
         return true;
     default:
         return isMediaVirtualKey(vk);

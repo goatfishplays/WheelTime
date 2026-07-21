@@ -500,7 +500,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_itemSearchPage = new QWidget(m_itemDetailStack);
     auto *searchForm = new QFormLayout(m_itemSearchPage);
     m_searchActionsCheck = new QCheckBox("Search actions", m_itemSearchPage);
-    m_searchProgramsCheck = new QCheckBox("Search programs (Start Menu)", m_itemSearchPage);
+    m_searchProgramsCheck = new QCheckBox("Search programs", m_itemSearchPage);
     m_searchMenusCheck = new QCheckBox("Search menus", m_itemSearchPage);
     m_searchWebCheck = new QCheckBox("Web search fallback", m_itemSearchPage);
     m_searchWebUrlEdit = new QLineEdit(m_itemSearchPage);
@@ -2183,9 +2183,14 @@ QString SettingsWindow::keyDisplayName(int vk) const
     {
         return QString(QChar(vk));
     }
-    if (vk >= 0x70 && vk <= 0x7B)
+    // VK_F1 (0x70) through VK_F24 (0x87)
+    if (vk >= 0x70 && vk <= 0x87)
     {
         return QString("F%1").arg(vk - 0x6F);
+    }
+    if (vk >= 0x60 && vk <= 0x69)
+    {
+        return QString("Numpad %1").arg(vk - 0x60);
     }
 
     switch (vk)
@@ -2210,6 +2215,63 @@ QString SettingsWindow::keyDisplayName(int vk) const
         return "Backspace";
     case 0x2E:
         return "Delete";
+    case 0x2D:
+        return "Insert";
+    case 0x24:
+        return "Home";
+    case 0x23:
+        return "End";
+    case 0x21:
+        return "Page Up";
+    case 0x22:
+        return "Page Down";
+    case 0x14:
+        return "Caps Lock";
+    case 0x90:
+        return "Num Lock";
+    case 0x91:
+        return "Scroll Lock";
+    case 0x2C:
+        return "Print Screen";
+    case 0x13:
+        return "Pause";
+    case 0x5D:
+        return "Menu";
+    // OEM / punctuation (US layout labels; Shift variants noted where useful)
+    case 0xBA:
+        return "; / :";
+    case 0xBB:
+        return "= / +";
+    case 0xBC:
+        return ", / <";
+    case 0xBD:
+        return "- / _";
+    case 0xBE:
+        return ". / >";
+    case 0xBF:
+        return "Slash / ?";
+    case 0xC0:
+        return "` / ~";
+    case 0xDB:
+        return "[ / {";
+    case 0xDC:
+        return "\\ / |";
+    case 0xDD:
+        return "] / }";
+    case 0xDE:
+        return "' / \"";
+    // Numpad operators
+    case 0x6A:
+        return "Numpad *";
+    case 0x6B:
+        return "Numpad +";
+    case 0x6D:
+        return "Numpad -";
+    case 0x6E:
+        return "Numpad .";
+    case 0x6F:
+        return "Numpad /";
+    // Media
     case 0xAD:
         return "Mute";
     case 0xAE:
@@ -2226,6 +2288,27 @@ QString SettingsWindow::keyDisplayName(int vk) const
         return "Play/Pause";
     case 0xB5:
         return "Media Select";
+    // Browser / launch
+    case 0xA6:
+        return "Browser Back";
+    case 0xA7:
+        return "Browser Forward";
+    case 0xA8:
+        return "Browser Refresh";
+    case 0xA9:
+        return "Browser Stop";
+    case 0xAA:
+        return "Browser Search";
+    case 0xAB:
+        return "Browser Favorites";
+    case 0xAC:
+        return "Browser Home";
+    case 0xB4:
+        return "Launch Mail";
+    case 0xB6:
+        return "Launch App 1";
+    case 0xB7:
+        return "Launch App 2";
     default:
         return QString("Key %1").arg(vk);
     }
@@ -2262,16 +2345,79 @@ void SettingsWindow::populateHotkeyKeyCombo()
         m_hotkeyKeyCombo->addItem(QString(QChar(key)), key);
     }
 
-    const std::vector<int> extraKeys = {
-        0x0D, 0x09, 0x1B, 0x20, 0x25, 0x26, 0x27, 0x28, 0x08, 0x2E,
-        0x70, 0x71, 0x72, 0x73, 0x74, 0x75,
-        0x76, 0x77, 0x78, 0x79, 0x7A, 0x7B};
-    for (int key : extraKeys)
+    // Editing / navigation
+    const std::vector<int> navKeys = {
+        0x0D, // Enter
+        0x09, // Tab
+        0x1B, // Esc
+        0x20, // Space
+        0x08, // Backspace
+        0x2E, // Delete
+        0x2D, // Insert
+        0x25, // Left
+        0x26, // Up
+        0x27, // Right
+        0x28, // Down
+        0x24, // Home
+        0x23, // End
+        0x21, // Page Up
+        0x22, // Page Down
+        0x14, // Caps Lock
+        0x90, // Num Lock
+        0x91, // Scroll Lock
+        0x2C, // Print Screen
+        0x13, // Pause
+        0x5D, // Menu (Apps)
+    };
+    for (int key : navKeys)
     {
         m_hotkeyKeyCombo->addItem(keyDisplayName(key), key);
     }
 
-    // Windows media keys (VK_VOLUME_* / VK_MEDIA_*). Sent without modifiers.
+    // F1–F24
+    for (int key = 0x70; key <= 0x87; ++key)
+    {
+        m_hotkeyKeyCombo->addItem(keyDisplayName(key), key);
+    }
+
+    // OEM punctuation (US layout). Use Shift modifier for the shifted glyph
+    // (e.g. Shift + "- / _" for underscore, Shift + "= / +" for plus).
+    const std::vector<int> symbolKeys = {
+        0xBD, // - / _
+        0xBB, // = / +
+        0xBA, // ; / :
+        0xDE, // ' / "
+        0xBC, // , / <
+        0xBE, // . / >
+        0xBF, // / / ?
+        0xC0, // ` / ~
+        0xDB, // [ / {
+        0xDD, // ] / }
+        0xDC, // \ / |
+    };
+    for (int key : symbolKeys)
+    {
+        m_hotkeyKeyCombo->addItem(keyDisplayName(key), key);
+    }
+
+    // Numpad 0–9 and operators
+    for (int key = 0x60; key <= 0x69; ++key)
+    {
+        m_hotkeyKeyCombo->addItem(keyDisplayName(key), key);
+    }
+    const std::vector<int> numpadOps = {
+        0x6A, // *
+        0x6B, // +
+        0x6D, // -
+        0x6E, // .
+        0x6F, // /
+    };
+    for (int key : numpadOps)
+    {
+        m_hotkeyKeyCombo->addItem(keyDisplayName(key), key);
+    }
+
+    // Windows media keys. Sent without modifiers.
     const std::vector<int> mediaKeys = {
         0xB3, // Play/Pause
         0xB0, // Next Track
@@ -2285,6 +2431,24 @@ void SettingsWindow::populateHotkeyKeyCombo()
     for (int key : mediaKeys)
     {
         m_hotkeyKeyCombo->addItem(QString("Media: %1").arg(keyDisplayName(key)), key);
+    }
+
+    // Browser / launch keys (same SendInput path as media).
+    const std::vector<int> browserKeys = {
+        0xA6, // Browser Back
+        0xA7, // Browser Forward
+        0xA8, // Browser Refresh
+        0xA9, // Browser Stop
+        0xAA, // Browser Search
+        0xAB, // Browser Favorites
+        0xAC, // Browser Home
+        0xB4, // Launch Mail
+        0xB6, // Launch App 1
+        0xB7, // Launch App 2
+    };
+    for (int key : browserKeys)
+    {
+        m_hotkeyKeyCombo->addItem(keyDisplayName(key), key);
     }
 }
 

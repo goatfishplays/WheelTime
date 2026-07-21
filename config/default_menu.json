@@ -61,8 +61,8 @@
             "items": [
                 {
                     "searchActions": true,
-                    "searchMenus": false,
-                    "searchPrograms": false,
+                    "searchMenus": true,
+                    "searchPrograms": true,
                     "type": "search",
                     "webSearch": true,
                     "webSearchUrl": "https://www.google.com/search?q={query}"
