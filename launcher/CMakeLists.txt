@@ -1,4 +1,5 @@
 qt_add_executable(${PROJECT_NAME} 
+    WIN32
     src/main.cpp
 )
 # add_executable(Launcher
@@ -23,4 +24,8 @@ qt_add_resources(${PROJECT_NAME} "target"
     BASE "${CMAKE_SOURCE_DIR}/resources/styles"
     FILES
         "${CMAKE_SOURCE_DIR}/resources/styles/defaultWheel.qss"
+)
+
+install(TARGETS ${PROJECT_NAME}
+    RUNTIME DESTINATION "."
 )

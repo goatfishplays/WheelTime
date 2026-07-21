@@ -10,6 +10,7 @@
 #include <QJsonParseError>
 #include <QJsonValue>
 #include <QRegularExpression>
+#include <QStandardPaths>
 #include <QDebug>
 
 #include <algorithm>
@@ -32,6 +33,47 @@ namespace
             QDir(appDir).filePath("config/default_menu.json"),
             QDir(appDir).filePath("../config/default_menu.json"),
             QDir(appDir).filePath("../../config/default_menu.json")};
+    }
+
+    QString userConfigPath()
+    {
+        QString configRoot = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+        if (configRoot.isEmpty())
+        {
+            configRoot = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+        }
+        if (configRoot.isEmpty())
+        {
+            configRoot = QDir::home().filePath(".wheeltime");
+        }
+        return QDir(configRoot).filePath("default_menu.json");
+    }
+
+    bool seedUserConfigIfMissing(const QString &destination)
+    {
+        if (QFile::exists(destination))
+        {
+            return true;
+        }
+
+        const QFileInfo destinationInfo(destination);
+        QDir().mkpath(destinationInfo.absolutePath());
+
+        for (const QString &candidate : defaultConfigCandidates())
+        {
+            if (!QFile::exists(candidate))
+            {
+                continue;
+            }
+            if (QFile::copy(candidate, destination))
+            {
+                qInfo() << "Seeded user menu config from" << candidate << "to" << destination;
+                return true;
+            }
+            qWarning() << "Could not copy default menu config from" << candidate << "to" << destination;
+        }
+
+        return false;
     }
 
     QString slugify(const QString &seed, const QString &prefix)
@@ -484,15 +526,13 @@ namespace
 
 QString MenuConfigLoader::defaultConfigPath()
 {
-    for (const QString &candidate : defaultConfigCandidates())
+    const QString writableConfig = userConfigPath();
+    if (seedUserConfigIfMissing(writableConfig) || QFile::exists(writableConfig))
     {
-        if (QFile::exists(candidate))
-        {
-            return QFileInfo(candidate).absoluteFilePath();
-        }
+        return QFileInfo(writableConfig).absoluteFilePath();
     }
 
-    return QFileInfo(QDir::current().filePath("config/default_menu.json")).absoluteFilePath();
+    return QFileInfo(writableConfig).absoluteFilePath();
 }
 
 bool MenuConfigLoader::loadConfig(const QString &filepath, AppConfig &appConfig, std::vector<Action> &actions, std::vector<Menu *> &menus)
