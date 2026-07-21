@@ -121,6 +121,13 @@ App::App()
     // Connect escapePressed signal from Gui to hide and return focus
     QObject::connect(&gui, &Gui::escapePressed, [this]()
                      {
+                         // Settings has an explicit Close button. Escaping out via
+                         // hideGui() skips resumeHotkeys() / scheduler resume and
+                         // leaves menu triggers permanently unregistered.
+                         if (gui.isSettingsVisible())
+                         {
+                             return;
+                         }
                          if (gui.isSearchVisible())
                          {
                              hideSearchOverlay();
@@ -643,6 +650,18 @@ void App::hideGui()
                 hideGui();
             },
             Qt::QueuedConnection);
+        return;
+    }
+
+    // Settings must leave through the same cleanup as Close (resume OS hotkeys
+    // and the scheduler). The wheel dismiss path below does not do that.
+    if (gui.isSettingsVisible())
+    {
+        if (m_scheduler)
+        {
+            m_scheduler->resume();
+        }
+        restoreOverlayAfterSettings();
         return;
     }
 

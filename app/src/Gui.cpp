@@ -217,7 +217,9 @@ bool Gui::eventFilter(QObject *watched, QEvent *event)
 
 void Gui::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Escape)
+    // Settings is dismissed with Close, not Escape (Escape cancels hotkey
+    // recording inside the editor and must not tear the overlay down).
+    if (event->key() == Qt::Key_Escape && m_overlayMode != OverlayMode::Settings)
     {
         emit escapePressed();
     }
