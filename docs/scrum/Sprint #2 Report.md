@@ -1,7 +1,7 @@
 # **Sprint 2 Report**
 
-**Product Name:** Wheel Time
-**Team Name:** Wheelest Wheels
+**Product Name:** Wheel Time  
+**Team Name:** Wheelest Wheels  
 **Date:** 7/9/26
 
 **Sprint 2 lead:** Mithil Harish
