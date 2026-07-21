@@ -259,8 +259,7 @@ QToolButton#wheelActionButton {
     padding: 8px 10px;
     min-width: 96px;
     min-height: 72px;
-    /* qproperty-iconSize: 40px 40px; */
-    qproperty-iconSize: 64px 64px;
+    qproperty-iconSize: 96px 96px;
 }
 
 QToolButton#wheelActionButton:hover {
@@ -280,7 +279,7 @@ QToolButton#wheelActionButton[selectedAction="true"] {
     padding: 10px 12px;
     min-width: 112px;
     min-height: 88px;
-    qproperty-iconSize: 48px 48px;
+    qproperty-iconSize: 104px 104px;
 }
 
 QToolButton#wheelActionButton[selectedAction="false"] {
@@ -289,7 +288,7 @@ QToolButton#wheelActionButton[selectedAction="false"] {
     padding: 8px 10px;
     min-width: 96px;
     min-height: 72px;
-    qproperty-iconSize: 40px 40px;
+    qproperty-iconSize: 96px 96px;
 }
 
 QCheckBox {
