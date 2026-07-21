@@ -837,7 +837,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 }
                 else if (typeId == "hotkey")
                 {
-                    item = std::make_unique<AI_Keystroke>('E', 0, 0.0f, false);
+                    item = std::make_unique<AI_Keystroke>('A', 0, 0.0f, false);
                 }
                 else if (typeId == "mouse_button")
                 {

@@ -2,6 +2,7 @@
     "actions": [
         {
             "channel": 0,
+            "icon": "E:/Media/Images/Reference/microphone.png",
             "id": "action-new-action-2",
             "items": [
                 {
@@ -16,7 +17,7 @@
         },
         {
             "channel": 0,
-            "icon": "E:/Media/Images/PixelArt/torpinFastFetch.png",
+            "icon": "E:/Media/Images/Reference/headphones.png",
             "id": "action-new-action-5",
             "items": [
                 {
@@ -31,18 +32,7 @@
         },
         {
             "channel": 0,
-            "icon": "C:/Users/Torpin Pascual/Pictures/Screenshots/Screenshot 2026-07-15 144429.png",
-            "id": "action-new-action",
-            "items": [
-                {
-                    "menuId": "menu-new-menu-2",
-                    "type": "menu"
-                }
-            ],
-            "name": "Test Action"
-        },
-        {
-            "channel": 0,
+            "icon": "E:/Media/Images/Reference/pause-play.png",
             "id": "action-new-action-3",
             "items": [
                 {
@@ -57,6 +47,7 @@
         },
         {
             "channel": 0,
+            "icon": "E:/Media/Images/Reference/searching-bar.png",
             "id": "action-search",
             "items": [
                 {
@@ -108,7 +99,6 @@
             "actionIds": [
                 "action-new-action-2",
                 "action-new-action-5",
-                "action-new-action",
                 "action-new-action-3",
                 "action-search"
             ],
@@ -116,7 +106,7 @@
             "executeOnRelease": true,
             "exitOnAction": true,
             "id": "menu-example",
-            "name": "GAMBLING",
+            "name": "Main",
             "restoreMouseOnClose": true,
             "triggerMod": 6,
             "triggerVk": 192
@@ -130,7 +120,7 @@
             "executeOnRelease": false,
             "exitOnAction": false,
             "id": "menu-new-menu",
-            "name": "test 1",
+            "name": "Video Demo",
             "restoreMouseOnClose": true,
             "triggerMod": 6,
             "triggerVk": 186
