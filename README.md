@@ -13,7 +13,7 @@ WheelTime is a Windows radial launcher for quick actions, app launches, hotkeys,
 
 ## Get WheelTime
 
-### Option 1: Installer
+### Option 1: Installer (Recommended Download)
 
 [Download WheelTime](https://github.com/goatfishplays/WheelTime/releases/latest)
 
@@ -22,7 +22,7 @@ WheelTime is a Windows radial launcher for quick actions, app launches, hotkeys,
 - Adds normal app shortcuts when installer support is available.
 - Windows may show an unknown-publisher warning because the installer is not code-signed.
 
-### Option 2: Portable Zip
+### Option 2: Portable Zip (Portable option as backup)
 
 Download `WheelTime-portable-windows.zip` from a release.
 
