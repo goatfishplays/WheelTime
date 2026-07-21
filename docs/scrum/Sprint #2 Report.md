@@ -1,7 +1,7 @@
 # **Sprint 2 Report**
 
-**Product Name:** Wheel Time
-**Team Name:** Wheelest Wheels
+**Product Name:** Wheel Time  
+**Team Name:** Wheelest Wheels  
 **Date:** 7/9/26
 
 **Sprint 2 lead:** Mithil Harish
@@ -96,10 +96,6 @@ Partially Completed Work:
 * **Average ideal work hours completed per day:** 8.82 hours/day (123.5 total hrs / 14 total days)
 
 ## **Final Burnup Chart**
-
-The final Sprint 2 burnup chart shows the teams completed ideal hours out of the total estimated 67.5 ideal hours. The final burnup value is:
-
-**63.5 completed ideal hours / 67.5 total estimated ideal hours**
 
 ![Sprint 2 Final Burnup Chart](https://github.com/goatfishplays/WheelTime/blob/main/docs/images/final-burnup-chart-s2.png)
 
