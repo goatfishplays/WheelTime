@@ -119,6 +119,9 @@ namespace Application
         QPushButton *m_hotkeyRecordButton{nullptr};
         QPushButton *m_hotkeyClearButton{nullptr};
 
+        QGroupBox *m_globalGroup{nullptr};
+        QCheckBox *m_darkModeCheck{nullptr};
+
         QLineEdit *m_menuNameEdit{nullptr};
         QCheckBox *m_executeOnReleaseCheck{nullptr};
         QCheckBox *m_exitOnActionCheck{nullptr};

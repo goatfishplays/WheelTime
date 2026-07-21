@@ -131,7 +131,14 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     leftLayout->setContentsMargins(12, 12, 12, 12);
     leftLayout->setSpacing(12);
 
-    // global settings group removed
+    // Global Settings
+    m_globalGroup = new QGroupBox("Global Settings", leftPane);
+    auto *globalLayout = new QVBoxLayout(m_globalGroup);
+    m_darkModeCheck = new QCheckBox("Dark Mode", m_globalGroup);
+    m_darkModeCheck->setObjectName("darkModeToggle");
+    globalLayout->addWidget(m_darkModeCheck);
+    leftLayout->addWidget(m_globalGroup);
+
     auto *menusGroup = new QGroupBox("Menus", leftPane);
     auto *menusLayout = new QVBoxLayout(menusGroup);
     m_menuList = new QListWidget(menusGroup);
@@ -574,7 +581,10 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                     QMessageBox::warning(this, "Invalid Configuration", errorMessage);
                     return;
                 }
-                emit saveRequested(); });
+                emit saveRequested();
+                if (m_darkModeCheck) {
+                    m_darkModeCheck->setText(m_darkModeCheck->isChecked() ? "Light Mode" : "Dark Mode");
+                } });
 
     connect(m_hotkeyRecordButton, &QPushButton::clicked, this, [this]()
             {
@@ -1427,10 +1437,17 @@ void SettingsWindow::closeEvent(QCloseEvent *event)
 
 void SettingsWindow::loadWorkingCopy(const AppConfig &appConfig, const std::vector<Action> &actions, const std::vector<Menu> &menus)
 {
+    m_isRefreshing = true;
+
     m_appConfig = appConfig;
     m_actions = actions;
     m_menus = menus;
     m_selectionKind = SelectionKind::None;
+
+    if (m_darkModeCheck) {
+        m_darkModeCheck->setChecked(m_appConfig.darkMode);
+        m_darkModeCheck->setText(m_appConfig.darkMode ? "Light Mode" : "Dark Mode");
+    }
     
     updateHotkeyButtonText();
     
@@ -1452,7 +1469,11 @@ void SettingsWindow::loadWorkingCopy(const AppConfig &appConfig, const std::vect
 
 void SettingsWindow::exportWorkingCopy(AppConfig &appConfig, std::vector<Action> &actions, std::vector<Menu> &menus) const
 {
-    appConfig = m_appConfig;
+    if (m_darkModeCheck) {
+        appConfig.darkMode = m_darkModeCheck->isChecked();
+    } else {
+        appConfig = m_appConfig;
+    }
     actions = m_actions;
     menus = m_menus;
 }

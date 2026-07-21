@@ -303,8 +303,12 @@ namespace
         return Action(parseItems(actionObject.value("items").toArray()), name, icon, id, channel);
     }
 
-    bool loadNewSchema(const QJsonObject &rootObject, std::vector<Action> &actions, std::vector<Menu *> &menus)
+    bool loadNewSchema(const QJsonObject &rootObject, AppConfig &appConfig, std::vector<Action> &actions, std::vector<Menu *> &menus)
     {
+        if (rootObject.contains("appConfig")) {
+            QJsonObject appConfigObj = rootObject.value("appConfig").toObject();
+            appConfig.darkMode = appConfigObj.value("darkMode").toBool(false);
+        }
         const QJsonArray actionsArray = rootObject.value("actions").toArray();
         const QJsonArray menusArray = rootObject.value("menus").toArray();
         if (menusArray.isEmpty())
@@ -342,7 +346,7 @@ namespace
         return !menus.empty();
     }
 
-    bool loadLegacySchema(const QJsonObject &rootObject, std::vector<Action> &actions, std::vector<Menu *> &menus)
+    bool loadLegacySchema(const QJsonObject &rootObject, AppConfig &appConfig, std::vector<Action> &actions, std::vector<Menu *> &menus)
     {
         const QJsonArray menusArray = rootObject.value("menus").toArray();
         if (menusArray.isEmpty())
@@ -556,10 +560,10 @@ bool MenuConfigLoader::loadConfig(const QString &filepath, AppConfig &appConfig,
     // absent, treat the file as the older menu-owned schema for compatibility.
     if (rootObject.contains("actions"))
     {
-        return loadNewSchema(rootObject, actions, menus);
+        return loadNewSchema(rootObject, appConfig, actions, menus);
     }
 
-    return loadLegacySchema(rootObject, actions, menus);
+    return loadLegacySchema(rootObject, appConfig, actions, menus);
 }
 
 bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appConfig, const std::vector<Action> &actions, const std::vector<Menu *> &menus)
@@ -615,7 +619,11 @@ bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appC
         menusArray.append(menuObject);
     }
 
+    QJsonObject appConfigObj;
+    appConfigObj.insert("darkMode", appConfig.darkMode);
+
     QJsonObject rootObject;
+    rootObject.insert("appConfig", appConfigObj);
     rootObject.insert("actions", actionsArray);
     rootObject.insert("menus", menusArray);
 

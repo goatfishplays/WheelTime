@@ -70,16 +70,6 @@ int main(int argc, char *argv[])
                              }
                          }
                      });
-    QFile file(":/styles/defaultWheel.qss");
-
-    if (file.open(QFile::ReadOnly))
-    {
-        qApp->setStyleSheet(file.readAll());
-    }
-    else
-    {
-        qDebug() << "Failed to open resource";
-    }
     // QApplication::setStyle("Fusion");
 
     return qtApp.exec();

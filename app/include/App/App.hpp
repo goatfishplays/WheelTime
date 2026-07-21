@@ -30,6 +30,7 @@ namespace Application
 
     struct AppConfig
     {
+        bool darkMode = false;
     };
 
     /**
@@ -130,6 +131,12 @@ namespace Application
         bool saveConfig();
         /// @brief Replaces the live runtime config with an edited working copy.
         bool applyConfig(const AppConfig &appConfig, const std::vector<Action> &actions, const std::vector<Menu> &menus);
+
+        /**
+         * @brief Applies the application's visual theme based on the given boolean.
+         * @param isDark True if the dark theme should be applied, false for the light theme.
+         */
+        void applyTheme(bool isDark);
         /// @brief Re-renders the active menu after config changes.
         void refreshActiveMenu();
         QString getConfigPath() const;

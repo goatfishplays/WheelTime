@@ -104,6 +104,8 @@ App::App()
         loadedMenus.push_back(new Menu(0, 0, false, false, true, false, "Config Error", {"action-config-missing"}, "menu-config-error"));
     }
 
+    applyTheme(m_appConfig.darkMode);
+
     bool anyHotkey = false;
     for (Menu* m : loadedMenus) {
         if (m->triggerMod == 0 && m->triggerVk == 0) continue;
@@ -989,6 +991,7 @@ bool App::applyConfig(const AppConfig &appConfig, const std::vector<Action> &act
     }
 
     m_appConfig = appConfig;
+    applyTheme(m_appConfig.darkMode);
 
     // Drop in-flight macros that may reference old library Actions / menus.
     if (m_scheduler)
@@ -1046,4 +1049,21 @@ void App::refreshActiveMenu()
 QString App::getConfigPath() const
 {
     return m_configPath;
+}
+
+void App::applyTheme(bool isDark)
+{
+    static int currentTheme = -1;
+    int newTheme = isDark ? 1 : 0;
+    if (currentTheme == newTheme)
+    {
+        return;
+    }
+
+    QFile file(isDark ? ":/styles/darkWheel.qss" : ":/styles/defaultWheel.qss");
+    if (file.open(QFile::ReadOnly))
+    {
+        qApp->setStyleSheet(file.readAll());
+        currentTheme = newTheme;
+    }
 }
