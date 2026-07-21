@@ -177,6 +177,7 @@ namespace Application
         QLabel *m_cancelHelpLabel{nullptr};
         QSpinBox *m_nthSpin{nullptr};
         QLabel *m_nthHelpLabel{nullptr};
+        QPushButton *m_resetFrequenciesButton{nullptr};
         QComboBox *m_socketProtocolCombo{nullptr};
         QLineEdit *m_socketDestinationEdit{nullptr};
         QLineEdit *m_socketMessageEdit{nullptr};

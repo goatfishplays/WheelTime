@@ -118,6 +118,8 @@ namespace Application
          * Does not record a use.
          */
         Action *nthFrequentAction(int n);
+        /// @brief Clears all action launch frequency counts and persists history.
+        void resetActionFrequencies();
         /// @brief Global hotkey callback used to show or hide the launcher.
         void onHotkeyTriggered(int hotkeyId);
         /// @brief Opens the non-modal settings editor window.

@@ -144,6 +144,12 @@ void ActionHistory::pruneToLibrary(const std::vector<std::string> &validIds)
     }
 }
 
+void ActionHistory::clearFrequencies()
+{
+    std::lock_guard lock{m_mutex};
+    m_counts.clear();
+}
+
 bool ActionHistory::load(const QString &path)
 {
     QFile file(path);

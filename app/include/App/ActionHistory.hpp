@@ -50,6 +50,9 @@ public:
     /// @brief Drops ids that are not in @p validIds (e.g. after config reload).
     void pruneToLibrary(const std::vector<std::string> &validIds);
 
+    /// @brief Clears all launch frequency counts (MRU recent list is unchanged).
+    void clearFrequencies();
+
     /// @brief Loads recent/frequent state from JSON at @p path (missing file is ok).
     bool load(const QString &path);
 

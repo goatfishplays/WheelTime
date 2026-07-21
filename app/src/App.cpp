@@ -871,6 +871,12 @@ void App::saveActionHistory()
     m_actionHistory.save(historyPath());
 }
 
+void App::resetActionFrequencies()
+{
+    m_actionHistory.clearFrequencies();
+    saveActionHistory();
+}
+
 Scheduler &App::scheduler() noexcept
 {
     return *m_scheduler;

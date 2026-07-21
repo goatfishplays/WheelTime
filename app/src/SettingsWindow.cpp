@@ -462,8 +462,13 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_nthSpin->setRange(1, 1000);
     m_nthHelpLabel = new QLabel(m_itemNthPage);
     m_nthHelpLabel->setWordWrap(true);
+    m_resetFrequenciesButton = new QPushButton("Reset all frequencies", m_itemNthPage);
+    m_resetFrequenciesButton->setToolTip(
+        "Clears launch counts used by Nth Frequent ranking. Recent history is kept.");
+    m_resetFrequenciesButton->hide();
     nthForm->addRow("N (1 = top)", m_nthSpin);
     nthForm->addRow(m_nthHelpLabel);
+    nthForm->addRow(m_resetFrequenciesButton);
 
     m_itemSocketPage = new QWidget(m_itemDetailStack);
     auto *socketForm = new QFormLayout(m_itemSocketPage);
@@ -1159,6 +1164,23 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 }
                 refreshActionItemList();
                 refreshActionSummary(); });
+    connect(m_resetFrequenciesButton, &QPushButton::clicked, this, [this]()
+            {
+                const auto answer = QMessageBox::question(
+                    this,
+                    "Reset Frequencies",
+                    "Clear all action launch frequencies? Nth Frequent ranking will start empty. "
+                    "Recent history is not affected.",
+                    QMessageBox::Yes | QMessageBox::No,
+                    QMessageBox::No);
+                if (answer != QMessageBox::Yes)
+                {
+                    return;
+                }
+                App::getInstance().resetActionFrequencies();
+                QMessageBox::information(this, "Frequencies Reset",
+                                         "All action launch frequencies have been cleared.");
+            });
     auto socketEditorChanged = [this]()
     {
         if (m_isRefreshing)
@@ -1822,6 +1844,7 @@ void SettingsWindow::refreshItemDetail()
         const QSignalBlocker blocker(m_nthSpin);
         m_nthSpin->setValue(std::max(1, recent->n));
         m_nthHelpLabel->setText("Runs the Nth most recently launched action from the wheel (1 = most recent).");
+        m_resetFrequenciesButton->hide();
         m_itemDetailStack->setCurrentWidget(m_itemNthPage);
         return;
     }
@@ -1831,6 +1854,7 @@ void SettingsWindow::refreshItemDetail()
         const QSignalBlocker blocker(m_nthSpin);
         m_nthSpin->setValue(std::max(1, frequent->n));
         m_nthHelpLabel->setText("Runs the Nth most frequently launched action from the wheel (1 = most used).");
+        m_resetFrequenciesButton->show();
         m_itemDetailStack->setCurrentWidget(m_itemNthPage);
         return;
     }
