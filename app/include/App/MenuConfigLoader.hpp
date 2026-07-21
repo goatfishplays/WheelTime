@@ -28,7 +28,7 @@ namespace Application
         static bool loadConfig(const QString &filepath, AppConfig &appConfig, std::vector<Action> &actions, std::vector<Menu *> &menus);
         /// @brief Saves the current shared action library and menu references.
         static bool saveConfig(const QString &filepath, const AppConfig &appConfig, const std::vector<Action> &actions, const std::vector<Menu *> &menus);
-        /// @brief Finds the default repo-local config path using common run dirs.
+        /// @brief Returns the writable user config path, seeding it from the bundled default when needed.
         static QString defaultConfigPath();
     };
 }

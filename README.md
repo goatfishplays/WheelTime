@@ -1,88 +1,57 @@
-# Wheel Time
+# WheelTime
 
-Wheel Time is a real-time application launcher designed to help users quickly open programs, scripts, or macros without leaving their current workflow. The main target users are gamers and general computer users who want quick access to common actions without memorizing many hotkeys.
+WheelTime is a Windows radial launcher for quick actions, app launches, hotkeys, search, and small macro chains. It is designed for people who want fast access to common actions without leaving their current workflow.
 
-## Project Goals
+## Features
 
-- Create a functional launcher interface
-- Allow users to launch programs and scripts
-- Support quick open/close behavior for low interruption
-- Keep the interface lightweight and responsive
+- Global hotkeys open configured radial menus.
+- Radial wheel executes reusable actions.
+- Settings editor manages menus, menu hotkeys, action slots, and action items.
+- Built-in action items include hotkeys, app launch, delay, search palette, cancel, menu switching, mouse actions, socket actions, and close.
+- Search palette can search actions, menus, programs, and optional web search.
+- User settings are saved to a writable app config folder after first run.
 
-## MVP
+## Get WheelTime
 
-The MVP is complete when:
+### Option 1: Installer (Recommended Download)
 
-- The launcher can be opened with a hotkey
-- The launcher displays a visual list of actions
-- The user can launch at least one external program or script
-- The user can close the launcher quickly
-- The launcher returns focus to the previous application
-- The app builds and runs on at least two team members' Windows machines
-- Basic usage is documented in the README
+[Download WheelTime](https://github.com/goatfishplays/WheelTime/releases/latest)
 
-## Tech Stack
+- Installs per user under `%LOCALAPPDATA%\WheelTime`.
+- Does not require admin rights.
+- Adds normal app shortcuts when installer support is available.
+- Windows may show an unknown-publisher warning because the installer is not code-signed.
 
-- Language: C++
-- Core Libraries: Windows API, Qt
-- Build System: CMake
-- Development Tools: VSCode, Cursor, Git/GitHub, Doxygen
+### Option 2: Portable Zip (Portable option as backup)
 
-## Sprint 1 Goal
+Download `WheelTime-portable-windows.zip` from a release.
 
-Create a basic Windows launcher prototype with a simple interface.
+1. Extract the zip anywhere.
+2. Open the extracted folder.
+3. Run `WheelTime.exe`.
 
-## Sprint 1 Tasks
+The portable package includes the Qt runtime files, so users do not need Qt, CMake, Visual Studio, or the source repo.
 
-- Set up GitHub repository
-- Set up C++/CMake project
-- Add README/build steps
-- Research app launching in C++
-- Research Windows API basics
-- Research GUI/window options
-- Create basic launcher window
+## Basic Usage
 
-## Sprint 2 Goal
+Run `WheelTime.exe`, then use the configured menu hotkeys from `config/default_menu.json`.
 
-Allow the launcher to open and close quickly using a hotkey and run basic actions.
+Current default menu hotkeys:
 
-## Sprint 2 Tasks
+- `Ctrl+Shift+Backtick` opens `Main`.
+- `Ctrl+Shift+Semicolon` opens `Video Demo`.
+- `Ctrl+Shift+Apostrophe` opens `New Menu`.
 
-- Research Windows API `RegisterHotKey`
-- Implement global hotkey to open launcher
-- Add Escape key listener to close launcher
-- Research window focus behavior
-- Restore focus to previous app after launcher closes
-- Create placeholder macro/script action
-- Connect GUI buttons to app launching actions
-- Test launching Notepad and Calculator from GUI
-- Add save/load functions for menu actions
-- Improve mouse events for radial wheel selection
-- Test launcher behavior over full-screen apps
-- Log bugs and open issues in GitHub
-- Update README with hotkey usage instructions
+In the launcher:
 
-## Sprint 3 Goal
+- Move the mouse to select a wheel action.
+- Left click to run the selected action.
+- Right click to close the overlay.
+- Use `Settings` or `Edit` to change menus and actions.
 
-Allow users to configure launcher actions without editing code.
+On first run, WheelTime copies the bundled default config into the user's app config folder. After that, settings edits save to the user config, not the installed template.
 
-## Sprint 3 Tasks
-
-- Design settings window layout
-- Create settings dialog/window using QT
-- Load current settings into UI controls
-- Save settings when user clicks Apply/OK
-- Validate user settings before saving/applying
-- Connect settings to main application
-- Add default restore settings button
-- Implement cancel/discard changes
-- Testing the functionality with configurations we add
-- Implement custom launcher action management
-- Integrate actions with the radial menu
-- Ability to delete launcher actions
-- Test the launch integration with running applications
-
-## Build Instructions
+## Developer Setup
 
 ### Requirements
 
@@ -91,10 +60,68 @@ Allow users to configure launcher actions without editing code.
 - Visual Studio Build Tools 2022 with Desktop development for C++
 - Qt 6 MSVC 2022 64-bit
 
-### Configure and Build
+### Configure And Build
 
 From the project root:
 
 ```powershell
 cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_PREFIX_PATH="C:\Qt\6.11.1\msvc2022_64"
 cmake --build build --config Debug
+```
+
+Run the app from the project root:
+
+```powershell
+.\build\Debug\WheelTime.exe
+```
+
+If you are inside a subfolder such as `docs`, go back to the repo root first:
+
+```powershell
+cd "C:\Coding Projects\115A\WheelTime"
+```
+
+### Build Tests
+
+The CMake build also creates smoke and scheduler test executables in `build\Debug`.
+
+Examples:
+
+```powershell
+.\build\Debug\phase10_scheduler_tests.exe
+.\build\Debug\search_palette_tests.exe
+```
+
+## Release Packaging
+
+From the project root:
+
+```powershell
+.\scripts\package-windows.ps1
+```
+
+The script:
+
+- configures a Release build in `build-package`
+- builds `WheelTime.exe`
+- installs a portable staging folder
+- runs Qt deployment to copy required Qt DLLs/plugins
+- creates `artifacts\WheelTime-portable-windows.zip`
+- creates `artifacts\WheelTimeSetup.exe` only when NSIS is installed
+
+If Qt is installed somewhere else, pass its MSVC prefix:
+
+```powershell
+.\scripts\package-windows.ps1 -QtPrefix "C:\Qt\6.11.1\msvc2022_64"
+```
+
+NSIS is optional. Without NSIS, the portable zip is still produced.
+
+## Repository Layout
+
+- `launcher/` contains the executable entry point.
+- `app/` contains menus, actions, settings UI, search palette, scheduler, and radial UI.
+- `platform/` contains Windows-specific input, window, launching, and key/mouse execution code.
+- `config/default_menu.json` is the bundled default config template.
+- `resources/styles/defaultWheel.qss` contains the Qt styling.
+- `scripts/package-windows.ps1` builds release artifacts.

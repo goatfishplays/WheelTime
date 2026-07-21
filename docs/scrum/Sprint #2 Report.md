@@ -101,7 +101,7 @@ The final Sprint 2 burnup chart shows the teams completed ideal hours out of the
 
 **63.5 completed ideal hours / 67.5 total estimated ideal hours**
 
-![Sprint 2 Final Burnup Chart](https://github.com/goatfishplays/WheelTime/blob/main/docs/scrum/sprint2-burnup-chart.png)
+![Sprint 2 Final Burnup Chart](https://github.com/goatfishplays/WheelTime/blob/main/docs/images/final-burnup-chart-s2.png)
 
 ## **Sprint 2 Summary**
 
