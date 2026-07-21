@@ -89,7 +89,7 @@ The final burnup chart for Sprint 3 shows 62 completed ideal hours out of 64 tot
 
 **62 completed ideal hours / 64 total estimated ideal hours**
 
-![Sprint 3 Final Burnup Chart](https://raw.githubusercontent.com/goatfishplays/WheelTime/refs/heads/main/docs/scrum/sprint3-burnup-chart.png)
+![Sprint 3 Final Burnup Chart](https://raw.githubusercontent.com/goatfishplays/WheelTime/refs/heads/main/docs/images/final-burnup-chart-s3.png)
 
 ## **Sprint 3 Summary**
 
