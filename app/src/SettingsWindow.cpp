@@ -318,9 +318,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     addItemType("Close Launcher", "close");
     addItemType("Nth Recent", "nth_recent");
     addItemType("Nth Frequent", "nth_frequent");
-    addItemType("Cancel Most Recent", "cancel_recent");
-    addItemType("Cancel Channel", "cancel_channel");
-    addItemType("Cancel All", "cancel_all");
+    addItemType("Cancel", "cancel");
     addItemType("Socket Send", "socket");
     addItemType("Custom Script/App (Advanced)", "script");
     auto *addItemButton = new QPushButton("Add Item", itemsGroup);
@@ -449,9 +447,9 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_itemCancelPage = new QWidget(m_itemDetailStack);
     auto *cancelForm = new QFormLayout(m_itemCancelPage);
     m_cancelLevelCombo = new QComboBox(m_itemCancelPage);
-    m_cancelLevelCombo->addItem("Most Recent on Channel", static_cast<int>(CancelLevel::MostRecent));
-    m_cancelLevelCombo->addItem("Entire Channel", static_cast<int>(CancelLevel::Channel));
-    m_cancelLevelCombo->addItem("All Actions", static_cast<int>(CancelLevel::All));
+    m_cancelLevelCombo->addItem("Most Recent", static_cast<int>(CancelLevel::MostRecent));
+    m_cancelLevelCombo->addItem("Channel", static_cast<int>(CancelLevel::Channel));
+    m_cancelLevelCombo->addItem("All", static_cast<int>(CancelLevel::All));
     m_cancelChannelSpin = new QSpinBox(m_itemCancelPage);
     m_cancelChannelSpin->setRange(0, 1000000);
     m_cancelHelpLabel = new QLabel(m_itemCancelPage);
@@ -864,17 +862,9 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 {
                     item = std::make_unique<AI_NthFrequent>(1);
                 }
-                else if (typeId == "cancel_recent")
+                else if (typeId == "cancel")
                 {
                     item = std::make_unique<AI_Cancel>(CancelLevel::MostRecent, 0);
-                }
-                else if (typeId == "cancel_channel")
-                {
-                    item = std::make_unique<AI_Cancel>(CancelLevel::Channel, 0);
-                }
-                else if (typeId == "cancel_all")
-                {
-                    item = std::make_unique<AI_Cancel>(CancelLevel::All);
                 }
                 else if (typeId == "socket")
                 {
@@ -1133,8 +1123,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
         }
         item->level = static_cast<CancelLevel>(m_cancelLevelCombo->currentData().toInt());
         item->channel = static_cast<uint32_t>(m_cancelChannelSpin->value());
-        const bool needsChannel = item->level == CancelLevel::MostRecent || item->level == CancelLevel::Channel;
-        m_cancelChannelSpin->setEnabled(needsChannel);
+        updateCancelChannelVisibility(item->level);
         if (item->level == CancelLevel::MostRecent)
         {
             m_cancelHelpLabel->setText(
@@ -1319,6 +1308,19 @@ void SettingsWindow::updateHotkeyButtonText()
         m_hotkeyRecordButton->setText("Unassigned");
     } else {
         m_hotkeyRecordButton->setText(mods + keyDisplayName(vk));
+    }
+}
+
+void SettingsWindow::updateCancelChannelVisibility(CancelLevel level)
+{
+    const bool needsChannel = level == CancelLevel::MostRecent || level == CancelLevel::Channel;
+    m_cancelChannelSpin->setVisible(needsChannel);
+    if (auto *form = qobject_cast<QFormLayout *>(m_itemCancelPage->layout()))
+    {
+        if (QWidget *label = form->labelForField(m_cancelChannelSpin))
+        {
+            label->setVisible(needsChannel);
+        }
     }
 }
 
@@ -1837,8 +1839,7 @@ void SettingsWindow::refreshItemDetail()
         const int levelIndex = m_cancelLevelCombo->findData(static_cast<int>(cancel->level));
         m_cancelLevelCombo->setCurrentIndex(levelIndex >= 0 ? levelIndex : 0);
         m_cancelChannelSpin->setValue(static_cast<int>(cancel->channel));
-        const bool needsChannel = cancel->level == CancelLevel::MostRecent || cancel->level == CancelLevel::Channel;
-        m_cancelChannelSpin->setEnabled(needsChannel);
+        updateCancelChannelVisibility(cancel->level);
         if (cancel->level == CancelLevel::MostRecent)
         {
             m_cancelHelpLabel->setText(

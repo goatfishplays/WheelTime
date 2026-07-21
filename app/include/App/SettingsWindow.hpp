@@ -22,6 +22,7 @@
 
 #include "App/App.hpp"
 #include "App/Action.hpp"
+#include "App/ActionItems/Cancel.hpp"
 #include "App/Menu.hpp"
 
 namespace Application
@@ -80,6 +81,7 @@ namespace Application
         void refreshMenuTargetCombo();
         void refreshItemDetail();
         void updateHotkeyButtonText();
+        void updateCancelChannelVisibility(CancelLevel level);
         QString describeActionItem(const ActionItem *item) const;
         QString launchPresetDisplayName(const std::string &presetId) const;
         QString launchPresetTarget(const std::string &presetId) const;
