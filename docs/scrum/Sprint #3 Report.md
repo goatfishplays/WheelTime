@@ -4,7 +4,7 @@
 **Team Name:** Wheelest Wheels  
 **Date:** 7/14/26
 
-**Sprint 3 Lead:** Ethan Jackson
+**Sprint 3 lead:** Ethan Jackson
 
 ## **Actions to Stop Doing**
 
@@ -89,6 +89,5 @@ Create settings dialog/window using Win32 API or QT - 5 hours
 
 ## **Sprint 3 Summary**
 
-Sprint 3 pushed the project from a rigid prototype containing hardcoded strings into a truly modular tool managed with an active settings platform. By adding file pickers and implementing serialization for configs, the app no longer relies on code rewrites or text editing for simple changes. Also, the team successfully closed out a focus window bug from Sprint 2, creating a seamless open-and-close loop that won't disrupt gaming sessions.
+Sprint 3 pushed the project from a prototype containing hardcoded strings into a truly modular tool managed with an active settings platform. By adding file pickers and implementing serialization for configs, the app no longer relies on code rewrites or text editing for simple changes. Also, the team successfully closed out a focus window bug from Sprint 2, creating a seamless open-and-close loop that won't disrupt gaming sessions.
 While configuration features are operational, final radial context integrations and script launch errors require additional testing before this is marked fully completed. Moving into Sprint 4, the focus will turn toward ironing out remaining launch edge cases, looking into any performance impovements, and implementing a more extensive testing suite.
-
