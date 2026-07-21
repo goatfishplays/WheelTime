@@ -109,9 +109,9 @@ Allow users to configure launcher actions without editing code.
 
 ## **Initial Burnup Chart**
 
-The initial burnup chart for Sprint 3 shows **0 completed ideal hours out of 64 total estimated ideal hours** at the start of the sprint.
+The initial burnup chart for Sprint 3 shows **5 completed ideal hours out of 64 total estimated ideal hours** at the start of the sprint.
 
-![Sprint 3 Burnup Chart](https://raw.githubusercontent.com/goatfishplays/WheelTime/refs/heads/main/docs/scrum/sprint3-burnup-chart.png)
+![Sprint 3 Burnup Chart](https://raw.githubusercontent.com/goatfishplays/WheelTime/refs/heads/main/docs/images/initial-burnup-chart-s3.png)
 
 ## **Initial Scrum Board**
 
