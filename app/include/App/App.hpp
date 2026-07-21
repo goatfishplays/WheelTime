@@ -154,6 +154,12 @@ namespace Application
         void disarmExecuteOnRelease();
         /// @brief QTimer callback: execute current selection once the chord is up.
         void onExecuteOnReleaseTick();
+        /// @brief Starts Escape edge-polling while the non-activating wheel is up.
+        void armEscapeDismiss();
+        /// @brief Stops Escape polling when the wheel closes.
+        void disarmEscapeDismiss();
+        /// @brief QTimer callback: dismiss the wheel on Escape press edges.
+        void onEscapeWatchTick();
         App();
         ~App();
 
@@ -171,6 +177,10 @@ namespace Application
         bool m_executeOnReleaseArmed{false};
         int m_releaseWatchMod{0};
         int m_releaseWatchVk{0};
+        /// @brief Polls Escape while the wheel is visible (Qt keys never reach it).
+        QTimer *m_escapeWatchTimer{nullptr};
+        /// @brief Prior Escape-down sample for rising-edge dismiss detection.
+        bool m_escapeWasDown{false};
 
         /// @brief Path of action_history.json next to the menu config.
         [[nodiscard]] QString historyPath() const;

@@ -151,6 +151,14 @@ App::App()
     QObject::connect(m_releaseWatchTimer, &QTimer::timeout, [this]()
                      { onExecuteOnReleaseTick(); });
 
+    // The wheel overlay is intentionally non-activating / NoFocus so games keep
+    // keyboard focus. Qt never delivers Escape to Gui::keyPressEvent in that
+    // mode, so poll the physical key the same way execute-on-release does.
+    m_escapeWatchTimer = new QTimer(qApp);
+    m_escapeWatchTimer->setInterval(16);
+    QObject::connect(m_escapeWatchTimer, &QTimer::timeout, [this]()
+                     { onEscapeWatchTick(); });
+
     QTimer::singleShot(0, [this]() { showSettingsWindow(); });
 }
 
@@ -276,6 +284,43 @@ void App::disarmExecuteOnRelease()
     {
         m_releaseWatchTimer->stop();
     }
+}
+
+void App::armEscapeDismiss()
+{
+    // Seed with the current key state so a held Escape does not instantly close.
+    m_escapeWasDown = m_inputRcvr.isVirtualKeyDown(0x1B); // VK_ESCAPE
+    if (m_escapeWatchTimer != nullptr)
+    {
+        m_escapeWatchTimer->start();
+    }
+}
+
+void App::disarmEscapeDismiss()
+{
+    m_escapeWasDown = false;
+    if (m_escapeWatchTimer != nullptr)
+    {
+        m_escapeWatchTimer->stop();
+    }
+}
+
+void App::onEscapeWatchTick()
+{
+    if (!gui.isLauncherVisible())
+    {
+        disarmEscapeDismiss();
+        return;
+    }
+
+    const bool escapeDown = m_inputRcvr.isVirtualKeyDown(0x1B); // VK_ESCAPE
+    if (escapeDown && !m_escapeWasDown)
+    {
+        m_escapeWasDown = true;
+        hideGui();
+        return;
+    }
+    m_escapeWasDown = escapeDown;
 }
 
 void App::onExecuteOnReleaseTick()
@@ -525,6 +570,7 @@ void App::showGui(Menu *menu)
     overlayWindow.setClickThrough(false);
     overlayWindow.showNoActivate();
     gui.enterInteractiveOverlay();
+    armEscapeDismiss();
 }
 
 void App::hideGui()
@@ -543,6 +589,7 @@ void App::hideGui()
     }
 
     disarmExecuteOnRelease();
+    disarmEscapeDismiss();
     initializeOverlay();
     gui.enterDormantOverlay();
     Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));

@@ -34,9 +34,11 @@
             "id": "action-new-action",
             "items": [
                 {
-                    "customTarget": "notepad.exe",
-                    "presetId": "notepad",
-                    "type": "launch_app"
+                    "holdDuration": 0,
+                    "keycode": 69,
+                    "modifiers": 0,
+                    "proceed": false,
+                    "type": "hotkey"
                 }
             ],
             "name": "Test Action"
@@ -69,21 +71,6 @@
                 }
             ],
             "name": "Search"
-        },
-        {
-            "channel": 0,
-            "icon": "C:/Users/Torpin Pascual/Pictures/Screenshots/Screenshot 2025-08-13 144050.png",
-            "id": "action-new-action-6",
-            "items": [
-                {
-                    "holdDuration": 0,
-                    "keycode": 69,
-                    "modifiers": 0,
-                    "proceed": false,
-                    "type": "hotkey"
-                }
-            ],
-            "name": "New Action"
         }
     ],
     "menus": [
@@ -96,8 +83,8 @@
                 "action-search"
             ],
             "centerMouseOnOpen": true,
-            "executeOnRelease": true,
-            "exitOnAction": true,
+            "executeOnRelease": false,
+            "exitOnAction": false,
             "id": "menu-example",
             "name": "GAMBLING",
             "triggerMod": 6,
@@ -106,8 +93,7 @@
         {
             "actionIds": [
                 "action-new-action-2",
-                "action-search",
-                "action-new-action-6"
+                "action-search"
             ],
             "centerMouseOnOpen": true,
             "executeOnRelease": false,
@@ -118,7 +104,8 @@
             "triggerVk": 0
         },
         {
-            "actionIds": [],
+            "actionIds": [
+            ],
             "centerMouseOnOpen": true,
             "executeOnRelease": false,
             "exitOnAction": false,
