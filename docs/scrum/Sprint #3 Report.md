@@ -1,7 +1,7 @@
 # **Sprint 3 Report**
 
-**Product Name:** Wheel Time
-**Team Name:** Wheelest Wheels
+**Product Name:** Wheel Time  
+**Team Name:** Wheelest Wheels  
 **Date:** 7/14/26
 
 **Sprint 3 Lead:** Ethan Jackson
@@ -84,10 +84,6 @@ Create settings dialog/window using Win32 API or QT - 5 hours
 * **Ideal work hours completed per day:** 62 ideal hours / 7 days \= 8.8 ideal hours/day
 
 ## **Final Burnup Chart**
-
-The final burnup chart for Sprint 3 shows 62 completed ideal hours out of 64 total estimated ideal hours at the end of the sprint.
-
-**62 completed ideal hours / 64 total estimated ideal hours**
 
 ![Sprint 3 Final Burnup Chart](https://raw.githubusercontent.com/goatfishplays/WheelTime/refs/heads/main/docs/images/final-burnup-chart-s3.png)
 
