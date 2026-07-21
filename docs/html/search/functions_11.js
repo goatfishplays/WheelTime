@@ -1,9 +1,0 @@
-var searchData=
-[
-  ['takecancelflushes_0',['takeCancelFlushes',['../class_application_1_1_action_execution_context.html#a34fc50e2ff890d56f9d0700b79a9394a',1,'Application::ActionExecutionContext']]],
-  ['takecancelrequests_1',['takeCancelRequests',['../class_application_1_1_action_execution_context.html#a18677eef2b55f44cd509b694e1c3f43e',1,'Application::ActionExecutionContext']]],
-  ['takescheduledactions_2',['takeScheduledActions',['../class_application_1_1_action_execution_context.html#a06c424b47da8c3a1a7af15146c685adc',1,'Application::ActionExecutionContext']]],
-  ['threadsafequeue_3',['ThreadSafeQueue',['../class_application_1_1_thread_safe_queue.html#af45207558b0c6b3b110ba35424c7b28d',1,'Application::ThreadSafeQueue::ThreadSafeQueue()=default'],['../class_application_1_1_thread_safe_queue.html#abf15d4efc97a505a5bf0886d865d002d',1,'Application::ThreadSafeQueue::ThreadSafeQueue(const ThreadSafeQueue &amp;)=delete'],['../class_application_1_1_thread_safe_queue.html#a95be21b53187837d16f248ffbc05538c',1,'Application::ThreadSafeQueue::ThreadSafeQueue(ThreadSafeQueue &amp;&amp;)=delete'],['../class_thread_safe_queue.html#af45207558b0c6b3b110ba35424c7b28d',1,'ThreadSafeQueue::ThreadSafeQueue()=default'],['../class_thread_safe_queue.html#abf15d4efc97a505a5bf0886d865d002d',1,'ThreadSafeQueue::ThreadSafeQueue(const ThreadSafeQueue &amp;)=delete'],['../class_thread_safe_queue.html#a95be21b53187837d16f248ffbc05538c',1,'ThreadSafeQueue::ThreadSafeQueue(ThreadSafeQueue &amp;&amp;)=delete']]],
-  ['trypop_4',['tryPop',['../class_application_1_1_thread_safe_queue.html#a1be9bdb2d196ceb99309d7dbb83a0d9a',1,'Application::ThreadSafeQueue::tryPop()'],['../class_thread_safe_queue.html#a1be9bdb2d196ceb99309d7dbb83a0d9a',1,'ThreadSafeQueue::tryPop()']]],
-  ['type_5',['type',['../class_application_1_1_execute_result.html#a56eac187744059307b76375a19d9908c',1,'Application::ExecuteResult']]]
-];
