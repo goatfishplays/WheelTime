@@ -101,7 +101,7 @@ App::App()
         std::vector<std::unique_ptr<ActionItem>> items;
         items.push_back(std::make_unique<AI_Close>());
         actionLibrary.push_back(Action(std::move(items), "Config missing", "", "action-config-missing"));
-        loadedMenus.push_back(new Menu(0, 0, false, false, true, "Config Error", {"action-config-missing"}, "menu-config-error"));
+        loadedMenus.push_back(new Menu(0, 0, false, false, true, false, "Config Error", {"action-config-missing"}, "menu-config-error"));
     }
 
     bool anyHotkey = false;
@@ -525,8 +525,11 @@ void App::gatherPriors()
 void App::restorePriors()
 {
     // The non-activating overlay should leave keyboard focus where it already
-    // is, so we intentionally avoid restoring focus here. Mouse restore can be
-    // revisited later if users want the cursor snapped back after overlay use.
+    // is, so we intentionally avoid restoring focus here.
+    if (activeMenu != nullptr && activeMenu->restoreMouseOnClose)
+    {
+        inputRcvr.setAbsoluteMousePosition(priorMousePos);
+    }
 }
 
 void App::initializeOverlay()

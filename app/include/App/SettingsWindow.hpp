@@ -123,6 +123,7 @@ namespace Application
         QCheckBox *m_executeOnReleaseCheck{nullptr};
         QCheckBox *m_exitOnActionCheck{nullptr};
         QCheckBox *m_centerMouseOnOpenCheck{nullptr};
+        QCheckBox *m_restoreMouseOnCloseCheck{nullptr};
         QListWidget *m_slotList{nullptr};
         QComboBox *m_slotActionCombo{nullptr};
 

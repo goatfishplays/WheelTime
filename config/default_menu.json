@@ -35,11 +35,8 @@
             "id": "action-new-action",
             "items": [
                 {
-                    "holdDuration": 0,
-                    "keycode": 69,
-                    "modifiers": 0,
-                    "proceed": false,
-                    "type": "hotkey"
+                    "menuId": "menu-new-menu-2",
+                    "type": "menu"
                 }
             ],
             "name": "Test Action"
@@ -72,6 +69,38 @@
                 }
             ],
             "name": "Search"
+        },
+        {
+            "channel": 1,
+            "id": "action-new-action-4",
+            "items": [
+                {
+                    "holdDuration": 5.199999809265137,
+                    "keycode": 65,
+                    "modifiers": 0,
+                    "proceed": false,
+                    "type": "hotkey"
+                },
+                {
+                    "holdDuration": 0,
+                    "keycode": 66,
+                    "modifiers": 0,
+                    "proceed": false,
+                    "type": "hotkey"
+                }
+            ],
+            "name": "a5b"
+        },
+        {
+            "channel": 0,
+            "id": "action-new-action-6",
+            "items": [
+                {
+                    "level": "all",
+                    "type": "cancel"
+                }
+            ],
+            "name": "New Action"
         }
     ],
     "menus": [
@@ -84,10 +113,11 @@
                 "action-search"
             ],
             "centerMouseOnOpen": true,
-            "executeOnRelease": false,
-            "exitOnAction": false,
+            "executeOnRelease": true,
+            "exitOnAction": true,
             "id": "menu-example",
             "name": "GAMBLING",
+            "restoreMouseOnClose": true,
             "triggerMod": 6,
             "triggerVk": 192
         },
@@ -101,17 +131,21 @@
             "exitOnAction": false,
             "id": "menu-new-menu",
             "name": "test 1",
+            "restoreMouseOnClose": true,
             "triggerMod": 6,
             "triggerVk": 186
         },
         {
             "actionIds": [
+                "action-new-action-4",
+                "action-new-action-6"
             ],
             "centerMouseOnOpen": true,
             "executeOnRelease": false,
             "exitOnAction": false,
             "id": "menu-new-menu-2",
             "name": "New Menu",
+            "restoreMouseOnClose": true,
             "triggerMod": 6,
             "triggerVk": 222
         }

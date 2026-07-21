@@ -559,6 +559,24 @@ void Scheduler::handleCancelAction(uint64_t actionId)
 
 void Scheduler::handleCancelChannel(uint32_t channel)
 {
+    // Drain cancelable waiters first. Cancelling a delayed/paused holder calls
+    // releaseAndTakeNext; if a waiter is still queued it can be dispatched to a
+    // worker before its own cancel runs, and the first ActionItem still executes.
+    auto waiting = m_channels.removeWaitingIf(
+        [this, channel](const ActionExecutionContext &ctx)
+        {
+            return ctx.channel() == channel && isCancelableAction(ctx.actionId());
+        });
+    for (auto &ctx : waiting)
+    {
+        if (!ctx)
+        {
+            continue;
+        }
+        flushCleanups(ctx->actionId());
+        discardContext(std::move(ctx), false);
+    }
+
     std::vector<uint64_t> ids;
     for (const auto &[id, logical] : m_logicalChannelById)
     {
@@ -575,6 +593,22 @@ void Scheduler::handleCancelChannel(uint32_t channel)
 
 void Scheduler::handleCancelAll()
 {
+    // Same waiter-first ordering as handleCancelChannel (see comment there).
+    auto waiting = m_channels.removeWaitingIf(
+        [this](const ActionExecutionContext &ctx)
+        {
+            return isCancelableAction(ctx.actionId());
+        });
+    for (auto &ctx : waiting)
+    {
+        if (!ctx)
+        {
+            continue;
+        }
+        flushCleanups(ctx->actionId());
+        discardContext(std::move(ctx), false);
+    }
+
     std::vector<uint64_t> ids;
     for (const auto &[id, cancelable] : m_cancelableById)
     {

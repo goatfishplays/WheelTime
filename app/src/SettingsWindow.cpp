@@ -214,11 +214,13 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_executeOnReleaseCheck = new QCheckBox("Execute on release", menuSettingsGroup);
     m_exitOnActionCheck = new QCheckBox("Exit on action", menuSettingsGroup);
     m_centerMouseOnOpenCheck = new QCheckBox("Center mouse on open", menuSettingsGroup);
+    m_restoreMouseOnCloseCheck = new QCheckBox("Restore mouse on close", menuSettingsGroup);
     menuForm->addRow("Menu Name", m_menuNameEdit);
     menuForm->addRow("Trigger Hotkey", hotkeyLayout);
     menuForm->addRow("", m_executeOnReleaseCheck);
     menuForm->addRow("", m_exitOnActionCheck);
     menuForm->addRow("", m_centerMouseOnOpenCheck);
+    menuForm->addRow("", m_restoreMouseOnCloseCheck);
     menuEditorSplit->addWidget(menuSettingsGroup);
 
     auto *slotsGroup = new QGroupBox("Wheel Slots", m_menuEditor);
@@ -618,7 +620,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
 
     connect(addMenuButton, &QPushButton::clicked, this, [this]()
             {
-                Menu menu(0, 0, false, false, true, "New Menu", {}, makeUniqueMenuId("New Menu"));
+                Menu menu(0, 0, false, false, true, false, "New Menu", {}, makeUniqueMenuId("New Menu"));
                 m_menus.push_back(menu);
                 refreshLists();
                 setSelectedMenu(static_cast<int>(m_menus.size()) - 1); });
@@ -682,6 +684,13 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 if (index >= 0)
                 {
                     m_menus[index].centerMouseOnOpen = checked;
+                } });
+    connect(m_restoreMouseOnCloseCheck, &QCheckBox::toggled, this, [this](bool checked)
+            {
+                const int index = currentMenuIndex();
+                if (index >= 0)
+                {
+                    m_menus[index].restoreMouseOnClose = checked;
                 } });
     connect(addSlotButton, &QPushButton::clicked, this, [this]()
             {
@@ -1520,10 +1529,12 @@ void SettingsWindow::refreshMenuEditor()
     const QSignalBlocker releaseBlocker(m_executeOnReleaseCheck);
     const QSignalBlocker exitBlocker(m_exitOnActionCheck);
     const QSignalBlocker centerMouseBlocker(m_centerMouseOnOpenCheck);
+    const QSignalBlocker restoreMouseBlocker(m_restoreMouseOnCloseCheck);
     m_menuNameEdit->setText(QString::fromStdString(m_menus[index].getName()));
     m_executeOnReleaseCheck->setChecked(m_menus[index].executeOnRelease);
     m_exitOnActionCheck->setChecked(m_menus[index].exitOnAction);
     m_centerMouseOnOpenCheck->setChecked(m_menus[index].centerMouseOnOpen);
+    m_restoreMouseOnCloseCheck->setChecked(m_menus[index].restoreMouseOnClose);
 
     updateHotkeyButtonText();
     refreshSlotList();
@@ -2344,6 +2355,7 @@ void SettingsWindow::deleteActionReferences(const std::string &actionId)
                          menu.executeOnRelease,
                          menu.exitOnAction,
                          menu.centerMouseOnOpen,
+                         menu.restoreMouseOnClose,
                          menu.getName(),
                          keptIds,
                          menu.getId());
