@@ -100,8 +100,8 @@
             "exitOnAction": false,
             "id": "menu-new-menu",
             "name": "test 1",
-            "triggerMod": 0,
-            "triggerVk": 0
+            "triggerMod": 6,
+            "triggerVk": 222
         },
         {
             "actionIds": [

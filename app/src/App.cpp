@@ -233,11 +233,16 @@ void App::onHotkeyTriggered(int hotkeyId)
         }
     }
 
-    // Second press / visible launcher always dismisses (and disarms release-watch).
+    // Same-menu hotkey (or unmatched) toggles closed while the wheel is up.
+    // A different menu's hotkey switches to that menu instead of dismissing.
     if (gui.isLauncherVisible())
     {
-        hideGui();
-        return;
+        if (targetMenu == nullptr || targetMenu == activeMenu)
+        {
+            hideGui();
+            return;
+        }
+        disarmExecuteOnRelease();
     }
 
     Menu *menuToShow = targetMenu;
