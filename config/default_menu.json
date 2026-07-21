@@ -34,9 +34,11 @@
             "id": "action-new-action",
             "items": [
                 {
-                    "type": "mouse_move",
-                    "x": 9999,
-                    "y": 9999
+                    "destination": "https://httpbin.org/post",
+                    "httpMethod": "POST",
+                    "message": "{\n    \"username\": \"TestUser\",\n    \"message\": \"Hello from my macro application!\",\n    \"number\": 42,\n    \"enabled\": true\n}",
+                    "protocol": "http",
+                    "type": "socket"
                 }
             ],
             "name": "Test Action"
