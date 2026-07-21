@@ -146,6 +146,10 @@ namespace Application
         void restorePriors();
         void initializeOverlay();
         void configureOverlayForCursor();
+        /// @brief Unregisters live menu hotkeys so settings can capture those keys.
+        void suspendHotkeys();
+        /// @brief Re-registers menu hotkeys after settings closes.
+        void resumeHotkeys();
         /// @brief Deletes and clears the currently loaded heap-allocated menus.
         void clearMenus();
         /// @brief Starts polling for hotkey chord release (execute-on-release mode).
@@ -181,6 +185,8 @@ namespace Application
         QTimer *m_escapeWatchTimer{nullptr};
         /// @brief Prior Escape-down sample for rising-edge dismiss detection.
         bool m_escapeWasDown{false};
+        /// @brief True while settings has unregistered hotkeys for key capture.
+        bool m_hotkeysSuspended{false};
 
         /// @brief Path of action_history.json next to the menu config.
         [[nodiscard]] QString historyPath() const;

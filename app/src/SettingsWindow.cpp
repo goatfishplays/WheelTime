@@ -1308,14 +1308,45 @@ bool SettingsWindow::eventFilter(QObject *obj, QEvent *event)
         int idx = currentMenuIndex();
         if (idx >= 0)
         {
-            m_menus[idx].triggerVk = keyEvent->nativeVirtualKey();
-            m_menus[idx].triggerMod = 0;
-            
+            const int newVk = static_cast<int>(keyEvent->nativeVirtualKey());
+            int newMod = 0;
+
             Qt::KeyboardModifiers modifiers = keyEvent->modifiers();
-            if (modifiers & Qt::ControlModifier) m_menus[idx].triggerMod |= 0x0002;
-            if (modifiers & Qt::AltModifier)     m_menus[idx].triggerMod |= 0x0001;
-            if (modifiers & Qt::ShiftModifier)   m_menus[idx].triggerMod |= 0x0004;
-            if (modifiers & Qt::MetaModifier)    m_menus[idx].triggerMod |= 0x0008;
+            if (modifiers & Qt::ControlModifier) newMod |= 0x0002;
+            if (modifiers & Qt::AltModifier)     newMod |= 0x0001;
+            if (modifiers & Qt::ShiftModifier)   newMod |= 0x0004;
+            if (modifiers & Qt::MetaModifier)    newMod |= 0x0008;
+
+            QString conflictMenuName;
+            for (int i = 0; i < static_cast<int>(m_menus.size()); ++i)
+            {
+                if (i == idx)
+                {
+                    continue;
+                }
+                if (m_menus[i].triggerVk == newVk && m_menus[i].triggerMod == newMod && newVk != 0)
+                {
+                    conflictMenuName = QString::fromStdString(m_menus[i].getName());
+                    break;
+                }
+            }
+
+            if (!conflictMenuName.isEmpty())
+            {
+                QMessageBox::warning(
+                    this,
+                    "Hotkey Already Used",
+                    QString("That hotkey is already assigned to \"%1\". "
+                            "Clear the other menu's hotkey first, or choose a different combination.")
+                        .arg(conflictMenuName));
+                m_isRecordingHotkey = false;
+                m_hotkeyRecordButton->releaseKeyboard();
+                updateHotkeyButtonText();
+                return true;
+            }
+
+            m_menus[idx].triggerVk = newVk;
+            m_menus[idx].triggerMod = newMod;
         }
 
         m_isRecordingHotkey = false;
@@ -2525,8 +2556,9 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
     }
 
     std::vector<std::string> menuIds;
-    for (const Menu &menu : m_menus)
+    for (int menuIndex = 0; menuIndex < static_cast<int>(m_menus.size()); ++menuIndex)
     {
+        const Menu &menu = m_menus[menuIndex];
         if (menu.getId().empty())
         {
             errorMessage = "Every menu must have a non-empty ID.";
@@ -2538,6 +2570,21 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
             return false;
         }
         menuIds.push_back(menu.getId());
+
+        if (menu.triggerVk != 0)
+        {
+            for (int otherIndex = 0; otherIndex < menuIndex; ++otherIndex)
+            {
+                const Menu &other = m_menus[otherIndex];
+                if (other.triggerVk == menu.triggerVk && other.triggerMod == menu.triggerMod)
+                {
+                    errorMessage = QString("Menus '%1' and '%2' share the same trigger hotkey.")
+                                       .arg(QString::fromStdString(other.getName()))
+                                       .arg(QString::fromStdString(menu.getName()));
+                    return false;
+                }
+            }
+        }
 
         for (const std::string &actionId : menu.getActionIds())
         {

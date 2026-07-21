@@ -184,16 +184,22 @@ App::~App()
         m_settingsWindow = nullptr;
     }
 
-    clearMenus();
-
-    // Unregister hotkey
-    for (Menu* m : loadedMenus) {
-        if (m->triggerMod == 0 && m->triggerVk == 0) continue;
-        Platform::InputBind bind;
-        bind.mod = m->triggerMod;
-        bind.input = m->triggerVk;
-        m_inputRcvr.unregisterInputBinding(bind);
+    // Release OS hotkeys before deleting menu objects.
+    if (!m_hotkeysSuspended)
+    {
+        for (Menu *m : loadedMenus)
+        {
+            if (m == nullptr || (m->triggerMod == 0 && m->triggerVk == 0))
+            {
+                continue;
+            }
+            Platform::InputBind bind;
+            bind.mod = m->triggerMod;
+            bind.input = m->triggerVk;
+            m_inputRcvr.unregisterInputBinding(bind);
+        }
     }
+    clearMenus();
 }
 
 void App::clearMenus()
@@ -203,6 +209,50 @@ void App::clearMenus()
         delete loadedMenus[i];
     }
     loadedMenus.clear();
+}
+
+void App::suspendHotkeys()
+{
+    if (m_hotkeysSuspended)
+    {
+        return;
+    }
+
+    // RegisterHotKey consumes matching KeyPresses, so the settings recorder
+    // cannot capture a chord that is still bound. Drop live binds while editing.
+    for (Menu *m : loadedMenus)
+    {
+        if (m == nullptr || (m->triggerMod == 0 && m->triggerVk == 0))
+        {
+            continue;
+        }
+        Platform::InputBind bind;
+        bind.mod = m->triggerMod;
+        bind.input = m->triggerVk;
+        m_inputRcvr.unregisterInputBinding(bind);
+    }
+    m_hotkeysSuspended = true;
+}
+
+void App::resumeHotkeys()
+{
+    if (!m_hotkeysSuspended)
+    {
+        return;
+    }
+
+    for (Menu *m : loadedMenus)
+    {
+        if (m == nullptr || (m->triggerMod == 0 && m->triggerVk == 0))
+        {
+            continue;
+        }
+        Platform::InputBind bind;
+        bind.mod = m->triggerMod;
+        bind.input = m->triggerVk;
+        m_inputRcvr.registerInputBinding(bind);
+    }
+    m_hotkeysSuspended = false;
 }
 
 void App::onHotkeyTriggered(int hotkeyId)
@@ -876,6 +926,8 @@ void App::showSettingsWindow()
 
     // Pause macros while editing; resume when the window closes.
     m_scheduler->pause();
+    // Drop OS hotkeys so the recorder can capture chords that are already bound.
+    suspendHotkeys();
     m_settingsWindow->loadWorkingCopy(m_appConfig, actionLibrary, getMenuCopies());
     gui.showSettingsPanel(m_settingsWindow);
     gui.show();
@@ -894,6 +946,7 @@ void App::restoreOverlayAfterSettings()
     // with Qt by only using showNoActivate after styles are restored.
     gui.hideSettingsPanel();
     gui.enterDormantOverlay();
+    resumeHotkeys();
     Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
     overlayWindow.setTransparentOverlay(true);
     overlayWindow.setNonActivating(true);
@@ -909,13 +962,21 @@ bool App::saveConfig()
 
 bool App::applyConfig(const AppConfig &appConfig, const std::vector<Action> &actions, const std::vector<Menu> &menus)
 {
-    // Unregister old hotkey
-    for (Menu* m : loadedMenus) {
-        if (m->triggerMod == 0 && m->triggerVk == 0) continue;
-        Platform::InputBind oldBind;
-        oldBind.mod = m->triggerMod;
-        oldBind.input = m->triggerVk;
-        m_inputRcvr.unregisterInputBinding(oldBind);
+    // Skip unregister while settings has hotkeys suspended; resumeHotkeys will
+    // bind whatever ends up in loadedMenus when the editor closes.
+    if (!m_hotkeysSuspended)
+    {
+        for (Menu *m : loadedMenus)
+        {
+            if (m == nullptr || (m->triggerMod == 0 && m->triggerVk == 0))
+            {
+                continue;
+            }
+            Platform::InputBind oldBind;
+            oldBind.mod = m->triggerMod;
+            oldBind.input = m->triggerVk;
+            m_inputRcvr.unregisterInputBinding(oldBind);
+        }
     }
 
     m_appConfig = appConfig;
@@ -937,12 +998,19 @@ bool App::applyConfig(const AppConfig &appConfig, const std::vector<Action> &act
         loadedMenus.push_back(new Menu(menu));
     }
 
-    for (Menu* m : loadedMenus) {
-        if (m->triggerMod == 0 && m->triggerVk == 0) continue;
-        Platform::InputBind newBind;
-        newBind.mod = m->triggerMod;
-        newBind.input = m->triggerVk;
-        m_inputRcvr.registerInputBinding(newBind);
+    if (!m_hotkeysSuspended)
+    {
+        for (Menu *m : loadedMenus)
+        {
+            if (m == nullptr || (m->triggerMod == 0 && m->triggerVk == 0))
+            {
+                continue;
+            }
+            Platform::InputBind newBind;
+            newBind.mod = m->triggerMod;
+            newBind.input = m->triggerVk;
+            m_inputRcvr.registerInputBinding(newBind);
+        }
     }
 
     activeMenu = previousActiveMenuId.empty() ? nullptr : findMenuById(previousActiveMenuId);

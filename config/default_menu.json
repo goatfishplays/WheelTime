@@ -101,7 +101,7 @@
             "id": "menu-new-menu",
             "name": "test 1",
             "triggerMod": 6,
-            "triggerVk": 222
+            "triggerVk": 186
         },
         {
             "actionIds": [
@@ -111,8 +111,8 @@
             "exitOnAction": false,
             "id": "menu-new-menu-2",
             "name": "New Menu",
-            "triggerMod": 0,
-            "triggerVk": 0
+            "triggerMod": 6,
+            "triggerVk": 222
         }
     ]
 }
