@@ -364,7 +364,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_itemDelayPage = new QWidget(m_itemDetailStack);
     auto *delayForm = new QFormLayout(m_itemDelayPage);
     m_delaySpin = new QSpinBox(m_itemDelayPage);
-    m_delaySpin->setRange(0, 3600000);
+    m_delaySpin->setRange(0, 86400000); // up to 24 hours
     delayForm->addRow("Milliseconds", m_delaySpin);
 
     m_itemClosePage = new QWidget(m_itemDetailStack);
@@ -395,7 +395,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_hotkeyKeyCombo = new QComboBox(m_itemHotkeyPage);
     populateHotkeyKeyCombo();
     m_hotkeyHoldSpin = new QDoubleSpinBox(m_itemHotkeyPage);
-    m_hotkeyHoldSpin->setRange(0.0, 10.0);
+    m_hotkeyHoldSpin->setRange(0.0, 3600.0); // up to 1 hour
     m_hotkeyHoldSpin->setDecimals(2);
     m_hotkeyHoldSpin->setSingleStep(0.1);
     m_hotkeyHoldSpin->setSuffix(" s");
@@ -434,7 +434,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_mouseButtonCombo->addItem("Right", 1);
     m_mouseButtonCombo->addItem("Middle", 2);
     m_mouseButtonHoldSpin = new QDoubleSpinBox(m_itemMouseButtonPage);
-    m_mouseButtonHoldSpin->setRange(0.0, 10.0);
+    m_mouseButtonHoldSpin->setRange(0.0, 3600.0); // up to 1 hour
     m_mouseButtonHoldSpin->setDecimals(2);
     m_mouseButtonHoldSpin->setSingleStep(0.1);
     m_mouseButtonHoldSpin->setSuffix(" s");
