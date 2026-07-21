@@ -303,22 +303,26 @@ SettingsWindow::SettingsWindow(QWidget *parent)
 
     auto *itemButtons = new QHBoxLayout();
     m_newItemTypeCombo = new QComboBox(itemsGroup);
-    m_newItemTypeCombo->addItems(
-        {"Launch App",
-         "Delay",
-         "Press Hotkey",
-         "Open Menu",
-         "Close Launcher",
-         "Custom Script/App (Advanced)",
-         "Mouse Move",
-         "Mouse Button",
-         "Cancel Most Recent",
-         "Cancel Channel",
-         "Cancel All",
-         "Nth Recent",
-         "Nth Frequent",
-         "Socket Send",
-         "Search Palette"});
+    // Grouped for scanning: input, timing, navigation, history, cancel, advanced.
+    const auto addItemType = [this](const QString &label, const QString &typeId)
+    {
+        m_newItemTypeCombo->addItem(label, typeId);
+    };
+    addItemType("Launch App", "launch_app");
+    addItemType("Press Hotkey", "hotkey");
+    addItemType("Mouse Button", "mouse_button");
+    addItemType("Mouse Move", "mouse_move");
+    addItemType("Delay", "delay");
+    addItemType("Open Menu", "menu");
+    addItemType("Search Palette", "search");
+    addItemType("Close Launcher", "close");
+    addItemType("Nth Recent", "nth_recent");
+    addItemType("Nth Frequent", "nth_frequent");
+    addItemType("Cancel Most Recent", "cancel_recent");
+    addItemType("Cancel Channel", "cancel_channel");
+    addItemType("Cancel All", "cancel_all");
+    addItemType("Socket Send", "socket");
+    addItemType("Custom Script/App (Advanced)", "script");
     auto *addItemButton = new QPushButton("Add Item", itemsGroup);
     auto *removeItemButton = new QPushButton("Remove Item", itemsGroup);
     auto *moveItemUpButton = new QPushButton("Move Up", itemsGroup);
@@ -819,55 +823,70 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 }
 
                 std::unique_ptr<ActionItem> item;
-                switch (m_newItemTypeCombo->currentIndex())
+                const QString typeId = m_newItemTypeCombo->currentData().toString();
+                if (typeId == "launch_app")
                 {
-                case 0:
                     item = std::make_unique<AI_LaunchApp>("calculator", "");
-                    break;
-                case 1:
-                    item = std::make_unique<AI_Delay>(0);
-                    break;
-                case 2:
+                }
+                else if (typeId == "hotkey")
+                {
                     item = std::make_unique<AI_Keystroke>('E', 0, 0.0f, false);
-                    break;
-                case 3:
-                    item = std::make_unique<AI_Menu>(m_menus.empty() ? "" : m_menus.front().getId());
-                    break;
-                case 4:
-                    item = std::make_unique<AI_Close>();
-                    break;
-                case 5:
-                    item = std::make_unique<AI_Script>("");
-                    break;
-                case 6:
-                    item = std::make_unique<AI_MouseMove>(0, 0);
-                    break;
-                case 7:
+                }
+                else if (typeId == "mouse_button")
+                {
                     item = std::make_unique<AI_MouseButton>(0, 0.0f, false);
-                    break;
-                case 8:
-                    item = std::make_unique<AI_Cancel>(CancelLevel::MostRecent, 0);
-                    break;
-                case 9:
-                    item = std::make_unique<AI_Cancel>(CancelLevel::Channel, 0);
-                    break;
-                case 10:
-                    item = std::make_unique<AI_Cancel>(CancelLevel::All);
-                    break;
-                case 11:
+                }
+                else if (typeId == "mouse_move")
+                {
+                    item = std::make_unique<AI_MouseMove>(0, 0);
+                }
+                else if (typeId == "delay")
+                {
+                    item = std::make_unique<AI_Delay>(0);
+                }
+                else if (typeId == "menu")
+                {
+                    item = std::make_unique<AI_Menu>(m_menus.empty() ? "" : m_menus.front().getId());
+                }
+                else if (typeId == "search")
+                {
+                    item = std::make_unique<AI_Search>();
+                }
+                else if (typeId == "close")
+                {
+                    item = std::make_unique<AI_Close>();
+                }
+                else if (typeId == "nth_recent")
+                {
                     item = std::make_unique<AI_NthRecent>(1);
-                    break;
-                case 12:
+                }
+                else if (typeId == "nth_frequent")
+                {
                     item = std::make_unique<AI_NthFrequent>(1);
-                    break;
-                case 13:
+                }
+                else if (typeId == "cancel_recent")
+                {
+                    item = std::make_unique<AI_Cancel>(CancelLevel::MostRecent, 0);
+                }
+                else if (typeId == "cancel_channel")
+                {
+                    item = std::make_unique<AI_Cancel>(CancelLevel::Channel, 0);
+                }
+                else if (typeId == "cancel_all")
+                {
+                    item = std::make_unique<AI_Cancel>(CancelLevel::All);
+                }
+                else if (typeId == "socket")
+                {
                     item = std::make_unique<AI_Socket>(
                         Platform::SocketProtocol::Udp, "127.0.0.1:9000", "", "POST");
-                    break;
-                case 14:
-                    item = std::make_unique<AI_Search>();
-                    break;
-                default:
+                }
+                else if (typeId == "script")
+                {
+                    item = std::make_unique<AI_Script>("");
+                }
+                else
+                {
                     return;
                 }
                 m_actions[actionIndex].addItem(-1, std::move(item));
