@@ -1,75 +1,103 @@
 # C++ Coding Standards
 
-**Product Name:** Wheel Time  
-**Team Name:** Wheelest Wheels  
+**Product / CMake / binary:** WheelTime (display name: Wheel Time)  
+**Team:** Wheelest Wheels  
 **Date:** 7/21/26  
 
 ## Purpose
 
-This document defines the coding standards for the Wheel Time C++ codebase. The goal is to keep the code readable, consistent, and easy for all team members to understand and maintain.
+Coding standards for the WheelTime C++ codebase: readable, consistent, and maintainable.
+
+Applies to active code under `app/`, `platform/`, and `launcher/`. When older code disagrees, new and touched code moves toward these rules. Reference shape: `Scheduler.hpp` and newer ActionItems.
 
 ---
 
-## Header Files
+## Layout and identity
 
-- Every `.cpp` file should usually have an affiliated `.hpp` file with the same name.
-- Small files such as `main.cpp` do not need a matching header file if they only contain program startup logic.
-- Header files should contain class declarations, function declarations, constants, and shared types.
-- Source files should contain function implementations and internal helper logic.
-- Use include guards or `#pragma once` in every header file.
-- Avoid putting large function implementations directly in header files unless there is a clear reason.
+| Surface | Convention | Notes |
+|---------|------------|--------|
+| Repo / product / CMake / binary | **WheelTime** | Display name may be “Wheel Time” |
+| Include path root | `App/…`, `Platform/…` | Folder name stays short |
+| Namespaces | `Application`, `Platform` | Do **not** use `namespace App` |
+| OS implementations | `platform/src/<os>/` | e.g. `windows/` (lowercase OS id) |
 
-## Include Order
+Do **not** rename `include/App` → `include/Application` for style alone: path prefix `App`, namespace `Application`. Platform must not depend on App.
 
-Use this order for include statements:
+---
 
-1. Related header file.
-2. Standard C++ library headers.
-3. Third-party library headers, such as Qt.
-4. Windows API headers.
-5. Project headers.
+## Header and source files
 
-Example:
+- Headers: `.hpp` + `#pragma once`. Sources: `.cpp`.
+- Usually one `.hpp` per `.cpp` with the same stem (`main.cpp` is an exception).
+- Headers declare; sources implement. Avoid large implementations in headers without a clear reason.
+- Names: **PascalCase** matching the primary type (`Scheduler.hpp`, `MouseButton.cpp`).
+- Domains as folders: `ActionItems/`, not `action_items/`.
+- Tests: `app/tests/<topic>_tests.cpp` with a CMake target of the same stem. Do not leave orphan test sources unwired in CMake.
 
-    #include "ActionExecutor.hpp"
+## Include order
 
-    #include <iostream>
-    #include <string>
+Blank line between groups. Canonical order (matches `Scheduler.hpp` and most headers):
+
+1. Corresponding header (in `.cpp` only)
+2. C++ standard library
+3. Third-party (Qt, etc.)
+4. Project headers (`App/…`, `Platform/…`)
+5. Windows API headers (platform / OS-specific files only)
+
+Do **not** mass-reformat existing files for include order alone. New and touched code moves toward this order.
+
+| From | Include | Form |
+|------|---------|------|
+| App / launcher | App headers | `#include "App/Scheduler.hpp"` |
+| App / launcher | Platform headers | `#include <Platform/Execute.hpp>` |
+| Platform | Other Platform headers | `"Platform/…"` or `<Platform/…>` — stay consistent within `platform/src/` |
+| Anywhere | Qt / std | `#include <QWidget>`, `#include <vector>` |
+
+Example (`.cpp`):
+
+    #include "App/Scheduler.hpp"
+
+    #include <atomic>
+    #include <memory>
     #include <vector>
 
-    #include <QApplication>
-    #include <QWidget>
+    #include <QTimer>
 
-    #include <windows.h>
-
-    #include "AppAction.hpp"
-
-## Indentation
-
-- Use spaces for indentation.
-- Use **2 spaces** per indentation level.
-- Do not use tabs.
-- Keep formatting consistent across all files.
+    #include "App/Action.hpp"
+    #include <Platform/Execute.hpp>
 
 ## Naming
 
-- Use descriptive names for variables, functions, classes, and files.
-- Class names should use **PascalCase**.
-  - Example: `ActionExecutor`, `RadialMenuWidget`
-- Function and variable names should use **camelCase**.
-  - Example: `launchApplication()`, `selectedAction`
-- Constants should use **UPPER_CASE**.
-  - Example: `DEFAULT_HOTKEY`, `MAX_ACTION_COUNT`
-- File names should match the main class or feature when possible.
-  - Example: `ActionExecutor.hpp`, `ActionExecutor.cpp`
+### Types
+
+- Classes, structs, enums, type aliases: **PascalCase** (prefer `enum class`).
+- ActionItem implementations: **`AI_`** + PascalCase (`AI_Keystroke`, not `AI_nthRecent`).
+- Prefer full words in public API (`InputReceiver`, not `InputRcvr`).
+
+### Functions and methods
+
+- **camelCase** (`launchApplication()`, `selectedAction`).
+- Booleans: prefer `is` / `has` / `can` (`isPaused`, `isCancelable`).
+- Accessors: one style per type — prefer bare nouns (`channel()`, `name()`, `absoluteMousePosition()`) or consistent `getX()`, never both for the same field.
+- Prefer full words for mutators/size (`removeAction`, `itemCount`); no leading underscore on parameters.
+
+### Members, locals, constants
+
+- Private / protected members: **`m_`** + camelCase.
+- Public fields only for small DTOs / ActionItem value fields (`AI_Delay::durationMs`); do not mix `m_` and bare private fields on the same class.
+- Locals and parameters: camelCase, no `m_`.
+- Constants: `kCamelCase` or PascalCase enum / `constexpr`; avoid `SCREAMING_SNAKE` except for macros.
+
+### Domain vocabulary
+
+- One name per concept across app and platform boundaries.
+- JSON / config tags and assets: **snake_case** (`launch_app`, `nth_recent`, `keystroke`); do not force PascalCase onto wire formats.
+- Prefer a single canonical tag per item kind; do not add duplicate aliases without a migration plan.
 
 ## Functions
 
-- Return type, function name, and parameters should be on the same line when practical.
-- Keep functions focused on one main responsibility.
-- Avoid very long functions. If a function becomes hard to read, split it into smaller helper functions.
-- Use short but clear parameter names.
-- Add a brief comment before important function declarations explaining the purpose, inputs, and output.
+- Keep signature on one line when practical; one responsibility per function; split when hard to read.
+- Prefer a short comment on important declarations (purpose, inputs, output).
 
 Example:
 
@@ -77,146 +105,141 @@ Example:
     // Returns true if the launch request succeeds.
     bool launchApplication(const std::string& filePath);
 
-## Local Variables
+## Local variables
 
-- Declare variables as close to their first use as possible.
-- Place each variable in the narrowest reasonable scope.
-- Initialize variables when they are declared.
-- Use `const` when a variable should not change.
-- Avoid reusing one variable for multiple unrelated purposes.
+- Declare near first use, in the narrowest scope; initialize on declaration; prefer `const`; do not reuse one variable for unrelated purposes.
 
-Example:
+## Braces and formatting
 
-    const std::string appPath = action.getPath();
-    bool launched = executor.launchApplication(appPath);
-
-## Braces
-
-- Always use braces for `if`, `else`, `for`, `while`, and `do-while` statements.
-- Use braces even when the body has only one line.
+- **4 spaces**, no tabs. Always brace `if` / `else` / `for` / `while` / `do-while`, even for one-liners.
+- Prefer Allman for new blocks in Allman files; **match the file you edit**. Dual brace placement (Allman vs K&R) is intentional until a shared `.clang-format` exists — do not reformat untouched regions for preference alone.
+- Namespace body: prefer types at column 0 (`namespace Application { … }`, scheduler style).
+- Lines under **100 characters** when practical.
+- Language: **C++23** for active CMake targets unless a subdirectory documents otherwise.
+- One blank line between function definitions; no trailing whitespace; consistent operator spacing.
+- Until a shared `.clang-format` exists, match neighboring code. Clean up before submitting a PR.
 
 Good:
 
-    if (isVisible) {
-      hideLauncher();
+    if (isVisible)
+    {
+        hideLauncher();
     }
 
 Avoid:
 
     if (isVisible)
-      hideLauncher();
+        hideLauncher();
 
-## Line Length
+## Comments and docs
 
-- Keep lines under **100 characters** whenever practical.
-- Break long function calls or conditionals across multiple lines.
-- Avoid making code harder to read just to force a line under 100 characters.
+- Explain **why**, not what every obvious line does. Keep comments short; remove outdated ones.
+- TODOs only when real, specific, and actionable; no drive-by jokes in public headers.
+- Prefer `///` for member briefs; longer notes as block comments above the declaration.
+- New or substantially edited headers use compact Doxygen only:
 
-## Comments
+```cpp
+/**
+ * @file Example.hpp
+ * @brief One-line purpose.
+ */
+```
 
-- Write comments that explain **why** code exists, not what every obvious line does.
-- Keep comments short and useful.
-- Remove outdated comments when code changes.
-- Use TODO comments only when the issue is real and should be handled later.
+- Remove all `@author` lines; do not add new ones. Do not invent a second full Doxygen banner style.
+- Generated HTML under `docs/html` is produced by Doxygen (`docs/Doxyfile`); it is gitignored — regenerate with `cd docs && doxygen Doxyfile` when needed. Do not treat generated HTML as a style source.
+- Update the README when build steps, dependencies, or usage change. Document major design decisions; drop outdated notes.
 
-Example:
+## Magic numbers
 
-    // Restore focus so the user can return to the game after closing the launcher.
-    restorePreviousWindowFocus();
+- Prefer named `constexpr` / constants near the use site (or shared when used across files). Naming follows the Constants rule above.
 
-## Magic Numbers
+    constexpr int kMenuRadius = 140;
+    constexpr int kMaxVisibleActions = 8;
 
-- Avoid hardcoded numeric values.
-- Use named constants or `constexpr` variables instead.
-- Constants should be placed near the code that uses them unless they are shared across files.
+## Classes and API shape
 
-Example:
+- Keep members private unless there is a strong reason (DTO exception above).
+- Prefer small classes with clear responsibilities. New types must not mix UI, action execution, and settings. `App` is the allowed composition root that wires Gui, Scheduler, hotkeys, and config until a future split; do not grow that mix into additional types.
+- Construct objects into a valid starting state.
+- Prefer clear ownership:
+  - `unique_ptr` for polymorphic ActionItem sequences and runtime Menu storage (`App::loadedMenus`).
+  - Menus reference actions by stable id.
+  - Non-owning `Menu*` / `Action*` observers (`activeMenu()`, `findMenuById()`) are fine.
+- Mark side-effect-free queries `[[nodiscard]]` when ignoring the result is a bug.
+- Prefer `noexcept` on trivial getters/setters and moves when accurate.
+- Prefer typed results (`ExecuteResult`) over ambiguous `bool` / out-params when that pattern is already used nearby.
+- Put units in names when non-obvious (`durationMs`); do not silently mix seconds and milliseconds.
+- Prefer `nullptr`, `override`, `= default` / `= delete` where appropriate.
 
-    constexpr int MENU_RADIUS = 140;
-    constexpr int MAX_VISIBLE_ACTIONS = 8;
+## Ownership and RAII
 
-## Classes
+- Prefer RAII. Do not use raw owning pointers.
+- Qt widgets may use parented `new` (`new QWidget(parent)`); the Qt parent owns lifetime. That is the only approved raw-`new` ownership pattern.
+- Prefer `std::unique_ptr` for exclusive ownership elsewhere.
 
-- Keep data members private unless there is a strong reason not to.
-- Keep public interfaces concise and easy to understand.
-- Prefer small classes with clear responsibilities.
-- Avoid mixing UI code, action execution logic, and settings logic in the same class.
-- Use constructors to put objects into a valid starting state.
+## Threading and scheduling
 
-## Error Handling
+- Scheduler owns every live `ActionExecutionContext`, channel state, and delay parking.
+- Workers never make scheduling decisions; they only execute work the scheduler dispatches.
+- Preserve strict FIFO ordering within channels.
+- Prefer `std::jthread` over `std::thread` for new code.
+- Minimize lock contention; keep shared mutable state behind clear owners (scheduler thread, mutex-guarded queues/history).
+- Avoid global state beyond the existing App singleton composition root.
 
-- Check for failure cases when launching programs, opening files, saving settings, or registering hotkeys.
-- Do not allow invalid user input to crash the application.
-- Return clear success/failure values where useful.
+## Error handling
+
+- Check failures when launching programs, opening files, saving settings, or registering hotkeys.
+- Do not let invalid user input crash the app.
+- Prefer typed results (`ExecuteResult`, status enums) when that pattern is already used nearby.
+- Exceptions only for programmer/contract errors (e.g. null Action passed to a context ctor). Do not invent a second error style for the same layer.
 - Log or document important failures during testing.
 
-Example:
+## Qt / GUI
 
-    if (!executor.launchApplication(filePath)) {
-      // TODO: Show user-facing error message in settings/action menu.
-      return false;
-    }
+- Keep UI layout separate from action execution; handlers call into action/executor types.
+- Descriptive widget names; keep the launcher overlay lightweight and responsive.
+- Parented Qt `new` is allowed (see Ownership).
 
-## Qt / GUI Code
+## Windows / platform
 
-- Keep UI layout code separate from action execution logic when possible.
-- UI button handlers should call into action/executor classes instead of directly containing all logic.
-- Keep widget names descriptive.
-- Keep the launcher interface lightweight and responsive.
+- Keep OS-specific logic in `platform/src/<os>/`. Comment non-obvious API calls; check return values (hotkeys, focus, process launch).
 
-## Windows API Code
+## Configuration
 
-- Keep Windows API-specific logic isolated when possible.
-- Add short comments for Windows API calls that are not obvious.
-- Check return values from Windows API functions such as hotkey registration, focus handling, and process launching.
-- Avoid spreading platform-specific code throughout the entire project.
-
-## Configuration and Settings
-
-- User-configurable actions should be saved and loaded through a clear settings/configuration system.
-- Avoid requiring users to edit code to add or change launcher actions.
-- Validate paths, hotkeys, and action names before saving.
-- Handle missing or invalid configuration files safely.
+- Save/load user actions through the settings/config system; do not require code edits to add actions.
+- Validate paths, keystrokes, and names before saving; handle missing or invalid config safely.
 
 ## Testing
 
-- Manual tests should be documented in the test plan/report.
-- Automated tests should be placed in the `app/tests` directory.
-- Add unit tests for logic that can be tested without the GUI.
-- Useful test areas include:
-  - Action execution.
-  - Action history.
-  - Search/fuzzy matching.
-  - Scheduler behavior.
-  - Settings validation.
-  - Invalid action paths.
-- Before merging major changes, team members should build and run the project locally.
+- Manual tests live in the test plan/report; automated tests under `app/tests`.
+- Hand-rolled `main` + `bool test…()` helpers; keep that pattern consistent within a file.
+- File-scoped `using namespace Application;` is allowed in `.cpp` and test mains. Prefer specific `using Application::Type;` in headers; never put broad `using namespace` in headers.
+- Share fakes via a common helper when a third copy would appear.
+- Tests may include App and Platform headers. Cover logic that can run without the GUI (actions, history, search, scheduler, settings validation).
+- Build and run locally before merging major changes.
 
-## Git and Pull Requests
+## CMake
 
-- Use clear branch names when possible.
-  - Example: `feature/search-palette`, `fix/hotkey-close`
-- Keep pull requests focused on one main change.
-- Write clear commit messages that describe what changed.
-- Do not commit build artifacts, temporary files, or personal IDE files.
-- Review code before merging into the main branch.
-- Make sure the project builds before merging major code changes.
+- Libraries: PascalCase (`App`, `Platform`). Executables: `WheelTime`.
+- Test targets: snake_case stems matching the `.cpp` file name.
+- List new sources in the owning `CMakeLists.txt`; wire or remove orphans.
 
-## Formatting
+## Git and pull requests
 
-- Leave one blank line between function definitions.
-- Do not leave trailing whitespace at the end of lines.
-- Keep spacing around operators consistent.
-- Keep related code grouped together.
-- Run formatting or manually clean up code before submitting a pull request.
+- Clear branch names (`feature/search-palette`, `fix/hotkey-close`).
+- Focused PRs; clear commit messages; no build artifacts or personal IDE files.
+- Review and confirm the project builds before merging major changes.
 
-## Documentation
+## Deliberately allowed
 
-- Update the README when build steps, dependencies, or usage instructions change.
-- Document major design decisions in the repository.
-- Keep comments and documentation consistent with the current code.
-- Remove outdated notes once they no longer apply.
+- JSON snake_case vs C++ PascalCase (wire format ≠ C++ naming).
+- `App/` path vs `Application` namespace (historical; don’t churn paths for style alone).
+- Public fields on small ActionItem DTOs (infrastructure types use `m_`).
+- `App` as composition root wiring Gui + Scheduler + settings/hotkeys.
+- Qt parented-`new` for widgets.
+- Dual brace placement across subsystems until clang-format lands.
+- File-scoped `using namespace Application;` in `.cpp` / tests.
 
 ## Summary
 
-The main goal of these standards is consistency. Team members should write C++ code that is readable, modular, and easy to maintain. When in doubt, choose the style that makes the code easier for another teammate to understand and build on.
+Prefer consistency. When in doubt, match `app/include/App/Scheduler.hpp` and ActionItems under `app/include/App/ActionItems/`, and choose the form that is easiest for another teammate to follow.

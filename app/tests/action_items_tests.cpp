@@ -1,6 +1,6 @@
 /**
- * @file phase9_actionitems_smoke.cpp
- * @brief Disposable smoke tests for built-in ActionItems (Phase 9).
+ * @file action_items_tests.cpp
+ * @brief Tests for built-in ActionItems.
  */
 
 #include "App/Action.hpp"
@@ -83,7 +83,7 @@ bool testKeystrokeHoldRegistersCleanup()
         std::cerr << "hold: missing flush or scheduled release\n";
         return false;
     }
-    if (flushes.front()->cancelable() || scheduled.front().action->cancelable())
+    if (flushes.front()->isCancelable() || scheduled.front().action->isCancelable())
     {
         std::cerr << "hold: cleanup Actions should be uncancelable\n";
         return false;
@@ -180,7 +180,7 @@ bool testMouseButtonHoldRegistersCleanup()
         std::cerr << "mouse_hold: missing flush or scheduled release\n";
         return false;
     }
-    if (flushes.front()->cancelable() || scheduled.front().action->cancelable())
+    if (flushes.front()->isCancelable() || scheduled.front().action->isCancelable())
     {
         std::cerr << "mouse_hold: cleanup Actions should be uncancelable\n";
         return false;
@@ -796,7 +796,7 @@ bool testSocketActionItemExecuteStress()
 int main(int argc, char *argv[])
 {
     QApplication qtApp(argc, argv);
-    (void)App::getInstance();
+    (void)App::instance();
 
     using TestFn = bool (*)();
     const std::pair<const char *, TestFn> tests[] = {
@@ -834,10 +834,10 @@ int main(int argc, char *argv[])
 
     if (failed != 0)
     {
-        std::cerr << failed << " phase9 actionitems smoke test(s) failed\n";
+        std::cerr << failed << " action item test(s) failed\n";
         return 1;
     }
 
-    std::cout << "Phase 9 ActionItems smoke tests passed\n";
+    std::cout << "ActionItems tests passed\n";
     return 0;
 }

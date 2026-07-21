@@ -15,17 +15,17 @@ namespace Application
  *
  * `button`: 0 = left, 1 = right, 2 = middle.
  * `modifiers`: same bit mask as AI_Keystroke (Ctrl/Alt/Shift/Win).
- * Tap (`holdDuration <= 0`) presses then releases. Hold uses press + delayed
+ * Tap (`holdDurationSec <= 0`) presses then releases. Hold uses press + delayed
  * release (cancel-flush + scheduled cleanup), matching AI_Keystroke.
  */
 class AI_MouseButton : public ActionItem
 {
 public:
-    AI_MouseButton(int button = 0, float holdDuration = 0.0f, bool proceed = false, int modifiers = 0);
+    AI_MouseButton(int button = 0, float holdDurationSec = 0.0f, bool proceed = false, int modifiers = 0);
 
     int button = 0;
     int modifiers = 0;
-    float holdDuration = 0.0f; ///< Hold time in seconds.
+    float holdDurationSec = 0.0f; ///< Hold time in seconds.
     bool proceed = false;
 
     std::unique_ptr<ActionItem> clone() const override;

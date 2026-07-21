@@ -1,32 +1,25 @@
 /**
  * @file App.cpp
- * @author goatfishplays@gmail.com
- * @brief Contains the implementation of the actual app
- * @version 0.1
- * @date 2026-07-02
- *
- * @copyright Copyright (c) 2026
+ * @brief Application singleton implementation.
  */
 
 #include "App/App.hpp"
 
-#include <Platform/Window.hpp>
-#include <Platform/Inputs.hpp>
-#include <Platform/Execute.hpp>
-#include <QAbstractNativeEventFilter>
-#include <QApplication>
-#include <QString>
-#include <vector>
-#include <QTimer>
-#include <QPushButton>
-#include <QThread>
-
+#include "App/ActionItems.hpp"
 #include "App/MenuConfigLoader.hpp"
 #include "App/SettingsWindow.hpp"
-#include "App/ActionItems.hpp"
 
+#include <Platform/Execute.hpp>
+#include <Platform/Inputs.hpp>
+#include <Platform/Window.hpp>
+
+#include <QAbstractNativeEventFilter>
+#include <QApplication>
 #include <QDir>
 #include <QFileInfo>
+#include <QString>
+#include <QThread>
+#include <QTimer>
 
 #include <algorithm>
 #include <string>
@@ -41,7 +34,7 @@ using namespace Application;
 /// recent launch, so resolving n=1 schedules itself forever.
 bool App::isHistoryMetaAction(const Action &action)
 {
-    for (const auto &item : action.getItems())
+    for (const auto &item : action.items())
     {
         if (!item)
         {
@@ -65,7 +58,7 @@ public:
     bool nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result) override
     {
         int hotkeyId = 0;
-        if (Platform::InputRcvr::isHotkeyMessage(message, hotkeyId))
+        if (Platform::InputReceiver::isHotkeyMessage(message, hotkeyId))
         {
             m_app->onHotkeyTriggered(hotkeyId);
             return true; // Handled
@@ -78,12 +71,12 @@ private:
 };
 
 App::App()
-    : activeMenu(nullptr),
-      gui(0),
-      priorMousePos{},
-      priorWindow{},
-      inputRcvr(),
-      executor(),
+    : m_activeMenu(nullptr),
+      m_gui(0),
+      m_priorMousePos{},
+      m_priorWindow{},
+      m_executor(),
+      m_inputReceiver(),
       m_hotkeyFilter(nullptr),
       m_settingsWindow(nullptr),
       m_configPath(MenuConfigLoader::defaultConfigPath()),
@@ -96,22 +89,29 @@ App::App()
 {
     // Load the repo-local config on startup. If it is missing or malformed,
     // keep the app alive with a tiny fallback menu so the GUI still opens.
-    if (!MenuConfigLoader::loadConfig(m_configPath, m_appConfig, actionLibrary, loadedMenus))
+    if (!MenuConfigLoader::loadConfig(m_configPath, m_appConfig, m_actionLibrary, m_loadedMenus))
     {
         std::vector<std::unique_ptr<ActionItem>> items;
         items.push_back(std::make_unique<AI_Close>());
-        actionLibrary.push_back(Action(std::move(items), "Config missing", "", "action-config-missing"));
-        loadedMenus.push_back(new Menu(0, 0, false, false, true, false, "Config Error", {"action-config-missing"}, "menu-config-error"));
+        m_actionLibrary.push_back(Action(std::move(items), "Config missing", "", "action-config-missing"));
+        m_loadedMenus.push_back(std::make_unique<Menu>(
+            0, 0, false, false, true, false, "Config Error",
+            std::vector<std::string>{"action-config-missing"}, "menu-config-error"));
     }
 
     bool anyHotkey = false;
-    for (Menu* m : loadedMenus) {
-        if (m->triggerMod == 0 && m->triggerVk == 0) continue;
+    for (const auto &menuPtr : m_loadedMenus)
+    {
+        Menu *m = menuPtr.get();
+        if (m == nullptr || (m->triggerMod() == 0 && m->triggerVk() == 0))
+        {
+            continue;
+        }
         anyHotkey = true;
-        Platform::InputBind bind;
-        bind.mod = m->triggerMod;
-        bind.input = m->triggerVk;
-        m_inputRcvr.registerInputBinding(bind);
+        Platform::InputBinding bind;
+        bind.mod = m->triggerMod();
+        bind.input = m->triggerVk();
+        m_inputReceiver.registerInputBinding(bind);
     }
 
     // Install native event filter to capture WM_HOTKEY
@@ -119,16 +119,16 @@ App::App()
     qApp->installNativeEventFilter(m_hotkeyFilter);
 
     // Connect escapePressed signal from Gui to hide and return focus
-    QObject::connect(&gui, &Gui::escapePressed, [this]()
+    QObject::connect(&m_gui, &Gui::escapePressed, [this]()
                      {
                          // Settings has an explicit Close button. Escaping out via
                          // hideGui() skips resumeHotkeys() / scheduler resume and
                          // leaves menu triggers permanently unregistered.
-                         if (gui.isSettingsVisible())
+                         if (m_gui.isSettingsVisible())
                          {
                              return;
                          }
-                         if (gui.isSearchVisible())
+                         if (m_gui.isSearchVisible())
                          {
                              hideSearchOverlay();
                              return;
@@ -136,22 +136,22 @@ App::App()
                          hideGui();
                      });
 
-    // Move the old loadConfig block up above so it is loaded before inputRcvr registration
+    // Move the old loadConfig block up above so it is loaded before m_inputReceiver registration
 
     m_actionHistory.load(historyPath());
     pruneActionHistory();
 
-    if (!loadedMenus.empty())
+    if (!m_loadedMenus.empty())
     {
-        activeMenu = loadedMenus.front();
-        gui.setMenu(*activeMenu, getActionSlotVisualsForMenu(*activeMenu));
+        m_activeMenu = m_loadedMenus.front().get();
+        m_gui.setMenu(*m_activeMenu, actionSlotVisualsForMenu(*m_activeMenu));
     }
 
     initializeOverlay();
 
     // Warm the search palette's program index in the background so the first
     // palette open does not block on the initial shortcut-folder scan.
-    gui.preloadSearchIndex();
+    m_gui.preloadSearchIndex();
 
     m_releaseWatchTimer = new QTimer(qApp);
     m_releaseWatchTimer->setInterval(16);
@@ -191,19 +191,20 @@ App::~App()
         m_settingsWindow = nullptr;
     }
 
-    // Release OS hotkeys before deleting menu objects.
+    // Release OS hotkeys before clearing owned menus.
     if (!m_hotkeysSuspended)
     {
-        for (Menu *m : loadedMenus)
+        for (const auto &menuPtr : m_loadedMenus)
         {
-            if (m == nullptr || (m->triggerMod == 0 && m->triggerVk == 0))
+            Menu *m = menuPtr.get();
+            if (m == nullptr || (m->triggerMod() == 0 && m->triggerVk() == 0))
             {
                 continue;
             }
-            Platform::InputBind bind;
-            bind.mod = m->triggerMod;
-            bind.input = m->triggerVk;
-            m_inputRcvr.unregisterInputBinding(bind);
+            Platform::InputBinding bind;
+            bind.mod = m->triggerMod();
+            bind.input = m->triggerVk();
+            m_inputReceiver.unregisterInputBinding(bind);
         }
     }
     clearMenus();
@@ -211,11 +212,7 @@ App::~App()
 
 void App::clearMenus()
 {
-    for (int i = static_cast<int>(loadedMenus.size()) - 1; i >= 0; --i)
-    {
-        delete loadedMenus[i];
-    }
-    loadedMenus.clear();
+    m_loadedMenus.clear();
 }
 
 void App::suspendHotkeys()
@@ -227,16 +224,17 @@ void App::suspendHotkeys()
 
     // RegisterHotKey consumes matching KeyPresses, so the settings recorder
     // cannot capture a chord that is still bound. Drop live binds while editing.
-    for (Menu *m : loadedMenus)
+    for (const auto &menuPtr : m_loadedMenus)
     {
-        if (m == nullptr || (m->triggerMod == 0 && m->triggerVk == 0))
+        Menu *m = menuPtr.get();
+        if (m == nullptr || (m->triggerMod() == 0 && m->triggerVk() == 0))
         {
             continue;
         }
-        Platform::InputBind bind;
-        bind.mod = m->triggerMod;
-        bind.input = m->triggerVk;
-        m_inputRcvr.unregisterInputBinding(bind);
+        Platform::InputBinding bind;
+        bind.mod = m->triggerMod();
+        bind.input = m->triggerVk();
+        m_inputReceiver.unregisterInputBinding(bind);
     }
     m_hotkeysSuspended = true;
 }
@@ -248,16 +246,17 @@ void App::resumeHotkeys()
         return;
     }
 
-    for (Menu *m : loadedMenus)
+    for (const auto &menuPtr : m_loadedMenus)
     {
-        if (m == nullptr || (m->triggerMod == 0 && m->triggerVk == 0))
+        Menu *m = menuPtr.get();
+        if (m == nullptr || (m->triggerMod() == 0 && m->triggerVk() == 0))
         {
             continue;
         }
-        Platform::InputBind bind;
-        bind.mod = m->triggerMod;
-        bind.input = m->triggerVk;
-        m_inputRcvr.registerInputBinding(bind);
+        Platform::InputBinding bind;
+        bind.mod = m->triggerMod();
+        bind.input = m->triggerVk();
+        m_inputReceiver.registerInputBinding(bind);
     }
     m_hotkeysSuspended = false;
 }
@@ -265,7 +264,7 @@ void App::resumeHotkeys()
 void App::onHotkeyTriggered(int hotkeyId)
 {
     // Don't fight the settings editor while the overlay is in focusable editor mode.
-    if (gui.isSettingsVisible())
+    if (m_gui.isSettingsVisible())
     {
         return;
     }
@@ -273,7 +272,7 @@ void App::onHotkeyTriggered(int hotkeyId)
     // A menu hotkey while the search palette is open exits search into that
     // menu. Restore prior focus first so wheel mode keeps its invariant that
     // the underlying app owns the keyboard.
-    if (gui.isSearchVisible())
+    if (m_gui.isSearchVisible())
     {
         hideSearchOverlay();
     }
@@ -281,9 +280,10 @@ void App::onHotkeyTriggered(int hotkeyId)
     int mod = (hotkeyId >> 16) & 0xFFFF;
     int vk = hotkeyId & 0xFFFF;
     Menu *targetMenu = nullptr;
-    for (Menu *m : loadedMenus)
+    for (const auto &menuPtr : m_loadedMenus)
     {
-        if (m->triggerMod == mod && m->triggerVk == vk)
+        Menu *m = menuPtr.get();
+        if (m != nullptr && m->triggerMod() == mod && m->triggerVk() == vk)
         {
             targetMenu = m;
             break;
@@ -292,9 +292,9 @@ void App::onHotkeyTriggered(int hotkeyId)
 
     // Same-menu hotkey (or unmatched) toggles closed while the wheel is up.
     // A different menu's hotkey switches to that menu instead of dismissing.
-    if (gui.isLauncherVisible())
+    if (m_gui.isLauncherVisible())
     {
-        if (targetMenu == nullptr || targetMenu == activeMenu)
+        if (targetMenu == nullptr || targetMenu == m_activeMenu)
         {
             hideGui();
             return;
@@ -303,13 +303,13 @@ void App::onHotkeyTriggered(int hotkeyId)
     }
 
     Menu *menuToShow = targetMenu;
-    if (menuToShow == nullptr && activeMenu == nullptr && !loadedMenus.empty())
+    if (menuToShow == nullptr && m_activeMenu == nullptr && !m_loadedMenus.empty())
     {
-        menuToShow = loadedMenus.front();
+        menuToShow = m_loadedMenus.front().get();
     }
     else if (menuToShow == nullptr)
     {
-        menuToShow = activeMenu;
+        menuToShow = m_activeMenu;
     }
 
     if (menuToShow == nullptr)
@@ -317,12 +317,12 @@ void App::onHotkeyTriggered(int hotkeyId)
         return;
     }
 
-    activeMenu = menuToShow;
-    showGui(activeMenu);
+    m_activeMenu = menuToShow;
+    showGui(m_activeMenu);
 
-    if (activeMenu->executeOnRelease)
+    if (m_activeMenu->executeOnRelease())
     {
-        armExecuteOnRelease(activeMenu->triggerMod, activeMenu->triggerVk);
+        armExecuteOnRelease(m_activeMenu->triggerMod(), m_activeMenu->triggerVk());
     }
 }
 
@@ -351,7 +351,7 @@ void App::disarmExecuteOnRelease()
 void App::armEscapeDismiss()
 {
     // Seed with the current key state so a held Escape does not instantly close.
-    m_escapeWasDown = m_inputRcvr.isVirtualKeyDown(0x1B); // VK_ESCAPE
+    m_escapeWasDown = m_inputReceiver.isVirtualKeyDown(0x1B); // VK_ESCAPE
     if (m_escapeWatchTimer != nullptr)
     {
         m_escapeWatchTimer->start();
@@ -369,13 +369,13 @@ void App::disarmEscapeDismiss()
 
 void App::onEscapeWatchTick()
 {
-    if (!gui.isLauncherVisible())
+    if (!m_gui.isLauncherVisible())
     {
         disarmEscapeDismiss();
         return;
     }
 
-    const bool escapeDown = m_inputRcvr.isVirtualKeyDown(0x1B); // VK_ESCAPE
+    const bool escapeDown = m_inputReceiver.isVirtualKeyDown(0x1B); // VK_ESCAPE
     if (escapeDown && !m_escapeWasDown)
     {
         m_escapeWasDown = true;
@@ -394,22 +394,22 @@ void App::onExecuteOnReleaseTick()
 
     // Wait until primary key AND every launcher modifier are up. Otherwise
     // releasing only Tab on Ctrl+Shift+Tab would inject keys with Ctrl/Shift still held.
-    if (!m_inputRcvr.isChordFullyReleased(m_releaseWatchMod, m_releaseWatchVk))
+    if (!m_inputReceiver.isChordFullyReleased(m_releaseWatchMod, m_releaseWatchVk))
     {
         return;
     }
 
     disarmExecuteOnRelease();
 
-    if (!gui.isLauncherVisible())
+    if (!m_gui.isLauncherVisible())
     {
         return;
     }
 
-    gui.refreshSelectionFromCursor();
-    const int selected = gui.selectedActionIndex();
-    if (activeMenu != nullptr && selected >= 0 && selected < activeMenu->actionCount()
-        && findActionById(activeMenu->getActionId(selected)) != nullptr)
+    m_gui.refreshSelectionFromCursor();
+    const int selected = m_gui.selectedActionIndex();
+    if (m_activeMenu != nullptr && selected >= 0 && selected < m_activeMenu->actionCount()
+        && findActionById(m_activeMenu->actionId(selected)) != nullptr)
     {
         executeAction(selected);
         return;
@@ -419,16 +419,17 @@ void App::onExecuteOnReleaseTick()
     hideGui();
 }
 
-Menu *App::getActiveMenu()
+Menu *App::activeMenu()
 {
-    return activeMenu;
+    return m_activeMenu;
 }
 
 Menu *App::findMenuById(const std::string &menuId)
 {
-    for (Menu *menu : loadedMenus)
+    for (const auto &menuPtr : m_loadedMenus)
     {
-        if (menu != nullptr && menu->getId() == menuId)
+        Menu *menu = menuPtr.get();
+        if (menu != nullptr && menu->id() == menuId)
         {
             return menu;
         }
@@ -438,9 +439,10 @@ Menu *App::findMenuById(const std::string &menuId)
 
 const Menu *App::findMenuById(const std::string &menuId) const
 {
-    for (const Menu *menu : loadedMenus)
+    for (const auto &menuPtr : m_loadedMenus)
     {
-        if (menu != nullptr && menu->getId() == menuId)
+        const Menu *menu = menuPtr.get();
+        if (menu != nullptr && menu->id() == menuId)
         {
             return menu;
         }
@@ -450,9 +452,9 @@ const Menu *App::findMenuById(const std::string &menuId) const
 
 Action *App::findActionById(const std::string &actionId)
 {
-    for (Action &action : actionLibrary)
+    for (Action &action : m_actionLibrary)
     {
-        if (action.getId() == actionId)
+        if (action.id() == actionId)
         {
             return &action;
         }
@@ -462,9 +464,9 @@ Action *App::findActionById(const std::string &actionId)
 
 const Action *App::findActionById(const std::string &actionId) const
 {
-    for (const Action &action : actionLibrary)
+    for (const Action &action : m_actionLibrary)
     {
-        if (action.getId() == actionId)
+        if (action.id() == actionId)
         {
             return &action;
         }
@@ -472,7 +474,7 @@ const Action *App::findActionById(const std::string &actionId) const
     return nullptr;
 }
 
-std::vector<ActionSlotVisual> App::getActionSlotVisualsForMenu(const Menu &menu) const
+std::vector<ActionSlotVisual> App::actionSlotVisualsForMenu(const Menu &menu) const
 {
     std::vector<ActionSlotVisual> visuals;
     visuals.reserve(menu.actionCount());
@@ -480,14 +482,14 @@ std::vector<ActionSlotVisual> App::getActionSlotVisualsForMenu(const Menu &menu)
     const QFileInfo configInfo(m_configPath);
     const QDir configDir = configInfo.absoluteDir();
 
-    for (const std::string &actionId : menu.getActionIds())
+    for (const std::string &actionId : menu.actionIds())
     {
         const Action *action = findActionById(actionId);
         ActionSlotVisual visual;
-        visual.label = action != nullptr ? action->getName() : "Missing Action";
-        if (action != nullptr && !action->getIconFilepath().empty())
+        visual.label = action != nullptr ? action->name() : "Missing Action";
+        if (action != nullptr && !action->iconFilepath().empty())
         {
-            const QString iconPath = QString::fromStdString(action->getIconFilepath());
+            const QString iconPath = QString::fromStdString(action->iconFilepath());
             const QFileInfo iconInfo(iconPath);
             if (iconInfo.isAbsolute())
             {
@@ -504,38 +506,33 @@ std::vector<ActionSlotVisual> App::getActionSlotVisualsForMenu(const Menu &menu)
     return visuals;
 }
 
-std::vector<Menu> App::getMenuCopies() const
+std::vector<Menu> App::menuCopies() const
 {
     std::vector<Menu> menus;
-    menus.reserve(loadedMenus.size());
-    for (const Menu *menu : loadedMenus)
+    menus.reserve(m_loadedMenus.size());
+    for (const auto &menuPtr : m_loadedMenus)
     {
-        if (menu != nullptr)
+        if (menuPtr)
         {
-            menus.push_back(*menu);
+            menus.push_back(*menuPtr);
         }
     }
     return menus;
 }
 
-const std::vector<Action> &App::getActionLibrary() const
-{
-    return actionLibrary;
-}
-
 void App::gatherPriors()
 {
-    priorMousePos = inputRcvr.getAbsoluteMousePosition();
-    priorWindow.getActiveWindow();
+    m_priorMousePos = m_inputReceiver.absoluteMousePosition();
+    m_priorWindow.captureActiveWindow();
 }
 
 void App::restorePriors()
 {
     // The non-activating overlay should leave keyboard focus where it already
     // is, so we intentionally avoid restoring focus here.
-    if (activeMenu != nullptr && activeMenu->restoreMouseOnClose)
+    if (m_activeMenu != nullptr && m_activeMenu->restoreMouseOnClose())
     {
-        inputRcvr.setAbsoluteMousePosition(priorMousePos);
+        m_inputReceiver.setAbsoluteMousePosition(m_priorMousePos);
     }
 }
 
@@ -549,30 +546,30 @@ void App::initializeOverlay()
     // Give Qt the same initial fullscreen bounds the native overlay window
     // will use so layered painting has a valid backing-store size from the
     // beginning instead of the default tiny top-level widget size.
-    const Platform::Vec2 cursorPos = inputRcvr.getAbsoluteMousePosition();
-    Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
+    const Platform::Vec2 cursorPos = m_inputReceiver.absoluteMousePosition();
+    Platform::Window overlayWindow(reinterpret_cast<void *>(m_gui.winId()));
     const Platform::WindowRect bounds = overlayWindow.monitorBoundsForPoint(cursorPos.x, cursorPos.y);
-    gui.setGeometry(bounds.x, bounds.y, bounds.width, bounds.height);
-    gui.show();
+    m_gui.setGeometry(bounds.x, bounds.y, bounds.width, bounds.height);
+    m_gui.show();
     overlayWindow.setTransparentOverlay(true);
     overlayWindow.setNonActivating(true);
     overlayWindow.setTopmost(true);
     overlayWindow.setBounds(bounds);
     overlayWindow.showNoActivate();
-    gui.enterDormantOverlay();
+    m_gui.enterDormantOverlay();
     overlayWindow.setClickThrough(true);
     m_overlayInitialized = true;
 }
 
 void App::configureOverlayForCursor()
 {
-    const Platform::Vec2 cursorPos = inputRcvr.getAbsoluteMousePosition();
-    Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
+    const Platform::Vec2 cursorPos = m_inputReceiver.absoluteMousePosition();
+    Platform::Window overlayWindow(reinterpret_cast<void *>(m_gui.winId()));
     const Platform::WindowRect bounds = overlayWindow.monitorBoundsForPoint(cursorPos.x, cursorPos.y);
     // Keep Qt's widget geometry in sync with the native overlay bounds. The
     // shell widget owns the centered panel layout, so it must know its actual
     // monitor-sized rect for rendering and hit-testing to behave correctly.
-    gui.setGeometry(bounds.x, bounds.y, bounds.width, bounds.height);
+    m_gui.setGeometry(bounds.x, bounds.y, bounds.width, bounds.height);
     overlayWindow.setBounds(bounds);
     overlayWindow.setTransparentOverlay(true);
     overlayWindow.setNonActivating(true);
@@ -591,7 +588,7 @@ void App::showGui(Menu *menu)
     if (QCoreApplication::instance() != nullptr
         && QThread::currentThread() != QCoreApplication::instance()->thread())
     {
-        const std::string menuId = menu->getId();
+        const std::string menuId = menu->id();
         QMetaObject::invokeMethod(
             QCoreApplication::instance(),
             [this, menuId]()
@@ -604,37 +601,37 @@ void App::showGui(Menu *menu)
 
     // Wheel and search are mutually exclusive; wheel mode must also win back
     // the non-activating focus model, so restore the prior foreground window.
-    if (gui.isSearchVisible())
+    if (m_gui.isSearchVisible())
     {
         hideSearchOverlay();
     }
 
     initializeOverlay();
     gatherPriors();
-    activeMenu = menu;
+    m_activeMenu = menu;
     // Size the overlay to the current monitor first so radius/layout use final dims.
     configureOverlayForCursor();
 
-    if (activeMenu->centerMouseOnOpen)
+    if (m_activeMenu->centerMouseOnOpen())
     {
-        const Platform::Vec2 cursorPos = inputRcvr.getAbsoluteMousePosition();
-        Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
+        const Platform::Vec2 cursorPos = m_inputReceiver.absoluteMousePosition();
+        Platform::Window overlayWindow(reinterpret_cast<void *>(m_gui.winId()));
         const Platform::WindowRect bounds =
             overlayWindow.monitorBoundsForPoint(cursorPos.x, cursorPos.y);
         // Start the cursor slightly above the wheel center; scales with the
         // monitor so the nudge feels the same across resolutions.
         const int upwardNudge = bounds.height * 2 / 100;
-        inputRcvr.setAbsoluteMousePosition(Platform::Vec2{
+        m_inputReceiver.setAbsoluteMousePosition(Platform::Vec2{
             bounds.x + bounds.width / 2,
             bounds.y + bounds.height / 2 - upwardNudge});
     }
 
-    gui.setMenu(*activeMenu, getActionSlotVisualsForMenu(*activeMenu));
+    m_gui.setMenu(*m_activeMenu, actionSlotVisualsForMenu(*m_activeMenu));
 
-    Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
+    Platform::Window overlayWindow(reinterpret_cast<void *>(m_gui.winId()));
     overlayWindow.setClickThrough(false);
     overlayWindow.showNoActivate();
-    gui.enterInteractiveOverlay();
+    m_gui.enterInteractiveOverlay();
     armEscapeDismiss();
 }
 
@@ -655,7 +652,7 @@ void App::hideGui()
 
     // Settings must leave through the same cleanup as Close (resume OS hotkeys
     // and the scheduler). The wheel dismiss path below does not do that.
-    if (gui.isSettingsVisible())
+    if (m_gui.isSettingsVisible())
     {
         if (m_scheduler)
         {
@@ -668,8 +665,8 @@ void App::hideGui()
     disarmExecuteOnRelease();
     disarmEscapeDismiss();
     initializeOverlay();
-    gui.enterDormantOverlay();
-    Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
+    m_gui.enterDormantOverlay();
+    Platform::Window overlayWindow(reinterpret_cast<void *>(m_gui.winId()));
     overlayWindow.setClickThrough(true);
     overlayWindow.showNoActivate();
     restorePriors();
@@ -693,7 +690,7 @@ void App::showSearchOverlay(const SearchConfig &config)
     }
 
     // Don't fight the settings editor; search and settings are mutually exclusive.
-    if (gui.isSettingsVisible())
+    if (m_gui.isSettingsVisible())
     {
         return;
     }
@@ -709,19 +706,19 @@ void App::showSearchOverlay(const SearchConfig &config)
 
     // Search mode needs real keyboard focus for the query field, unlike wheel
     // mode. Same native flip settings mode uses.
-    Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
+    Platform::Window overlayWindow(reinterpret_cast<void *>(m_gui.winId()));
     overlayWindow.setNonActivating(false);
     overlayWindow.setClickThrough(false);
     overlayWindow.setTopmost(true);
 
     // showSearchPanel hides the wheel/settings panels and flips the mode enum.
-    gui.showSearchPanel(config);
-    gui.show();
-    gui.raise();
-    gui.activateWindow();
+    m_gui.showSearchPanel(config);
+    m_gui.show();
+    m_gui.raise();
+    m_gui.activateWindow();
     // Beat the Windows foreground lock if activateWindow was not enough.
     overlayWindow.focus();
-    gui.focusSearchInput();
+    m_gui.focusSearchInput();
 }
 
 void App::hideSearchOverlay(bool restoreFocus)
@@ -739,15 +736,15 @@ void App::hideSearchOverlay(bool restoreFocus)
         return;
     }
 
-    if (!gui.isSearchVisible())
+    if (!m_gui.isSearchVisible())
     {
         return;
     }
 
-    gui.hideSearchPanel();
+    m_gui.hideSearchPanel();
 
     // Back to the dormant shell: non-activating, click-through, topmost.
-    Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
+    Platform::Window overlayWindow(reinterpret_cast<void *>(m_gui.winId()));
     overlayWindow.setTransparentOverlay(true);
     overlayWindow.setNonActivating(true);
     overlayWindow.setClickThrough(true);
@@ -757,21 +754,21 @@ void App::hideSearchOverlay(bool restoreFocus)
     // Search genuinely steals focus (unlike the wheel), so hand it back.
     if (restoreFocus)
     {
-        priorWindow.focus();
+        m_priorWindow.focus();
     }
 }
 
-void App::executeAction(int actionInd)
+void App::executeAction(int actionIndex)
 {
     // Click-to-execute while holding must not also fire on release.
     disarmExecuteOnRelease();
 
-    if (activeMenu == nullptr || actionInd < 0 || actionInd >= activeMenu->actionCount())
+    if (m_activeMenu == nullptr || actionIndex < 0 || actionIndex >= m_activeMenu->actionCount())
     {
         return;
     }
 
-    Action *action = findActionById(activeMenu->getActionId(actionInd));
+    Action *action = findActionById(m_activeMenu->actionId(actionIndex));
     if (action == nullptr)
     {
         return;
@@ -779,14 +776,14 @@ void App::executeAction(int actionInd)
 
     // Clear leftover launcher modifiers before inject (click-while-holding path).
     // Release-execute also waits for a full physical chord-up; this is the safety net.
-    if (activeMenu->triggerMod != 0)
+    if (m_activeMenu->triggerMod() != 0)
     {
-        executor.modifiersUp(activeMenu->triggerMod);
+        m_executor.modifiersUp(m_activeMenu->triggerMod());
     }
 
-    executeActionById(action->getId());
+    executeActionById(action->id());
 
-    if (activeMenu->exitOnAction && gui.isLauncherVisible())
+    if (m_activeMenu->exitOnAction() && m_gui.isLauncherVisible())
     {
         hideGui();
     }
@@ -804,7 +801,7 @@ void App::executeActionById(const std::string &actionId)
     // Skip history/cancel helpers so "Most Recent" cannot become most recent.
     if (!isHistoryMetaAction(*action))
     {
-        m_actionHistory.recordUse(action->getId());
+        m_actionHistory.recordUse(action->id());
         saveActionHistory();
     }
 
@@ -877,12 +874,12 @@ QString App::historyPath() const
 void App::pruneActionHistory()
 {
     std::vector<std::string> ids;
-    ids.reserve(actionLibrary.size());
-    for (const Action &action : actionLibrary)
+    ids.reserve(m_actionLibrary.size());
+    for (const Action &action : m_actionLibrary)
     {
-        if (!action.getId().empty())
+        if (!action.id().empty())
         {
-            ids.push_back(action.getId());
+            ids.push_back(action.id());
         }
     }
     m_actionHistory.pruneToLibrary(ids);
@@ -909,11 +906,41 @@ const Scheduler &App::scheduler() const noexcept
     return *m_scheduler;
 }
 
+std::vector<std::unique_ptr<Menu>> &App::loadedMenus() noexcept
+{
+    return m_loadedMenus;
+}
+
+const std::vector<std::unique_ptr<Menu>> &App::loadedMenus() const noexcept
+{
+    return m_loadedMenus;
+}
+
+std::vector<Action> &App::actionLibrary() noexcept
+{
+    return m_actionLibrary;
+}
+
+const std::vector<Action> &App::actionLibrary() const noexcept
+{
+    return m_actionLibrary;
+}
+
+Platform::Executor &App::executor() noexcept
+{
+    return m_executor;
+}
+
+const Platform::Executor &App::executor() const noexcept
+{
+    return m_executor;
+}
+
 void App::showSettingsWindow()
 {
     // Settings replaces the search palette; settings takes focus itself, so
     // there is no point bouncing focus back to the prior window first.
-    if (gui.isSearchVisible())
+    if (m_gui.isSearchVisible())
     {
         hideSearchOverlay(/*restoreFocus=*/false);
     }
@@ -946,7 +973,7 @@ void App::showSettingsWindow()
     // Settings mode is intentionally different from wheel mode. The wheel must
     // not steal keyboard focus from games/apps, but the editor has line edits,
     // combo boxes, and hotkey recording controls that need normal focus.
-    Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
+    Platform::Window overlayWindow(reinterpret_cast<void *>(m_gui.winId()));
     overlayWindow.setTransparentOverlay(true);
     overlayWindow.setNonActivating(false);
     overlayWindow.setClickThrough(false);
@@ -956,11 +983,11 @@ void App::showSettingsWindow()
     m_scheduler->pause();
     // Drop OS hotkeys so the recorder can capture chords that are already bound.
     suspendHotkeys();
-    m_settingsWindow->loadWorkingCopy(m_appConfig, actionLibrary, getMenuCopies());
-    gui.showSettingsPanel(m_settingsWindow);
-    gui.show();
-    gui.raise();
-    gui.activateWindow();
+    m_settingsWindow->loadWorkingCopy(m_appConfig, m_actionLibrary, menuCopies());
+    m_gui.showSettingsPanel(m_settingsWindow);
+    m_gui.show();
+    m_gui.raise();
+    m_gui.activateWindow();
 }
 
 void App::restoreOverlayAfterSettings()
@@ -972,10 +999,10 @@ void App::restoreOverlayAfterSettings()
 
     // Re-apply the dormant overlay shell styles. Avoid show()/hide() mismatches
     // with Qt by only using showNoActivate after styles are restored.
-    gui.hideSettingsPanel();
-    gui.enterDormantOverlay();
+    m_gui.hideSettingsPanel();
+    m_gui.enterDormantOverlay();
     resumeHotkeys();
-    Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
+    Platform::Window overlayWindow(reinterpret_cast<void *>(m_gui.winId()));
     overlayWindow.setTransparentOverlay(true);
     overlayWindow.setNonActivating(true);
     overlayWindow.setClickThrough(true);
@@ -985,25 +1012,26 @@ void App::restoreOverlayAfterSettings()
 
 bool App::saveConfig()
 {
-    return MenuConfigLoader::saveConfig(m_configPath, m_appConfig, actionLibrary, loadedMenus);
+    return MenuConfigLoader::saveConfig(m_configPath, m_appConfig, m_actionLibrary, m_loadedMenus);
 }
 
 bool App::applyConfig(const AppConfig &appConfig, const std::vector<Action> &actions, const std::vector<Menu> &menus)
 {
     // Skip unregister while settings has hotkeys suspended; resumeHotkeys will
-    // bind whatever ends up in loadedMenus when the editor closes.
+    // bind whatever ends up in m_loadedMenus when the editor closes.
     if (!m_hotkeysSuspended)
     {
-        for (Menu *m : loadedMenus)
+        for (const auto &menuPtr : m_loadedMenus)
         {
-            if (m == nullptr || (m->triggerMod == 0 && m->triggerVk == 0))
+            Menu *m = menuPtr.get();
+            if (m == nullptr || (m->triggerMod() == 0 && m->triggerVk() == 0))
             {
                 continue;
             }
-            Platform::InputBind oldBind;
-            oldBind.mod = m->triggerMod;
-            oldBind.input = m->triggerVk;
-            m_inputRcvr.unregisterInputBinding(oldBind);
+            Platform::InputBinding oldBind;
+            oldBind.mod = m->triggerMod();
+            oldBind.input = m->triggerVk();
+            m_inputReceiver.unregisterInputBinding(oldBind);
         }
     }
 
@@ -1014,37 +1042,38 @@ bool App::applyConfig(const AppConfig &appConfig, const std::vector<Action> &act
     {
         m_scheduler->cancelAll();
     }
-    const std::string previousActiveMenuId = activeMenu == nullptr ? "" : activeMenu->getId();
+    const std::string previousActiveMenuId = m_activeMenu == nullptr ? "" : m_activeMenu->id();
 
     // Swap the full runtime model in one step so menus and the shared action
     // library stay in sync after settings edits or schema migration.
-    actionLibrary = actions;
+    m_actionLibrary = actions;
     clearMenus();
-    loadedMenus.reserve(menus.size());
+    m_loadedMenus.reserve(menus.size());
     for (const Menu &menu : menus)
     {
-        loadedMenus.push_back(new Menu(menu));
+        m_loadedMenus.push_back(std::make_unique<Menu>(menu));
     }
 
     if (!m_hotkeysSuspended)
     {
-        for (Menu *m : loadedMenus)
+        for (const auto &menuPtr : m_loadedMenus)
         {
-            if (m == nullptr || (m->triggerMod == 0 && m->triggerVk == 0))
+            Menu *m = menuPtr.get();
+            if (m == nullptr || (m->triggerMod() == 0 && m->triggerVk() == 0))
             {
                 continue;
             }
-            Platform::InputBind newBind;
-            newBind.mod = m->triggerMod;
-            newBind.input = m->triggerVk;
-            m_inputRcvr.registerInputBinding(newBind);
+            Platform::InputBinding newBind;
+            newBind.mod = m->triggerMod();
+            newBind.input = m->triggerVk();
+            m_inputReceiver.registerInputBinding(newBind);
         }
     }
 
-    activeMenu = previousActiveMenuId.empty() ? nullptr : findMenuById(previousActiveMenuId);
-    if (activeMenu == nullptr && !loadedMenus.empty())
+    m_activeMenu = previousActiveMenuId.empty() ? nullptr : findMenuById(previousActiveMenuId);
+    if (m_activeMenu == nullptr && !m_loadedMenus.empty())
     {
-        activeMenu = loadedMenus.front();
+        m_activeMenu = m_loadedMenus.front().get();
     }
 
     const bool saved = saveConfig();
@@ -1056,13 +1085,13 @@ bool App::applyConfig(const AppConfig &appConfig, const std::vector<Action> &act
 
 void App::refreshActiveMenu()
 {
-    if (activeMenu != nullptr)
+    if (m_activeMenu != nullptr)
     {
-        gui.setMenu(*activeMenu, getActionSlotVisualsForMenu(*activeMenu));
+        m_gui.setMenu(*m_activeMenu, actionSlotVisualsForMenu(*m_activeMenu));
     }
 }
 
-QString App::getConfigPath() const
+QString App::configPath() const
 {
     return m_configPath;
 }

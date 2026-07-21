@@ -7,7 +7,7 @@ WheelTime is a Windows radial launcher for quick actions, app launches, hotkeys,
 - Global hotkeys open configured radial menus.
 - Radial wheel executes reusable actions.
 - Settings editor manages menus, menu hotkeys, action slots, and action items.
-- Built-in action items include hotkeys, app launch, delay, search palette, cancel, menu switching, mouse actions, socket actions, and close.
+- Built-in action items include keystrokes, app launch, delay, search palette, cancel, menu switching, mouse actions, socket actions, and close.
 - Search palette can search actions, menus, programs, and optional web search.
 - User settings are saved to a writable app config folder after first run.
 
@@ -83,12 +83,12 @@ cd "C:\Coding Projects\115A\WheelTime"
 
 ### Build Tests
 
-The CMake build also creates smoke and scheduler test executables in `build\Debug`.
+The CMake build also creates test executables in `build\Debug`.
 
 Examples:
 
 ```powershell
-.\build\Debug\phase10_scheduler_tests.exe
+.\build\Debug\scheduler_tests.exe
 .\build\Debug\search_palette_tests.exe
 ```
 

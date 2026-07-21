@@ -39,15 +39,15 @@ ExecuteResult AI_NthFrequent::execute(ActionExecutionContext &context)
         return ExecuteResult::Continue();
     }
 
-    Action *frequent = App::getInstance().nthFrequentAction(n);
+    Action *frequent = App::instance().nthFrequentAction(n);
     if (frequent == nullptr)
     {
         std::cerr << "[AI_NthFrequent] no history entry for n=" << n << '\n';
         return ExecuteResult::Continue();
     }
 
-    std::cerr << "[AI_NthFrequent] n=" << n << " -> actionId=" << frequent->getId()
-              << " name=" << frequent->getName() << '\n';
+    std::cerr << "[AI_NthFrequent] n=" << n << " -> actionId=" << frequent->id()
+              << " name=" << frequent->name() << '\n';
     context.scheduleAction(
         std::make_unique<Action>(*frequent),
         std::chrono::steady_clock::now());

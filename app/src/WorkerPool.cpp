@@ -170,13 +170,13 @@ void WorkerPool::workerMain()
             if (result.context->currentIndex() == 0)
             {
                 std::cerr << actionTag << " runtimeId=" << result.context->actionId()
-                          << " id=" << action.getId() << " name=" << action.getName()
+                          << " id=" << action.id() << " name=" << action.name()
                           << " channel=" << action.channel()
-                          << " cancelable=" << (action.cancelable() ? "true" : "false") << '\n';
+                          << " cancelable=" << (action.isCancelable() ? "true" : "false") << '\n';
             }
             std::cerr << itemTag << " kind=" << actionItemKindName(item->kind())
                       << " index=" << result.context->currentIndex()
-                      << " actionId=" << action.getId()
+                      << " actionId=" << action.id()
                       << " runtimeId=" << result.context->actionId() << '\n';
 
             const ExecuteResult executeResult = item->execute(*result.context);

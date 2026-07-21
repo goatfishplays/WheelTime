@@ -10,7 +10,7 @@
                     "keycode": 112,
                     "modifiers": 4,
                     "proceed": false,
-                    "type": "hotkey"
+                    "type": "keystroke"
                 }
             ],
             "name": "Discord Mute"
@@ -25,7 +25,7 @@
                     "keycode": 112,
                     "modifiers": 6,
                     "proceed": false,
-                    "type": "hotkey"
+                    "type": "keystroke"
                 }
             ],
             "name": "Discord Deafen"
@@ -40,7 +40,7 @@
                     "keycode": 179,
                     "modifiers": 0,
                     "proceed": false,
-                    "type": "hotkey"
+                    "type": "keystroke"
                 }
             ],
             "name": "Media Pause"
@@ -84,7 +84,7 @@
                     "keycode": 67,
                     "modifiers": 2,
                     "proceed": false,
-                    "type": "hotkey"
+                    "type": "keystroke"
                 },
                 {
                     "duration": 3000,
@@ -102,7 +102,7 @@
                     "keycode": 86,
                     "modifiers": 2,
                     "proceed": false,
-                    "type": "hotkey"
+                    "type": "keystroke"
                 }
             ],
             "name": "Copy, 3 seconds, paste"
@@ -127,84 +127,84 @@
                     "keycode": 72,
                     "modifiers": 4,
                     "proceed": false,
-                    "type": "hotkey"
+                    "type": "keystroke"
                 },
                 {
                     "holdDuration": 0,
                     "keycode": 69,
                     "modifiers": 0,
                     "proceed": false,
-                    "type": "hotkey"
+                    "type": "keystroke"
                 },
                 {
                     "holdDuration": 0,
                     "keycode": 76,
                     "modifiers": 0,
                     "proceed": false,
-                    "type": "hotkey"
+                    "type": "keystroke"
                 },
                 {
                     "holdDuration": 0,
                     "keycode": 76,
                     "modifiers": 0,
                     "proceed": false,
-                    "type": "hotkey"
+                    "type": "keystroke"
                 },
                 {
                     "holdDuration": 0,
                     "keycode": 79,
                     "modifiers": 0,
                     "proceed": false,
-                    "type": "hotkey"
+                    "type": "keystroke"
                 },
                 {
                     "holdDuration": 0,
                     "keycode": 188,
                     "modifiers": 0,
                     "proceed": false,
-                    "type": "hotkey"
+                    "type": "keystroke"
                 },
                 {
                     "holdDuration": 0,
                     "keycode": 32,
                     "modifiers": 0,
                     "proceed": false,
-                    "type": "hotkey"
+                    "type": "keystroke"
                 },
                 {
                     "holdDuration": 0,
                     "keycode": 87,
                     "modifiers": 4,
                     "proceed": false,
-                    "type": "hotkey"
+                    "type": "keystroke"
                 },
                 {
                     "holdDuration": 0,
                     "keycode": 79,
                     "modifiers": 0,
                     "proceed": false,
-                    "type": "hotkey"
+                    "type": "keystroke"
                 },
                 {
                     "holdDuration": 0,
                     "keycode": 82,
                     "modifiers": 0,
                     "proceed": false,
-                    "type": "hotkey"
+                    "type": "keystroke"
                 },
                 {
                     "holdDuration": 0,
                     "keycode": 76,
                     "modifiers": 0,
                     "proceed": false,
-                    "type": "hotkey"
+                    "type": "keystroke"
                 },
                 {
                     "holdDuration": 0,
                     "keycode": 68,
                     "modifiers": 0,
                     "proceed": false,
-                    "type": "hotkey"
+                    "type": "keystroke"
                 }
             ],
             "name": "Hello, World"

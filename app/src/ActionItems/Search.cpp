@@ -28,7 +28,7 @@ ActionItemKind AI_Search::kind() const
 ExecuteResult AI_Search::execute(ActionExecutionContext & /*context*/)
 {
     // showSearchOverlay marshals itself to the GUI thread.
-    App::getInstance().showSearchOverlay(config);
+    App::instance().showSearchOverlay(config);
     return ExecuteResult::Continue();
 }
 

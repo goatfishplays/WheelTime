@@ -1,12 +1,6 @@
 /**
  * @file Window.cpp
- * @author
- * @brief WindowsOS implementation of window controls
- * @version 0.1
- * @date 2026-06-29
- *
- * @copyright Copyright (c) 2026
- *
+ * @brief Windows implementation of window controls.
  */
 
 #include "Platform/Window.hpp"
@@ -91,7 +85,7 @@ void Window::focus()
     SetActiveWindow(hwnd);
 }
 
-void Window::getActiveWindow()
+void Window::captureActiveWindow()
 {
     m_impl->hwnd = GetForegroundWindow();
 }

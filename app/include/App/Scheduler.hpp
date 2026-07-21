@@ -62,7 +62,7 @@ enum class SchedulerRequestType
  * Cancellation:
  * - cancelAction / cancelChannel / cancelAll (thread-safe).
  * - Only between ActionItems; the current item always finishes.
- * - Actions with cancelable()==false are skipped.
+ * - Actions with isCancelable()==false are skipped.
  * - setCancelFlush Actions run immediately on cancel (e.g. KeyUp).
  * - scheduleAction(..., removeIfParentCancelled=true) links delayed cleanup
  *   that is discarded when the parent is cancelled (after flush).

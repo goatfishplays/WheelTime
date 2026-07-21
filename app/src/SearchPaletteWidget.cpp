@@ -5,6 +5,9 @@
 
 #include "App/SearchPaletteWidget.hpp"
 
+#include "App/App.hpp"
+#include "App/FuzzyMatch.hpp"
+
 #include <QDir>
 #include <QFileInfo>
 #include <QHBoxLayout>
@@ -15,9 +18,6 @@
 #include <QVBoxLayout>
 
 #include <algorithm>
-
-#include "App/App.hpp"
-#include "App/FuzzyMatch.hpp"
 
 using namespace Application;
 
@@ -215,7 +215,7 @@ bool SearchPaletteWidget::handlePaletteKey(QKeyEvent *keyEvent)
     switch (keyEvent->key())
     {
     case Qt::Key_Escape:
-        App::getInstance().hideSearchOverlay();
+        App::instance().hideSearchOverlay();
         return true;
     case Qt::Key_Up:
         moveSelection(-1);
@@ -299,7 +299,7 @@ QIcon SearchPaletteWidget::resolveActionIcon(const std::string &iconFilepath)
     QString iconPath = QString::fromStdString(iconFilepath);
     if (!QFileInfo(iconPath).isAbsolute())
     {
-        const QDir configDir = QFileInfo(App::getInstance().getConfigPath()).absoluteDir();
+        const QDir configDir = QFileInfo(App::instance().configPath()).absoluteDir();
         iconPath = configDir.filePath(iconPath);
     }
     auto it = m_actionIconCache.find(iconPath);
@@ -314,24 +314,24 @@ QIcon SearchPaletteWidget::resolveActionIcon(const std::string &iconFilepath)
 
 void SearchPaletteWidget::collectActionResults(const QString &query, std::vector<ResultEntry> &out)
 {
-    const App &app = App::getInstance();
+    const App &app = App::instance();
     std::vector<ResultEntry> matches;
-    for (const Action &action : app.getActionLibrary())
+    for (const Action &action : app.actionLibrary())
     {
         // History/cancel helpers make no sense to launch from search.
         if (App::isHistoryMetaAction(action))
         {
             continue;
         }
-        const QString name = QString::fromStdString(action.getName());
+        const QString name = QString::fromStdString(action.name());
         const FuzzyResult match = fuzzyMatch(query, name);
         if (!match.matched)
         {
             continue;
         }
         matches.push_back(ResultEntry{
-            ResultKind::Action, name, resolveActionIcon(action.getIconFilepath()),
-            action.getId(), match.score});
+            ResultKind::Action, name, resolveActionIcon(action.iconFilepath()),
+            action.id(), match.score});
     }
     std::stable_sort(matches.begin(), matches.end(), [](const ResultEntry &a, const ResultEntry &b)
                      { return a.score != b.score ? a.score > b.score
@@ -364,22 +364,23 @@ void SearchPaletteWidget::collectProgramResults(const QString &query, std::vecto
 
 void SearchPaletteWidget::collectMenuResults(const QString &query, std::vector<ResultEntry> &out) const
 {
-    const App &app = App::getInstance();
+    const App &app = App::instance();
     std::vector<ResultEntry> matches;
-    for (const Menu *menu : app.loadedMenus)
+    for (const auto &menuPtr : app.loadedMenus())
     {
+        const Menu *menu = menuPtr.get();
         if (menu == nullptr)
         {
             continue;
         }
-        const QString name = QString::fromStdString(menu->getName());
+        const QString name = QString::fromStdString(menu->name());
         const FuzzyResult match = fuzzyMatch(query, name);
         if (!match.matched)
         {
             continue;
         }
         matches.push_back(ResultEntry{
-            ResultKind::Menu, name, QIcon(), menu->getId(), match.score});
+            ResultKind::Menu, name, QIcon(), menu->id(), match.score});
     }
     std::stable_sort(matches.begin(), matches.end(), [](const ResultEntry &a, const ResultEntry &b)
                      { return a.score != b.score ? a.score > b.score
@@ -559,7 +560,7 @@ void SearchPaletteWidget::activateRow(int row)
 
 void SearchPaletteWidget::activateEntry(const ResultEntry &entry)
 {
-    App &app = App::getInstance();
+    App &app = App::instance();
     switch (entry.kind)
     {
     case ResultKind::Action:
@@ -570,7 +571,7 @@ void SearchPaletteWidget::activateEntry(const ResultEntry &entry)
         break;
     case ResultKind::Program:
         app.hideSearchOverlay();
-        app.executor.executeScript(entry.target);
+        app.executor().executeScript(entry.target);
         break;
     case ResultKind::Menu:
     {
@@ -586,7 +587,7 @@ void SearchPaletteWidget::activateEntry(const ResultEntry &entry)
     }
     case ResultKind::Web:
         app.hideSearchOverlay();
-        app.executor.executeScript(entry.target);
+        app.executor().executeScript(entry.target);
         break;
     }
 }

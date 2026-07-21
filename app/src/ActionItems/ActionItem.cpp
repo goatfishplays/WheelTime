@@ -27,7 +27,7 @@ const char *actionItemKindName(ActionItemKind kind) noexcept
     case ActionItemKind::Close:
         return "close";
     case ActionItemKind::Keystroke:
-        return "hotkey";
+        return "keystroke";
     case ActionItemKind::KeyRelease:
         return "key_release";
     case ActionItemKind::Socket:

@@ -1,6 +1,6 @@
 /**
- * @file action_history_smoke.cpp
- * @brief Smoke / integration tests for ActionHistory and nth ActionItems.
+ * @file action_history_tests.cpp
+ * @brief Regression tests for ActionHistory and nth ActionItems.
  *
  * Pure ActionHistory tests are isolated. App integration tests install their own
  * fixture actions/menu slots so they do not depend on the user-editable
@@ -75,15 +75,15 @@ Action makeDelayAction(const char *id, const char *name)
 
 void upsertAction(App &app, Action action)
 {
-    for (Action &existing : app.actionLibrary)
+    for (Action &existing : app.actionLibrary())
     {
-        if (existing.getId() == action.getId())
+        if (existing.id() == action.id())
         {
             existing = std::move(action);
             return;
         }
     }
-    app.actionLibrary.push_back(std::move(action));
+    app.actionLibrary().push_back(std::move(action));
 }
 
 /// @brief Installs deterministic library + menu slots without saving user config.
@@ -109,13 +109,14 @@ bool installSmokeFixtures(App &app)
         upsertAction(app, Action(std::move(items), "Smoke Cancel", "", kSmokeCancel, 0));
     }
 
-    if (app.loadedMenus.empty())
+    if (app.loadedMenus().empty())
     {
-        app.loadedMenus.push_back(
-            new Menu(0, 0, false, false, true, false, "Smoke Menu", {}, "menu-smoke"));
+        app.loadedMenus().push_back(
+            std::make_unique<Menu>(0, 0, false, false, true, false, "Smoke Menu",
+                                   std::vector<std::string>{}, "menu-smoke"));
     }
 
-    Menu *menu = app.loadedMenus.front();
+    Menu *menu = app.loadedMenus().front().get();
     if (menu == nullptr)
     {
         std::cerr << "smoke fixtures: front menu null\n";
@@ -135,15 +136,15 @@ bool installSmokeFixtures(App &app)
     menu->addActionId(-1, kSmokeNthRecent);
     menu->addActionId(-1, kSmokeNthFrequent);
 
-    if (app.getActiveMenu() != menu)
+    if (app.activeMenu() != menu)
     {
         // showGui sets activeMenu; keep the overlay dormant via hide afterward.
         app.showGui(menu);
         app.hideGui();
     }
 
-    if (app.findActionById(kSmokeAlpha) == nullptr || app.getActiveMenu() == nullptr
-        || app.getActiveMenu()->actionCount() < 6)
+    if (app.findActionById(kSmokeAlpha) == nullptr || app.activeMenu() == nullptr
+        || app.activeMenu()->actionCount() < 6)
     {
         std::cerr << "smoke fixtures: install incomplete\n";
         return false;
@@ -276,7 +277,7 @@ bool testMaxRecentCapAndEmptyIgnored()
 
 bool testAppLookupAndActionItemSchedule()
 {
-    App &app = App::getInstance();
+    App &app = App::instance();
     if (!installSmokeFixtures(app))
     {
         return false;
@@ -298,15 +299,15 @@ bool testAppLookupAndActionItemSchedule()
         std::cerr << "app_lookup: recent pointers null\n";
         return false;
     }
-    if (r1->getId() != kSmokeAlpha || r2->getId() != kSmokeGamma || r3->getId() != kSmokeBeta)
+    if (r1->id() != kSmokeAlpha || r2->id() != kSmokeGamma || r3->id() != kSmokeBeta)
     {
-        std::cerr << "app_lookup: recent order wrong: " << r1->getId() << ", " << r2->getId()
-                  << ", " << r3->getId() << '\n';
+        std::cerr << "app_lookup: recent order wrong: " << r1->id() << ", " << r2->id()
+                  << ", " << r3->id() << '\n';
         return false;
     }
 
     Action *f1 = app.nthFrequentAction(1);
-    if (f1 == nullptr || f1->getId() != kSmokeAlpha)
+    if (f1 == nullptr || f1->id() != kSmokeAlpha)
     {
         std::cerr << "app_lookup: frequent #1 should be alpha\n";
         return false;
@@ -324,7 +325,7 @@ bool testAppLookupAndActionItemSchedule()
     {
         auto scheduled = ctx.takeScheduledActions();
         if (scheduled.size() != 1 || !scheduled[0].action
-            || scheduled[0].action->getId() != kSmokeAlpha)
+            || scheduled[0].action->id() != kSmokeAlpha)
         {
             std::cerr << "nth_recent_item: did not schedule alpha copy\n";
             return false;
@@ -340,7 +341,7 @@ bool testAppLookupAndActionItemSchedule()
     {
         auto scheduled = ctx.takeScheduledActions();
         if (scheduled.size() != 1 || !scheduled[0].action
-            || scheduled[0].action->getId() != kSmokeAlpha)
+            || scheduled[0].action->id() != kSmokeAlpha)
         {
             std::cerr << "nth_frequent_item: did not schedule alpha copy\n";
             return false;
@@ -374,7 +375,7 @@ bool testAppLookupAndActionItemSchedule()
 
 bool testSchedulerRunsScheduledNthTarget()
 {
-    App &app = App::getInstance();
+    App &app = App::instance();
     if (!installSmokeFixtures(app))
     {
         return false;
@@ -402,7 +403,7 @@ bool testSchedulerRunsScheduledNthTarget()
 
 bool testHistoryMetaActionsDoNotLoop()
 {
-    App &app = App::getInstance();
+    App &app = App::instance();
     if (!installSmokeFixtures(app))
     {
         return false;
@@ -430,13 +431,13 @@ bool testHistoryMetaActionsDoNotLoop()
     drainScheduler(app);
 
     Action *r1 = app.nthRecentAction(1);
-    if (r1 == nullptr || r1->getId() != kSmokeAlpha)
+    if (r1 == nullptr || r1->id() != kSmokeAlpha)
     {
         std::cerr << "meta_loop: helpers were recorded as most recent\n";
         return false;
     }
-    if (r1->getId() == recentHelper->getId() || r1->getId() == frequentHelper->getId()
-        || r1->getId() == cancelHelper->getId())
+    if (r1->id() == recentHelper->id() || r1->id() == frequentHelper->id()
+        || r1->id() == cancelHelper->id())
     {
         std::cerr << "meta_loop: lookup returned a helper action\n";
         return false;
@@ -452,7 +453,7 @@ bool testHistoryMetaActionsDoNotLoop()
     }
     auto scheduled = ctx.takeScheduledActions();
     if (scheduled.size() != 1 || !scheduled[0].action
-        || scheduled[0].action->getId() == kSmokeNthRecent)
+        || scheduled[0].action->id() == kSmokeNthRecent)
     {
         std::cerr << "meta_loop: nth_recent scheduled itself\n";
         return false;

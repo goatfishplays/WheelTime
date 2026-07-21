@@ -32,10 +32,10 @@ std::unique_ptr<Action> makeKeyReleaseAction(int keycode, int modifiers)
 
 } // namespace
 
-AI_Keystroke::AI_Keystroke(int keycode, int modifiers, float holdDuration, bool proceed)
+AI_Keystroke::AI_Keystroke(int keycode, int modifiers, float holdDurationSec, bool proceed)
     : keycode{keycode}
     , modifiers{modifiers}
-    , holdDuration{holdDuration}
+    , holdDurationSec{holdDurationSec}
     , proceed{proceed}
 {
 }
@@ -52,23 +52,23 @@ ActionItemKind AI_Keystroke::kind() const
 
 ExecuteResult AI_Keystroke::execute(ActionExecutionContext &context)
 {
-    Platform::InputBind bind{keycode, modifiers};
+    Platform::InputBinding bind{keycode, modifiers};
 
-    if (holdDuration <= 0.0f)
+    if (holdDurationSec <= 0.0f)
     {
         std::cerr << "[AI_Keystroke] tap key=" << keycode << " mods=" << modifiers << '\n';
-        App::getInstance().executor.executeKey(bind);
+        App::instance().executor().executeKey(bind);
         return ExecuteResult::Continue();
     }
 
     const auto hold = std::chrono::duration_cast<std::chrono::steady_clock::duration>(
-        std::chrono::duration<float>(holdDuration));
+        std::chrono::duration<float>(holdDurationSec));
     const auto holdMs =
         std::chrono::duration_cast<std::chrono::milliseconds>(hold).count();
 
     std::cerr << "[AI_Keystroke] keyDown key=" << keycode << " mods=" << modifiers
               << " holdMs=" << holdMs << " proceed=" << (proceed ? "true" : "false") << '\n';
-    App::getInstance().executor.keyDown(bind);
+    App::instance().executor().keyDown(bind);
 
     // Immediate KeyUp if this Action is cancelled mid-hold.
     context.setCancelFlush(makeKeyReleaseAction(keycode, modifiers));
@@ -81,7 +81,7 @@ ExecuteResult AI_Keystroke::execute(ActionExecutionContext &context)
         std::move(delayedItems), "key-hold-release", "", "key-hold-release", 0);
     delayed->setCancelable(false);
     // Start now; AI_Delay inside holds for `holdMs`. Do not also wake at
-    // now+hold or the release waits 2x holdDuration.
+    // now+hold or the release waits 2x holdDurationSec.
     context.scheduleAction(
         std::move(delayed),
         std::chrono::steady_clock::now(),
@@ -115,9 +115,9 @@ ActionItemKind AI_KeyRelease::kind() const
 
 ExecuteResult AI_KeyRelease::execute(ActionExecutionContext & /*context*/)
 {
-    Platform::InputBind bind{keycode, modifiers};
+    Platform::InputBinding bind{keycode, modifiers};
     std::cerr << "[AI_KeyRelease] keyUp key=" << keycode << " mods=" << modifiers << '\n';
-    App::getInstance().executor.keyUp(bind);
+    App::instance().executor().keyUp(bind);
     return ExecuteResult::Continue();
 }
 

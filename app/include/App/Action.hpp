@@ -60,14 +60,14 @@ public:
     [[nodiscard]] int itemCount() const;
 
     /// @brief Stable config ID used by menus and serialization.
-    [[nodiscard]] std::string getId() const;
-    [[nodiscard]] std::string getName() const;
+    [[nodiscard]] std::string id() const;
+    [[nodiscard]] std::string name() const;
     /// @brief Optional image shown above the action name on the wheel.
-    [[nodiscard]] std::string getIconFilepath() const;
+    [[nodiscard]] std::string iconFilepath() const;
     /// @brief Exposes the item sequence for settings editing/serialization.
-    [[nodiscard]] const std::vector<std::unique_ptr<ActionItem>> &getItems() const;
-    [[nodiscard]] ActionItem *getItem(int index);
-    [[nodiscard]] const ActionItem *getItem(int index) const;
+    [[nodiscard]] const std::vector<std::unique_ptr<ActionItem>> &items() const;
+    [[nodiscard]] ActionItem *item(int index);
+    [[nodiscard]] const ActionItem *item(int index) const;
     void setName(const std::string &newName);
     void setId(const std::string &newId);
     void setIconFilepath(const std::string &newIconFilepath);
@@ -91,7 +91,7 @@ public:
      * Default true. Cleanup Actions (e.g. delayed KeyUp) should be false so
      * they survive cancelAll and cannot leave hardware in a bad state.
      */
-    [[nodiscard]] bool cancelable() const noexcept;
+    [[nodiscard]] bool isCancelable() const noexcept;
     void setCancelable(bool cancelable) noexcept;
 
 private:

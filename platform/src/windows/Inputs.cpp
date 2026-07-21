@@ -1,16 +1,12 @@
 /**
  * @file Inputs.cpp
- * @author
- * @brief Windows implementation of input and global hotkeys
- * @version 0.1
- * @date 2026-07-05
- *
- * @copyright Copyright (c) 2026
- *
+ * @brief Windows implementation of input and global hotkeys.
  */
 
 #include "Platform/Inputs.hpp"
+
 #include <windows.h>
+
 #include <iostream>
 
 #ifndef MOD_NOREPEAT
@@ -27,39 +23,33 @@ bool isVkDown(int vk)
 }
 } // namespace
 
-class InputRcvr::Impl
+class InputReceiver::Impl
 {
 public:
 };
 
-InputRcvr::InputRcvr()
+InputReceiver::InputReceiver()
     : m_impl(std::make_unique<Impl>())
 {
 }
 
-InputRcvr::~InputRcvr()
+InputReceiver::~InputReceiver()
 {
 }
 
-Vec2 InputRcvr::getAbsoluteMousePosition()
+Vec2 InputReceiver::absoluteMousePosition()
 {
     POINT p;
     GetCursorPos(&p);
     return Vec2{p.x, p.y};
 }
 
-void InputRcvr::setAbsoluteMousePosition(Vec2 position)
+void InputReceiver::setAbsoluteMousePosition(Vec2 position)
 {
     SetCursorPos(position.x, position.y);
 }
 
-// Vec2 InputRcvr::getRelativeMousePosition()
-// {
-//     // Default fallback to absolute if no window focus context is provided
-//     return getAbsoluteMousePosition();
-// }
-
-void InputRcvr::registerInputBinding(InputBind bind)
+void InputReceiver::registerInputBinding(InputBinding bind)
 {
     // Pack id from the stored user mods only — never bake MOD_NOREPEAT into the id.
     const int id = (bind.mod << 16) | (bind.input & 0xFFFF);
@@ -76,7 +66,7 @@ void InputRcvr::registerInputBinding(InputBind bind)
     }
 }
 
-void InputRcvr::unregisterInputBinding(InputBind bind)
+void InputReceiver::unregisterInputBinding(InputBinding bind)
 {
     int id = (bind.mod << 16) | (bind.input & 0xFFFF);
     if (!UnregisterHotKey(NULL, id))
@@ -89,7 +79,7 @@ void InputRcvr::unregisterInputBinding(InputBind bind)
     }
 }
 
-bool InputRcvr::isHotkeyMessage(void *message, int &hotkeyIdOut)
+bool InputReceiver::isHotkeyMessage(void *message, int &hotkeyIdOut)
 {
     if (!message)
         return false;
@@ -102,12 +92,12 @@ bool InputRcvr::isHotkeyMessage(void *message, int &hotkeyIdOut)
     return false;
 }
 
-bool InputRcvr::isVirtualKeyDown(int vk) const
+bool InputReceiver::isVirtualKeyDown(int vk) const
 {
     return isVkDown(vk);
 }
 
-bool InputRcvr::isChordHeld(int mod, int vk) const
+bool InputReceiver::isChordHeld(int mod, int vk) const
 {
     if (!isVkDown(vk))
     {
@@ -135,7 +125,7 @@ bool InputRcvr::isChordHeld(int mod, int vk) const
     return true;
 }
 
-bool InputRcvr::isChordFullyReleased(int mod, int vk) const
+bool InputReceiver::isChordFullyReleased(int mod, int vk) const
 {
     if (isVkDown(vk))
     {

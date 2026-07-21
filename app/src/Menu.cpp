@@ -21,12 +21,12 @@ Menu::Menu(int triggerMod,
            std::string name,
            std::vector<std::string> actionIds,
            std::string id)
-    : triggerMod(triggerMod)
-    , triggerVk(triggerVk)
-    , executeOnRelease(executeOnRelease)
-    , exitOnAction(exitOnAction)
-    , centerMouseOnOpen(centerMouseOnOpen)
-    , restoreMouseOnClose(restoreMouseOnClose)
+    : m_triggerMod(triggerMod)
+    , m_triggerVk(triggerVk)
+    , m_executeOnRelease(executeOnRelease)
+    , m_exitOnAction(exitOnAction)
+    , m_centerMouseOnOpen(centerMouseOnOpen)
+    , m_restoreMouseOnClose(restoreMouseOnClose)
     , m_name(std::move(name))
     , m_id(std::move(id))
     , m_actionIds(std::move(actionIds))
@@ -59,12 +59,12 @@ int Menu::actionCount() const
     return static_cast<int>(m_actionIds.size());
 }
 
-std::string Menu::getId() const
+std::string Menu::id() const
 {
     return m_id;
 }
 
-std::string Menu::getName() const
+std::string Menu::name() const
 {
     return m_name;
 }
@@ -79,12 +79,12 @@ void Menu::setName(const std::string &newName)
     m_name = newName;
 }
 
-const std::vector<std::string> &Menu::getActionIds() const
+const std::vector<std::string> &Menu::actionIds() const
 {
     return m_actionIds;
 }
 
-std::string Menu::getActionId(int index) const
+std::string Menu::actionId(int index) const
 {
     if (index < 0 || index >= static_cast<int>(m_actionIds.size()))
     {
@@ -113,6 +113,66 @@ void Menu::moveActionId(int fromIndex, int toIndex)
     std::string actionId = m_actionIds[fromIndex];
     m_actionIds.erase(m_actionIds.begin() + fromIndex);
     m_actionIds.insert(m_actionIds.begin() + toIndex, std::move(actionId));
+}
+
+int Menu::triggerMod() const noexcept
+{
+    return m_triggerMod;
+}
+
+void Menu::setTriggerMod(int mod) noexcept
+{
+    m_triggerMod = mod;
+}
+
+int Menu::triggerVk() const noexcept
+{
+    return m_triggerVk;
+}
+
+void Menu::setTriggerVk(int vk) noexcept
+{
+    m_triggerVk = vk;
+}
+
+bool Menu::executeOnRelease() const noexcept
+{
+    return m_executeOnRelease;
+}
+
+void Menu::setExecuteOnRelease(bool enabled) noexcept
+{
+    m_executeOnRelease = enabled;
+}
+
+bool Menu::exitOnAction() const noexcept
+{
+    return m_exitOnAction;
+}
+
+void Menu::setExitOnAction(bool enabled) noexcept
+{
+    m_exitOnAction = enabled;
+}
+
+bool Menu::centerMouseOnOpen() const noexcept
+{
+    return m_centerMouseOnOpen;
+}
+
+void Menu::setCenterMouseOnOpen(bool enabled) noexcept
+{
+    m_centerMouseOnOpen = enabled;
+}
+
+bool Menu::restoreMouseOnClose() const noexcept
+{
+    return m_restoreMouseOnClose;
+}
+
+void Menu::setRestoreMouseOnClose(bool enabled) noexcept
+{
+    m_restoreMouseOnClose = enabled;
 }
 
 } // namespace Application

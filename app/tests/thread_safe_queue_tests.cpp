@@ -1,6 +1,6 @@
 /**
- * @file phase2_queue_smoke.cpp
- * @brief Disposable smoke test for ThreadSafeQueue (Phase 2).
+ * @file thread_safe_queue_tests.cpp
+ * @brief Tests for ThreadSafeQueue.
  */
 
 #include "App/ThreadSafeQueue.hpp"
@@ -204,10 +204,10 @@ int main()
 
     if (failed != 0)
     {
-        std::cerr << failed << " smoke test(s) failed\n";
+        std::cerr << failed << " ThreadSafeQueue test(s) failed\n";
         return 1;
     }
 
-    std::cout << "Phase 2 ThreadSafeQueue smoke tests passed\n";
+    std::cout << "ThreadSafeQueue tests passed\n";
     return 0;
 }

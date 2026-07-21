@@ -1,6 +1,10 @@
 #include "App/MenuConfigLoader.hpp"
 
+#include "App/Action.hpp"
+#include "App/ActionItems.hpp"
+
 #include <QCoreApplication>
+#include <QDebug>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -11,13 +15,9 @@
 #include <QJsonValue>
 #include <QRegularExpression>
 #include <QStandardPaths>
-#include <QDebug>
 
 #include <algorithm>
 #include <memory>
-
-#include "App/Action.hpp"
-#include "App/ActionItems.hpp"
 
 using namespace Application;
 
@@ -158,7 +158,7 @@ namespace
             {
                 items.push_back(std::make_unique<AI_Delay>(itemObject.value("duration").toInt(0)));
             }
-            else if (type == "hotkey" || type == "keystroke")
+            else if (type == "keystroke")
             {
                 items.push_back(std::make_unique<AI_Keystroke>(
                     itemObject.value("keycode").toInt(0),
@@ -303,7 +303,8 @@ namespace
         return Action(parseItems(actionObject.value("items").toArray()), name, icon, id, channel);
     }
 
-    bool loadNewSchema(const QJsonObject &rootObject, std::vector<Action> &actions, std::vector<Menu *> &menus)
+    bool loadNewSchema(const QJsonObject &rootObject, std::vector<Action> &actions,
+                       std::vector<std::unique_ptr<Menu>> &menus)
     {
         const QJsonArray actionsArray = rootObject.value("actions").toArray();
         const QJsonArray menusArray = rootObject.value("menus").toArray();
@@ -327,7 +328,7 @@ namespace
                 actionIds.push_back(idValue.toString().toStdString());
             }
 
-            menus.push_back(new Menu(
+            menus.push_back(std::make_unique<Menu>(
                 menuObject.value("triggerMod").toInt(0),
                 menuObject.value("triggerVk").toInt(0),
                 menuObject.value("executeOnRelease").toBool(false),
@@ -342,7 +343,8 @@ namespace
         return !menus.empty();
     }
 
-    bool loadLegacySchema(const QJsonObject &rootObject, std::vector<Action> &actions, std::vector<Menu *> &menus)
+    bool loadLegacySchema(const QJsonObject &rootObject, std::vector<Action> &actions,
+                          std::vector<std::unique_ptr<Menu>> &menus)
     {
         const QJsonArray menusArray = rootObject.value("menus").toArray();
         if (menusArray.isEmpty())
@@ -379,7 +381,7 @@ namespace
                 menuActionIds.push_back(actionId);
             }
 
-            menus.push_back(new Menu(
+            menus.push_back(std::make_unique<Menu>(
                 0,
                 0,
                 menuObject.value("executeOnRelease").toBool(false),
@@ -410,13 +412,13 @@ namespace
             break;
         case ActionItemKind::Delay:
             itemObject.insert("type", "delay");
-            itemObject.insert("duration", static_cast<const AI_Delay &>(item).duration);
+            itemObject.insert("duration", static_cast<const AI_Delay &>(item).durationMs);
             break;
         case ActionItemKind::Keystroke:
-            itemObject.insert("type", "hotkey");
+            itemObject.insert("type", "keystroke");
             itemObject.insert("keycode", static_cast<const AI_Keystroke &>(item).keycode);
             itemObject.insert("modifiers", static_cast<const AI_Keystroke &>(item).modifiers);
-            itemObject.insert("holdDuration", static_cast<const AI_Keystroke &>(item).holdDuration);
+            itemObject.insert("holdDuration", static_cast<const AI_Keystroke &>(item).holdDurationSec);
             itemObject.insert("proceed", static_cast<const AI_Keystroke &>(item).proceed);
             break;
         case ActionItemKind::Close:
@@ -435,7 +437,7 @@ namespace
             itemObject.insert("type", "mouse_button");
             itemObject.insert("button", static_cast<const AI_MouseButton &>(item).button);
             itemObject.insert("modifiers", static_cast<const AI_MouseButton &>(item).modifiers);
-            itemObject.insert("holdDuration", static_cast<const AI_MouseButton &>(item).holdDuration);
+            itemObject.insert("holdDuration", static_cast<const AI_MouseButton &>(item).holdDurationSec);
             itemObject.insert("proceed", static_cast<const AI_MouseButton &>(item).proceed);
             break;
         case ActionItemKind::MouseButtonRelease:
@@ -535,7 +537,8 @@ QString MenuConfigLoader::defaultConfigPath()
     return QFileInfo(writableConfig).absoluteFilePath();
 }
 
-bool MenuConfigLoader::loadConfig(const QString &filepath, AppConfig &appConfig, std::vector<Action> &actions, std::vector<Menu *> &menus)
+bool MenuConfigLoader::loadConfig(const QString &filepath, AppConfig &appConfig, std::vector<Action> &actions,
+                                  std::vector<std::unique_ptr<Menu>> &menus)
 {
     QJsonDocument document;
     if (!readJsonFile(filepath, document))
@@ -545,12 +548,6 @@ bool MenuConfigLoader::loadConfig(const QString &filepath, AppConfig &appConfig,
 
     const QJsonObject rootObject = document.object();
     actions.clear();
-
-    if (rootObject.contains("globalHotkey"))
-    {
-        // Legacy global hotkey loading logic can be kept if we want to migrate
-        // it to the first menu or something, but we'll just ignore it since it's menu-based now.
-    }
 
     // Newer configs include a top-level action library. If that section is
     // absent, treat the file as the older menu-owned schema for compatibility.
@@ -562,22 +559,23 @@ bool MenuConfigLoader::loadConfig(const QString &filepath, AppConfig &appConfig,
     return loadLegacySchema(rootObject, actions, menus);
 }
 
-bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appConfig, const std::vector<Action> &actions, const std::vector<Menu *> &menus)
+bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appConfig, const std::vector<Action> &actions,
+                                  const std::vector<std::unique_ptr<Menu>> &menus)
 {
     QJsonArray actionsArray;
     for (const Action &action : actions)
     {
         QJsonObject actionObject;
-        actionObject.insert("id", QString::fromStdString(action.getId()));
-        actionObject.insert("name", QString::fromStdString(action.getName()));
-        if (!action.getIconFilepath().empty())
+        actionObject.insert("id", QString::fromStdString(action.id()));
+        actionObject.insert("name", QString::fromStdString(action.name()));
+        if (!action.iconFilepath().empty())
         {
-            actionObject.insert("icon", QString::fromStdString(action.getIconFilepath()));
+            actionObject.insert("icon", QString::fromStdString(action.iconFilepath()));
         }
         actionObject.insert("channel", static_cast<int>(action.channel()));
 
         QJsonArray itemsArray;
-        for (const auto &itemPtr : action.getItems())
+        for (const auto &itemPtr : action.items())
         {
             if (itemPtr)
             {
@@ -589,25 +587,26 @@ bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appC
     }
 
     QJsonArray menusArray;
-    for (const Menu *menu : menus)
+    for (const auto &menuPtr : menus)
     {
-        if (menu == nullptr)
+        if (!menuPtr)
         {
             continue;
         }
+        const Menu &menu = *menuPtr;
 
         QJsonObject menuObject;
-        menuObject.insert("id", QString::fromStdString(menu->getId()));
-        menuObject.insert("name", QString::fromStdString(menu->getName()));
-        menuObject.insert("executeOnRelease", menu->executeOnRelease);
-        menuObject.insert("exitOnAction", menu->exitOnAction);
-        menuObject.insert("centerMouseOnOpen", menu->centerMouseOnOpen);
-        menuObject.insert("restoreMouseOnClose", menu->restoreMouseOnClose);
-        menuObject.insert("triggerMod", menu->triggerMod);
-        menuObject.insert("triggerVk", menu->triggerVk);
+        menuObject.insert("id", QString::fromStdString(menu.id()));
+        menuObject.insert("name", QString::fromStdString(menu.name()));
+        menuObject.insert("executeOnRelease", menu.executeOnRelease());
+        menuObject.insert("exitOnAction", menu.exitOnAction());
+        menuObject.insert("centerMouseOnOpen", menu.centerMouseOnOpen());
+        menuObject.insert("restoreMouseOnClose", menu.restoreMouseOnClose());
+        menuObject.insert("triggerMod", menu.triggerMod());
+        menuObject.insert("triggerVk", menu.triggerVk());
 
         QJsonArray actionIdsArray;
-        for (const std::string &actionId : menu->getActionIds())
+        for (const std::string &actionId : menu.actionIds())
         {
             actionIdsArray.append(QString::fromStdString(actionId));
         }

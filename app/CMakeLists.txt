@@ -81,134 +81,60 @@ target_link_libraries(App
         Qt6::Gui
 )
 
-# Disposable Phase 2 smoke test (header-only queue; no Qt / App runtime).
-add_executable(phase2_queue_smoke
-    tests/phase2_queue_smoke.cpp
+# ThreadSafeQueue tests (header-only; no Qt / App runtime).
+add_executable(thread_safe_queue_tests
+    tests/thread_safe_queue_tests.cpp
 )
-target_include_directories(phase2_queue_smoke
+target_include_directories(thread_safe_queue_tests
     PRIVATE
         include
 )
-target_compile_features(phase2_queue_smoke
+target_compile_features(thread_safe_queue_tests
     PRIVATE
-        cxx_std_20
+        cxx_std_23
 )
 
-# Disposable Phase 3 smoke test (needs App for Action / context / WorkerPool).
-add_executable(phase3_worker_smoke
-    tests/phase3_worker_smoke.cpp
+# Built-in ActionItem tests.
+add_executable(action_items_tests
+    tests/action_items_tests.cpp
 )
-target_link_libraries(phase3_worker_smoke
+target_link_libraries(action_items_tests
     PRIVATE
         App
 )
-target_compile_features(phase3_worker_smoke
+target_compile_features(action_items_tests
     PRIVATE
-        cxx_std_20
+        cxx_std_23
 )
 
-# Disposable Phase 4 smoke test.
-add_executable(phase4_scheduler_smoke
-    tests/phase4_scheduler_smoke.cpp
+# Comprehensive scheduler tests.
+add_executable(scheduler_tests
+    tests/scheduler_tests.cpp
 )
-target_link_libraries(phase4_scheduler_smoke
+target_include_directories(scheduler_tests
+    PRIVATE
+        tests
+)
+target_link_libraries(scheduler_tests
     PRIVATE
         App
 )
-target_compile_features(phase4_scheduler_smoke
+target_compile_features(scheduler_tests
     PRIVATE
-        cxx_std_20
+        cxx_std_23
 )
 
-# Disposable Phase 5 smoke test.
-add_executable(phase5_delay_queue_smoke
-    tests/phase5_delay_queue_smoke.cpp
+# ActionHistory regression tests.
+add_executable(action_history_tests
+    tests/action_history_tests.cpp
 )
-target_link_libraries(phase5_delay_queue_smoke
+target_link_libraries(action_history_tests
     PRIVATE
         App
 )
-target_compile_features(phase5_delay_queue_smoke
+target_compile_features(action_history_tests
     PRIVATE
-        cxx_std_20
-)
-
-# Disposable Phase 6 smoke test.
-add_executable(phase6_channel_smoke
-    tests/phase6_channel_smoke.cpp
-)
-target_link_libraries(phase6_channel_smoke
-    PRIVATE
-        App
-)
-target_compile_features(phase6_channel_smoke
-    PRIVATE
-        cxx_std_20
-)
-
-# Disposable Phase 7 smoke test.
-add_executable(phase7_cancel_smoke
-    tests/phase7_cancel_smoke.cpp
-)
-target_link_libraries(phase7_cancel_smoke
-    PRIVATE
-        App
-)
-target_compile_features(phase7_cancel_smoke
-    PRIVATE
-        cxx_std_20
-)
-
-# Disposable Phase 8 smoke test.
-add_executable(phase8_pause_smoke
-    tests/phase8_pause_smoke.cpp
-)
-target_link_libraries(phase8_pause_smoke
-    PRIVATE
-        App
-)
-target_compile_features(phase8_pause_smoke
-    PRIVATE
-        cxx_std_20
-)
-
-# Disposable Phase 9 smoke test.
-add_executable(phase9_actionitems_smoke
-    tests/phase9_actionitems_smoke.cpp
-)
-target_link_libraries(phase9_actionitems_smoke
-    PRIVATE
-        App
-)
-target_compile_features(phase9_actionitems_smoke
-    PRIVATE
-        cxx_std_20
-)
-
-# Phase 10 comprehensive scheduler tests.
-add_executable(phase10_scheduler_tests
-    tests/phase10_scheduler_tests.cpp
-)
-target_link_libraries(phase10_scheduler_tests
-    PRIVATE
-        App
-)
-target_compile_features(phase10_scheduler_tests
-    PRIVATE
-        cxx_std_20
-)
-
-# ActionHistory smoke test.
-add_executable(action_history_smoke
-    tests/action_history_smoke.cpp
-)
-target_link_libraries(action_history_smoke
-    PRIVATE
-        App
-)
-target_compile_features(action_history_smoke
-    PRIVATE
-        cxx_std_20
+        cxx_std_23
 )
 
 # Search palette tests (fuzzy match, config round-trip, palette results).
@@ -221,5 +147,5 @@ target_link_libraries(search_palette_tests
 )
 target_compile_features(search_palette_tests
     PRIVATE
-        cxx_std_20
+        cxx_std_23
 )

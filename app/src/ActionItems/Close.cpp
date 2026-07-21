@@ -25,7 +25,7 @@ ActionItemKind AI_Close::kind() const
 ExecuteResult AI_Close::execute(ActionExecutionContext & /*context*/)
 {
     std::cerr << "[AI_Close] hideGui\n";
-    App &app = App::getInstance();
+    App &app = App::instance();
     app.hideSearchOverlay();
     app.hideGui();
     return ExecuteResult::Continue();

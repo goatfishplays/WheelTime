@@ -103,27 +103,27 @@ int Action::itemCount() const
     return static_cast<int>(m_sequence.size());
 }
 
-std::string Action::getId() const
+std::string Action::id() const
 {
     return m_id;
 }
 
-std::string Action::getName() const
+std::string Action::name() const
 {
     return m_name;
 }
 
-std::string Action::getIconFilepath() const
+std::string Action::iconFilepath() const
 {
     return m_iconFilepath;
 }
 
-const std::vector<std::unique_ptr<ActionItem>> &Action::getItems() const
+const std::vector<std::unique_ptr<ActionItem>> &Action::items() const
 {
     return m_sequence;
 }
 
-ActionItem *Action::getItem(int index)
+ActionItem *Action::item(int index)
 {
     if (index < 0 || index >= static_cast<int>(m_sequence.size()))
     {
@@ -133,7 +133,7 @@ ActionItem *Action::getItem(int index)
     return m_sequence[index].get();
 }
 
-const ActionItem *Action::getItem(int index) const
+const ActionItem *Action::item(int index) const
 {
     if (index < 0 || index >= static_cast<int>(m_sequence.size()))
     {
@@ -186,7 +186,7 @@ void Action::setChannel(uint32_t channel) noexcept
     m_channel = channel;
 }
 
-bool Action::cancelable() const noexcept
+bool Action::isCancelable() const noexcept
 {
     return m_cancelable;
 }
