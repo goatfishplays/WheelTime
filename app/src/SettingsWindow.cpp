@@ -14,6 +14,7 @@
 #include <QPushButton>
 #include <QScrollArea>
 #include <QSignalBlocker>
+#include <QSizePolicy>
 #include <QSplitter>
 #include <QVBoxLayout>
 #include <QKeyEvent>
@@ -123,10 +124,16 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     root->setContentsMargins(16, 16, 16, 16);
     root->setSpacing(12);
     auto *splitter = new QSplitter(Qt::Horizontal, this);
+    splitter->setChildrenCollapsible(false);
     root->addWidget(splitter, 1);
 
     auto *leftPane = new QWidget(splitter);
     leftPane->setObjectName("settingsSidebar");
+    // Keep navigation readable without letting it steal room from the editor.
+    // The right side has forms/detail text, so it owns extra horizontal space.
+    leftPane->setMinimumWidth(240);
+    leftPane->setMaximumWidth(320);
+    leftPane->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
     auto *leftLayout = new QVBoxLayout(leftPane);
     leftLayout->setContentsMargins(12, 12, 12, 12);
     leftLayout->setSpacing(12);
@@ -162,6 +169,11 @@ SettingsWindow::SettingsWindow(QWidget *parent)
 
     m_editorStack = new QStackedWidget(splitter);
     m_editorStack->setObjectName("settingsEditorStack");
+    m_editorStack->setMinimumWidth(560);
+    m_editorStack->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    splitter->setStretchFactor(0, 0);
+    splitter->setStretchFactor(1, 1);
+    splitter->setSizes({280, 820});
 
     m_emptyEditor = new QWidget(m_editorStack);
     m_emptyEditor->setObjectName("emptyEditor");
@@ -264,12 +276,16 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     actionForm->addRow("Action Name", m_actionNameEdit);
 
     auto *iconRow = new QWidget(actionSettingsGroup);
+    iconRow->setMinimumWidth(0);
     auto *iconRowLayout = new QHBoxLayout(iconRow);
     iconRowLayout->setContentsMargins(0, 0, 0, 0);
     m_actionIconEdit = new QLineEdit(iconRow);
     m_actionIconEdit->setPlaceholderText("Optional path to PNG/SVG/ICO...");
-    m_browseActionIconButton = new QPushButton("Browse...", iconRow);
+    m_actionIconEdit->setMinimumWidth(0);
+    m_browseActionIconButton = new QPushButton("Browse", iconRow);
     m_clearActionIconButton = new QPushButton("Clear", iconRow);
+    m_browseActionIconButton->setFixedWidth(76);
+    m_clearActionIconButton->setFixedWidth(62);
     iconRowLayout->addWidget(m_actionIconEdit, 1);
     iconRowLayout->addWidget(m_browseActionIconButton);
     iconRowLayout->addWidget(m_clearActionIconButton);
