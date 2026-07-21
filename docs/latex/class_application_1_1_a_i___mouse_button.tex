@@ -1,0 +1,136 @@
+\doxysection{Application::\+AI\+\_\+\+Mouse\+Button Class Reference}
+\hypertarget{class_application_1_1_a_i___mouse_button}{}\label{class_application_1_1_a_i___mouse_button}\index{Application::AI\_MouseButton@{Application::AI\_MouseButton}}
+
+
+Simulates a mouse button with optional modifiers and hold behavior.  
+
+
+
+
+{\ttfamily \+\#include $<$Mouse\+Button.\+hpp$>$}
+
+Inheritance diagram for Application::\+AI\+\_\+\+Mouse\+Button:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_application_1_1_a_i___mouse_button}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_af58578748c46b6ec28d7b7355586ba58}{AI\+\_\+\+Mouse\+Button}} (int button=0, float hold\+Duration=0.\+0f, bool proceed=false, int modifiers=0)
+\item 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} $>$ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a6e96f6134074a752086929d0f39bb97d}{clone}} () const override
+\item 
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a460a89f12093c5d1196ea557813a3977}{kind}} () const override
+\item 
+\doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}} \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a522251901ac0c0eae6f9425fdf691352}{execute}} (\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&context) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{class_application_1_1_action_item}{Application::\+\+Action\+Item}}}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} ()=default
+\item 
+virtual \doxymbox{\hyperlink{class_application_1_1_action_item_a475b8d6aff3774c90b9f0a4512959bf5}{\texorpdfstring{$\sim$}{\string~}\+Action\+Item}} ()=default
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a65292069e0ba05aae613c77ac025b374}{button}} = 0
+\item 
+int \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a721d13e7dbea87e958ee4f9f84458130}{modifiers}} = 0
+\item 
+float \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a3432a3fd47351c78d140f1af08392ea0}{hold\+Duration}} = 0.\+0f
+\begin{DoxyCompactList}\small\item\em Hold time in seconds. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a7cd512cccb2fc113c1e5e16cdd10ef12}{proceed}} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Simulates a mouse button with optional modifiers and hold behavior. 
+
+{\ttfamily \doxylink{class_application_1_1_a_i___mouse_button_a65292069e0ba05aae613c77ac025b374}{button}}:\+ 0 = left, 1 = right, 2 = middle. {\ttfamily \doxylink{class_application_1_1_a_i___mouse_button_a721d13e7dbea87e958ee4f9f84458130}{modifiers}}:\+ same bit mask as \doxylink{class_application_1_1_a_i___keystroke}{AI\+\_\+\+Keystroke} (Ctrl/\+\+Alt/\+\+Shift/\+\+Win). Tap ({\ttfamily \doxylink{class_application_1_1_a_i___mouse_button_a3432a3fd47351c78d140f1af08392ea0}{hold\+Duration} \texorpdfstring{$<$}{<}= 0}) presses then releases. Hold uses press + delayed release (cancel-\/flush + scheduled cleanup), matching \doxylink{class_application_1_1_a_i___keystroke}{AI\+\_\+\+Keystroke}. 
+
+\label{class_application_1_1_a_i___mouse_button_doc-constructors}
+\Hypertarget{class_application_1_1_a_i___mouse_button_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_a_i___mouse_button_af58578748c46b6ec28d7b7355586ba58}\index{Application::AI\_MouseButton@{Application::AI\_MouseButton}!AI\_MouseButton@{AI\_MouseButton}}
+\index{AI\_MouseButton@{AI\_MouseButton}!Application::AI\_MouseButton@{Application::AI\_MouseButton}}
+\doxysubsubsection{\texorpdfstring{AI\_MouseButton()}{AI\_MouseButton()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___mouse_button_af58578748c46b6ec28d7b7355586ba58} 
+Application::\+\+AI\+\_\+\+Mouse\+Button::\+\+AI\+\_\+\+Mouse\+Button (\begin{DoxyParamCaption}\item[{int}]{button}{ = {\ttfamily 0}, }\item[{float}]{hold\+Duration}{ = {\ttfamily 0.0f}, }\item[{bool}]{proceed}{ = {\ttfamily false}, }\item[{int}]{modifiers}{ = {\ttfamily 0}}\end{DoxyParamCaption})}
+
+
+
+\label{class_application_1_1_a_i___mouse_button_doc-func-members}
+\Hypertarget{class_application_1_1_a_i___mouse_button_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_a_i___mouse_button_a6e96f6134074a752086929d0f39bb97d}\index{Application::AI\_MouseButton@{Application::AI\_MouseButton}!clone@{clone}}
+\index{clone@{clone}!Application::AI\_MouseButton@{Application::AI\_MouseButton}}
+\doxysubsubsection{\texorpdfstring{clone()}{clone()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___mouse_button_a6e96f6134074a752086929d0f39bb97d} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} $>$ Application::\+\+AI\+\_\+\+Mouse\+Button::\+clone (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_afd400c3edd7ad9e074a28d462421789c}{Application::\+\+Action\+Item}}.
+
+\Hypertarget{class_application_1_1_a_i___mouse_button_a522251901ac0c0eae6f9425fdf691352}\index{Application::AI\_MouseButton@{Application::AI\_MouseButton}!execute@{execute}}
+\index{execute@{execute}!Application::AI\_MouseButton@{Application::AI\_MouseButton}}
+\doxysubsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___mouse_button_a522251901ac0c0eae6f9425fdf691352} 
+\doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}} Application::\+\+AI\+\_\+\+Mouse\+Button::\+execute (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&}]{context}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_aeeaf1c44a2f6741be0fdaad53da67e54}{Application::\+\+Action\+Item}}.
+
+\Hypertarget{class_application_1_1_a_i___mouse_button_a460a89f12093c5d1196ea557813a3977}\index{Application::AI\_MouseButton@{Application::AI\_MouseButton}!kind@{kind}}
+\index{kind@{kind}!Application::AI\_MouseButton@{Application::AI\_MouseButton}}
+\doxysubsubsection{\texorpdfstring{kind()}{kind()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___mouse_button_a460a89f12093c5d1196ea557813a3977} 
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} Application::\+\+AI\+\_\+\+Mouse\+Button::\+kind (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_ab51b1298eb1b325512ca99d2f090fa75}{Application::\+\+Action\+Item}}.
+
+
+
+\label{class_application_1_1_a_i___mouse_button_doc-variable-members}
+\Hypertarget{class_application_1_1_a_i___mouse_button_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_application_1_1_a_i___mouse_button_a65292069e0ba05aae613c77ac025b374}\index{Application::AI\_MouseButton@{Application::AI\_MouseButton}!button@{button}}
+\index{button@{button}!Application::AI\_MouseButton@{Application::AI\_MouseButton}}
+\doxysubsubsection{\texorpdfstring{button}{button}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___mouse_button_a65292069e0ba05aae613c77ac025b374} 
+int Application::\+\+AI\+\_\+\+Mouse\+Button::\+button = 0}
+
+\Hypertarget{class_application_1_1_a_i___mouse_button_a3432a3fd47351c78d140f1af08392ea0}\index{Application::AI\_MouseButton@{Application::AI\_MouseButton}!holdDuration@{holdDuration}}
+\index{holdDuration@{holdDuration}!Application::AI\_MouseButton@{Application::AI\_MouseButton}}
+\doxysubsubsection{\texorpdfstring{holdDuration}{holdDuration}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___mouse_button_a3432a3fd47351c78d140f1af08392ea0} 
+float Application::\+\+AI\+\_\+\+Mouse\+Button::\+hold\+Duration = 0.\+0f}
+
+
+
+Hold time in seconds. 
+
+\Hypertarget{class_application_1_1_a_i___mouse_button_a721d13e7dbea87e958ee4f9f84458130}\index{Application::AI\_MouseButton@{Application::AI\_MouseButton}!modifiers@{modifiers}}
+\index{modifiers@{modifiers}!Application::AI\_MouseButton@{Application::AI\_MouseButton}}
+\doxysubsubsection{\texorpdfstring{modifiers}{modifiers}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___mouse_button_a721d13e7dbea87e958ee4f9f84458130} 
+int Application::\+\+AI\+\_\+\+Mouse\+Button::\+modifiers = 0}
+
+\Hypertarget{class_application_1_1_a_i___mouse_button_a7cd512cccb2fc113c1e5e16cdd10ef12}\index{Application::AI\_MouseButton@{Application::AI\_MouseButton}!proceed@{proceed}}
+\index{proceed@{proceed}!Application::AI\_MouseButton@{Application::AI\_MouseButton}}
+\doxysubsubsection{\texorpdfstring{proceed}{proceed}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___mouse_button_a7cd512cccb2fc113c1e5e16cdd10ef12} 
+bool Application::\+\+AI\+\_\+\+Mouse\+Button::\+proceed = false}
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\+Action\+Items/\+\doxymbox{\hyperlink{_mouse_button_8hpp}{Mouse\+Button.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\+Action\+Items/\+\doxymbox{\hyperlink{_mouse_button_8cpp}{Mouse\+Button.\+cpp}}\end{DoxyCompactItemize}

@@ -1,23 +1,70 @@
 var hierarchy =
 [
-    [ "App::Action", "classApp_1_1Action.html", null ],
-    [ "App::ActionItem", "classApp_1_1ActionItem.html", [
-      [ "App::AI_Close", "classApp_1_1AI__Close.html", null ],
-      [ "App::AI_Close", "classApp_1_1AI__Close.html", null ],
-      [ "App::AI_Delay", "classApp_1_1AI__Delay.html", null ],
-      [ "App::AI_Keystroke", "classApp_1_1AI__Keystroke.html", null ],
-      [ "App::AI_Menu", "classApp_1_1AI__Menu.html", null ],
-      [ "App::AI_Script", "classApp_1_1AI__Script.html", null ]
+    [ "Application::Action", "class_application_1_1_action.html", null ],
+    [ "Application::ActionExecutionContext", "class_application_1_1_action_execution_context.html", null ],
+    [ "Application::ActionHistory", "class_application_1_1_action_history.html", null ],
+    [ "Application::ActionItem", "class_application_1_1_action_item.html", [
+      [ "Application::AI_Cancel", "class_application_1_1_a_i___cancel.html", null ],
+      [ "Application::AI_Close", "class_application_1_1_a_i___close.html", null ],
+      [ "Application::AI_Delay", "class_application_1_1_a_i___delay.html", null ],
+      [ "Application::AI_KeyRelease", "class_application_1_1_a_i___key_release.html", null ],
+      [ "Application::AI_Keystroke", "class_application_1_1_a_i___keystroke.html", null ],
+      [ "Application::AI_LaunchApp", "class_application_1_1_a_i___launch_app.html", null ],
+      [ "Application::AI_Menu", "class_application_1_1_a_i___menu.html", null ],
+      [ "Application::AI_MouseButton", "class_application_1_1_a_i___mouse_button.html", null ],
+      [ "Application::AI_MouseButtonRelease", "class_application_1_1_a_i___mouse_button_release.html", null ],
+      [ "Application::AI_MouseMove", "class_application_1_1_a_i___mouse_move.html", null ],
+      [ "Application::AI_NthFrequent", "class_application_1_1_a_i___nth_frequent.html", null ],
+      [ "Application::AI_NthRecent", "class_application_1_1_a_i___nth_recent.html", null ],
+      [ "Application::AI_Script", "class_application_1_1_a_i___script.html", null ],
+      [ "Application::AI_Search", "class_application_1_1_a_i___search.html", null ],
+      [ "Application::AI_Socket", "class_application_1_1_a_i___socket.html", null ]
     ] ],
-    [ "App::App", "classApp_1_1App.html", null ],
-    [ "Platform::Executor", "classPlatform_1_1Executor.html", null ],
-    [ "Platform::Hotkey", "structPlatform_1_1Hotkey.html", null ],
-    [ "Platform::Window::Impl", "classWindow_1_1Impl.html", null ],
-    [ "Platform::InputRcvr", "classPlatform_1_1InputRcvr.html", null ],
-    [ "App::Menu", "classApp_1_1Menu.html", null ],
+    [ "Application::ActionSlotVisual", "struct_application_1_1_action_slot_visual.html", null ],
+    [ "Application::App", "class_application_1_1_app.html", null ],
+    [ "Application::AppConfig", "struct_application_1_1_app_config.html", null ],
+    [ "Application::ChannelDispatch", "struct_application_1_1_channel_dispatch.html", null ],
+    [ "Application::ChannelManager", "class_application_1_1_channel_manager.html", null ],
+    [ "Application::DelayQueue", "class_application_1_1_delay_queue.html", null ],
+    [ "Application::ExecuteResult", "class_application_1_1_execute_result.html", null ],
+    [ "Platform::Executor", "class_platform_1_1_executor.html", null ],
+    [ "Application::FuzzyResult", "struct_application_1_1_fuzzy_result.html", null ],
+    [ "Platform::InputRcvr::Impl", "class_input_rcvr_1_1_impl.html", null ],
+    [ "Platform::Executor::Impl", "class_platform_1_1_executor_1_1_impl.html", null ],
+    [ "Platform::Window::Impl", "class_window_1_1_impl.html", null ],
+    [ "Platform::InputBind", "struct_platform_1_1_input_bind.html", null ],
+    [ "Platform::InputRcvr", "class_platform_1_1_input_rcvr.html", null ],
+    [ "Application::Menu", "class_application_1_1_menu.html", null ],
+    [ "Application::MenuConfigLoader", "class_application_1_1_menu_config_loader.html", null ],
+    [ "Application::PendingCancelRequest", "struct_application_1_1_pending_cancel_request.html", null ],
+    [ "Application::ProgramEntry", "struct_application_1_1_program_entry.html", null ],
+    [ "Application::ProgramIndex", "class_application_1_1_program_index.html", null ],
+    [ "QAbstractNativeEventFilter", null, [
+      [ "HotkeyFilter", "class_hotkey_filter.html", null ]
+    ] ],
+    [ "QT_WARNING_DISABLE_DEPRECATED::qt_meta_tag_ZN11Application11HoverButtonE_t", "struct_q_t___w_a_r_n_i_n_g___d_i_s_a_b_l_e___d_e_p_r_e_c_a_t_e_d_1_1qt__meta__tag___z_n11_application11_hover_button_e__t.html", null ],
+    [ "QT_WARNING_DISABLE_DEPRECATED::qt_meta_tag_ZN11Application14SettingsWindowE_t", "struct_q_t___w_a_r_n_i_n_g___d_i_s_a_b_l_e___d_e_p_r_e_c_a_t_e_d_1_1qt__meta__tag___z_n11_application14_settings_window_e__t.html", null ],
+    [ "QT_WARNING_DISABLE_DEPRECATED::qt_meta_tag_ZN11Application16RadialMenuWidgetE_t", "struct_q_t___w_a_r_n_i_n_g___d_i_s_a_b_l_e___d_e_p_r_e_c_a_t_e_d_1_1qt__meta__tag___z_n11_application16_radial_menu_widget_e__t.html", null ],
+    [ "QT_WARNING_DISABLE_DEPRECATED::qt_meta_tag_ZN11Application19SearchPaletteWidgetE_t", "struct_q_t___w_a_r_n_i_n_g___d_i_s_a_b_l_e___d_e_p_r_e_c_a_t_e_d_1_1qt__meta__tag___z_n11_applica8eb73d15a58572e08152952d525535f.html", null ],
+    [ "QT_WARNING_DISABLE_DEPRECATED::qt_meta_tag_ZN11Application3GuiE_t", "struct_q_t___w_a_r_n_i_n_g___d_i_s_a_b_l_e___d_e_p_r_e_c_a_t_e_d_1_1qt__meta__tag___z_n11_application3_gui_e__t.html", null ],
+    [ "QToolButton", null, [
+      [ "Application::HoverButton", "class_application_1_1_hover_button.html", null ]
+    ] ],
     [ "QWidget", null, [
-      [ "EmoteWheel", "classEmoteWheel.html", null ]
+      [ "Application::Gui", "class_application_1_1_gui.html", null ],
+      [ "Application::RadialMenuWidget", "class_application_1_1_radial_menu_widget.html", null ],
+      [ "Application::SearchPaletteWidget", "class_application_1_1_search_palette_widget.html", null ],
+      [ "Application::SettingsWindow", "class_application_1_1_settings_window.html", null ]
     ] ],
-    [ "Platform::Vec2", "structPlatform_1_1Vec2.html", null ],
-    [ "Platform::Window", "classPlatform_1_1Window.html", null ]
+    [ "Application::ScheduledAction", "struct_application_1_1_scheduled_action.html", null ],
+    [ "Application::Scheduler", "class_application_1_1_scheduler.html", null ],
+    [ "Application::SearchConfig", "struct_application_1_1_search_config.html", null ],
+    [ "Platform::SocketSendRequest", "struct_platform_1_1_socket_send_request.html", null ],
+    [ "Application::ThreadSafeQueue&lt; T &gt;", "class_application_1_1_thread_safe_queue.html", null ],
+    [ "ThreadSafeQueue&lt; T &gt;", "class_thread_safe_queue.html", null ],
+    [ "Platform::Vec2", "struct_platform_1_1_vec2.html", null ],
+    [ "Platform::Window", "class_platform_1_1_window.html", null ],
+    [ "Platform::WindowRect", "struct_platform_1_1_window_rect.html", null ],
+    [ "Application::WorkerPool", "class_application_1_1_worker_pool.html", null ],
+    [ "Application::WorkerResult", "struct_application_1_1_worker_result.html", null ]
 ];

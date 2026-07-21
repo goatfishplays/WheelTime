@@ -34,11 +34,15 @@ public:
     /// @brief Move the cursor to the monitor center when this menu opens.
     bool centerMouseOnOpen = true;
 
+    /// @brief Snap the cursor back to its pre-open position when this menu closes.
+    bool restoreMouseOnClose = false;
+
     Menu(int triggerMod = 0,
          int triggerVk = 0,
          bool executeOnRelease = false,
          bool exitOnAction = false,
          bool centerMouseOnOpen = true,
+         bool restoreMouseOnClose = false,
          std::string name = "Unnamed Menu",
          std::vector<std::string> actionIds = {},
          std::string id = "");

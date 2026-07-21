@@ -19,12 +19,30 @@ class \doxymbox{\hyperlink{class_window_1_1_impl}{Impl}}
 \item 
 \doxymbox{\hyperlink{class_platform_1_1_window_a74e6087da23d3c24e9fac0245e5ec92c}{Window}} ()
 \item 
-\doxymbox{\hyperlink{class_platform_1_1_window_ae17c9c5eec8a3fc8ca26ae6816156358}{\texorpdfstring{$\sim$}{\string~}\+Window}} ()
+\doxymbox{\hyperlink{class_platform_1_1_window_afb33dbe39dea96d2cd83ab0649cb6cf2}{Window}} (void \texorpdfstring{$\ast$}{*}native\+Handle)
 \item 
+\doxymbox{\hyperlink{class_platform_1_1_window_a245d821e6016fa1f6970ccbbedd635f6}{\texorpdfstring{$\sim$}{\string~}\+Window}} ()
+\item 
+void \doxymbox{\hyperlink{class_platform_1_1_window_aa97be77463034a88b3969f8085c3274e}{get\+Active\+Window}} ()
+\begin{DoxyCompactList}\small\item\em Sets this window to the currently active one. \end{DoxyCompactList}\item 
 void \doxymbox{\hyperlink{class_platform_1_1_window_a03985e4ca2c9b4fcf572b5029e8c0115}{focus}} ()
 \begin{DoxyCompactList}\small\item\em Bring the window into active view/\+focus. \end{DoxyCompactList}\item 
-void \doxymbox{\hyperlink{class_platform_1_1_window_ad858d283d92fdce5ac5ddc422e319811}{hide}} ()
-\begin{DoxyCompactList}\small\item\em Minimize/\+hide the window. \end{DoxyCompactList}\end{DoxyCompactItemize}
+void \doxymbox{\hyperlink{class_platform_1_1_window_a4626829d3cb9d01285f739d2bbc69b74}{hide}} ()
+\begin{DoxyCompactList}\small\item\em Minimize/\+hide the window. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_platform_1_1_window_a270ea59194438c08b8f3ebdf858717a7}{show\+No\+Activate}} ()
+\begin{DoxyCompactList}\small\item\em Shows the window without activating it. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_platform_1_1_window_a5203733a7c41ec7ac4298596b1d72faf}{set\+Topmost}} (bool enabled)
+\begin{DoxyCompactList}\small\item\em Keeps or clears native always-\/on-\/top state. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_platform_1_1_window_a73e6ec5716e746ef9ad0178a0cd4d414}{set\+Non\+Activating}} (bool enabled)
+\begin{DoxyCompactList}\small\item\em Toggles native no-\/activate behavior. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_platform_1_1_window_a4c1e6b7b73c51d5d3d105fed2f0368be}{set\+Transparent\+Overlay}} (bool enabled)
+\begin{DoxyCompactList}\small\item\em Enables layered transparency required by the overlay shell. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_platform_1_1_window_ab007c894116d7951d82613a8ae5bfb8c}{set\+Click\+Through}} (bool enabled)
+\begin{DoxyCompactList}\small\item\em Toggles whether mouse input passes through to windows below. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_platform_1_1_window_a1b29525ea6b5e03293a8c8d41cab1e48}{set\+Bounds}} (const \doxymbox{\hyperlink{struct_platform_1_1_window_rect}{Window\+Rect}} \&bounds)
+\begin{DoxyCompactList}\small\item\em Repositions and resizes the native window. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{struct_platform_1_1_window_rect}{Window\+Rect}} \doxymbox{\hyperlink{class_platform_1_1_window_a24cf3432c267ff1385cc9154ab6f7f50}{monitor\+Bounds\+For\+Point}} (int x, int y) const
+\begin{DoxyCompactList}\small\item\em Finds the monitor bounds containing the supplied screen point. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -37,15 +55,21 @@ TODO:\+ Decide if we want to use QT for the actual GUI
 \doxysubsection{Constructor \& Destructor Documentation}
 \Hypertarget{class_platform_1_1_window_a74e6087da23d3c24e9fac0245e5ec92c}\index{Platform::Window@{Platform::Window}!Window@{Window}}
 \index{Window@{Window}!Platform::Window@{Platform::Window}}
-\doxysubsubsection{\texorpdfstring{Window()}{Window()}}
+\doxysubsubsection{\texorpdfstring{Window()}{Window()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
 {\footnotesize\ttfamily \label{class_platform_1_1_window_a74e6087da23d3c24e9fac0245e5ec92c} 
 Window::\+\+Window (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
 
-\Hypertarget{class_platform_1_1_window_ae17c9c5eec8a3fc8ca26ae6816156358}\index{Platform::Window@{Platform::Window}!````~Window@{\texorpdfstring{$\sim$}{\string~}Window}}
+\Hypertarget{class_platform_1_1_window_afb33dbe39dea96d2cd83ab0649cb6cf2}\index{Platform::Window@{Platform::Window}!Window@{Window}}
+\index{Window@{Window}!Platform::Window@{Platform::Window}}
+\doxysubsubsection{\texorpdfstring{Window()}{Window()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_platform_1_1_window_afb33dbe39dea96d2cd83ab0649cb6cf2} 
+Window::\+\+Window (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{native\+Handle}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_platform_1_1_window_a245d821e6016fa1f6970ccbbedd635f6}\index{Platform::Window@{Platform::Window}!````~Window@{\texorpdfstring{$\sim$}{\string~}Window}}
 \index{````~Window@{\texorpdfstring{$\sim$}{\string~}Window}!Platform::Window@{Platform::Window}}
 \doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}Window()}{\string~Window()}}
-{\footnotesize\ttfamily \label{class_platform_1_1_window_ae17c9c5eec8a3fc8ca26ae6816156358} 
-Platform::\+\+Window::\+\texorpdfstring{$\sim$}{\string~}\+Window (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{class_platform_1_1_window_a245d821e6016fa1f6970ccbbedd635f6} 
+Window::\+\texorpdfstring{$\sim$}{\string~}\+Window (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
 
 
 
@@ -62,17 +86,97 @@ void Window::\+focus (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
 
 Bring the window into active view/\+focus. 
 
-\Hypertarget{class_platform_1_1_window_ad858d283d92fdce5ac5ddc422e319811}\index{Platform::Window@{Platform::Window}!hide@{hide}}
+\Hypertarget{class_platform_1_1_window_aa97be77463034a88b3969f8085c3274e}\index{Platform::Window@{Platform::Window}!getActiveWindow@{getActiveWindow}}
+\index{getActiveWindow@{getActiveWindow}!Platform::Window@{Platform::Window}}
+\doxysubsubsection{\texorpdfstring{getActiveWindow()}{getActiveWindow()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_window_aa97be77463034a88b3969f8085c3274e} 
+void Window::\+get\+Active\+Window (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Sets this window to the currently active one. 
+
+\Hypertarget{class_platform_1_1_window_a4626829d3cb9d01285f739d2bbc69b74}\index{Platform::Window@{Platform::Window}!hide@{hide}}
 \index{hide@{hide}!Platform::Window@{Platform::Window}}
 \doxysubsubsection{\texorpdfstring{hide()}{hide()}}
-{\footnotesize\ttfamily \label{class_platform_1_1_window_ad858d283d92fdce5ac5ddc422e319811} 
-void Platform::\+\+Window::\+hide (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{class_platform_1_1_window_a4626829d3cb9d01285f739d2bbc69b74} 
+void Window::\+hide (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
 
 
 
 Minimize/\+hide the window. 
 
+\Hypertarget{class_platform_1_1_window_a24cf3432c267ff1385cc9154ab6f7f50}\index{Platform::Window@{Platform::Window}!monitorBoundsForPoint@{monitorBoundsForPoint}}
+\index{monitorBoundsForPoint@{monitorBoundsForPoint}!Platform::Window@{Platform::Window}}
+\doxysubsubsection{\texorpdfstring{monitorBoundsForPoint()}{monitorBoundsForPoint()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_window_a24cf3432c267ff1385cc9154ab6f7f50} 
+\doxymbox{\hyperlink{struct_platform_1_1_window_rect}{Window\+Rect}} Window::\+monitor\+Bounds\+For\+Point (\begin{DoxyParamCaption}\item[{int}]{x}{, }\item[{int}]{y}{}\end{DoxyParamCaption}) const}
 
+
+
+Finds the monitor bounds containing the supplied screen point. 
+
+\Hypertarget{class_platform_1_1_window_a1b29525ea6b5e03293a8c8d41cab1e48}\index{Platform::Window@{Platform::Window}!setBounds@{setBounds}}
+\index{setBounds@{setBounds}!Platform::Window@{Platform::Window}}
+\doxysubsubsection{\texorpdfstring{setBounds()}{setBounds()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_window_a1b29525ea6b5e03293a8c8d41cab1e48} 
+void Window::\+set\+Bounds (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{struct_platform_1_1_window_rect}{Window\+Rect}} \&}]{bounds}{}\end{DoxyParamCaption})}
+
+
+
+Repositions and resizes the native window. 
+
+\Hypertarget{class_platform_1_1_window_ab007c894116d7951d82613a8ae5bfb8c}\index{Platform::Window@{Platform::Window}!setClickThrough@{setClickThrough}}
+\index{setClickThrough@{setClickThrough}!Platform::Window@{Platform::Window}}
+\doxysubsubsection{\texorpdfstring{setClickThrough()}{setClickThrough()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_window_ab007c894116d7951d82613a8ae5bfb8c} 
+void Window::\+set\+Click\+Through (\begin{DoxyParamCaption}\item[{bool}]{enabled}{}\end{DoxyParamCaption})}
+
+
+
+Toggles whether mouse input passes through to windows below. 
+
+The dormant launcher overlay uses click-\/through so it can stay alive without intercepting gameplay or normal desktop interaction. \Hypertarget{class_platform_1_1_window_a73e6ec5716e746ef9ad0178a0cd4d414}\index{Platform::Window@{Platform::Window}!setNonActivating@{setNonActivating}}
+\index{setNonActivating@{setNonActivating}!Platform::Window@{Platform::Window}}
+\doxysubsubsection{\texorpdfstring{setNonActivating()}{setNonActivating()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_window_a73e6ec5716e746ef9ad0178a0cd4d414} 
+void Window::\+set\+Non\+Activating (\begin{DoxyParamCaption}\item[{bool}]{enabled}{}\end{DoxyParamCaption})}
+
+
+
+Toggles native no-\/activate behavior. 
+
+\Hypertarget{class_platform_1_1_window_a5203733a7c41ec7ac4298596b1d72faf}\index{Platform::Window@{Platform::Window}!setTopmost@{setTopmost}}
+\index{setTopmost@{setTopmost}!Platform::Window@{Platform::Window}}
+\doxysubsubsection{\texorpdfstring{setTopmost()}{setTopmost()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_window_a5203733a7c41ec7ac4298596b1d72faf} 
+void Window::\+set\+Topmost (\begin{DoxyParamCaption}\item[{bool}]{enabled}{}\end{DoxyParamCaption})}
+
+
+
+Keeps or clears native always-\/on-\/top state. 
+
+\Hypertarget{class_platform_1_1_window_a4c1e6b7b73c51d5d3d105fed2f0368be}\index{Platform::Window@{Platform::Window}!setTransparentOverlay@{setTransparentOverlay}}
+\index{setTransparentOverlay@{setTransparentOverlay}!Platform::Window@{Platform::Window}}
+\doxysubsubsection{\texorpdfstring{setTransparentOverlay()}{setTransparentOverlay()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_window_a4c1e6b7b73c51d5d3d105fed2f0368be} 
+void Window::\+set\+Transparent\+Overlay (\begin{DoxyParamCaption}\item[{bool}]{enabled}{}\end{DoxyParamCaption})}
+
+
+
+Enables layered transparency required by the overlay shell. 
+
+\Hypertarget{class_platform_1_1_window_a270ea59194438c08b8f3ebdf858717a7}\index{Platform::Window@{Platform::Window}!showNoActivate@{showNoActivate}}
+\index{showNoActivate@{showNoActivate}!Platform::Window@{Platform::Window}}
+\doxysubsubsection{\texorpdfstring{showNoActivate()}{showNoActivate()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_window_a270ea59194438c08b8f3ebdf858717a7} 
+void Window::\+show\+No\+Activate (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Shows the window without activating it. 
+
+Used by the launcher overlay so keyboard focus stays on the underlying application while the wheel becomes visible. 
 
 The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
 \item 

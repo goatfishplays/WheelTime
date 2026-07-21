@@ -1,0 +1,93 @@
+\doxysection{Application::\+Action\+Item Class Reference}
+\hypertarget{class_application_1_1_action_item}{}\label{class_application_1_1_action_item}\index{Application::ActionItem@{Application::ActionItem}}
+
+
+One executable step inside an \doxylink{class_application_1_1_action}{Action}.  
+
+
+
+
+{\ttfamily \+\#include $<$Action\+Item.\+hpp$>$}
+
+Inheritance diagram for Application::\+Action\+Item:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=12.000000cm]{class_application_1_1_action_item}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} ()=default
+\item 
+virtual \doxymbox{\hyperlink{class_application_1_1_action_item_a475b8d6aff3774c90b9f0a4512959bf5}{\texorpdfstring{$\sim$}{\string~}\+Action\+Item}} ()=default
+\item 
+virtual std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} $>$ \doxymbox{\hyperlink{class_application_1_1_action_item_afd400c3edd7ad9e074a28d462421789c}{clone}} () const
+\item 
+virtual \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} \doxymbox{\hyperlink{class_application_1_1_action_item_ab51b1298eb1b325512ca99d2f090fa75}{kind}} () const
+\item 
+virtual \doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}} \doxymbox{\hyperlink{class_application_1_1_action_item_aeeaf1c44a2f6741be0fdaad53da67e54}{execute}} (\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&context)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+One executable step inside an \doxylink{class_application_1_1_action}{Action}. 
+
+Action\+Items never talk to the scheduler directly. They perform work and/\+or record requests on \doxylink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}, then return an \doxylink{class_application_1_1_execute_result}{Execute\+Result}. 
+
+\label{class_application_1_1_action_item_doc-constructors}
+\Hypertarget{class_application_1_1_action_item_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}\index{Application::ActionItem@{Application::ActionItem}!ActionItem@{ActionItem}}
+\index{ActionItem@{ActionItem}!Application::ActionItem@{Application::ActionItem}}
+\doxysubsubsection{\texorpdfstring{ActionItem()}{ActionItem()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758} 
+Application::\+\+Action\+Item::\+\+Action\+Item (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+\Hypertarget{class_application_1_1_action_item_a475b8d6aff3774c90b9f0a4512959bf5}\index{Application::ActionItem@{Application::ActionItem}!````~ActionItem@{\texorpdfstring{$\sim$}{\string~}ActionItem}}
+\index{````~ActionItem@{\texorpdfstring{$\sim$}{\string~}ActionItem}!Application::ActionItem@{Application::ActionItem}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}ActionItem()}{\string~ActionItem()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_item_a475b8d6aff3774c90b9f0a4512959bf5} 
+virtual Application::\+\+Action\+Item::\+\texorpdfstring{$\sim$}{\string~}\+Action\+Item (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}, {\ttfamily [default]}}
+
+
+
+\label{class_application_1_1_action_item_doc-func-members}
+\Hypertarget{class_application_1_1_action_item_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_action_item_afd400c3edd7ad9e074a28d462421789c}\index{Application::ActionItem@{Application::ActionItem}!clone@{clone}}
+\index{clone@{clone}!Application::ActionItem@{Application::ActionItem}}
+\doxysubsubsection{\texorpdfstring{clone()}{clone()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_item_afd400c3edd7ad9e074a28d462421789c} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} $>$ Application::\+\+Action\+Item::\+clone (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \doxymbox{\hyperlink{class_application_1_1_a_i___cancel_a22cdc3e7afe07f995dadaceaf1491c9d}{Application::\+\+AI\+\_\+\+Cancel}}, \doxymbox{\hyperlink{class_application_1_1_a_i___close_ac902b6b61db6658019e0bceaeb4e5b79}{Application::\+\+AI\+\_\+\+Close}}, \doxymbox{\hyperlink{class_application_1_1_a_i___delay_a1be269324458db56768c3cd6e85ab48a}{Application::\+\+AI\+\_\+\+Delay}}, \doxymbox{\hyperlink{class_application_1_1_a_i___key_release_a512c3f388729b4a37c38e88941e631bd}{Application::\+\+AI\+\_\+\+Key\+Release}}, \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_a35c6d9e013b8d7bb01e54de735a440b2}{Application::\+\+AI\+\_\+\+Keystroke}}, \doxymbox{\hyperlink{class_application_1_1_a_i___launch_app_a8e88b6fffc7ccd84d45b2b7c441e4044}{Application::\+\+AI\+\_\+\+Launch\+App}}, \doxymbox{\hyperlink{class_application_1_1_a_i___menu_a0dc0052d709f4c7fdf0dc6ad7674dd37}{Application::\+\+AI\+\_\+\+Menu}}, \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a6e96f6134074a752086929d0f39bb97d}{Application::\+\+AI\+\_\+\+Mouse\+Button}}, \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_release_a5af3d9cf041de0e2ce89c8053eec2ade}{Application::\+\+AI\+\_\+\+Mouse\+Button\+Release}}, \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_move_a58c77b7672a9f232ea6ca3dfd78dbb0d}{Application::\+\+AI\+\_\+\+Mouse\+Move}}, \doxymbox{\hyperlink{class_application_1_1_a_i___nth_frequent_ab42817bdfd8b828969bf5e5e5cc333e9}{Application::\+\+AI\+\_\+\+Nth\+Frequent}}, \doxymbox{\hyperlink{class_application_1_1_a_i___nth_recent_a0fd72aa3e1f0c5671e9922a3eaa3d83d}{Application::\+\+AI\+\_\+\+Nth\+Recent}}, \doxymbox{\hyperlink{class_application_1_1_a_i___script_a540a29dbe4768e324b478014c4b7a8a5}{Application::\+\+AI\+\_\+\+Script}}, \doxymbox{\hyperlink{class_application_1_1_a_i___search_aa5ee355c87cff41f6ce1a2102d1bb3a5}{Application::\+\+AI\+\_\+\+Search}}, and \doxymbox{\hyperlink{class_application_1_1_a_i___socket_abbf5c80e54242bb83535f97f8700143e}{Application::\+\+AI\+\_\+\+Socket}}.
+
+\Hypertarget{class_application_1_1_action_item_aeeaf1c44a2f6741be0fdaad53da67e54}\index{Application::ActionItem@{Application::ActionItem}!execute@{execute}}
+\index{execute@{execute}!Application::ActionItem@{Application::ActionItem}}
+\doxysubsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_item_aeeaf1c44a2f6741be0fdaad53da67e54} 
+\doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}} Application::\+\+Action\+Item::\+execute (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&}]{context}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented in \doxymbox{\hyperlink{class_application_1_1_a_i___cancel_a767df940ece1bb58921275cf8f43fc9d}{Application::\+\+AI\+\_\+\+Cancel}}, \doxymbox{\hyperlink{class_application_1_1_a_i___close_af70ef85bc8527721363e5400714569c8}{Application::\+\+AI\+\_\+\+Close}}, \doxymbox{\hyperlink{class_application_1_1_a_i___delay_a7ab43d2c98cd3325f357e1fa005a90df}{Application::\+\+AI\+\_\+\+Delay}}, \doxymbox{\hyperlink{class_application_1_1_a_i___key_release_a0d111fa0e2bcfadf4473b2ced07f502a}{Application::\+\+AI\+\_\+\+Key\+Release}}, \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_ae76bef72f12f58244919419b6ccf534e}{Application::\+\+AI\+\_\+\+Keystroke}}, \doxymbox{\hyperlink{class_application_1_1_a_i___launch_app_a6b7e33705c65f3a52869e24ab93f0b1f}{Application::\+\+AI\+\_\+\+Launch\+App}}, \doxymbox{\hyperlink{class_application_1_1_a_i___menu_a1c18cab5533595b23cee6575e8c24309}{Application::\+\+AI\+\_\+\+Menu}}, \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a522251901ac0c0eae6f9425fdf691352}{Application::\+\+AI\+\_\+\+Mouse\+Button}}, \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_release_a6621c548a5d3715a57b8c2d9762bb9e8}{Application::\+\+AI\+\_\+\+Mouse\+Button\+Release}}, \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_move_a095560a554bf6e804622b1172b0b9cdf}{Application::\+\+AI\+\_\+\+Mouse\+Move}}, \doxymbox{\hyperlink{class_application_1_1_a_i___nth_frequent_a6560aacea4cfcab53b7fe4ed388d33c2}{Application::\+\+AI\+\_\+\+Nth\+Frequent}}, \doxymbox{\hyperlink{class_application_1_1_a_i___nth_recent_a945f46e277785d5a88ee9f144dd1063d}{Application::\+\+AI\+\_\+\+Nth\+Recent}}, \doxymbox{\hyperlink{class_application_1_1_a_i___script_ad788a0cd7c8992d932c061fcecb10cf5}{Application::\+\+AI\+\_\+\+Script}}, \doxymbox{\hyperlink{class_application_1_1_a_i___search_abecc7adbc0c6f6cbfce724c2feb9b455}{Application::\+\+AI\+\_\+\+Search}}, and \doxymbox{\hyperlink{class_application_1_1_a_i___socket_aacbfb11b46acc7afa5d451d867e19e3b}{Application::\+\+AI\+\_\+\+Socket}}.
+
+\Hypertarget{class_application_1_1_action_item_ab51b1298eb1b325512ca99d2f090fa75}\index{Application::ActionItem@{Application::ActionItem}!kind@{kind}}
+\index{kind@{kind}!Application::ActionItem@{Application::ActionItem}}
+\doxysubsubsection{\texorpdfstring{kind()}{kind()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_item_ab51b1298eb1b325512ca99d2f090fa75} 
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} Application::\+\+Action\+Item::\+kind (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Reimplemented in \doxymbox{\hyperlink{class_application_1_1_a_i___cancel_aaf5a74a49f50a3ced2bd38976fcc738a}{Application::\+\+AI\+\_\+\+Cancel}}, \doxymbox{\hyperlink{class_application_1_1_a_i___close_aa7346ce18776a81aa9a8959b4af70033}{Application::\+\+AI\+\_\+\+Close}}, \doxymbox{\hyperlink{class_application_1_1_a_i___delay_aa94defa5bcb7fc8a8ae44cfd16b0f628}{Application::\+\+AI\+\_\+\+Delay}}, \doxymbox{\hyperlink{class_application_1_1_a_i___key_release_a7c1f3e247d74f80af42149b4b5967343}{Application::\+\+AI\+\_\+\+Key\+Release}}, \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_aa0afec9d626fbece88cf98f7c5b7c5da}{Application::\+\+AI\+\_\+\+Keystroke}}, \doxymbox{\hyperlink{class_application_1_1_a_i___launch_app_a3519a465cd907306115fe5d36f7997a6}{Application::\+\+AI\+\_\+\+Launch\+App}}, \doxymbox{\hyperlink{class_application_1_1_a_i___menu_a78e066c90de123a8e51cca61b5ab160e}{Application::\+\+AI\+\_\+\+Menu}}, \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a460a89f12093c5d1196ea557813a3977}{Application::\+\+AI\+\_\+\+Mouse\+Button}}, \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_release_a259e12f6d0033b888c121760f1a94472}{Application::\+\+AI\+\_\+\+Mouse\+Button\+Release}}, \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_move_a3f396fbb987a2ed65a338b4d8c0160fd}{Application::\+\+AI\+\_\+\+Mouse\+Move}}, \doxymbox{\hyperlink{class_application_1_1_a_i___nth_frequent_ab4782c54cdd049cc1674aa74f52282f0}{Application::\+\+AI\+\_\+\+Nth\+Frequent}}, \doxymbox{\hyperlink{class_application_1_1_a_i___nth_recent_aa5e759400c31d9b557db15d9598ccded}{Application::\+\+AI\+\_\+\+Nth\+Recent}}, \doxymbox{\hyperlink{class_application_1_1_a_i___script_a507daf6e8a29328cb784ca39e08cec3c}{Application::\+\+AI\+\_\+\+Script}}, \doxymbox{\hyperlink{class_application_1_1_a_i___search_aab5331f2acc8fe862cf2e2e0977484a4}{Application::\+\+AI\+\_\+\+Search}}, and \doxymbox{\hyperlink{class_application_1_1_a_i___socket_acef11a50d2e16c22443961e8c87c391c}{Application::\+\+AI\+\_\+\+Socket}}.
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\+Action\+Items/\+\doxymbox{\hyperlink{_action_item_8hpp}{Action\+Item.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\+Action\+Items/\+\doxymbox{\hyperlink{_action_item_8cpp}{Action\+Item.\+cpp}}\end{DoxyCompactItemize}

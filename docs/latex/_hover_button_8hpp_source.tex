@@ -1,0 +1,31 @@
+\doxysection{Hover\+Button.\+hpp}
+\hypertarget{_hover_button_8hpp_source}{}\label{_hover_button_8hpp_source}\index{E:/Github/WheelTime/app/include/App/HoverButton.hpp@{E:/Github/WheelTime/app/include/App/HoverButton.hpp}}
+\doxymbox{\hyperlink{_hover_button_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <QEnterEvent>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <QEvent>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <QToolButton>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00012\ \{}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_hover_button_a93499926de65ed2f4a33ddc1dcba008a}{HoverButton}}\ :\ \textcolor{keyword}{public}\ QToolButton}
+\DoxyCodeLine{00015\ \ \ \ \ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ Q\_OBJECT}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{keyword}{explicit}\ \doxymbox{\hyperlink{class_application_1_1_hover_button_a93499926de65ed2f4a33ddc1dcba008a}{HoverButton}}(QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ signals:}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_hover_button_ad1aaeb666d73a83c884b8b5de85ae6b9}{mouseHovered}}();}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_hover_button_ab9c63980fedf6d0a449d82718ff28de5}{mouseLeft}}();}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_hover_button_a365b2264e2c08cc14edbc480f418c79d}{enterEvent}}(QEnterEvent\ *event)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_hover_button_a248a80651155cda519d96a6eead9d719}{leaveEvent}}(QEvent\ *event)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00027\ \ \ \ \ \};}
+\DoxyCodeLine{00028\ \}}
+
+\end{DoxyCode}

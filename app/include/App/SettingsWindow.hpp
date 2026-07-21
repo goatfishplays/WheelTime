@@ -22,6 +22,7 @@
 
 #include "App/App.hpp"
 #include "App/Action.hpp"
+#include "App/ActionItems/Cancel.hpp"
 #include "App/Menu.hpp"
 
 namespace Application
@@ -80,6 +81,7 @@ namespace Application
         void refreshMenuTargetCombo();
         void refreshItemDetail();
         void updateHotkeyButtonText();
+        void updateCancelChannelVisibility(CancelLevel level);
         QString describeActionItem(const ActionItem *item) const;
         QString launchPresetDisplayName(const std::string &presetId) const;
         QString launchPresetTarget(const std::string &presetId) const;
@@ -121,6 +123,7 @@ namespace Application
         QCheckBox *m_executeOnReleaseCheck{nullptr};
         QCheckBox *m_exitOnActionCheck{nullptr};
         QCheckBox *m_centerMouseOnOpenCheck{nullptr};
+        QCheckBox *m_restoreMouseOnCloseCheck{nullptr};
         QListWidget *m_slotList{nullptr};
         QComboBox *m_slotActionCombo{nullptr};
 
@@ -177,6 +180,7 @@ namespace Application
         QLabel *m_cancelHelpLabel{nullptr};
         QSpinBox *m_nthSpin{nullptr};
         QLabel *m_nthHelpLabel{nullptr};
+        QPushButton *m_resetFrequenciesButton{nullptr};
         QComboBox *m_socketProtocolCombo{nullptr};
         QLineEdit *m_socketDestinationEdit{nullptr};
         QLineEdit *m_socketMessageEdit{nullptr};

@@ -1,0 +1,110 @@
+\doxysection{Application::\+AI\+\_\+\+Delay Class Reference}
+\hypertarget{class_application_1_1_a_i___delay}{}\label{class_application_1_1_a_i___delay}\index{Application::AI\_Delay@{Application::AI\_Delay}}
+
+
+Delays the current \doxylink{class_application_1_1_action}{Action} before the next item runs.  
+
+
+
+
+{\ttfamily \+\#include $<$Delay.\+hpp$>$}
+
+Inheritance diagram for Application::\+AI\+\_\+\+Delay:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_application_1_1_a_i___delay}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_a_i___delay_a1c2a7fe23c8aa0684b58537365fa8b10}{AI\+\_\+\+Delay}} (int duration\+Ms=0)
+\item 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} $>$ \doxymbox{\hyperlink{class_application_1_1_a_i___delay_a1be269324458db56768c3cd6e85ab48a}{clone}} () const override
+\item 
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} \doxymbox{\hyperlink{class_application_1_1_a_i___delay_aa94defa5bcb7fc8a8ae44cfd16b0f628}{kind}} () const override
+\item 
+\doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}} \doxymbox{\hyperlink{class_application_1_1_a_i___delay_a7ab43d2c98cd3325f357e1fa005a90df}{execute}} (\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&context) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{class_application_1_1_action_item}{Application::\+\+Action\+Item}}}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} ()=default
+\item 
+virtual \doxymbox{\hyperlink{class_application_1_1_action_item_a475b8d6aff3774c90b9f0a4512959bf5}{\texorpdfstring{$\sim$}{\string~}\+Action\+Item}} ()=default
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{class_application_1_1_a_i___delay_a1ee5a0a4b0e79ccacdf30e358139a5d3}{duration}} = 0
+\begin{DoxyCompactList}\small\item\em Delay in milliseconds. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Delays the current \doxylink{class_application_1_1_action}{Action} before the next item runs. 
+
+\label{class_application_1_1_a_i___delay_doc-constructors}
+\Hypertarget{class_application_1_1_a_i___delay_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_a_i___delay_a1c2a7fe23c8aa0684b58537365fa8b10}\index{Application::AI\_Delay@{Application::AI\_Delay}!AI\_Delay@{AI\_Delay}}
+\index{AI\_Delay@{AI\_Delay}!Application::AI\_Delay@{Application::AI\_Delay}}
+\doxysubsubsection{\texorpdfstring{AI\_Delay()}{AI\_Delay()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___delay_a1c2a7fe23c8aa0684b58537365fa8b10} 
+Application::\+\+AI\+\_\+\+Delay::\+\+AI\+\_\+\+Delay (\begin{DoxyParamCaption}\item[{int}]{duration\+Ms}{ = {\ttfamily 0}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+\label{class_application_1_1_a_i___delay_doc-func-members}
+\Hypertarget{class_application_1_1_a_i___delay_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_a_i___delay_a1be269324458db56768c3cd6e85ab48a}\index{Application::AI\_Delay@{Application::AI\_Delay}!clone@{clone}}
+\index{clone@{clone}!Application::AI\_Delay@{Application::AI\_Delay}}
+\doxysubsubsection{\texorpdfstring{clone()}{clone()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___delay_a1be269324458db56768c3cd6e85ab48a} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} $>$ Application::\+\+AI\+\_\+\+Delay::\+clone (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_afd400c3edd7ad9e074a28d462421789c}{Application::\+\+Action\+Item}}.
+
+\Hypertarget{class_application_1_1_a_i___delay_a7ab43d2c98cd3325f357e1fa005a90df}\index{Application::AI\_Delay@{Application::AI\_Delay}!execute@{execute}}
+\index{execute@{execute}!Application::AI\_Delay@{Application::AI\_Delay}}
+\doxysubsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___delay_a7ab43d2c98cd3325f357e1fa005a90df} 
+\doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}} Application::\+\+AI\+\_\+\+Delay::\+execute (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&}]{context}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_aeeaf1c44a2f6741be0fdaad53da67e54}{Application::\+\+Action\+Item}}.
+
+\Hypertarget{class_application_1_1_a_i___delay_aa94defa5bcb7fc8a8ae44cfd16b0f628}\index{Application::AI\_Delay@{Application::AI\_Delay}!kind@{kind}}
+\index{kind@{kind}!Application::AI\_Delay@{Application::AI\_Delay}}
+\doxysubsubsection{\texorpdfstring{kind()}{kind()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___delay_aa94defa5bcb7fc8a8ae44cfd16b0f628} 
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} Application::\+\+AI\+\_\+\+Delay::\+kind (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_ab51b1298eb1b325512ca99d2f090fa75}{Application::\+\+Action\+Item}}.
+
+
+
+\label{class_application_1_1_a_i___delay_doc-variable-members}
+\Hypertarget{class_application_1_1_a_i___delay_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_application_1_1_a_i___delay_a1ee5a0a4b0e79ccacdf30e358139a5d3}\index{Application::AI\_Delay@{Application::AI\_Delay}!duration@{duration}}
+\index{duration@{duration}!Application::AI\_Delay@{Application::AI\_Delay}}
+\doxysubsubsection{\texorpdfstring{duration}{duration}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___delay_a1ee5a0a4b0e79ccacdf30e358139a5d3} 
+int Application::\+\+AI\+\_\+\+Delay::\+duration = 0}
+
+
+
+Delay in milliseconds. 
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\+Action\+Items/\+\doxymbox{\hyperlink{_delay_8hpp}{Delay.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\+Action\+Items/\+\doxymbox{\hyperlink{_delay_8cpp}{Delay.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,198 @@
+\chapter{Wheel\+Time style guide }
+\hypertarget{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e}{}\label{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e}\index{WheelTime style guide@{WheelTime style guide}}
+\label{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md172}%
+\Hypertarget{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md172}%
+
+
+Conventions for active code under {\ttfamily app/\+}, {\ttfamily platform/\+}, and {\ttfamily launcher/\+}. When older code disagrees with this file, new and touched code should move toward these rules. Treat {\ttfamily \doxylink{_scheduler_8hpp}{Scheduler.\+hpp}} /\+ newer Action\+Items as the reference shape.
+
+\DoxyHorRuler{0}
+\hypertarget{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md174}{}\doxysection{\texorpdfstring{Layout and identity}{Layout and identity}}\label{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md174}
+
+\begin{DoxyTable}{3}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Surface  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Convention  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Notes  \\
+Repo /\+ product  &{\bfseries{Wheel\+Time}}  &Display name may be “\+Wheel Time”  \\
+CMake {\ttfamily project()} /\+ binary  &{\bfseries{Wheel\+Time}}  &Matches repo /\+ product name  \\
+Include path root  &{\ttfamily App/\+…}, {\ttfamily Platform/\+…}  &Folder name stays short  \\
+Namespaces  &{\ttfamily \doxylink{namespace_application}{Application}}, {\ttfamily \doxylink{namespace_platform}{Platform}}  &Do {\bfseries{not}} use {\ttfamily namespace App}  \\
+OS implementations  &{\ttfamily platform/\+src/\+\texorpdfstring{$<$}{<}os\texorpdfstring{$>$}{>}/\+}  &e.\+g. {\ttfamily windows/\+} (lowercase OS id)  \\
+\end{DoxyTable}
+
+
+Do {\bfseries{not}} rename {\ttfamily include/\+\+App} → {\ttfamily include/\+\+Application} for style alone. Document the split instead:\+ path prefix {\ttfamily App}, namespace {\ttfamily \doxylink{namespace_application}{Application}}.
+
+\DoxyHorRuler{0}
+\hypertarget{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md176}{}\doxysection{\texorpdfstring{Files and directories}{Files and directories}}\label{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md176}
+
+\begin{DoxyItemize}
+\item Headers:\+ {\ttfamily .hpp} + {\ttfamily \#pragma once} (no include guards).
+\item Sources:\+ {\ttfamily .cpp}.
+\item Names:\+ {\bfseries{Pascal\+Case}} matching the primary type ({\ttfamily \doxylink{_scheduler_8hpp}{Scheduler.\+hpp}}, {\ttfamily \doxylink{_mouse_button_8cpp}{Mouse\+Button.\+cpp}}).
+\item Domains as folders:\+ {\ttfamily Action\+Items/\+}, not {\ttfamily action\+\_\+items/\+}.
+\item Tests:\+ {\ttfamily app/\+tests/\+\texorpdfstring{$<$}{<}topic\texorpdfstring{$>$}{>}\+\_\+\texorpdfstring{$<$}{<}kind\texorpdfstring{$>$}{>}.cpp} with CMake target of the same stem.
+\begin{DoxyItemize}
+\item Use {\ttfamily \texorpdfstring{$\ast$}{*}\+\_\+tests} for kept regression suites; {\ttfamily \texorpdfstring{$\ast$}{*}\+\_\+smoke} only for disposable phase checks.
+\item Prefer {\ttfamily action\+\_\+items} over glued {\ttfamily actionitems} in new names.
+\end{DoxyItemize}
+\item Assets /\+ JSON:\+ {\bfseries{snake\+\_\+case}} or existing resource names; do not force Pascal\+Case onto wire formats.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md178}{}\doxysection{\texorpdfstring{Naming}{Naming}}\label{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md178}
+\hypertarget{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md179}{}\doxysubsection{\texorpdfstring{Types}{Types}}\label{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md179}
+
+\begin{DoxyItemize}
+\item Classes, structs, enums, type aliases:\+ {\bfseries{Pascal\+Case}}.
+\item Prefer {\ttfamily enum class} with Pascal\+Case enumerators.
+\item Action\+Item implementations:\+ prefix {\bfseries{{\ttfamily AI\+\_\+}}} + Pascal\+Case remainder.
+\begin{DoxyItemize}
+\item Good:\+ {\ttfamily AI\+\_\+\+Keystroke}, {\ttfamily AI\+\_\+\+Mouse\+Button}, {\ttfamily AI\+\_\+\+Nth\+Recent}.
+\item Bad:\+ {\ttfamily AI\+\_\+nth\+Recent} (lowercase after prefix).
+\end{DoxyItemize}
+\item Avoid unexplained abbreviations in new public API ({\ttfamily Input\+Receiver} over {\ttfamily Input\+Rcvr} for new names; existing abbreviations may stay until renamed intentionally).
+\end{DoxyItemize}\hypertarget{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md180}{}\doxysubsection{\texorpdfstring{Functions and methods}{Functions and methods}}\label{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md180}
+
+\begin{DoxyItemize}
+\item {\bfseries{camel\+Case}}.
+\item Booleans:\+ prefer {\ttfamily is} /\+ {\ttfamily has} /\+ {\ttfamily can} prefixes ({\ttfamily is\+Paused}, {\ttfamily is\+Cancelable}).
+\item Accessors:\+ pick {\bfseries{one}} style per type and stick to it.
+\begin{DoxyItemize}
+\item Preferred for library types:\+ bare nouns for trivial getters ({\ttfamily channel()}, {\ttfamily name()}), or consistent {\ttfamily get\+X()} — not both for the same field.
+\item Do not add a second alias ({\ttfamily get\+Items()} {\bfseries{and}} {\ttfamily items()}).
+\end{DoxyItemize}
+\item Prefer full words for mutators/\+size:\+ {\ttfamily remove\+Action}, {\ttfamily item\+Count} /\+ {\ttfamily num\+Items} — avoid {\ttfamily rem\+Action}, {\ttfamily len} in new or refurbished API.
+\item Parameters:\+ no leading underscore ({\ttfamily input\+Bind}, not {\ttfamily \+\_\+input\+Bind}).
+\end{DoxyItemize}\hypertarget{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md181}{}\doxysubsection{\texorpdfstring{Members and locals}{Members and locals}}\label{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md181}
+
+\begin{DoxyItemize}
+\item Private /\+ protected data members:\+ {\bfseries{{\ttfamily m\+\_\+}}} + camel\+Case ({\ttfamily m\+\_\+mailbox}, {\ttfamily m\+\_\+channel}).
+\item Public fields are allowed only for small DTOs /\+ Action\+Item value fields ({\ttfamily AI\+\_\+\+Delay::\+duration}). Document that choice on the type; do not mix {\ttfamily m\+\_\+} and bare private fields on the same class.
+\item Locals and parameters:\+ camel\+Case, no {\ttfamily m\+\_\+}.
+\item Constants:\+ {\ttfamily k\+Camel\+Case} or {\ttfamily Pascal\+Case} enum /\+ {\ttfamily constexpr}; avoid {\ttfamily SCREAMING\+\_\+\+SNAKE} except for macros.
+\end{DoxyItemize}\hypertarget{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md182}{}\doxysubsection{\texorpdfstring{Domain vocabulary}{Domain vocabulary}}\label{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md182}
+
+\begin{DoxyItemize}
+\item One name per concept across app and platform boundaries.
+\begin{DoxyItemize}
+\item Example debt:\+ cancel “latest” vs “most recent” — consolidate when those headers are edited.
+\end{DoxyItemize}
+\item JSON /\+ config type tags:\+ {\bfseries{snake\+\_\+case}} ({\ttfamily launch\+\_\+app}, {\ttfamily nth\+\_\+recent}, {\ttfamily hotkey}).
+\begin{DoxyItemize}
+\item Prefer a single canonical tag per item kind; do not add duplicate aliases ({\ttfamily hotkey} vs {\ttfamily keystroke}) without a migration plan.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md184}{}\doxysection{\texorpdfstring{Includes}{Includes}}\label{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md184}
+Order (blank line between groups):\+
+
+
+\begin{DoxyEnumerate}
+\item Corresponding header (in {\ttfamily .cpp})
+\item Project headers
+\item Third-\/party (Qt, etc.)
+\item C++ standard library
+\end{DoxyEnumerate}
+
+Style:\+
+
+
+\begin{DoxyTable}{3}{}{}{1}
+\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}From  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Include  &\SetCell{c,bg=\tableheadbgcolor,font=\bfseries}Form  \\
+App /\+ launcher code  &App headers  &{\ttfamily \#include "{}\doxylink{_scheduler_8hpp}{App/\+\+Scheduler.\+hpp}"{}}  \\
+App /\+ launcher code  &\doxylink{namespace_platform}{Platform} headers  &{\ttfamily \#include \texorpdfstring{$<$}{<}\doxylink{_execute_8hpp}{Platform/\+\+Execute.\+hpp}\texorpdfstring{$>$}{>}}  \\
+\doxylink{namespace_platform}{Platform} headers  &Other \doxylink{namespace_platform}{Platform} headers  &{\ttfamily "{}Platform/\+…"{}} or {\ttfamily \texorpdfstring{$<$}{<}Platform/\+…\texorpdfstring{$>$}{>}} — pick one per file set; implementations under {\ttfamily platform/\+src/\+} should be consistent with each other  \\
+Anywhere  &Qt /\+ std  &{\ttfamily \#include \texorpdfstring{$<$}{<}QWidget\texorpdfstring{$>$}{>}}, {\ttfamily \#include \texorpdfstring{$<$}{<}vector\texorpdfstring{$>$}{>}}  \\
+\end{DoxyTable}
+
+
+\doxylink{namespace_platform}{Platform} must not depend on App.
+
+\DoxyHorRuler{0}
+\hypertarget{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md186}{}\doxysection{\texorpdfstring{Classes and API shape}{Classes and API shape}}\label{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md186}
+
+\begin{DoxyItemize}
+\item Prefer clear ownership:\+ {\ttfamily unique\+\_\+ptr} for polymorphic sequences; menus reference actions by stable id.
+\item Mark side-\/effect-\/free queries {\ttfamily \+[\+[nodiscard]\+]\+} when ignoring the result is a bug ({\ttfamily cancelable()}, {\ttfamily execute} results).
+\item Prefer {\ttfamily noexcept} on trivial getters/\+setters and moves when accurate.
+\item Out parameters and boolean “success” returns:\+ prefer typed results ({\ttfamily Execute\+Result}) over ambiguous {\ttfamily bool} when already used nearby.
+\item Units in names or comments when non-\/obvious ({\ttfamily duration\+Ms} vs bare {\ttfamily duration}); do not silently mix seconds and milliseconds for similar fields.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md188}{}\doxysection{\texorpdfstring{Comments and docs}{Comments and docs}}\label{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md188}
+New or substantially edited headers should use the compact form:\+
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{}
+
+\end{DoxyCode}
+
+
+Rules:\+
+
+
+\begin{DoxyItemize}
+\item No placeholder authors ({\ttfamily your name (you@domain.\+com)}).
+\item Optional {\ttfamily @author} with a real identity is fine on \doxylink{namespace_platform}{Platform} headers that already use it; do not invent a second full Doxygen banner style for App.
+\item Prefer {\ttfamily /\+/\+/\+} for member briefs; longer notes as block comments above the declaration.
+\item Keep TODOs actionable and specific; avoid drive-\/by jokes in public headers.
+\item Generated Doxygen under {\ttfamily docs/\+html} is not a style source; regenerate after namespace/\+\+API renames.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md190}{}\doxysection{\texorpdfstring{Formatting and language}{Formatting and language}}\label{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md190}
+
+\begin{DoxyItemize}
+\item Language:\+ C++23 for active CMake targets unless a subdirectory documents otherwise. Do not quietly lower the standard on new targets.
+\item Indentation:\+ 4 spaces (match surrounding file).
+\item Braces:\+ Allman-\/style /\+ existing file style — {\bfseries{match the file you edit}}; do not reformat untouched regions for preference alone.
+\item Namespace body:\+ prefer types at column 0 inside {\ttfamily namespace \doxylink{namespace_application}{Application} \{ … \}} (scheduler style). When editing heavily indented older GUI headers, migrate the touched type toward that layout only if the diff stays focused.
+\item Prefer {\ttfamily nullptr}, {\ttfamily override}, {\ttfamily = default} /\+ {\ttfamily = delete} where appropriate.
+\end{DoxyItemize}
+
+A {\ttfamily .clang-\/format} may be added later to encode brace/\+indent rules; until then, match neighboring code.
+
+\DoxyHorRuler{0}
+\hypertarget{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md192}{}\doxysection{\texorpdfstring{Tests}{Tests}}\label{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md192}
+
+\begin{DoxyItemize}
+\item Hand-\/rolled {\ttfamily \doxylink{action__history__smoke_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}{main}} + {\ttfamily bool test…()} helpers is the current pattern; keep it consistent within a file.
+\item Prefer {\ttfamily using Application::\+\+Specific\+Type;} over broad {\ttfamily using namespace \doxylink{namespace_application}{Application};} in new tests when practical.
+\item Share fakes ({\ttfamily Counting\+Item}, delay stubs) via a small common helper when a third copy would appear — do not keep forking duplicates across phase files.
+\item Tests may include both App and \doxylink{namespace_platform}{Platform} headers.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md194}{}\doxysection{\texorpdfstring{CMake}{CMake}}\label{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md194}
+
+\begin{DoxyItemize}
+\item Library targets:\+ Pascal\+Case ({\ttfamily App}, {\ttfamily \doxylink{namespace_platform}{Platform}}).
+\item Executables:\+ match the chosen product spelling ({\ttfamily Wheel\+Time}).
+\item Test targets:\+ snake\+\_\+case stems matching the {\ttfamily .cpp} file name.
+\item New sources must be listed in the owning {\ttfamily CMake\+Lists.\+txt}. Orphan headers/\+sources in-\/tree should be wired or removed, not left ambiguous.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md196}{}\doxysection{\texorpdfstring{What this guide deliberately allows}{What this guide deliberately allows}}\label{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md196}
+
+\begin{DoxyItemize}
+\item {\bfseries{JSON snake\+\_\+case vs C++ Pascal\+Case}} — wire format is not C++ naming.
+\item {\bfseries{{\ttfamily App/\+} path vs {\ttfamily \doxylink{namespace_application}{Application}} namespace}} — historical; document, don’t churn paths.
+\item {\bfseries{Public fields on Action\+Items}} — small serializable items stay simple; infrastructure types use {\ttfamily m\+\_\+}.
+\end{DoxyItemize}
+
+\DoxyHorRuler{0}
+\hypertarget{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md198}{}\doxysection{\texorpdfstring{Known debt (fix toward this guide when touching)}{Known debt (fix toward this guide when touching)}}\label{md__e_1_2_github_2_wheel_time_2_s_t_y_l_e_autotoc_md198}
+
+\begin{DoxyEnumerate}
+\item Mixed {\ttfamily get\+X()} accessors vs bare nouns on older GUI types ({\ttfamily get\+Name} vs {\ttfamily channel})
+\item Public fields on {\ttfamily App} /\+ {\ttfamily Menu} (hotkey binds, collections) vs {\ttfamily m\+\_\+} infrastructure style
+\item Dual JSON load alias {\ttfamily keystroke} for canonical {\ttfamily hotkey} (keep until configs migrate)
+\item Test target naming ({\ttfamily \texorpdfstring{$\ast$}{*}\+\_\+smoke} vs {\ttfamily \texorpdfstring{$\ast$}{*}\+\_\+tests}, glued {\ttfamily actionitems}) and duplicated fakes
+\item Abbreviated \doxylink{namespace_platform}{Platform} names ({\ttfamily Input\+Rcvr}) retained for ABI chill — rename when convenient
+\item Generated Doxygen under {\ttfamily docs/\+html} may still mention obsolete names until regenerated
+\end{DoxyEnumerate}
+
+When in doubt:\+ match {\ttfamily \doxylink{_scheduler_8hpp}{app/\+include/\+\+App/\+\+Scheduler.\+hpp}} and the Action\+Items under {\ttfamily app/\+include/\+\+App/\+\+Action\+Items/\+}, then sharpen names on the next focused cleanup PR. 

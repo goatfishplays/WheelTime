@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hotkey_0',['Hotkey',['../structPlatform_1_1Hotkey.html',1,'Platform']]]
+  ['delayqueue_0',['DelayQueue',['../class_application_1_1_delay_queue.html',1,'Application']]]
 ];

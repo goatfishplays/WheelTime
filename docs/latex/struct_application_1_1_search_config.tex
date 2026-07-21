@@ -1,0 +1,73 @@
+\doxysection{Application::\+Search\+Config Struct Reference}
+\hypertarget{struct_application_1_1_search_config}{}\label{struct_application_1_1_search_config}\index{Application::SearchConfig@{Application::SearchConfig}}
+
+
+Initial filter set and websearch template for one search palette open.  
+
+
+
+
+{\ttfamily \+\#include $<$Search\+Config.\+hpp$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \doxymbox{\hyperlink{struct_application_1_1_search_config_a8048ac68f42a554df821835a56be295b}{search\+Actions}} \{true\}
+\item 
+bool \doxymbox{\hyperlink{struct_application_1_1_search_config_a0b777e38bed444f8b5a9dc2cf7575820}{search\+Programs}} \{true\}
+\item 
+bool \doxymbox{\hyperlink{struct_application_1_1_search_config_aec5837bf4aa59f25cdff805497cf7793}{search\+Menus}} \{true\}
+\item 
+bool \doxymbox{\hyperlink{struct_application_1_1_search_config_af091b7e6434e4afd0e8f188abc0da71f}{web\+Search}} \{true\}
+\item 
+std::\+string \doxymbox{\hyperlink{struct_application_1_1_search_config_a5498262a90ce6075bdbab4c271abf0a1}{web\+Search\+Url}} \{"{}https:\+/\+/\+www.\+google.\+com/\+search?q=\{query\}"{}\}
+\begin{DoxyCompactList}\small\item\em Websearch URL template; "{}\{query\}"{} is replaced with the percent-\/encoded query text. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Initial filter set and websearch template for one search palette open. 
+
+Configured per \doxylink{class_application_1_1_a_i___search}{AI\+\_\+\+Search} action item; the palette UI can still toggle the four filters at runtime while it is open. 
+
+\label{struct_application_1_1_search_config_doc-variable-members}
+\Hypertarget{struct_application_1_1_search_config_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_application_1_1_search_config_a8048ac68f42a554df821835a56be295b}\index{Application::SearchConfig@{Application::SearchConfig}!searchActions@{searchActions}}
+\index{searchActions@{searchActions}!Application::SearchConfig@{Application::SearchConfig}}
+\doxysubsubsection{\texorpdfstring{searchActions}{searchActions}}
+{\footnotesize\ttfamily \label{struct_application_1_1_search_config_a8048ac68f42a554df821835a56be295b} 
+bool Application::\+\+Search\+Config::\+search\+Actions \{true\}}
+
+\Hypertarget{struct_application_1_1_search_config_aec5837bf4aa59f25cdff805497cf7793}\index{Application::SearchConfig@{Application::SearchConfig}!searchMenus@{searchMenus}}
+\index{searchMenus@{searchMenus}!Application::SearchConfig@{Application::SearchConfig}}
+\doxysubsubsection{\texorpdfstring{searchMenus}{searchMenus}}
+{\footnotesize\ttfamily \label{struct_application_1_1_search_config_aec5837bf4aa59f25cdff805497cf7793} 
+bool Application::\+\+Search\+Config::\+search\+Menus \{true\}}
+
+\Hypertarget{struct_application_1_1_search_config_a0b777e38bed444f8b5a9dc2cf7575820}\index{Application::SearchConfig@{Application::SearchConfig}!searchPrograms@{searchPrograms}}
+\index{searchPrograms@{searchPrograms}!Application::SearchConfig@{Application::SearchConfig}}
+\doxysubsubsection{\texorpdfstring{searchPrograms}{searchPrograms}}
+{\footnotesize\ttfamily \label{struct_application_1_1_search_config_a0b777e38bed444f8b5a9dc2cf7575820} 
+bool Application::\+\+Search\+Config::\+search\+Programs \{true\}}
+
+\Hypertarget{struct_application_1_1_search_config_af091b7e6434e4afd0e8f188abc0da71f}\index{Application::SearchConfig@{Application::SearchConfig}!webSearch@{webSearch}}
+\index{webSearch@{webSearch}!Application::SearchConfig@{Application::SearchConfig}}
+\doxysubsubsection{\texorpdfstring{webSearch}{webSearch}}
+{\footnotesize\ttfamily \label{struct_application_1_1_search_config_af091b7e6434e4afd0e8f188abc0da71f} 
+bool Application::\+\+Search\+Config::\+web\+Search \{true\}}
+
+\Hypertarget{struct_application_1_1_search_config_a5498262a90ce6075bdbab4c271abf0a1}\index{Application::SearchConfig@{Application::SearchConfig}!webSearchUrl@{webSearchUrl}}
+\index{webSearchUrl@{webSearchUrl}!Application::SearchConfig@{Application::SearchConfig}}
+\doxysubsubsection{\texorpdfstring{webSearchUrl}{webSearchUrl}}
+{\footnotesize\ttfamily \label{struct_application_1_1_search_config_a5498262a90ce6075bdbab4c271abf0a1} 
+std::\+string Application::\+\+Search\+Config::\+web\+Search\+Url \{"{}https:\+/\+/\+www.\+google.\+com/\+search?q=\{query\}"{}\}}
+
+
+
+Websearch URL template; "{}\{query\}"{} is replaced with the percent-\/encoded query text. 
+
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_search_config_8hpp}{Search\+Config.\+hpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,44 @@
+\doxysection{Mouse\+Button.\+hpp}
+\hypertarget{_mouse_button_8hpp_source}{}\label{_mouse_button_8hpp_source}\index{E:/Github/WheelTime/app/include/App/ActionItems/MouseButton.hpp@{E:/Github/WheelTime/app/include/App/ActionItems/MouseButton.hpp}}
+\doxymbox{\hyperlink{_mouse_button_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_action_item_8hpp}{App/ActionItems/ActionItem.hpp}}"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00011\ \{}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00021\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_af58578748c46b6ec28d7b7355586ba58}{AI\_MouseButton}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{ActionItem}}}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00023\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00024\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_af58578748c46b6ec28d7b7355586ba58}{AI\_MouseButton}}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a65292069e0ba05aae613c77ac025b374}{button}}\ =\ 0,\ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a3432a3fd47351c78d140f1af08392ea0}{holdDuration}}\ =\ 0.0f,\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a7cd512cccb2fc113c1e5e16cdd10ef12}{proceed}}\ =\ \textcolor{keyword}{false},\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a721d13e7dbea87e958ee4f9f84458130}{modifiers}}\ =\ 0);}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a65292069e0ba05aae613c77ac025b374}{button}}\ =\ 0;}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a721d13e7dbea87e958ee4f9f84458130}{modifiers}}\ =\ 0;}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{float}\ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a3432a3fd47351c78d140f1af08392ea0}{holdDuration}}\ =\ 0.0f;\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a7cd512cccb2fc113c1e5e16cdd10ef12}{proceed}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ std::unique\_ptr<ActionItem>\ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a6e96f6134074a752086929d0f39bb97d}{clone}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00032\ \ \ \ \ \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{ActionItemKind}}\ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a460a89f12093c5d1196ea557813a3977}{kind}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00033\ \ \ \ \ [[nodiscard]]\ \doxymbox{\hyperlink{class_application_1_1_execute_result}{ExecuteResult}}\ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_a522251901ac0c0eae6f9425fdf691352}{execute}}(\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{ActionExecutionContext}}\ \&context)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_release_acc57c95333fa930c75b66749fd50b286}{AI\_MouseButtonRelease}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{ActionItem}}}
+\DoxyCodeLine{00043\ \{}
+\DoxyCodeLine{00044\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{explicit}\ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_release_acc57c95333fa930c75b66749fd50b286}{AI\_MouseButtonRelease}}(\textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_release_a3adbb674fce4d06cb92d3c2db3e20272}{button}}\ =\ 0,\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_release_a1dcac65ef50d5889b892cf59f2f55f5c}{modifiers}}\ =\ 0);}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_release_a3adbb674fce4d06cb92d3c2db3e20272}{button}}\ =\ 0;}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_release_a1dcac65ef50d5889b892cf59f2f55f5c}{modifiers}}\ =\ 0;}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ std::unique\_ptr<ActionItem>\ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_release_a5af3d9cf041de0e2ce89c8053eec2ade}{clone}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00051\ \ \ \ \ \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{ActionItemKind}}\ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_release_a259e12f6d0033b888c121760f1a94472}{kind}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00052\ \ \ \ \ [[nodiscard]]\ \doxymbox{\hyperlink{class_application_1_1_execute_result}{ExecuteResult}}\ \doxymbox{\hyperlink{class_application_1_1_a_i___mouse_button_release_a6621c548a5d3715a57b8c2d9762bb9e8}{execute}}(\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{ActionExecutionContext}}\ \&context)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00053\ \};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \}\ \textcolor{comment}{//\ namespace\ Application}}
+
+\end{DoxyCode}

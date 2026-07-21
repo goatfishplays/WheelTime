@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['main_2ecpp_0',['main.cpp',['../launcher_2src_2main_8cpp.html',1,'(Global Namespace)'],['../Wheel-Time_2main_8cpp.html',1,'(Global Namespace)']]]
+  ['foo_2eh_0',['foo.h',['../foo_8h.html',1,'']]],
+  ['fuzzymatch_2ecpp_1',['FuzzyMatch.cpp',['../_fuzzy_match_8cpp.html',1,'']]],
+  ['fuzzymatch_2ehpp_2',['FuzzyMatch.hpp',['../_fuzzy_match_8hpp.html',1,'']]]
 ];

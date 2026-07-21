@@ -1,5 +1,27 @@
 var searchData=
 [
-  ['receiving_20the_20hotkey_0',['Receiving the Hotkey',['../md__2shr_2Github_2WheelTime_2notes_2hotkey-basics.html#autotoc_md5',1,'']]],
-  ['registerhotkey_1',['RegisterHotKey',['../md__2shr_2Github_2WheelTime_2notes_2hotkey-basics.html',1,'']]]
+  ['identity_0',['Layout and identity',['../md__e_1_2_github_2_wheel_time_2_s_t_y_l_e.html#autotoc_md174',1,'']]],
+  ['if_20it_20does_20the_20right_20thing_20based_20on_20the_20product_20owners_20vision_1',['-Product Owner had looked over the codes functionality (Not a code review, just checking if it does the right thing based on the Product Owners vision).',['../md__acceptance_01_criteria.html#autotoc_md6',1,'']]],
+  ['implementation_20files_2',['&lt;b&gt;Start separating code into headers and implementation files&lt;/b&gt;',['../md_scrum_2_sprint_01_0g2_01_report.html#autotoc_md36',1,'']]],
+  ['implementation_20structures_3',['&lt;b&gt;Keep using headers and separate implementation structures&lt;/b&gt;',['../md_scrum_2_sprint_01_0g3_01_report.html#autotoc_md56',1,'']]],
+  ['in_20one_20work_20session_4',['&lt;b&gt;Start making tasks small enough to complete in one work session&lt;/b&gt;',['../md_scrum_2_sprint_01_report_01_0g1.html#autotoc_md75',1,'']]],
+  ['in_20the_20git_20repository_5',['-Is your code fully uploaded and functional in the Git Repository?',['../md__acceptance_01_criteria.html#autotoc_md5',1,'']]],
+  ['in_20the_20repo_6',['&lt;b&gt;Start writing short research notes in the repo&lt;/b&gt;',['../md_scrum_2_sprint_01_report_01_0g1.html#autotoc_md74',1,'']]],
+  ['includes_7',['Includes',['../md__e_1_2_github_2_wheel_time_2_s_t_y_l_e.html#autotoc_md184',1,'']]],
+  ['indentation_3a_8',['Indentation:',['../md__c_09_09_01_coding_01_standards_01_document.html#autotoc_md14',1,'']]],
+  ['info_9',['Window Focus Info',['../md__e_1_2_github_2_wheel_time_2notes_2hotkey-basics.html#autotoc_md150',1,'']]],
+  ['infrastructure_20tasks_10',['Infrastructure Tasks',['../md_scrum_2_sprint_plan1.html#autotoc_md138',1,'&lt;b&gt;Sprint 1 Infrastructure Tasks&lt;/b&gt;'],['../md_scrum_2_sprint_plan_01_0g2.html#autotoc_md97',1,'&lt;b&gt;Sprint 2 Infrastructure Tasks&lt;/b&gt;'],['../md_scrum_2_sprint_plan_01_0g3.html#autotoc_md110',1,'&lt;b&gt;Sprint 3 Infrastructure Tasks&lt;/b&gt;'],['../md_scrum_2_sprint_plan_01_0g4.html#autotoc_md124',1,'&lt;b&gt;Sprint 4 Infrastructure Tasks&lt;/b&gt;']]],
+  ['initial_20burnup_20chart_11',['Initial Burnup Chart',['../md_scrum_2_sprint_plan_01_0g2.html#autotoc_md101',1,'&lt;b&gt;Initial Burnup Chart&lt;/b&gt;'],['../md_scrum_2_sprint_plan_01_0g3.html#autotoc_md114',1,'&lt;b&gt;Initial Burnup Chart&lt;/b&gt;'],['../md_scrum_2_sprint_plan_01_0g4.html#autotoc_md128',1,'&lt;b&gt;Initial Burnup Chart&lt;/b&gt;'],['../md_scrum_2_sprint_plan1.html#autotoc_md142',1,'&lt;b&gt;Initial Burnup Chart&lt;/b&gt;']]],
+  ['initial_20scrum_20board_12',['Initial Scrum Board',['../md_scrum_2_sprint_plan_01_0g2.html#autotoc_md102',1,'&lt;b&gt;Initial Scrum Board&lt;/b&gt;'],['../md_scrum_2_sprint_plan_01_0g3.html#autotoc_md115',1,'&lt;b&gt;Initial Scrum Board&lt;/b&gt;'],['../md_scrum_2_sprint_plan_01_0g4.html#autotoc_md129',1,'&lt;b&gt;Initial Scrum Board&lt;/b&gt;'],['../md_scrum_2_sprint_plan1.html#autotoc_md143',1,'&lt;b&gt;Initial Scrum Board&lt;/b&gt;']]],
+  ['initial_20task_20assignment_13',['Initial Task Assignment',['../md_scrum_2_sprint_plan_01_0g2.html#autotoc_md100',1,'&lt;b&gt;Initial Task Assignment&lt;/b&gt;'],['../md_scrum_2_sprint_plan_01_0g3.html#autotoc_md113',1,'&lt;b&gt;Initial Task Assignment&lt;/b&gt;'],['../md_scrum_2_sprint_plan_01_0g4.html#autotoc_md127',1,'&lt;b&gt;Initial Task Assignment&lt;/b&gt;'],['../md_scrum_2_sprint_plan1.html#autotoc_md141',1,'&lt;b&gt;Initial Task Assignment&lt;/b&gt;']]],
+  ['ins_14',['&lt;b&gt;Keep holding regular Discord check-ins&lt;/b&gt;',['../md_scrum_2_sprint_01_0g2_01_report.html#autotoc_md40',1,'']]],
+  ['instructions_15',['Build Instructions',['../index.html#autotoc_md169',1,'']]],
+  ['integrity_20levels_16',['Sandbox / Integrity Levels',['../md__e_1_2_github_2_wheel_time_2notes_2secure-launching.html#autotoc_md158',1,'']]],
+  ['into_20headers_20and_20implementation_20files_17',['&lt;b&gt;Start separating code into headers and implementation files&lt;/b&gt;',['../md_scrum_2_sprint_01_0g2_01_report.html#autotoc_md36',1,'']]],
+  ['into_20the_20repository_18',['-Documentation for the code is completed and also pushed into the repository',['../md__acceptance_01_criteria.html#autotoc_md4',1,'']]],
+  ['into_20the_20ui_19',['&lt;b&gt;Stop hardcoding logic into the UI&lt;/b&gt;',['../md_scrum_2_sprint_01_0g2_01_report.html#autotoc_md34',1,'']]],
+  ['is_20completed_20and_20also_20pushed_20into_20the_20repository_20',['-Documentation for the code is completed and also pushed into the repository',['../md__acceptance_01_criteria.html#autotoc_md4',1,'']]],
+  ['is_20your_20code_20fully_20uploaded_20and_20functional_20in_20the_20git_20repository_21',['-Is your code fully uploaded and functional in the Git Repository?',['../md__acceptance_01_criteria.html#autotoc_md5',1,'']]],
+  ['it_20does_20the_20right_20thing_20based_20on_20the_20product_20owners_20vision_22',['-Product Owner had looked over the codes functionality (Not a code review, just checking if it does the right thing based on the Product Owners vision).',['../md__acceptance_01_criteria.html#autotoc_md6',1,'']]],
+  ['it_20run_20correctly_23',['Does it run correctly?',['../md__acceptance_01_criteria.html#autotoc_md7',1,'']]]
 ];

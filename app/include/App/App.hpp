@@ -118,6 +118,8 @@ namespace Application
          * Does not record a use.
          */
         Action *nthFrequentAction(int n);
+        /// @brief Clears all action launch frequency counts and persists history.
+        void resetActionFrequencies();
         /// @brief Global hotkey callback used to show or hide the launcher.
         void onHotkeyTriggered(int hotkeyId);
         /// @brief Opens the non-modal settings editor window.
@@ -146,6 +148,10 @@ namespace Application
         void restorePriors();
         void initializeOverlay();
         void configureOverlayForCursor();
+        /// @brief Unregisters live menu hotkeys so settings can capture those keys.
+        void suspendHotkeys();
+        /// @brief Re-registers menu hotkeys after settings closes.
+        void resumeHotkeys();
         /// @brief Deletes and clears the currently loaded heap-allocated menus.
         void clearMenus();
         /// @brief Starts polling for hotkey chord release (execute-on-release mode).
@@ -154,6 +160,12 @@ namespace Application
         void disarmExecuteOnRelease();
         /// @brief QTimer callback: execute current selection once the chord is up.
         void onExecuteOnReleaseTick();
+        /// @brief Starts Escape edge-polling while the non-activating wheel is up.
+        void armEscapeDismiss();
+        /// @brief Stops Escape polling when the wheel closes.
+        void disarmEscapeDismiss();
+        /// @brief QTimer callback: dismiss the wheel on Escape press edges.
+        void onEscapeWatchTick();
         App();
         ~App();
 
@@ -171,6 +183,12 @@ namespace Application
         bool m_executeOnReleaseArmed{false};
         int m_releaseWatchMod{0};
         int m_releaseWatchVk{0};
+        /// @brief Polls Escape while the wheel is visible (Qt keys never reach it).
+        QTimer *m_escapeWatchTimer{nullptr};
+        /// @brief Prior Escape-down sample for rising-edge dismiss detection.
+        bool m_escapeWasDown{false};
+        /// @brief True while settings has unregistered hotkeys for key capture.
+        bool m_hotkeysSuspended{false};
 
         /// @brief Path of action_history.json next to the menu config.
         [[nodiscard]] QString historyPath() const;

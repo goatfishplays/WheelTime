@@ -1,0 +1,443 @@
+\doxysection{Application::\+App Class Reference}
+\hypertarget{class_application_1_1_app}{}\label{class_application_1_1_app}\index{Application::App@{Application::App}}
+
+
+Owns the long-\/lived runtime state for Wheel\+Time.  
+
+
+
+
+{\ttfamily \+\#include $<$App.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_app_a5b586540a3195f6529d2abc8574ab9b1}{App}} (const App \&)=delete
+\item 
+\doxymbox{\hyperlink{class_application_1_1_app_a5b586540a3195f6529d2abc8574ab9b1}{App}} \& \doxymbox{\hyperlink{class_application_1_1_app_a3fbf628eeb7373edcd6926061f29a3f0}{operator=}} (const \doxymbox{\hyperlink{class_application_1_1_app_a5b586540a3195f6529d2abc8574ab9b1}{App}} \&)=delete
+\item 
+\doxymbox{\hyperlink{class_application_1_1_app_addc0a078c50da75efbda43053901cf78}{App}} (App \&\&)=delete
+\item 
+\doxymbox{\hyperlink{class_application_1_1_app_a5b586540a3195f6529d2abc8574ab9b1}{App}} \& \doxymbox{\hyperlink{class_application_1_1_app_aff6122bdf424cbae75578763538496b4}{operator=}} (\doxymbox{\hyperlink{class_application_1_1_app_a5b586540a3195f6529d2abc8574ab9b1}{App}} \&\&)=delete
+\item 
+\doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_application_1_1_app_ac581df413d53de2a98c50ed7807884db}{get\+Active\+Menu}} ()
+\begin{DoxyCompactList}\small\item\em Returns the menu currently shown in the radial UI. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_application_1_1_app_a090c37eaa07fb331e8c3615347560e78}{find\+Menu\+By\+Id}} (const std::\+string \&menu\+Id)
+\begin{DoxyCompactList}\small\item\em Look up a loaded menu by its stable config ID. \end{DoxyCompactList}\item 
+const \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_application_1_1_app_a7a44a02345e6becd3ec5a45e0e106214}{find\+Menu\+By\+Id}} (const std::\+string \&menu\+Id) const
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action}{Action}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_application_1_1_app_a2201dc09b73f1ffcacb47bca0ff8fd0e}{find\+Action\+By\+Id}} (const std::\+string \&action\+Id)
+\begin{DoxyCompactList}\small\item\em Look up a reusable action by its stable config ID. \end{DoxyCompactList}\item 
+const \doxymbox{\hyperlink{class_application_1_1_action}{Action}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_application_1_1_app_a8517e382e4c2c156f06dbcbea016d65d}{find\+Action\+By\+Id}} (const std::\+string \&action\+Id) const
+\item 
+std::\+vector$<$ \doxymbox{\hyperlink{struct_application_1_1_action_slot_visual}{Action\+Slot\+Visual}} $>$ \doxymbox{\hyperlink{class_application_1_1_app_a4870d2a8340ebd408f909259619ceb8f}{get\+Action\+Slot\+Visuals\+For\+Menu}} (const \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \&menu) const
+\begin{DoxyCompactList}\small\item\em Resolve user-\/facing labels/\+icons for the action IDs in a menu. \end{DoxyCompactList}\item 
+std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} $>$ \doxymbox{\hyperlink{class_application_1_1_app_a500794033fcccb571add06df6539be6e}{get\+Menu\+Copies}} () const
+\begin{DoxyCompactList}\small\item\em Build value copies of menus for the settings working copy. \end{DoxyCompactList}\item 
+const std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$ \& \doxymbox{\hyperlink{class_application_1_1_app_a24427b1f0382ae8b646a70a057fa6abb}{get\+Action\+Library}} () const
+\begin{DoxyCompactList}\small\item\em Exposes the shared action library for editor initialization. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_app_a0b0feb71657e097e2b3983f204e64990}{show\+Gui}} (\doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \texorpdfstring{$\ast$}{*}menu)
+\begin{DoxyCompactList}\small\item\em Shows the radial launcher for a specific menu. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_app_aa1c397e61a39f446db934b05d27b61ff}{hide\+Gui}} ()
+\begin{DoxyCompactList}\small\item\em Hides the radial launcher and restores prior focus/\+mouse state. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_app_af3dae6e6f7ef1e5def5be48b18b2d458}{show\+Search\+Overlay}} (const \doxymbox{\hyperlink{struct_application_1_1_search_config}{Search\+Config}} \&config)
+\begin{DoxyCompactList}\small\item\em Shows the search palette overlay with the given filter set. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_app_a31b33d1bfc91bd088e0bd97557ab76e2}{hide\+Search\+Overlay}} (bool restore\+Focus=true)
+\begin{DoxyCompactList}\small\item\em Hides the search palette and re-\/applies dormant overlay styles. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_app_a10e82db4a1948eef28eebac980d4de9e}{execute\+Action}} (int action\+Ind)
+\begin{DoxyCompactList}\small\item\em Executes the action referenced by the selected slot index. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_app_a3b174e1e600f8147f2e3cf009aaa2537}{execute\+Action\+By\+Id}} (const std::\+string \&action\+Id)
+\begin{DoxyCompactList}\small\item\em Records usage and schedules a library action by stable ID. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_application_1_1_action}{Action}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_application_1_1_app_a1017ac84b74aee4ef52d0f7d836a4edf}{nth\+Recent\+Action}} (int n)
+\begin{DoxyCompactList}\small\item\em Library \doxylink{class_application_1_1_action}{Action} at 1-\/based recent rank {\ttfamily n}, or nullptr. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_application_1_1_action}{Action}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_application_1_1_app_a833cff4526df569867b3cd35833e5167}{nth\+Frequent\+Action}} (int n)
+\begin{DoxyCompactList}\small\item\em Library \doxylink{class_application_1_1_action}{Action} at 1-\/based frequency rank {\ttfamily n}, or nullptr. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_app_adde53fd0355ad8360c9d562482453d1e}{on\+Hotkey\+Triggered}} (int hotkey\+Id)
+\begin{DoxyCompactList}\small\item\em Global hotkey callback used to show or hide the launcher. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_app_ad59528b2fdbb0042c847f02ced1c6d05}{show\+Settings\+Window}} ()
+\begin{DoxyCompactList}\small\item\em Opens the non-\/modal settings editor window. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_app_a76534395a2977f525e41e7134be1206f}{restore\+Overlay\+After\+Settings}} ()
+\begin{DoxyCompactList}\small\item\em Restores the dormant overlay shell after settings closes. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_app_a47882b6a1075bfefc1fccb959c58d6a8}{save\+Config}} ()
+\begin{DoxyCompactList}\small\item\em Persists the current runtime config to disk. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_app_a22f30de93841aca5fb53b5fc2b0ebd31}{apply\+Config}} (const \doxymbox{\hyperlink{struct_application_1_1_app_config}{App\+Config}} \&app\+Config, const std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$ \&actions, const std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} $>$ \&menus)
+\begin{DoxyCompactList}\small\item\em Replaces the live runtime config with an edited working copy. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_app_a534e62141472aa3dc1a85e0a2e65aff1}{refresh\+Active\+Menu}} ()
+\begin{DoxyCompactList}\small\item\em Re-\/renders the active menu after config changes. \end{DoxyCompactList}\item 
+QString \doxymbox{\hyperlink{class_application_1_1_app_a2e93c74f67b4858e04a6b337054eb0d6}{get\+Config\+Path}} () const
+\item 
+\doxymbox{\hyperlink{class_application_1_1_scheduler}{Scheduler}} \& \doxymbox{\hyperlink{class_application_1_1_app_a3331aaa5ddf4cc31e44d5225195aa329}{scheduler}} () noexcept
+\begin{DoxyCompactList}\small\item\em The multithreaded \doxylink{class_application_1_1_action}{Action} scheduler used for all launcher macros. \end{DoxyCompactList}\item 
+const \doxymbox{\hyperlink{class_application_1_1_scheduler}{Scheduler}} \& \doxymbox{\hyperlink{class_application_1_1_app_a20b5eeff3fdd7890b0606a5993105cc1}{scheduler}} () const noexcept
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \doxymbox{\hyperlink{class_application_1_1_app_a5b586540a3195f6529d2abc8574ab9b1}{App}} \& \doxymbox{\hyperlink{class_application_1_1_app_a7b23d715fb63183b1e84cee999fe6b7a}{get\+Instance}} ()
+\item 
+static bool \doxymbox{\hyperlink{class_application_1_1_app_ad3f47165dc70ab9a00147072e47e1895}{is\+History\+Meta\+Action}} (const \doxymbox{\hyperlink{class_application_1_1_action}{Action}} \&action)
+\begin{DoxyCompactList}\small\item\em True for history/\+cancel helper actions excluded from MRU/\+\+MFU. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \texorpdfstring{$\ast$}{*} $>$ \doxymbox{\hyperlink{class_application_1_1_app_ac9e13201405983160061487899563ede}{loaded\+Menus}}
+\begin{DoxyCompactList}\small\item\em Loaded wheel menus. Each menu owns only slot references. \end{DoxyCompactList}\item 
+std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$ \doxymbox{\hyperlink{class_application_1_1_app_a0fa6845b00b78b0a86c999a5aec8784f}{action\+Library}}
+\begin{DoxyCompactList}\small\item\em Shared library of reusable actions referenced by menu slots. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_platform_1_1_input_rcvr}{Platform::\+\+Input\+Rcvr}} \doxymbox{\hyperlink{class_application_1_1_app_a5f708e2729cf6f826b624a511bb5a430}{input\+Rcvr}}
+\item 
+\doxymbox{\hyperlink{class_platform_1_1_executor}{Platform::\+\+Executor}} \doxymbox{\hyperlink{class_application_1_1_app_a22cde3ad082b81f474532c1ab64e154d}{executor}}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_gui}{Gui}} \doxymbox{\hyperlink{class_application_1_1_app_a0057a7d8f4fa87d63f568796c1249da1}{gui}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Owns the long-\/lived runtime state for Wheel\+Time. 
+
+{\ttfamily \doxylink{class_application_1_1_app}{App}} now keeps two related collections:\+
+\begin{DoxyItemize}
+\item {\ttfamily \doxylink{class_application_1_1_app_a0fa6845b00b78b0a86c999a5aec8784f}{action\+Library}}:\+ reusable actions keyed by stable IDs
+\item {\ttfamily \doxylink{class_application_1_1_app_ac9e13201405983160061487899563ede}{loaded\+Menus}}:\+ wheel menus that reference those actions by ID
+\end{DoxyItemize}
+
+That split lets the same action be reused in multiple menus and keeps the runtime aligned with the JSON config edited from the settings window. 
+
+\label{class_application_1_1_app_doc-constructors}
+\Hypertarget{class_application_1_1_app_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_app_a5b586540a3195f6529d2abc8574ab9b1}\index{Application::App@{Application::App}!App@{App}}
+\index{App@{App}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{App()}{App()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a5b586540a3195f6529d2abc8574ab9b1} 
+Application::\+\+App::\+\+App (\begin{DoxyParamCaption}\item[{const App \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_application_1_1_app_addc0a078c50da75efbda43053901cf78}\index{Application::App@{Application::App}!App@{App}}
+\index{App@{App}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{App()}{App()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_addc0a078c50da75efbda43053901cf78} 
+Application::\+\+App::\+\+App (\begin{DoxyParamCaption}\item[{App \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+\label{class_application_1_1_app_doc-func-members}
+\Hypertarget{class_application_1_1_app_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_app_a22f30de93841aca5fb53b5fc2b0ebd31}\index{Application::App@{Application::App}!applyConfig@{applyConfig}}
+\index{applyConfig@{applyConfig}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{applyConfig()}{applyConfig()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a22f30de93841aca5fb53b5fc2b0ebd31} 
+bool App::\+apply\+Config (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{struct_application_1_1_app_config}{App\+Config}} \&}]{app\+Config}{, }\item[{const std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$ \&}]{actions}{, }\item[{const std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} $>$ \&}]{menus}{}\end{DoxyParamCaption})}
+
+
+
+Replaces the live runtime config with an edited working copy. 
+
+\Hypertarget{class_application_1_1_app_a10e82db4a1948eef28eebac980d4de9e}\index{Application::App@{Application::App}!executeAction@{executeAction}}
+\index{executeAction@{executeAction}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{executeAction()}{executeAction()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a10e82db4a1948eef28eebac980d4de9e} 
+void App::\+execute\+Action (\begin{DoxyParamCaption}\item[{int}]{action\+Ind}{}\end{DoxyParamCaption})}
+
+
+
+Executes the action referenced by the selected slot index. 
+
+\Hypertarget{class_application_1_1_app_a3b174e1e600f8147f2e3cf009aaa2537}\index{Application::App@{Application::App}!executeActionById@{executeActionById}}
+\index{executeActionById@{executeActionById}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{executeActionById()}{executeActionById()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a3b174e1e600f8147f2e3cf009aaa2537} 
+void App::\+execute\+Action\+By\+Id (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{action\+Id}{}\end{DoxyParamCaption})}
+
+
+
+Records usage and schedules a library action by stable ID. 
+
+\Hypertarget{class_application_1_1_app_a2201dc09b73f1ffcacb47bca0ff8fd0e}\index{Application::App@{Application::App}!findActionById@{findActionById}}
+\index{findActionById@{findActionById}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{findActionById()}{findActionById()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a2201dc09b73f1ffcacb47bca0ff8fd0e} 
+\doxymbox{\hyperlink{class_application_1_1_action}{Action}} \texorpdfstring{$\ast$}{*} App::\+find\+Action\+By\+Id (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{action\+Id}{}\end{DoxyParamCaption})}
+
+
+
+Look up a reusable action by its stable config ID. 
+
+\Hypertarget{class_application_1_1_app_a8517e382e4c2c156f06dbcbea016d65d}\index{Application::App@{Application::App}!findActionById@{findActionById}}
+\index{findActionById@{findActionById}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{findActionById()}{findActionById()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a8517e382e4c2c156f06dbcbea016d65d} 
+const \doxymbox{\hyperlink{class_application_1_1_action}{Action}} \texorpdfstring{$\ast$}{*} App::\+find\+Action\+By\+Id (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{action\+Id}{}\end{DoxyParamCaption}) const}
+
+\Hypertarget{class_application_1_1_app_a090c37eaa07fb331e8c3615347560e78}\index{Application::App@{Application::App}!findMenuById@{findMenuById}}
+\index{findMenuById@{findMenuById}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{findMenuById()}{findMenuById()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a090c37eaa07fb331e8c3615347560e78} 
+\doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \texorpdfstring{$\ast$}{*} App::\+find\+Menu\+By\+Id (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{menu\+Id}{}\end{DoxyParamCaption})}
+
+
+
+Look up a loaded menu by its stable config ID. 
+
+\Hypertarget{class_application_1_1_app_a7a44a02345e6becd3ec5a45e0e106214}\index{Application::App@{Application::App}!findMenuById@{findMenuById}}
+\index{findMenuById@{findMenuById}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{findMenuById()}{findMenuById()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a7a44a02345e6becd3ec5a45e0e106214} 
+const \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \texorpdfstring{$\ast$}{*} App::\+find\+Menu\+By\+Id (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{menu\+Id}{}\end{DoxyParamCaption}) const}
+
+\Hypertarget{class_application_1_1_app_a24427b1f0382ae8b646a70a057fa6abb}\index{Application::App@{Application::App}!getActionLibrary@{getActionLibrary}}
+\index{getActionLibrary@{getActionLibrary}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{getActionLibrary()}{getActionLibrary()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a24427b1f0382ae8b646a70a057fa6abb} 
+const std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$ \& App::\+get\+Action\+Library (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Exposes the shared action library for editor initialization. 
+
+\Hypertarget{class_application_1_1_app_a4870d2a8340ebd408f909259619ceb8f}\index{Application::App@{Application::App}!getActionSlotVisualsForMenu@{getActionSlotVisualsForMenu}}
+\index{getActionSlotVisualsForMenu@{getActionSlotVisualsForMenu}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{getActionSlotVisualsForMenu()}{getActionSlotVisualsForMenu()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a4870d2a8340ebd408f909259619ceb8f} 
+std::\+vector$<$ \doxymbox{\hyperlink{struct_application_1_1_action_slot_visual}{Action\+Slot\+Visual}} $>$ App::\+get\+Action\+Slot\+Visuals\+For\+Menu (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \&}]{menu}{}\end{DoxyParamCaption}) const}
+
+
+
+Resolve user-\/facing labels/\+icons for the action IDs in a menu. 
+
+\Hypertarget{class_application_1_1_app_ac581df413d53de2a98c50ed7807884db}\index{Application::App@{Application::App}!getActiveMenu@{getActiveMenu}}
+\index{getActiveMenu@{getActiveMenu}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{getActiveMenu()}{getActiveMenu()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_ac581df413d53de2a98c50ed7807884db} 
+\doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \texorpdfstring{$\ast$}{*} App::\+get\+Active\+Menu (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns the menu currently shown in the radial UI. 
+
+\Hypertarget{class_application_1_1_app_a2e93c74f67b4858e04a6b337054eb0d6}\index{Application::App@{Application::App}!getConfigPath@{getConfigPath}}
+\index{getConfigPath@{getConfigPath}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{getConfigPath()}{getConfigPath()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a2e93c74f67b4858e04a6b337054eb0d6} 
+QString App::\+get\+Config\+Path (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+\Hypertarget{class_application_1_1_app_a7b23d715fb63183b1e84cee999fe6b7a}\index{Application::App@{Application::App}!getInstance@{getInstance}}
+\index{getInstance@{getInstance}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{getInstance()}{getInstance()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a7b23d715fb63183b1e84cee999fe6b7a} 
+\doxymbox{\hyperlink{class_application_1_1_app_a5b586540a3195f6529d2abc8574ab9b1}{App}} \& Application::\+\+App::\+get\+Instance (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+\Hypertarget{class_application_1_1_app_a500794033fcccb571add06df6539be6e}\index{Application::App@{Application::App}!getMenuCopies@{getMenuCopies}}
+\index{getMenuCopies@{getMenuCopies}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{getMenuCopies()}{getMenuCopies()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a500794033fcccb571add06df6539be6e} 
+std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} $>$ App::\+get\+Menu\+Copies (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Build value copies of menus for the settings working copy. 
+
+\Hypertarget{class_application_1_1_app_aa1c397e61a39f446db934b05d27b61ff}\index{Application::App@{Application::App}!hideGui@{hideGui}}
+\index{hideGui@{hideGui}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{hideGui()}{hideGui()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_aa1c397e61a39f446db934b05d27b61ff} 
+void App::\+hide\+Gui (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Hides the radial launcher and restores prior focus/\+mouse state. 
+
+\Hypertarget{class_application_1_1_app_a31b33d1bfc91bd088e0bd97557ab76e2}\index{Application::App@{Application::App}!hideSearchOverlay@{hideSearchOverlay}}
+\index{hideSearchOverlay@{hideSearchOverlay}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{hideSearchOverlay()}{hideSearchOverlay()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a31b33d1bfc91bd088e0bd97557ab76e2} 
+void App::\+hide\+Search\+Overlay (\begin{DoxyParamCaption}\item[{bool}]{restore\+Focus}{ = {\ttfamily true}}\end{DoxyParamCaption})}
+
+
+
+Hides the search palette and re-\/applies dormant overlay styles. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em restore\+Focus} & Give focus back to the previously active window. Pass false when the user chose a new focus target themselves (alt-\/tab) or when another Wheel\+Time surface takes over (settings). \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_application_1_1_app_ad3f47165dc70ab9a00147072e47e1895}\index{Application::App@{Application::App}!isHistoryMetaAction@{isHistoryMetaAction}}
+\index{isHistoryMetaAction@{isHistoryMetaAction}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{isHistoryMetaAction()}{isHistoryMetaAction()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_ad3f47165dc70ab9a00147072e47e1895} 
+bool App::\+is\+History\+Meta\+Action (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_application_1_1_action}{Action}} \&}]{action}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+True for history/\+cancel helper actions excluded from MRU/\+\+MFU. 
+
+True if {\ttfamily action} is a history/\+cancel helper that must not enter MRU/\+\+MFU.
+
+Recording nth-\/recent/\+nth-\/frequent (or cancel) would make "{}\+Most Recent"{} the most recent launch, so resolving n=1 schedules itself forever. \Hypertarget{class_application_1_1_app_a833cff4526df569867b3cd35833e5167}\index{Application::App@{Application::App}!nthFrequentAction@{nthFrequentAction}}
+\index{nthFrequentAction@{nthFrequentAction}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{nthFrequentAction()}{nthFrequentAction()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a833cff4526df569867b3cd35833e5167} 
+\doxymbox{\hyperlink{class_application_1_1_action}{Action}} \texorpdfstring{$\ast$}{*} App::\+nth\+Frequent\+Action (\begin{DoxyParamCaption}\item[{int}]{n}{}\end{DoxyParamCaption})}
+
+
+
+Library \doxylink{class_application_1_1_action}{Action} at 1-\/based frequency rank {\ttfamily n}, or nullptr. 
+
+Skips history/\+cancel helper Actions the same way as nth\+Recent\+Action. Does not record a use. \Hypertarget{class_application_1_1_app_a1017ac84b74aee4ef52d0f7d836a4edf}\index{Application::App@{Application::App}!nthRecentAction@{nthRecentAction}}
+\index{nthRecentAction@{nthRecentAction}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{nthRecentAction()}{nthRecentAction()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a1017ac84b74aee4ef52d0f7d836a4edf} 
+\doxymbox{\hyperlink{class_application_1_1_action}{Action}} \texorpdfstring{$\ast$}{*} App::\+nth\+Recent\+Action (\begin{DoxyParamCaption}\item[{int}]{n}{}\end{DoxyParamCaption})}
+
+
+
+Library \doxylink{class_application_1_1_action}{Action} at 1-\/based recent rank {\ttfamily n}, or nullptr. 
+
+Skips history/\+cancel helper Actions (nth-\/recent, nth-\/frequent, cancel) so those can never resolve to themselves. Does not record a use. \Hypertarget{class_application_1_1_app_adde53fd0355ad8360c9d562482453d1e}\index{Application::App@{Application::App}!onHotkeyTriggered@{onHotkeyTriggered}}
+\index{onHotkeyTriggered@{onHotkeyTriggered}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{onHotkeyTriggered()}{onHotkeyTriggered()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_adde53fd0355ad8360c9d562482453d1e} 
+void App::\+on\+Hotkey\+Triggered (\begin{DoxyParamCaption}\item[{int}]{hotkey\+Id}{}\end{DoxyParamCaption})}
+
+
+
+Global hotkey callback used to show or hide the launcher. 
+
+\Hypertarget{class_application_1_1_app_aff6122bdf424cbae75578763538496b4}\index{Application::App@{Application::App}!operator=@{operator=}}
+\index{operator=@{operator=}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_aff6122bdf424cbae75578763538496b4} 
+\doxymbox{\hyperlink{class_application_1_1_app_a5b586540a3195f6529d2abc8574ab9b1}{App}} \& Application::\+\+App::\+operator= (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_application_1_1_app_a5b586540a3195f6529d2abc8574ab9b1}{App}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_application_1_1_app_a3fbf628eeb7373edcd6926061f29a3f0}\index{Application::App@{Application::App}!operator=@{operator=}}
+\index{operator=@{operator=}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a3fbf628eeb7373edcd6926061f29a3f0} 
+\doxymbox{\hyperlink{class_application_1_1_app_a5b586540a3195f6529d2abc8574ab9b1}{App}} \& Application::\+\+App::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_application_1_1_app_a5b586540a3195f6529d2abc8574ab9b1}{App}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_application_1_1_app_a534e62141472aa3dc1a85e0a2e65aff1}\index{Application::App@{Application::App}!refreshActiveMenu@{refreshActiveMenu}}
+\index{refreshActiveMenu@{refreshActiveMenu}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{refreshActiveMenu()}{refreshActiveMenu()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a534e62141472aa3dc1a85e0a2e65aff1} 
+void App::\+refresh\+Active\+Menu (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Re-\/renders the active menu after config changes. 
+
+\Hypertarget{class_application_1_1_app_a76534395a2977f525e41e7134be1206f}\index{Application::App@{Application::App}!restoreOverlayAfterSettings@{restoreOverlayAfterSettings}}
+\index{restoreOverlayAfterSettings@{restoreOverlayAfterSettings}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{restoreOverlayAfterSettings()}{restoreOverlayAfterSettings()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a76534395a2977f525e41e7134be1206f} 
+void App::\+restore\+Overlay\+After\+Settings (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Restores the dormant overlay shell after settings closes. 
+
+\Hypertarget{class_application_1_1_app_a47882b6a1075bfefc1fccb959c58d6a8}\index{Application::App@{Application::App}!saveConfig@{saveConfig}}
+\index{saveConfig@{saveConfig}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{saveConfig()}{saveConfig()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a47882b6a1075bfefc1fccb959c58d6a8} 
+bool App::\+save\+Config (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Persists the current runtime config to disk. 
+
+\Hypertarget{class_application_1_1_app_a20b5eeff3fdd7890b0606a5993105cc1}\index{Application::App@{Application::App}!scheduler@{scheduler}}
+\index{scheduler@{scheduler}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{scheduler()}{scheduler()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a20b5eeff3fdd7890b0606a5993105cc1} 
+const \doxymbox{\hyperlink{class_application_1_1_scheduler}{Scheduler}} \& App::\+scheduler (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{class_application_1_1_app_a3331aaa5ddf4cc31e44d5225195aa329}\index{Application::App@{Application::App}!scheduler@{scheduler}}
+\index{scheduler@{scheduler}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{scheduler()}{scheduler()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a3331aaa5ddf4cc31e44d5225195aa329} 
+\doxymbox{\hyperlink{class_application_1_1_scheduler}{Scheduler}} \& App::\+scheduler (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+The multithreaded \doxylink{class_application_1_1_action}{Action} scheduler used for all launcher macros. 
+
+\Hypertarget{class_application_1_1_app_a0b0feb71657e097e2b3983f204e64990}\index{Application::App@{Application::App}!showGui@{showGui}}
+\index{showGui@{showGui}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{showGui()}{showGui()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a0b0feb71657e097e2b3983f204e64990} 
+void App::\+show\+Gui (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \texorpdfstring{$\ast$}{*}}]{menu}{}\end{DoxyParamCaption})}
+
+
+
+Shows the radial launcher for a specific menu. 
+
+\Hypertarget{class_application_1_1_app_af3dae6e6f7ef1e5def5be48b18b2d458}\index{Application::App@{Application::App}!showSearchOverlay@{showSearchOverlay}}
+\index{showSearchOverlay@{showSearchOverlay}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{showSearchOverlay()}{showSearchOverlay()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_af3dae6e6f7ef1e5def5be48b18b2d458} 
+void App::\+show\+Search\+Overlay (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{struct_application_1_1_search_config}{Search\+Config}} \&}]{config}{}\end{DoxyParamCaption})}
+
+
+
+Shows the search palette overlay with the given filter set. 
+
+Unlike the wheel this takes real keyboard focus; the prior foreground window is captured first and restored by hide\+Search\+Overlay. \Hypertarget{class_application_1_1_app_ad59528b2fdbb0042c847f02ced1c6d05}\index{Application::App@{Application::App}!showSettingsWindow@{showSettingsWindow}}
+\index{showSettingsWindow@{showSettingsWindow}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{showSettingsWindow()}{showSettingsWindow()}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_ad59528b2fdbb0042c847f02ced1c6d05} 
+void App::\+show\+Settings\+Window (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Opens the non-\/modal settings editor window. 
+
+
+
+\label{class_application_1_1_app_doc-variable-members}
+\Hypertarget{class_application_1_1_app_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_application_1_1_app_a0fa6845b00b78b0a86c999a5aec8784f}\index{Application::App@{Application::App}!actionLibrary@{actionLibrary}}
+\index{actionLibrary@{actionLibrary}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{actionLibrary}{actionLibrary}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a0fa6845b00b78b0a86c999a5aec8784f} 
+std::\+vector$<$\doxymbox{\hyperlink{class_application_1_1_action}{Action}}$>$ Application::\+\+App::\+action\+Library}
+
+
+
+Shared library of reusable actions referenced by menu slots. 
+
+\Hypertarget{class_application_1_1_app_a22cde3ad082b81f474532c1ab64e154d}\index{Application::App@{Application::App}!executor@{executor}}
+\index{executor@{executor}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{executor}{executor}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a22cde3ad082b81f474532c1ab64e154d} 
+\doxymbox{\hyperlink{class_platform_1_1_executor}{Platform::\+\+Executor}} Application::\+\+App::\+executor}
+
+\Hypertarget{class_application_1_1_app_a0057a7d8f4fa87d63f568796c1249da1}\index{Application::App@{Application::App}!gui@{gui}}
+\index{gui@{gui}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{gui}{gui}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a0057a7d8f4fa87d63f568796c1249da1} 
+\doxymbox{\hyperlink{class_application_1_1_gui}{Gui}} Application::\+\+App::\+gui}
+
+\Hypertarget{class_application_1_1_app_a5f708e2729cf6f826b624a511bb5a430}\index{Application::App@{Application::App}!inputRcvr@{inputRcvr}}
+\index{inputRcvr@{inputRcvr}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{inputRcvr}{inputRcvr}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_a5f708e2729cf6f826b624a511bb5a430} 
+\doxymbox{\hyperlink{class_platform_1_1_input_rcvr}{Platform::\+\+Input\+Rcvr}} Application::\+\+App::\+input\+Rcvr}
+
+\Hypertarget{class_application_1_1_app_ac9e13201405983160061487899563ede}\index{Application::App@{Application::App}!loadedMenus@{loadedMenus}}
+\index{loadedMenus@{loadedMenus}!Application::App@{Application::App}}
+\doxysubsubsection{\texorpdfstring{loadedMenus}{loadedMenus}}
+{\footnotesize\ttfamily \label{class_application_1_1_app_ac9e13201405983160061487899563ede} 
+std::\+vector$<$\doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \texorpdfstring{$\ast$}{*}$>$ Application::\+\+App::\+loaded\+Menus}
+
+
+
+Loaded wheel menus. Each menu owns only slot references. 
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_app_8hpp}{App.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\doxymbox{\hyperlink{_app_8cpp}{App.\+cpp}}\end{DoxyCompactItemize}

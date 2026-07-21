@@ -144,13 +144,19 @@ void RadialMenuWidget::rebuildButtons()
     {
         auto *button = new HoverButton(this);
         const ActionSlotVisual &visual = m_slotVisuals[i];
-        button->setText(QString::fromStdString(visual.label));
+        const QString label = QString::fromStdString(visual.label);
+        button->setText(label);
+        button->setToolTip(label);
         if (!visual.iconPath.empty())
         {
             const QIcon icon = iconForPath(visual.iconPath);
             if (!icon.isNull())
             {
                 button->setIcon(icon);
+                // Icon-only so a larger image fills the existing button chrome
+                // without growing the control for under-icon text (name still
+                // appears in the wheel center / tooltip).
+                button->setToolButtonStyle(Qt::ToolButtonIconOnly);
             }
         }
         // Child widgets need their own tracking; parent tracking does not apply

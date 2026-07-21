@@ -1,0 +1,90 @@
+\doxysection{Radial\+Menu\+Widget.\+hpp}
+\hypertarget{_radial_menu_widget_8hpp_source}{}\label{_radial_menu_widget_8hpp_source}\index{E:/Github/WheelTime/app/include/App/RadialMenuWidget.hpp@{E:/Github/WheelTime/app/include/App/RadialMenuWidget.hpp}}
+\doxymbox{\hyperlink{_radial_menu_widget_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_action_8hpp}{App/Action.hpp}}"{}}}
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_hover_button_8hpp}{App/HoverButton.hpp}}"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_menu_8hpp}{App/Menu.hpp}}"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <QWidget>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <QLabel>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <QIcon>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <QVBoxLayout>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <QHBoxLayout>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <QSpacerItem>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <QResizeEvent>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <QEnterEvent>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <QMouseEvent>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <QKeyEvent>}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00023\ \{}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ab27ecc3a11425dcb4abe35e174612439}{RadialMenuWidget}}\ :\ \textcolor{keyword}{public}\ QWidget}
+\DoxyCodeLine{00026\ \ \ \ \ \{}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ Q\_OBJECT}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum\ class}\ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1be}{ActivationMode}}}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1bea0aa6f4210bf373c95eda00232e93cd98}{Distance}},}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1bea45f4ce6c3306644b1efe333f4f8d6929}{Angle}},}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1bea1649aed298f99d587e2eb30c1db5946b}{Exact}}}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keyword}{explicit}\ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ab27ecc3a11425dcb4abe35e174612439}{RadialMenuWidget}}(QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keyword}{explicit}\ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ab27ecc3a11425dcb4abe35e174612439}{RadialMenuWidget}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}}\ \&menu,\ QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_a881d98eb893d1a1ee623cd9449503435}{setMenu}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}}\ \&menu,\ \textcolor{keyword}{const}\ std::vector<ActionSlotVisual>\ \&slotVisuals);}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ace7ade05d4a157520158f0b99d09ce1c}{setCenterText}}(\textcolor{keyword}{const}\ QString\ \&text);}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_a2b87a9f8cc90126bc27d1f6240b980b8}{setButtonRadiusFraction}}(\textcolor{keywordtype}{double}\ fraction);}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_a2f245790bf8bac9956de6186eab5c9a3}{setButtonRadius}}(\textcolor{keywordtype}{int}\ radius);}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_a6cfc6ae33da31951eba943eaf0075015}{setActivationMode}}(\doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1be}{ActivationMode}}\ mode);}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ad9c1175a1cc1143e497c34c1e94d840e}{setMaxDistance}}(\textcolor{keywordtype}{double}\ maxDistance);}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_a64e7ed7e247acf95593bda6b504aa9f6}{getSelectedIndex}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_a51ea6a3975dbb04e01527819600bb9f8}{setSelectedIndex}}(\textcolor{keywordtype}{int}\ newVal);}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ab226a686aa64657eb61b1350562cdb8e}{updateSelectionFromGlobalMousePosition}}(\textcolor{keyword}{const}\ QPoint\ \&globalPos);}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ signals:}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_a9594585955166b6e57fa2cd8793ff26b}{selectedIndexChanged}}(\textcolor{keywordtype}{int}\ index);}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_acff7066baf0ebb603065a46bce10d352}{buttonTriggered}}(\textcolor{keywordtype}{int}\ index);}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_a117f792d25487edb46e06455ba21d965}{resizeEvent}}(QResizeEvent\ *event)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_a162d8abfa62ff6f4257e615fc3059037}{eventFilter}}(QObject\ *watched,\ QEvent\ *event)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ rebuildButtons();}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ repositionButtons();}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ updateSelection();}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ clearSelection();}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ indexFromAngle(\textcolor{keywordtype}{double}\ angleRadians,\ \textcolor{keywordtype}{int}\ count)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ [[nodiscard]]\ QPointF\ layoutCenter()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ QPointF\ widgetCenter(\textcolor{keyword}{const}\ QWidget\ *widget);}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ placeWidgetCentered(QWidget\ *widget,\ QPointF\ center);}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{int}\ effectiveButtonRadius()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ [[nodiscard]]\ QIcon\ iconForPath(\textcolor{keyword}{const}\ std::string\ \&path)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}}\ m\_menu;}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ std::vector<ActionSlotVisual>\ m\_slotVisuals;}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ QPoint\ m\_mousePosition;}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ QLabel\ *m\_centerLabel\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ std::vector<HoverButton\ *>\ m\_buttons;}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \textcolor{keyword}{mutable}\ std::unordered\_map<std::string,\ QIcon>\ m\_iconCache;}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ m\_buttonRadius\{220\};}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ m\_buttonRadiusFraction\{0.32\};}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_useFixedButtonRadius\{\textcolor{keyword}{false}\};}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1be}{ActivationMode}}\ m\_mode\{\doxymbox{\hyperlink{class_application_1_1_radial_menu_widget_ab16d1ac2bede7ca5c3e466efff0ea1bea1649aed298f99d587e2eb30c1db5946b}{ActivationMode::Exact}}\};}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ m\_maxDistance\{-\/1.0\};}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ m\_selectedIndex\{-\/1\};}
+\DoxyCodeLine{00143\ \ \ \ \ \};}
+\DoxyCodeLine{00144\ \}}
+
+\end{DoxyCode}

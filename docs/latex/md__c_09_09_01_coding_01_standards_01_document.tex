@@ -1,0 +1,40 @@
+\chapter{C++ Coding Standards }
+\hypertarget{md__c_09_09_01_coding_01_standards_01_document}{}\label{md__c_09_09_01_coding_01_standards_01_document}\index{C++ Coding Standards@{C++ Coding Standards}}
+\label{md__c_09_09_01_coding_01_standards_01_document_autotoc_md12}%
+\Hypertarget{md__c_09_09_01_coding_01_standards_01_document_autotoc_md12}%
+\hypertarget{md__c_09_09_01_coding_01_standards_01_document_autotoc_md13}{}\doxysection{\texorpdfstring{Header Files:\+}{Header Files:\+}}\label{md__c_09_09_01_coding_01_standards_01_document_autotoc_md13}
+-\/Every .ccp file should have an affiliated .hpp with the same name ~\newline
+ -\/Some exceptions such as a small .cpp file with just a \doxylink{phase10__scheduler__tests_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}{main()} ~\newline
+ -\/Order of Include Headers:\+ Standard C++ Library headers first, project headers last ~\newline
+ \hypertarget{md__c_09_09_01_coding_01_standards_01_document_autotoc_md14}{}\doxysection{\texorpdfstring{Indentation:\+}{Indentation:\+}}\label{md__c_09_09_01_coding_01_standards_01_document_autotoc_md14}
+-\/Only use spaces for indentation, 2 spaces at a time. ~\newline
+ -\/Do not use tabs at all in your code ~\newline
+\hypertarget{md__c_09_09_01_coding_01_standards_01_document_autotoc_md15}{}\doxysection{\texorpdfstring{Function Declaration:\+}{Function Declaration:\+}}\label{md__c_09_09_01_coding_01_standards_01_document_autotoc_md15}
+-\/Return type, function name, and parameters should all be on the same line. ~\newline
+ -\/Choose short concise parameter names that are easy to understand ~\newline
+ -\/Before each function declaration, add a brief comment that explains the purpose, input and output of your function. ~\newline
+ \hypertarget{md__c_09_09_01_coding_01_standards_01_document_autotoc_md16}{}\doxysection{\texorpdfstring{Local Variables:\+}{Local Variables:\+}}\label{md__c_09_09_01_coding_01_standards_01_document_autotoc_md16}
+-\/Try to place each variable in the narrowest scope possible ~\newline
+ -\/Initialize variables in their declaration ~\newline
+ -\/Declare variables as close to their first use as possible to allow readers to easily find a variables use and associated declaration ~\newline
+ \hypertarget{md__c_09_09_01_coding_01_standards_01_document_autotoc_md17}{}\doxysection{\texorpdfstring{Naming:\+}{Naming:\+}}\label{md__c_09_09_01_coding_01_standards_01_document_autotoc_md17}
+-\/Use descriptive names for variables and functions. ~\newline
+ -\/Use Pascal\+Case for class names. ~\newline
+ -\/Use camel\+Case for variables and functions. ~\newline
+ -\/Use UPPER\+\_\+\+CASE for constants and macros. ~\newline
+ \hypertarget{md__c_09_09_01_coding_01_standards_01_document_autotoc_md18}{}\doxysection{\texorpdfstring{Braces:\+}{Braces:\+}}\label{md__c_09_09_01_coding_01_standards_01_document_autotoc_md18}
+-\/Always use braces for if, else, for, while, and do-\/while statements, even for a single statement. ~\newline
+ \hypertarget{md__c_09_09_01_coding_01_standards_01_document_autotoc_md19}{}\doxysection{\texorpdfstring{Line Length:\+}{Line Length:\+}}\label{md__c_09_09_01_coding_01_standards_01_document_autotoc_md19}
+-\/Keep lines under 100 characters whenever practical. ~\newline
+ \hypertarget{md__c_09_09_01_coding_01_standards_01_document_autotoc_md20}{}\doxysection{\texorpdfstring{Comments:\+}{Comments:\+}}\label{md__c_09_09_01_coding_01_standards_01_document_autotoc_md20}
+-\/Write comments that explain why the code exists, not what every line does. ~\newline
+ -\/Remove outdated comments when code changes. ~\newline
+ \hypertarget{md__c_09_09_01_coding_01_standards_01_document_autotoc_md21}{}\doxysection{\texorpdfstring{Magic Numbers:\+}{Magic Numbers:\+}}\label{md__c_09_09_01_coding_01_standards_01_document_autotoc_md21}
+-\/Avoid hardcoded numeric values. ~\newline
+ -\/Use named constants or constexpr variables instead. ~\newline
+ \hypertarget{md__c_09_09_01_coding_01_standards_01_document_autotoc_md22}{}\doxysection{\texorpdfstring{Classes:\+}{Classes:\+}}\label{md__c_09_09_01_coding_01_standards_01_document_autotoc_md22}
+-\/Keep data members private unless there is a strong reason not to. ~\newline
+ -\/Keep public interfaces concise and easy to understand. ~\newline
+ \hypertarget{md__c_09_09_01_coding_01_standards_01_document_autotoc_md23}{}\doxysection{\texorpdfstring{Formatting:\+}{Formatting:\+}}\label{md__c_09_09_01_coding_01_standards_01_document_autotoc_md23}
+-\/Leave one blank line between function definitions. ~\newline
+ -\/Do not leave trailing whitespace at the end of lines. 

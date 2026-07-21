@@ -1,0 +1,30 @@
+\doxysection{Menu.\+hpp}
+\hypertarget{_action_items_2_menu_8hpp_source}{}\label{_action_items_2_menu_8hpp_source}\index{E:/Github/WheelTime/app/include/App/ActionItems/Menu.hpp@{E:/Github/WheelTime/app/include/App/ActionItems/Menu.hpp}}
+\doxymbox{\hyperlink{_action_items_2_menu_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_action_item_8hpp}{App/ActionItems/ActionItem.hpp}}"{}}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00013\ \{}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00016\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_a_i___menu_acd7cdab5cc5de54dbd3a1caafe5daf11}{AI\_Menu}}\ :\ \textcolor{keyword}{public}\ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{ActionItem}}}
+\DoxyCodeLine{00017\ \{}
+\DoxyCodeLine{00018\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{explicit}\ \doxymbox{\hyperlink{class_application_1_1_a_i___menu_acd7cdab5cc5de54dbd3a1caafe5daf11}{AI\_Menu}}(std::string\ \doxymbox{\hyperlink{class_application_1_1_a_i___menu_a4200106634175f64669b3df853dc6715}{menuId}}\ =\ \{\});}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ std::string\ \doxymbox{\hyperlink{class_application_1_1_a_i___menu_a4200106634175f64669b3df853dc6715}{menuId}};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ std::unique\_ptr<ActionItem>\ \doxymbox{\hyperlink{class_application_1_1_a_i___menu_a0dc0052d709f4c7fdf0dc6ad7674dd37}{clone}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00024\ \ \ \ \ \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{ActionItemKind}}\ \doxymbox{\hyperlink{class_application_1_1_a_i___menu_a78e066c90de123a8e51cca61b5ab160e}{kind}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00025\ \ \ \ \ [[nodiscard]]\ \doxymbox{\hyperlink{class_application_1_1_execute_result}{ExecuteResult}}\ \doxymbox{\hyperlink{class_application_1_1_a_i___menu_a1c18cab5533595b23cee6575e8c24309}{execute}}(\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{ActionExecutionContext}}\ \&context)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00026\ \};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \}\ \textcolor{comment}{//\ namespace\ Application}}
+
+\end{DoxyCode}

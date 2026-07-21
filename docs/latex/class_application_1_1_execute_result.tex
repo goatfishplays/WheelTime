@@ -1,0 +1,111 @@
+\doxysection{Application::\+Execute\+Result Class Reference}
+\hypertarget{class_application_1_1_execute_result}{}\label{class_application_1_1_execute_result}\index{Application::ExecuteResult@{Application::ExecuteResult}}
+
+
+Small result telling the scheduler whether to continue or delay.  
+
+
+
+
+{\ttfamily \+\#include $<$Execute\+Result.\+hpp$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum class \doxymbox{\hyperlink{class_application_1_1_execute_result_a49ecdbf2b9adb0b4902a9b9dc7a78d41}{Type}} \{ \doxymbox{\hyperlink{class_application_1_1_execute_result_a49ecdbf2b9adb0b4902a9b9dc7a78d41aa0bfb8e59e6c13fc8d990781f77694fe}{Continue}}
+, \doxymbox{\hyperlink{class_application_1_1_execute_result_a49ecdbf2b9adb0b4902a9b9dc7a78d41a75a15f36a5ac6ab72c79f29309346a58}{Delay\+Until}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_execute_result_a49ecdbf2b9adb0b4902a9b9dc7a78d41}{Type}} \doxymbox{\hyperlink{class_application_1_1_execute_result_a56eac187744059307b76375a19d9908c}{type}} () const noexcept
+\item 
+std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point \doxymbox{\hyperlink{class_application_1_1_execute_result_acd6b2b6c0ee410b9bc3fecd8ed25bba0}{wake\+Time}} () const noexcept
+\begin{DoxyCompactList}\small\item\em Wake time for Delay\+Until. Meaningless when \doxylink{class_application_1_1_execute_result_a56eac187744059307b76375a19d9908c}{type()} is Continue. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static Execute\+Result \doxymbox{\hyperlink{class_application_1_1_execute_result_af4cb1d5b5d7317f4ab2e23314bbacced}{Continue}} ()
+\begin{DoxyCompactList}\small\item\em Proceed with the current \doxylink{class_application_1_1_action}{Action} (advance /\+ finish as appropriate). \end{DoxyCompactList}\item 
+static Execute\+Result \doxymbox{\hyperlink{class_application_1_1_execute_result_aa1fa4181b276f43d88aaec9ade72b41c}{Delay\+Until}} (std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point wake\+Time)
+\begin{DoxyCompactList}\small\item\em Pause the current \doxylink{class_application_1_1_action}{Action} until {\ttfamily wake\+Time}. The item that returned this has already completed its work. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Small result telling the scheduler whether to continue or delay. 
+
+Describes only the fate of the {\bfseries{current}} \doxylink{class_application_1_1_action}{Action} after one \doxylink{class_application_1_1_action_item}{Action\+Item} returns. Nested work is requested via \doxylink{class_application_1_1_action_execution_context_a9bde69e5887b05935ba12198c1a63a16}{Action\+Execution\+Context::\+schedule\+Action}, not via \doxylink{class_application_1_1_execute_result}{Execute\+Result}.
+
+Workers:\+ on Delay\+Until, return the context to the scheduler (do not sleep). \doxylink{class_application_1_1_scheduler}{Scheduler}:\+ park the context until wake\+Time while holding its channel. 
+
+\label{class_application_1_1_execute_result_doc-enum-members}
+\Hypertarget{class_application_1_1_execute_result_doc-enum-members}
+\doxysubsection{Member Enumeration Documentation}
+\Hypertarget{class_application_1_1_execute_result_a49ecdbf2b9adb0b4902a9b9dc7a78d41}\index{Application::ExecuteResult@{Application::ExecuteResult}!Type@{Type}}
+\index{Type@{Type}!Application::ExecuteResult@{Application::ExecuteResult}}
+\doxysubsubsection{\texorpdfstring{Type}{Type}}
+{\footnotesize\ttfamily \label{class_application_1_1_execute_result_a49ecdbf2b9adb0b4902a9b9dc7a78d41} 
+enum class \doxymbox{\hyperlink{class_application_1_1_execute_result_a49ecdbf2b9adb0b4902a9b9dc7a78d41}{Application::\+\+Execute\+Result::\+\+Type}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Continue@{Continue}!Application::ExecuteResult@{Application::ExecuteResult}}
+\index{Application::ExecuteResult@{Application::ExecuteResult}!Continue@{Continue}}
+}\Hypertarget{class_application_1_1_execute_result_a49ecdbf2b9adb0b4902a9b9dc7a78d41aa0bfb8e59e6c13fc8d990781f77694fe}\label{class_application_1_1_execute_result_a49ecdbf2b9adb0b4902a9b9dc7a78d41aa0bfb8e59e6c13fc8d990781f77694fe} 
+Continue&Keep running the next item on a worker (or finish if none remain). \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{DelayUntil@{DelayUntil}!Application::ExecuteResult@{Application::ExecuteResult}}
+\index{Application::ExecuteResult@{Application::ExecuteResult}!DelayUntil@{DelayUntil}}
+}\Hypertarget{class_application_1_1_execute_result_a49ecdbf2b9adb0b4902a9b9dc7a78d41a75a15f36a5ac6ab72c79f29309346a58}\label{class_application_1_1_execute_result_a49ecdbf2b9adb0b4902a9b9dc7a78d41a75a15f36a5ac6ab72c79f29309346a58} 
+Delay\+Until&Pause this \doxylink{class_application_1_1_action}{Action} until \doxylink{class_application_1_1_execute_result_acd6b2b6c0ee410b9bc3fecd8ed25bba0}{wake\+Time()}. \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{class_application_1_1_execute_result_doc-func-members}
+\Hypertarget{class_application_1_1_execute_result_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_execute_result_af4cb1d5b5d7317f4ab2e23314bbacced}\index{Application::ExecuteResult@{Application::ExecuteResult}!Continue@{Continue}}
+\index{Continue@{Continue}!Application::ExecuteResult@{Application::ExecuteResult}}
+\doxysubsubsection{\texorpdfstring{Continue()}{Continue()}}
+{\footnotesize\ttfamily \label{class_application_1_1_execute_result_af4cb1d5b5d7317f4ab2e23314bbacced} 
+Execute\+Result Application::\+\+Execute\+Result::\+\+Continue (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Proceed with the current \doxylink{class_application_1_1_action}{Action} (advance /\+ finish as appropriate). 
+
+\Hypertarget{class_application_1_1_execute_result_aa1fa4181b276f43d88aaec9ade72b41c}\index{Application::ExecuteResult@{Application::ExecuteResult}!DelayUntil@{DelayUntil}}
+\index{DelayUntil@{DelayUntil}!Application::ExecuteResult@{Application::ExecuteResult}}
+\doxysubsubsection{\texorpdfstring{DelayUntil()}{DelayUntil()}}
+{\footnotesize\ttfamily \label{class_application_1_1_execute_result_aa1fa4181b276f43d88aaec9ade72b41c} 
+Execute\+Result Application::\+\+Execute\+Result::\+\+Delay\+Until (\begin{DoxyParamCaption}\item[{std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point}]{wake\+Time}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Pause the current \doxylink{class_application_1_1_action}{Action} until {\ttfamily wake\+Time}. The item that returned this has already completed its work. 
+
+\Hypertarget{class_application_1_1_execute_result_a56eac187744059307b76375a19d9908c}\index{Application::ExecuteResult@{Application::ExecuteResult}!type@{type}}
+\index{type@{type}!Application::ExecuteResult@{Application::ExecuteResult}}
+\doxysubsubsection{\texorpdfstring{type()}{type()}}
+{\footnotesize\ttfamily \label{class_application_1_1_execute_result_a56eac187744059307b76375a19d9908c} 
+\doxymbox{\hyperlink{class_application_1_1_execute_result_a49ecdbf2b9adb0b4902a9b9dc7a78d41}{Execute\+Result::\+\+Type}} Application::\+\+Execute\+Result::\+type (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+\Hypertarget{class_application_1_1_execute_result_acd6b2b6c0ee410b9bc3fecd8ed25bba0}\index{Application::ExecuteResult@{Application::ExecuteResult}!wakeTime@{wakeTime}}
+\index{wakeTime@{wakeTime}!Application::ExecuteResult@{Application::ExecuteResult}}
+\doxysubsubsection{\texorpdfstring{wakeTime()}{wakeTime()}}
+{\footnotesize\ttfamily \label{class_application_1_1_execute_result_acd6b2b6c0ee410b9bc3fecd8ed25bba0} 
+std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point Application::\+\+Execute\+Result::\+wake\+Time (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Wake time for Delay\+Until. Meaningless when \doxylink{class_application_1_1_execute_result_a56eac187744059307b76375a19d9908c}{type()} is Continue. 
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_execute_result_8hpp}{Execute\+Result.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\doxymbox{\hyperlink{_execute_result_8cpp}{Execute\+Result.\+cpp}}\end{DoxyCompactItemize}

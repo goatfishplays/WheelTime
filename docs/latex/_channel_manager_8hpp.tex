@@ -1,0 +1,33 @@
+\doxysection{E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\+Channel\+Manager.hpp File Reference}
+\hypertarget{_channel_manager_8hpp}{}\label{_channel_manager_8hpp}\index{E:/Github/WheelTime/app/include/App/ChannelManager.hpp@{E:/Github/WheelTime/app/include/App/ChannelManager.hpp}}
+
+
+Per-\/channel FIFO gate for the scheduler thread.  
+
+
+{\ttfamily \+\#include $<$chrono$>$}\newline
+{\ttfamily \+\#include $<$cstdint$>$}\newline
+{\ttfamily \+\#include $<$functional$>$}\newline
+{\ttfamily \+\#include $<$memory$>$}\newline
+{\ttfamily \+\#include $<$optional$>$}\newline
+{\ttfamily \+\#include $<$queue$>$}\newline
+{\ttfamily \+\#include $<$unordered\+\_\+map$>$}\newline
+{\ttfamily \+\#include "{}App/\+\+Action.\+hpp"{}}\newline
+{\ttfamily \+\#include "{}App/\+\+Action\+Execution\+Context.\+hpp"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch}{Application::\+\+Channel\+Dispatch}}
+\begin{DoxyCompactList}\small\item\em Result of admitting or promoting work on a channel. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_channel_manager}{Application::\+\+Channel\+Manager}}
+\begin{DoxyCompactList}\small\item\em Enforces strict one-\/in-\/flight-\/per-\/channel FIFO (hold through delays). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \doxymbox{\hyperlink{namespace_application}{Application}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Per-\/channel FIFO gate for the scheduler thread. 
+

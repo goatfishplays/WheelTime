@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['readme_2emd_0',['README.md',['../app_2README_8md.html',1,'(Global Namespace)'],['../launcher_2README_8md.html',1,'(Global Namespace)'],['../platform_2README_8md.html',1,'(Global Namespace)'],['../README_8md.html',1,'(Global Namespace)']]]
+  ['gui_2ecpp_0',['Gui.cpp',['../_gui_8cpp.html',1,'']]],
+  ['gui_2ehpp_1',['Gui.hpp',['../_gui_8hpp.html',1,'']]]
 ];

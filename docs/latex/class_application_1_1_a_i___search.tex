@@ -1,0 +1,106 @@
+\doxysection{Application::\+AI\+\_\+\+Search Class Reference}
+\hypertarget{class_application_1_1_a_i___search}{}\label{class_application_1_1_a_i___search}\index{Application::AI\_Search@{Application::AI\_Search}}
+
+
+Opens the search palette overlay with a configured filter set.  
+
+
+
+
+{\ttfamily \+\#include $<$Search.\+hpp$>$}
+
+Inheritance diagram for Application::\+AI\+\_\+\+Search:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_application_1_1_a_i___search}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_a_i___search_a2190d8a271fddf7e39e8755abf108fcf}{AI\+\_\+\+Search}} (\doxymbox{\hyperlink{struct_application_1_1_search_config}{Search\+Config}} config=\{\})
+\item 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} $>$ \doxymbox{\hyperlink{class_application_1_1_a_i___search_aa5ee355c87cff41f6ce1a2102d1bb3a5}{clone}} () const override
+\item 
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} \doxymbox{\hyperlink{class_application_1_1_a_i___search_aab5331f2acc8fe862cf2e2e0977484a4}{kind}} () const override
+\item 
+\doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}} \doxymbox{\hyperlink{class_application_1_1_a_i___search_abecc7adbc0c6f6cbfce724c2feb9b455}{execute}} (\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&context) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{class_application_1_1_action_item}{Application::\+\+Action\+Item}}}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} ()=default
+\item 
+virtual \doxymbox{\hyperlink{class_application_1_1_action_item_a475b8d6aff3774c90b9f0a4512959bf5}{\texorpdfstring{$\sim$}{\string~}\+Action\+Item}} ()=default
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{struct_application_1_1_search_config}{Search\+Config}} \doxymbox{\hyperlink{class_application_1_1_a_i___search_a58d9794c7d26fbb637712056e9e78ad0}{config}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Opens the search palette overlay with a configured filter set. 
+
+\label{class_application_1_1_a_i___search_doc-constructors}
+\Hypertarget{class_application_1_1_a_i___search_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_a_i___search_a2190d8a271fddf7e39e8755abf108fcf}\index{Application::AI\_Search@{Application::AI\_Search}!AI\_Search@{AI\_Search}}
+\index{AI\_Search@{AI\_Search}!Application::AI\_Search@{Application::AI\_Search}}
+\doxysubsubsection{\texorpdfstring{AI\_Search()}{AI\_Search()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___search_a2190d8a271fddf7e39e8755abf108fcf} 
+Application::\+\+AI\+\_\+\+Search::\+\+AI\+\_\+\+Search (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_application_1_1_search_config}{Search\+Config}}}]{config}{ = {\ttfamily \{\}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+\label{class_application_1_1_a_i___search_doc-func-members}
+\Hypertarget{class_application_1_1_a_i___search_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_a_i___search_aa5ee355c87cff41f6ce1a2102d1bb3a5}\index{Application::AI\_Search@{Application::AI\_Search}!clone@{clone}}
+\index{clone@{clone}!Application::AI\_Search@{Application::AI\_Search}}
+\doxysubsubsection{\texorpdfstring{clone()}{clone()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___search_aa5ee355c87cff41f6ce1a2102d1bb3a5} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} $>$ Application::\+\+AI\+\_\+\+Search::\+clone (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_afd400c3edd7ad9e074a28d462421789c}{Application::\+\+Action\+Item}}.
+
+\Hypertarget{class_application_1_1_a_i___search_abecc7adbc0c6f6cbfce724c2feb9b455}\index{Application::AI\_Search@{Application::AI\_Search}!execute@{execute}}
+\index{execute@{execute}!Application::AI\_Search@{Application::AI\_Search}}
+\doxysubsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___search_abecc7adbc0c6f6cbfce724c2feb9b455} 
+\doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}} Application::\+\+AI\+\_\+\+Search::\+execute (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&}]{context}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_aeeaf1c44a2f6741be0fdaad53da67e54}{Application::\+\+Action\+Item}}.
+
+\Hypertarget{class_application_1_1_a_i___search_aab5331f2acc8fe862cf2e2e0977484a4}\index{Application::AI\_Search@{Application::AI\_Search}!kind@{kind}}
+\index{kind@{kind}!Application::AI\_Search@{Application::AI\_Search}}
+\doxysubsubsection{\texorpdfstring{kind()}{kind()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___search_aab5331f2acc8fe862cf2e2e0977484a4} 
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} Application::\+\+AI\+\_\+\+Search::\+kind (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_ab51b1298eb1b325512ca99d2f090fa75}{Application::\+\+Action\+Item}}.
+
+
+
+\label{class_application_1_1_a_i___search_doc-variable-members}
+\Hypertarget{class_application_1_1_a_i___search_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_application_1_1_a_i___search_a58d9794c7d26fbb637712056e9e78ad0}\index{Application::AI\_Search@{Application::AI\_Search}!config@{config}}
+\index{config@{config}!Application::AI\_Search@{Application::AI\_Search}}
+\doxysubsubsection{\texorpdfstring{config}{config}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___search_a58d9794c7d26fbb637712056e9e78ad0} 
+\doxymbox{\hyperlink{struct_application_1_1_search_config}{Search\+Config}} Application::\+\+AI\+\_\+\+Search::\+config}
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\+Action\+Items/\+\doxymbox{\hyperlink{_search_8hpp}{Search.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\+Action\+Items/\+\doxymbox{\hyperlink{_search_8cpp}{Search.\+cpp}}\end{DoxyCompactItemize}

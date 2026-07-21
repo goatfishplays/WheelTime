@@ -1,0 +1,179 @@
+\doxysection{Application::\+Search\+Palette\+Widget Class Reference}
+\hypertarget{class_application_1_1_search_palette_widget}{}\label{class_application_1_1_search_palette_widget}\index{Application::SearchPaletteWidget@{Application::SearchPaletteWidget}}
+
+
+Search input + filter chips + ranked results list.  
+
+
+
+
+{\ttfamily \+\#include $<$Search\+Palette\+Widget.\+hpp$>$}
+
+Inheritance diagram for Application::\+Search\+Palette\+Widget:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_application_1_1_search_palette_widget}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_search_palette_widget_aa353587bf2da94c97f388748649b23b1}{Search\+Palette\+Widget}} (QWidget \texorpdfstring{$\ast$}{*}parent=nullptr)
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_ad6e50dd8b53c94ae8ffb66245c701da5}{open\+With\+Config}} (const \doxymbox{\hyperlink{struct_application_1_1_search_config}{Search\+Config}} \&config)
+\begin{DoxyCompactList}\small\item\em Resets text/\+filters from {\ttfamily config} and rebuilds results. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_a4254e98cbd74c5ab5ac098e54ecf2018}{focus\+Input}} ()
+\begin{DoxyCompactList}\small\item\em Puts keyboard focus into the search field. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_a5f3ca00b6f4767881c413340b8d00342}{preload\+Index}} ()
+\begin{DoxyCompactList}\small\item\em Starts the shortcut scan on a background thread so the first palette open does not block on it. Call once at app startup. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_ac8d432f29b00f84b1922291b4de09f98}{set\+Query\+Text}} (const QString \&text)
+\begin{DoxyCompactList}\small\item\em Sets the query text programmatically (rebuilds results). \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_a79fc41874b400d73a5a8a03168edd576}{result\+Count}} () const
+\begin{DoxyCompactList}\small\item\em Number of rows currently in the results list. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_a237fd5815ecc77a979536715416ee2de}{selected\+Row}} () const
+\begin{DoxyCompactList}\small\item\em Currently selected results row, or -\/1. \end{DoxyCompactList}\item 
+QString \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_a8428bc5835ea28341866586409b2f0e8}{result\+Label\+At}} (int row) const
+\begin{DoxyCompactList}\small\item\em Display label of a results row (empty when out of range). \end{DoxyCompactList}\item 
+QString \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_aa9a39c4fedfd0a7157a6725c7f5cfded}{result\+Category\+At}} (int row) const
+\begin{DoxyCompactList}\small\item\em Category tag ("{}\+Action"{}/\+"{}\+Program"{}/\+"{}\+Menu"{}/\+"{}\+Web"{}) of a results row. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static QString \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_ad8783302d82d6a4ffbe81f42cb090920}{build\+Web\+Search\+Url}} (const QString \&url\+Template, const QString \&query)
+\begin{DoxyCompactList}\small\item\em Substitutes the percent-\/encoded {\ttfamily query} into {\ttfamily url\+Template}. "{}\{query\}"{} is replaced; templates without the placeholder get the encoded query appended. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_a0cb9fe7b466023c8781732c40b602021}{event\+Filter}} (QObject \texorpdfstring{$\ast$}{*}watched, QEvent \texorpdfstring{$\ast$}{*}event) override
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_a60e1f16d26328ace444116a2472828b5}{key\+Press\+Event}} (QKey\+Event \texorpdfstring{$\ast$}{*}event) override
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Search input + filter chips + ranked results list. 
+
+Result categories are ranked strictly actions \texorpdfstring{$>$}{>} programs \texorpdfstring{$>$}{>} menus, with a websearch fallback row pinned last. The widget queries \doxylink{class_application_1_1_app}{App} directly for actions/\+menus and owns the Start \doxylink{class_application_1_1_menu}{Menu} program index. 
+
+\label{class_application_1_1_search_palette_widget_doc-constructors}
+\Hypertarget{class_application_1_1_search_palette_widget_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_search_palette_widget_aa353587bf2da94c97f388748649b23b1}\index{Application::SearchPaletteWidget@{Application::SearchPaletteWidget}!SearchPaletteWidget@{SearchPaletteWidget}}
+\index{SearchPaletteWidget@{SearchPaletteWidget}!Application::SearchPaletteWidget@{Application::SearchPaletteWidget}}
+\doxysubsubsection{\texorpdfstring{SearchPaletteWidget()}{SearchPaletteWidget()}}
+{\footnotesize\ttfamily \label{class_application_1_1_search_palette_widget_aa353587bf2da94c97f388748649b23b1} 
+Search\+Palette\+Widget::\+\+Search\+Palette\+Widget (\begin{DoxyParamCaption}\item[{QWidget \texorpdfstring{$\ast$}{*}}]{parent}{ = {\ttfamily nullptr}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+\label{class_application_1_1_search_palette_widget_doc-func-members}
+\Hypertarget{class_application_1_1_search_palette_widget_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_search_palette_widget_ad8783302d82d6a4ffbe81f42cb090920}\index{Application::SearchPaletteWidget@{Application::SearchPaletteWidget}!buildWebSearchUrl@{buildWebSearchUrl}}
+\index{buildWebSearchUrl@{buildWebSearchUrl}!Application::SearchPaletteWidget@{Application::SearchPaletteWidget}}
+\doxysubsubsection{\texorpdfstring{buildWebSearchUrl()}{buildWebSearchUrl()}}
+{\footnotesize\ttfamily \label{class_application_1_1_search_palette_widget_ad8783302d82d6a4ffbe81f42cb090920} 
+QString Search\+Palette\+Widget::\+build\+Web\+Search\+Url (\begin{DoxyParamCaption}\item[{const QString \&}]{url\+Template}{, }\item[{const QString \&}]{query}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Substitutes the percent-\/encoded {\ttfamily query} into {\ttfamily url\+Template}. "{}\{query\}"{} is replaced; templates without the placeholder get the encoded query appended. 
+
+\Hypertarget{class_application_1_1_search_palette_widget_a0cb9fe7b466023c8781732c40b602021}\index{Application::SearchPaletteWidget@{Application::SearchPaletteWidget}!eventFilter@{eventFilter}}
+\index{eventFilter@{eventFilter}!Application::SearchPaletteWidget@{Application::SearchPaletteWidget}}
+\doxysubsubsection{\texorpdfstring{eventFilter()}{eventFilter()}}
+{\footnotesize\ttfamily \label{class_application_1_1_search_palette_widget_a0cb9fe7b466023c8781732c40b602021} 
+bool Search\+Palette\+Widget::\+event\+Filter (\begin{DoxyParamCaption}\item[{QObject \texorpdfstring{$\ast$}{*}}]{watched}{, }\item[{QEvent \texorpdfstring{$\ast$}{*}}]{event}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}}
+
+\Hypertarget{class_application_1_1_search_palette_widget_a4254e98cbd74c5ab5ac098e54ecf2018}\index{Application::SearchPaletteWidget@{Application::SearchPaletteWidget}!focusInput@{focusInput}}
+\index{focusInput@{focusInput}!Application::SearchPaletteWidget@{Application::SearchPaletteWidget}}
+\doxysubsubsection{\texorpdfstring{focusInput()}{focusInput()}}
+{\footnotesize\ttfamily \label{class_application_1_1_search_palette_widget_a4254e98cbd74c5ab5ac098e54ecf2018} 
+void Search\+Palette\+Widget::\+focus\+Input (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Puts keyboard focus into the search field. 
+
+\Hypertarget{class_application_1_1_search_palette_widget_a60e1f16d26328ace444116a2472828b5}\index{Application::SearchPaletteWidget@{Application::SearchPaletteWidget}!keyPressEvent@{keyPressEvent}}
+\index{keyPressEvent@{keyPressEvent}!Application::SearchPaletteWidget@{Application::SearchPaletteWidget}}
+\doxysubsubsection{\texorpdfstring{keyPressEvent()}{keyPressEvent()}}
+{\footnotesize\ttfamily \label{class_application_1_1_search_palette_widget_a60e1f16d26328ace444116a2472828b5} 
+void Search\+Palette\+Widget::\+key\+Press\+Event (\begin{DoxyParamCaption}\item[{QKey\+Event \texorpdfstring{$\ast$}{*}}]{event}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}}
+
+\Hypertarget{class_application_1_1_search_palette_widget_ad6e50dd8b53c94ae8ffb66245c701da5}\index{Application::SearchPaletteWidget@{Application::SearchPaletteWidget}!openWithConfig@{openWithConfig}}
+\index{openWithConfig@{openWithConfig}!Application::SearchPaletteWidget@{Application::SearchPaletteWidget}}
+\doxysubsubsection{\texorpdfstring{openWithConfig()}{openWithConfig()}}
+{\footnotesize\ttfamily \label{class_application_1_1_search_palette_widget_ad6e50dd8b53c94ae8ffb66245c701da5} 
+void Search\+Palette\+Widget::\+open\+With\+Config (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{struct_application_1_1_search_config}{Search\+Config}} \&}]{config}{}\end{DoxyParamCaption})}
+
+
+
+Resets text/\+filters from {\ttfamily config} and rebuilds results. 
+
+\Hypertarget{class_application_1_1_search_palette_widget_a5f3ca00b6f4767881c413340b8d00342}\index{Application::SearchPaletteWidget@{Application::SearchPaletteWidget}!preloadIndex@{preloadIndex}}
+\index{preloadIndex@{preloadIndex}!Application::SearchPaletteWidget@{Application::SearchPaletteWidget}}
+\doxysubsubsection{\texorpdfstring{preloadIndex()}{preloadIndex()}}
+{\footnotesize\ttfamily \label{class_application_1_1_search_palette_widget_a5f3ca00b6f4767881c413340b8d00342} 
+void Search\+Palette\+Widget::\+preload\+Index (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Starts the shortcut scan on a background thread so the first palette open does not block on it. Call once at app startup. 
+
+\Hypertarget{class_application_1_1_search_palette_widget_aa9a39c4fedfd0a7157a6725c7f5cfded}\index{Application::SearchPaletteWidget@{Application::SearchPaletteWidget}!resultCategoryAt@{resultCategoryAt}}
+\index{resultCategoryAt@{resultCategoryAt}!Application::SearchPaletteWidget@{Application::SearchPaletteWidget}}
+\doxysubsubsection{\texorpdfstring{resultCategoryAt()}{resultCategoryAt()}}
+{\footnotesize\ttfamily \label{class_application_1_1_search_palette_widget_aa9a39c4fedfd0a7157a6725c7f5cfded} 
+QString Search\+Palette\+Widget::\+result\+Category\+At (\begin{DoxyParamCaption}\item[{int}]{row}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Category tag ("{}\+Action"{}/\+"{}\+Program"{}/\+"{}\+Menu"{}/\+"{}\+Web"{}) of a results row. 
+
+\Hypertarget{class_application_1_1_search_palette_widget_a79fc41874b400d73a5a8a03168edd576}\index{Application::SearchPaletteWidget@{Application::SearchPaletteWidget}!resultCount@{resultCount}}
+\index{resultCount@{resultCount}!Application::SearchPaletteWidget@{Application::SearchPaletteWidget}}
+\doxysubsubsection{\texorpdfstring{resultCount()}{resultCount()}}
+{\footnotesize\ttfamily \label{class_application_1_1_search_palette_widget_a79fc41874b400d73a5a8a03168edd576} 
+int Search\+Palette\+Widget::\+result\+Count (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Number of rows currently in the results list. 
+
+\Hypertarget{class_application_1_1_search_palette_widget_a8428bc5835ea28341866586409b2f0e8}\index{Application::SearchPaletteWidget@{Application::SearchPaletteWidget}!resultLabelAt@{resultLabelAt}}
+\index{resultLabelAt@{resultLabelAt}!Application::SearchPaletteWidget@{Application::SearchPaletteWidget}}
+\doxysubsubsection{\texorpdfstring{resultLabelAt()}{resultLabelAt()}}
+{\footnotesize\ttfamily \label{class_application_1_1_search_palette_widget_a8428bc5835ea28341866586409b2f0e8} 
+QString Search\+Palette\+Widget::\+result\+Label\+At (\begin{DoxyParamCaption}\item[{int}]{row}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Display label of a results row (empty when out of range). 
+
+\Hypertarget{class_application_1_1_search_palette_widget_a237fd5815ecc77a979536715416ee2de}\index{Application::SearchPaletteWidget@{Application::SearchPaletteWidget}!selectedRow@{selectedRow}}
+\index{selectedRow@{selectedRow}!Application::SearchPaletteWidget@{Application::SearchPaletteWidget}}
+\doxysubsubsection{\texorpdfstring{selectedRow()}{selectedRow()}}
+{\footnotesize\ttfamily \label{class_application_1_1_search_palette_widget_a237fd5815ecc77a979536715416ee2de} 
+int Search\+Palette\+Widget::\+selected\+Row (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Currently selected results row, or -\/1. 
+
+\Hypertarget{class_application_1_1_search_palette_widget_ac8d432f29b00f84b1922291b4de09f98}\index{Application::SearchPaletteWidget@{Application::SearchPaletteWidget}!setQueryText@{setQueryText}}
+\index{setQueryText@{setQueryText}!Application::SearchPaletteWidget@{Application::SearchPaletteWidget}}
+\doxysubsubsection{\texorpdfstring{setQueryText()}{setQueryText()}}
+{\footnotesize\ttfamily \label{class_application_1_1_search_palette_widget_ac8d432f29b00f84b1922291b4de09f98} 
+void Search\+Palette\+Widget::\+set\+Query\+Text (\begin{DoxyParamCaption}\item[{const QString \&}]{text}{}\end{DoxyParamCaption})}
+
+
+
+Sets the query text programmatically (rebuilds results). 
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_search_palette_widget_8hpp}{Search\+Palette\+Widget.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\doxymbox{\hyperlink{_search_palette_widget_8cpp}{Search\+Palette\+Widget.\+cpp}}\end{DoxyCompactItemize}

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.17.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Wheel Time: E:/Github/WheelTime/app/include/App.hpp File Reference</title>
+<title>Wheel Time: E:/Github/WheelTime/app/include/App/App.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="codefolding.js"></script>
 <script type="text/javascript" src="clipboard.js"></script>
@@ -119,45 +119,36 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('_app_8hpp.html
 </div><!--header-->
 <div class="contents">
 
-<p>The action application itself.  
+<p><a class="el" href="namespace_application.html">Application</a> singleton: menus, actions, input, and scheduler ownership.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;string&gt;</code><br />
+<div class="textblock"><code>#include &lt;QApplication&gt;</code><br />
+<code>#include &lt;QString&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
+<code>#include &lt;<a class="el" href="_execute_8hpp_source.html">Platform/Execute.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="_inputs_8hpp_source.html">Platform/Inputs.hpp</a>&gt;</code><br />
 <code>#include &lt;<a class="el" href="_window_8hpp_source.html">Platform/Window.hpp</a>&gt;</code><br />
+<code>#include &quot;<a class="el" href="_action_8hpp_source.html">App/Action.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_action_history_8hpp_source.html">App/ActionHistory.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_gui_8hpp_source.html">App/Gui.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_menu_8hpp_source.html">App/Menu.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_scheduler_8hpp_source.html">App/Scheduler.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_search_config_8hpp_source.html">App/SearchConfig.hpp</a>&quot;</code><br />
+<code>#include &lt;memory&gt;</code><br />
 </div>
 <p><a href="_app_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:App_3A_3AApp" id="r_App_3A_3AApp"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_app_1_1_app.html">App::App</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Controls the current state of the application and visible window.  <a href="class_app_1_1_app.html#details">More...</a><br /></td></tr>
-<tr class="memitem:App_3A_3AMenu" id="r_App_3A_3AMenu"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_app_1_1_menu.html">App::Menu</a></td></tr>
-<tr class="memitem:App_3A_3AAction" id="r_App_3A_3AAction"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_app_1_1_action.html">App::Action</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains a sequence of actions to be executed.  <a href="class_app_1_1_action.html#details">More...</a><br /></td></tr>
-<tr class="memitem:App_3A_3AActionItem" id="r_App_3A_3AActionItem"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_app_1_1_action_item.html">App::ActionItem</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents an individual action to be taken.  <a href="class_app_1_1_action_item.html#details">More...</a><br /></td></tr>
-<tr class="memitem:App_3A_3AAI_5FScript" id="r_App_3A_3AAI_5FScript"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_app_1_1_a_i___script.html">App::AI_Script</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs a specified script.  <a href="class_app_1_1_a_i___script.html#details">More...</a><br /></td></tr>
-<tr class="memitem:App_3A_3AAI_5FKeystroke" id="r_App_3A_3AAI_5FKeystroke"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_app_1_1_a_i___keystroke.html">App::AI_Keystroke</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs a specified keystroke.  <a href="class_app_1_1_a_i___keystroke.html#details">More...</a><br /></td></tr>
-<tr class="memitem:App_3A_3AAI_5FDelay" id="r_App_3A_3AAI_5FDelay"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_app_1_1_a_i___delay.html">App::AI_Delay</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delays the next action in sequence.  <a href="class_app_1_1_a_i___delay.html#details">More...</a><br /></td></tr>
-<tr class="memitem:App_3A_3AAI_5FSubmenu" id="r_App_3A_3AAI_5FSubmenu"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_app_1_1_a_i___submenu.html">App::AI_Submenu</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Opens a submenu.  <a href="class_app_1_1_a_i___submenu.html#details">More...</a><br /></td></tr>
-<tr class="memitem:App_3A_3AAI_5FClose" id="r_App_3A_3AAI_5FClose"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_app_1_1_a_i___close.html">App::AI_Close</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes the menu.  <a href="class_app_1_1_a_i___close.html#details">More...</a><br /></td></tr>
+<tr class="memitem:Application_3A_3AAppConfig" id="r_Application_3A_3AAppConfig"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="struct_application_1_1_app_config.html">Application::AppConfig</a></td></tr>
+<tr class="memitem:Application_3A_3AApp" id="r_Application_3A_3AApp"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="class_application_1_1_app.html">Application::App</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Owns the long-lived runtime state for WheelTime.  <a href="class_application_1_1_app.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:App" id="r_App"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespace_app.html">App</a></td></tr>
+<tr class="memitem:Application" id="r_Application"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="namespace_application.html">Application</a></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>The action application itself. </p>
-<dl class="section author"><dt>Author</dt><dd>your name (<a href="#" onclick="location.href='mai'+'lto:'+'you'+'@d'+'oma'+'in'+'.co'+'m'; return false;">you@d<span class="obfuscator">.nosp@m.</span>omai<span class="obfuscator">.nosp@m.</span>n.com</a>) </dd></dl>
-<dl class="section version"><dt>Version</dt><dd>0.1 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2026-06-29</dd></dl>
-<dl class="section copyright"><dt>Copyright</dt><dd>Copyright (c) 2026 </dd></dl>
+<div class="textblock"><p><a class="el" href="namespace_application.html">Application</a> singleton: menus, actions, input, and scheduler ownership. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
@@ -171,7 +162,7 @@ Namespaces</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="dir_d422163b96683743ed3963d4aac17747.html">app</a></li><li class="navelem"><a href="dir_78f5ecd95a37a67589a284a718a0be9c.html">include</a></li><li class="navelem"><a href="_app_8hpp.html">App.hpp</a></li>
+    <li class="navelem"><a href="dir_d422163b96683743ed3963d4aac17747.html">app</a></li><li class="navelem"><a href="dir_78f5ecd95a37a67589a284a718a0be9c.html">include</a></li><li class="navelem"><a href="dir_7a2f57d59a2b6653989e92b3e785f164.html">App</a></li><li class="navelem"><a href="_app_8hpp.html">App.hpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.17.0 </li>
   </ul>
 </div>

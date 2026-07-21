@@ -1,0 +1,106 @@
+\doxysection{Application::\+AI\+\_\+\+Menu Class Reference}
+\hypertarget{class_application_1_1_a_i___menu}{}\label{class_application_1_1_a_i___menu}\index{Application::AI\_Menu@{Application::AI\_Menu}}
+
+
+Switches the launcher to another menu by stable menu ID.  
+
+
+
+
+{\ttfamily \+\#include $<$Menu.\+hpp$>$}
+
+Inheritance diagram for Application::\+AI\+\_\+\+Menu:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_application_1_1_a_i___menu}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_a_i___menu_acd7cdab5cc5de54dbd3a1caafe5daf11}{AI\+\_\+\+Menu}} (std::\+string menu\+Id=\{\})
+\item 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} $>$ \doxymbox{\hyperlink{class_application_1_1_a_i___menu_a0dc0052d709f4c7fdf0dc6ad7674dd37}{clone}} () const override
+\item 
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} \doxymbox{\hyperlink{class_application_1_1_a_i___menu_a78e066c90de123a8e51cca61b5ab160e}{kind}} () const override
+\item 
+\doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}} \doxymbox{\hyperlink{class_application_1_1_a_i___menu_a1c18cab5533595b23cee6575e8c24309}{execute}} (\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&context) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{class_application_1_1_action_item}{Application::\+\+Action\+Item}}}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} ()=default
+\item 
+virtual \doxymbox{\hyperlink{class_application_1_1_action_item_a475b8d6aff3774c90b9f0a4512959bf5}{\texorpdfstring{$\sim$}{\string~}\+Action\+Item}} ()=default
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std::\+string \doxymbox{\hyperlink{class_application_1_1_a_i___menu_a4200106634175f64669b3df853dc6715}{menu\+Id}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Switches the launcher to another menu by stable menu ID. 
+
+\label{class_application_1_1_a_i___menu_doc-constructors}
+\Hypertarget{class_application_1_1_a_i___menu_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_a_i___menu_acd7cdab5cc5de54dbd3a1caafe5daf11}\index{Application::AI\_Menu@{Application::AI\_Menu}!AI\_Menu@{AI\_Menu}}
+\index{AI\_Menu@{AI\_Menu}!Application::AI\_Menu@{Application::AI\_Menu}}
+\doxysubsubsection{\texorpdfstring{AI\_Menu()}{AI\_Menu()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___menu_acd7cdab5cc5de54dbd3a1caafe5daf11} 
+Application::\+\+AI\+\_\+\+Menu::\+\+AI\+\_\+\+Menu (\begin{DoxyParamCaption}\item[{std::\+string}]{menu\+Id}{ = {\ttfamily \{\}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+\label{class_application_1_1_a_i___menu_doc-func-members}
+\Hypertarget{class_application_1_1_a_i___menu_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_a_i___menu_a0dc0052d709f4c7fdf0dc6ad7674dd37}\index{Application::AI\_Menu@{Application::AI\_Menu}!clone@{clone}}
+\index{clone@{clone}!Application::AI\_Menu@{Application::AI\_Menu}}
+\doxysubsubsection{\texorpdfstring{clone()}{clone()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___menu_a0dc0052d709f4c7fdf0dc6ad7674dd37} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} $>$ Application::\+\+AI\+\_\+\+Menu::\+clone (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_afd400c3edd7ad9e074a28d462421789c}{Application::\+\+Action\+Item}}.
+
+\Hypertarget{class_application_1_1_a_i___menu_a1c18cab5533595b23cee6575e8c24309}\index{Application::AI\_Menu@{Application::AI\_Menu}!execute@{execute}}
+\index{execute@{execute}!Application::AI\_Menu@{Application::AI\_Menu}}
+\doxysubsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___menu_a1c18cab5533595b23cee6575e8c24309} 
+\doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}} Application::\+\+AI\+\_\+\+Menu::\+execute (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&}]{context}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_aeeaf1c44a2f6741be0fdaad53da67e54}{Application::\+\+Action\+Item}}.
+
+\Hypertarget{class_application_1_1_a_i___menu_a78e066c90de123a8e51cca61b5ab160e}\index{Application::AI\_Menu@{Application::AI\_Menu}!kind@{kind}}
+\index{kind@{kind}!Application::AI\_Menu@{Application::AI\_Menu}}
+\doxysubsubsection{\texorpdfstring{kind()}{kind()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___menu_a78e066c90de123a8e51cca61b5ab160e} 
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} Application::\+\+AI\+\_\+\+Menu::\+kind (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_ab51b1298eb1b325512ca99d2f090fa75}{Application::\+\+Action\+Item}}.
+
+
+
+\label{class_application_1_1_a_i___menu_doc-variable-members}
+\Hypertarget{class_application_1_1_a_i___menu_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_application_1_1_a_i___menu_a4200106634175f64669b3df853dc6715}\index{Application::AI\_Menu@{Application::AI\_Menu}!menuId@{menuId}}
+\index{menuId@{menuId}!Application::AI\_Menu@{Application::AI\_Menu}}
+\doxysubsubsection{\texorpdfstring{menuId}{menuId}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___menu_a4200106634175f64669b3df853dc6715} 
+std::\+string Application::\+\+AI\+\_\+\+Menu::\+menu\+Id}
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\+Action\+Items/\+\doxymbox{\hyperlink{_action_items_2_menu_8hpp}{Menu.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\+Action\+Items/\+\doxymbox{\hyperlink{_action_items_2_menu_8cpp}{Menu.\+cpp}}\end{DoxyCompactItemize}

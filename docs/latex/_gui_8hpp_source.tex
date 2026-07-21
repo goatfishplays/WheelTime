@@ -1,0 +1,86 @@
+\doxysection{Gui.\+hpp}
+\hypertarget{_gui_8hpp_source}{}\label{_gui_8hpp_source}\index{E:/Github/WheelTime/app/include/App/Gui.hpp@{E:/Github/WheelTime/app/include/App/Gui.hpp}}
+\doxymbox{\hyperlink{_gui_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <QWidget>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <QKeyEvent>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <QLabel>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <QVBoxLayout>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <QHBoxLayout>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <QSpacerItem>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <QResizeEvent>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <QEnterEvent>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <QMouseEvent>}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ <QPushButton>}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <QDialog>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <QGridLayout>}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_menu_8hpp}{App/Menu.hpp}}"{}}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_action_8hpp}{App/Action.hpp}}"{}}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_radial_menu_widget_8hpp}{App/RadialMenuWidget.hpp}}"{}}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_search_config_8hpp}{App/SearchConfig.hpp}}"{}}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00030\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_settings_window}{SettingsWindow}};}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_search_palette_widget}{SearchPaletteWidget}};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_gui_a6a932fe7ca79f8671d2ab90624cf8e84}{Gui}}\ :\ \textcolor{keyword}{public}\ QWidget}
+\DoxyCodeLine{00042\ \ \ \ \ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ Q\_OBJECT}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keyword}{explicit}\ \doxymbox{\hyperlink{class_application_1_1_gui_a6a932fe7ca79f8671d2ab90624cf8e84}{Gui}}(QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_gui_aeaf4b881c04117913c6f63ff755ea7c6}{onSelectChange}}(\textcolor{keywordtype}{int}\ selectionInd);}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_gui_a2b0c8627f1572ca9a34ef1e529e73ef5}{setMenu}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}}\ \&menu,\ \textcolor{keyword}{const}\ std::vector<ActionSlotVisual>\ \&slotVisuals);}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_gui_a979949769a57216c85992831e1fc9aaf}{enterInteractiveOverlay}}();}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_gui_ac5185bbff4d07ddf1092e2448d73a177}{enterDormantOverlay}}();}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_gui_a48d241b53c0793406de96ce11733ef3c}{showSettingsPanel}}(\doxymbox{\hyperlink{class_application_1_1_settings_window}{SettingsWindow}}\ *settingsWindow);}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_gui_ad1e0b8d2ebeedfac6a322e926cf78713}{hideSettingsPanel}}();}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_gui_a8f2b23955a1d9ca0ac30ecdb3b2f3c2b}{showSearchPanel}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_application_1_1_search_config}{SearchConfig}}\ \&config);}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_gui_a784a16eecf2656c26071417aad9e11e3}{hideSearchPanel}}();}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_gui_aea7d5eb588fbe38332db34c78ce822ad}{focusSearchInput}}();}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_gui_a3564048ab1384ca1d689e3ce012ae969}{preloadSearchIndex}}();}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_gui_a022414fc173978080f57bcff78176b18}{isLauncherVisible}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_gui_ad0a78260802f6cbe9aef2e106087f280}{isSettingsVisible}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_gui_a2a8b7743158e15b5e8e77f827841be8d}{isSearchVisible}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_gui_a4615bfb312c4d5b3b72a2dd2d57bca09}{refreshSelectionFromCursor}}();}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_gui_a85a0a8e551e8b2623334a4f8b5fc82ee}{selectedActionIndex}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ signals:}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_gui_a0acfabe787f4d77a3ad8bc39995d80c9}{escapePressed}}();}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_gui_acde0313879b68f06db5d4c19ff128b3b}{eventFilter}}(QObject\ *watched,\ QEvent\ *event)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_gui_aabe07a671c9edf148eb6e6b371fb9dd5}{keyPressEvent}}(QKeyEvent\ *event)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum\ class}\ OverlayMode}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ Dormant,}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ Wheel,}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \ \ \ \ Settings,}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bca13348442cc6a27032d2b4aa28b75a5d3}{Search}}}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ QWidget\ *m\_overlayPanel\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ QWidget\ *m\_searchHost\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_search_palette_widget}{SearchPaletteWidget}}\ *m\_searchPalette\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ QWidget\ *m\_settingsHost\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ QGridLayout\ *m\_settingsHostLayout\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ QLabel\ *m\_titleLabel\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_radial_menu_widget}{RadialMenuWidget}}\ *m\_radialMenu\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ QPushButton\ *m\_settingsButton\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ QPushButton\ *m\_editButton\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ OverlayMode\ m\_overlayMode\{OverlayMode::Dormant\};}
+\DoxyCodeLine{00107\ \ \ \ \ \};}
+\DoxyCodeLine{00108\ \}}
+
+\end{DoxyCode}

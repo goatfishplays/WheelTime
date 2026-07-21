@@ -214,11 +214,13 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_executeOnReleaseCheck = new QCheckBox("Execute on release", menuSettingsGroup);
     m_exitOnActionCheck = new QCheckBox("Exit on action", menuSettingsGroup);
     m_centerMouseOnOpenCheck = new QCheckBox("Center mouse on open", menuSettingsGroup);
+    m_restoreMouseOnCloseCheck = new QCheckBox("Restore mouse on close", menuSettingsGroup);
     menuForm->addRow("Menu Name", m_menuNameEdit);
     menuForm->addRow("Trigger Hotkey", hotkeyLayout);
     menuForm->addRow("", m_executeOnReleaseCheck);
     menuForm->addRow("", m_exitOnActionCheck);
     menuForm->addRow("", m_centerMouseOnOpenCheck);
+    menuForm->addRow("", m_restoreMouseOnCloseCheck);
     menuEditorSplit->addWidget(menuSettingsGroup);
 
     auto *slotsGroup = new QGroupBox("Wheel Slots", m_menuEditor);
@@ -303,22 +305,24 @@ SettingsWindow::SettingsWindow(QWidget *parent)
 
     auto *itemButtons = new QHBoxLayout();
     m_newItemTypeCombo = new QComboBox(itemsGroup);
-    m_newItemTypeCombo->addItems(
-        {"Launch App",
-         "Delay",
-         "Press Hotkey",
-         "Open Menu",
-         "Close Launcher",
-         "Custom Script/App (Advanced)",
-         "Mouse Move",
-         "Mouse Button",
-         "Cancel Most Recent",
-         "Cancel Channel",
-         "Cancel All",
-         "Nth Recent",
-         "Nth Frequent",
-         "Socket Send",
-         "Search Palette"});
+    // Grouped for scanning: input, timing, navigation, history, cancel, advanced.
+    const auto addItemType = [this](const QString &label, const QString &typeId)
+    {
+        m_newItemTypeCombo->addItem(label, typeId);
+    };
+    addItemType("Launch App", "launch_app");
+    addItemType("Press Hotkey", "hotkey");
+    addItemType("Mouse Button", "mouse_button");
+    addItemType("Mouse Move", "mouse_move");
+    addItemType("Delay", "delay");
+    addItemType("Open Menu", "menu");
+    addItemType("Search Palette", "search");
+    addItemType("Close Launcher", "close");
+    addItemType("Nth Recent", "nth_recent");
+    addItemType("Nth Frequent", "nth_frequent");
+    addItemType("Cancel", "cancel");
+    addItemType("Socket Send", "socket");
+    addItemType("Custom Script/App (Advanced)", "script");
     auto *addItemButton = new QPushButton("Add Item", itemsGroup);
     auto *removeItemButton = new QPushButton("Remove Item", itemsGroup);
     auto *moveItemUpButton = new QPushButton("Move Up", itemsGroup);
@@ -362,7 +366,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_itemDelayPage = new QWidget(m_itemDetailStack);
     auto *delayForm = new QFormLayout(m_itemDelayPage);
     m_delaySpin = new QSpinBox(m_itemDelayPage);
-    m_delaySpin->setRange(0, 3600000);
+    m_delaySpin->setRange(0, 86400000); // up to 24 hours
     delayForm->addRow("Milliseconds", m_delaySpin);
 
     m_itemClosePage = new QWidget(m_itemDetailStack);
@@ -393,7 +397,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_hotkeyKeyCombo = new QComboBox(m_itemHotkeyPage);
     populateHotkeyKeyCombo();
     m_hotkeyHoldSpin = new QDoubleSpinBox(m_itemHotkeyPage);
-    m_hotkeyHoldSpin->setRange(0.0, 10.0);
+    m_hotkeyHoldSpin->setRange(0.0, 3600.0); // up to 1 hour
     m_hotkeyHoldSpin->setDecimals(2);
     m_hotkeyHoldSpin->setSingleStep(0.1);
     m_hotkeyHoldSpin->setSuffix(" s");
@@ -432,7 +436,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_mouseButtonCombo->addItem("Right", 1);
     m_mouseButtonCombo->addItem("Middle", 2);
     m_mouseButtonHoldSpin = new QDoubleSpinBox(m_itemMouseButtonPage);
-    m_mouseButtonHoldSpin->setRange(0.0, 10.0);
+    m_mouseButtonHoldSpin->setRange(0.0, 3600.0); // up to 1 hour
     m_mouseButtonHoldSpin->setDecimals(2);
     m_mouseButtonHoldSpin->setSingleStep(0.1);
     m_mouseButtonHoldSpin->setSuffix(" s");
@@ -445,9 +449,9 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_itemCancelPage = new QWidget(m_itemDetailStack);
     auto *cancelForm = new QFormLayout(m_itemCancelPage);
     m_cancelLevelCombo = new QComboBox(m_itemCancelPage);
-    m_cancelLevelCombo->addItem("Most Recent on Channel", static_cast<int>(CancelLevel::MostRecent));
-    m_cancelLevelCombo->addItem("Entire Channel", static_cast<int>(CancelLevel::Channel));
-    m_cancelLevelCombo->addItem("All Actions", static_cast<int>(CancelLevel::All));
+    m_cancelLevelCombo->addItem("Most Recent", static_cast<int>(CancelLevel::MostRecent));
+    m_cancelLevelCombo->addItem("Channel", static_cast<int>(CancelLevel::Channel));
+    m_cancelLevelCombo->addItem("All", static_cast<int>(CancelLevel::All));
     m_cancelChannelSpin = new QSpinBox(m_itemCancelPage);
     m_cancelChannelSpin->setRange(0, 1000000);
     m_cancelHelpLabel = new QLabel(m_itemCancelPage);
@@ -462,8 +466,13 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_nthSpin->setRange(1, 1000);
     m_nthHelpLabel = new QLabel(m_itemNthPage);
     m_nthHelpLabel->setWordWrap(true);
+    m_resetFrequenciesButton = new QPushButton("Reset all frequencies", m_itemNthPage);
+    m_resetFrequenciesButton->setToolTip(
+        "Clears launch counts used by Nth Frequent ranking. Recent history is kept.");
+    m_resetFrequenciesButton->hide();
     nthForm->addRow("N (1 = top)", m_nthSpin);
     nthForm->addRow(m_nthHelpLabel);
+    nthForm->addRow(m_resetFrequenciesButton);
 
     m_itemSocketPage = new QWidget(m_itemDetailStack);
     auto *socketForm = new QFormLayout(m_itemSocketPage);
@@ -491,7 +500,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_itemSearchPage = new QWidget(m_itemDetailStack);
     auto *searchForm = new QFormLayout(m_itemSearchPage);
     m_searchActionsCheck = new QCheckBox("Search actions", m_itemSearchPage);
-    m_searchProgramsCheck = new QCheckBox("Search programs (Start Menu)", m_itemSearchPage);
+    m_searchProgramsCheck = new QCheckBox("Search programs", m_itemSearchPage);
     m_searchMenusCheck = new QCheckBox("Search menus", m_itemSearchPage);
     m_searchWebCheck = new QCheckBox("Web search fallback", m_itemSearchPage);
     m_searchWebUrlEdit = new QLineEdit(m_itemSearchPage);
@@ -611,7 +620,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
 
     connect(addMenuButton, &QPushButton::clicked, this, [this]()
             {
-                Menu menu(0, 0, false, false, true, "New Menu", {}, makeUniqueMenuId("New Menu"));
+                Menu menu(0, 0, false, false, true, false, "New Menu", {}, makeUniqueMenuId("New Menu"));
                 m_menus.push_back(menu);
                 refreshLists();
                 setSelectedMenu(static_cast<int>(m_menus.size()) - 1); });
@@ -675,6 +684,13 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 if (index >= 0)
                 {
                     m_menus[index].centerMouseOnOpen = checked;
+                } });
+    connect(m_restoreMouseOnCloseCheck, &QCheckBox::toggled, this, [this](bool checked)
+            {
+                const int index = currentMenuIndex();
+                if (index >= 0)
+                {
+                    m_menus[index].restoreMouseOnClose = checked;
                 } });
     connect(addSlotButton, &QPushButton::clicked, this, [this]()
             {
@@ -814,55 +830,62 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 }
 
                 std::unique_ptr<ActionItem> item;
-                switch (m_newItemTypeCombo->currentIndex())
+                const QString typeId = m_newItemTypeCombo->currentData().toString();
+                if (typeId == "launch_app")
                 {
-                case 0:
                     item = std::make_unique<AI_LaunchApp>("calculator", "");
-                    break;
-                case 1:
-                    item = std::make_unique<AI_Delay>(0);
-                    break;
-                case 2:
-                    item = std::make_unique<AI_Keystroke>('E', 0, 0.0f, false);
-                    break;
-                case 3:
-                    item = std::make_unique<AI_Menu>(m_menus.empty() ? "" : m_menus.front().getId());
-                    break;
-                case 4:
-                    item = std::make_unique<AI_Close>();
-                    break;
-                case 5:
-                    item = std::make_unique<AI_Script>("");
-                    break;
-                case 6:
-                    item = std::make_unique<AI_MouseMove>(0, 0);
-                    break;
-                case 7:
+                }
+                else if (typeId == "hotkey")
+                {
+                    item = std::make_unique<AI_Keystroke>('A', 0, 0.0f, false);
+                }
+                else if (typeId == "mouse_button")
+                {
                     item = std::make_unique<AI_MouseButton>(0, 0.0f, false);
-                    break;
-                case 8:
-                    item = std::make_unique<AI_Cancel>(CancelLevel::MostRecent, 0);
-                    break;
-                case 9:
-                    item = std::make_unique<AI_Cancel>(CancelLevel::Channel, 0);
-                    break;
-                case 10:
-                    item = std::make_unique<AI_Cancel>(CancelLevel::All);
-                    break;
-                case 11:
+                }
+                else if (typeId == "mouse_move")
+                {
+                    item = std::make_unique<AI_MouseMove>(0, 0);
+                }
+                else if (typeId == "delay")
+                {
+                    item = std::make_unique<AI_Delay>(0);
+                }
+                else if (typeId == "menu")
+                {
+                    item = std::make_unique<AI_Menu>(m_menus.empty() ? "" : m_menus.front().getId());
+                }
+                else if (typeId == "search")
+                {
+                    item = std::make_unique<AI_Search>();
+                }
+                else if (typeId == "close")
+                {
+                    item = std::make_unique<AI_Close>();
+                }
+                else if (typeId == "nth_recent")
+                {
                     item = std::make_unique<AI_NthRecent>(1);
-                    break;
-                case 12:
+                }
+                else if (typeId == "nth_frequent")
+                {
                     item = std::make_unique<AI_NthFrequent>(1);
-                    break;
-                case 13:
+                }
+                else if (typeId == "cancel")
+                {
+                    item = std::make_unique<AI_Cancel>(CancelLevel::MostRecent, 0);
+                }
+                else if (typeId == "socket")
+                {
                     item = std::make_unique<AI_Socket>(
                         Platform::SocketProtocol::Udp, "127.0.0.1:9000", "", "POST");
-                    break;
-                case 14:
-                    item = std::make_unique<AI_Search>();
-                    break;
-                default:
+                }
+                else if (typeId == "script")
+                {
+                    item = std::make_unique<AI_Script>("");
+                }
+                else
+                {
                     return;
                 }
                 m_actions[actionIndex].addItem(-1, std::move(item));
@@ -1109,8 +1132,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
         }
         item->level = static_cast<CancelLevel>(m_cancelLevelCombo->currentData().toInt());
         item->channel = static_cast<uint32_t>(m_cancelChannelSpin->value());
-        const bool needsChannel = item->level == CancelLevel::MostRecent || item->level == CancelLevel::Channel;
-        m_cancelChannelSpin->setEnabled(needsChannel);
+        updateCancelChannelVisibility(item->level);
         if (item->level == CancelLevel::MostRecent)
         {
             m_cancelHelpLabel->setText(
@@ -1159,6 +1181,23 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 }
                 refreshActionItemList();
                 refreshActionSummary(); });
+    connect(m_resetFrequenciesButton, &QPushButton::clicked, this, [this]()
+            {
+                const auto answer = QMessageBox::question(
+                    this,
+                    "Reset Frequencies",
+                    "Clear all action launch frequencies? Nth Frequent ranking will start empty. "
+                    "Recent history is not affected.",
+                    QMessageBox::Yes | QMessageBox::No,
+                    QMessageBox::No);
+                if (answer != QMessageBox::Yes)
+                {
+                    return;
+                }
+                App::getInstance().resetActionFrequencies();
+                QMessageBox::information(this, "Frequencies Reset",
+                                         "All action launch frequencies have been cleared.");
+            });
     auto socketEditorChanged = [this]()
     {
         if (m_isRefreshing)
@@ -1281,6 +1320,19 @@ void SettingsWindow::updateHotkeyButtonText()
     }
 }
 
+void SettingsWindow::updateCancelChannelVisibility(CancelLevel level)
+{
+    const bool needsChannel = level == CancelLevel::MostRecent || level == CancelLevel::Channel;
+    m_cancelChannelSpin->setVisible(needsChannel);
+    if (auto *form = qobject_cast<QFormLayout *>(m_itemCancelPage->layout()))
+    {
+        if (QWidget *label = form->labelForField(m_cancelChannelSpin))
+        {
+            label->setVisible(needsChannel);
+        }
+    }
+}
+
 bool SettingsWindow::eventFilter(QObject *obj, QEvent *event)
 {
     if (m_isRecordingHotkey && event->type() == QEvent::KeyPress)
@@ -1296,17 +1348,57 @@ bool SettingsWindow::eventFilter(QObject *obj, QEvent *event)
             return true;
         }
 
+        // Escape cancels recording without changing the existing bind.
+        if (key == Qt::Key_Escape)
+        {
+            m_isRecordingHotkey = false;
+            m_hotkeyRecordButton->releaseKeyboard();
+            updateHotkeyButtonText();
+            return true;
+        }
+
         int idx = currentMenuIndex();
         if (idx >= 0)
         {
-            m_menus[idx].triggerVk = keyEvent->nativeVirtualKey();
-            m_menus[idx].triggerMod = 0;
-            
+            const int newVk = static_cast<int>(keyEvent->nativeVirtualKey());
+            int newMod = 0;
+
             Qt::KeyboardModifiers modifiers = keyEvent->modifiers();
-            if (modifiers & Qt::ControlModifier) m_menus[idx].triggerMod |= 0x0002;
-            if (modifiers & Qt::AltModifier)     m_menus[idx].triggerMod |= 0x0001;
-            if (modifiers & Qt::ShiftModifier)   m_menus[idx].triggerMod |= 0x0004;
-            if (modifiers & Qt::MetaModifier)    m_menus[idx].triggerMod |= 0x0008;
+            if (modifiers & Qt::ControlModifier) newMod |= 0x0002;
+            if (modifiers & Qt::AltModifier)     newMod |= 0x0001;
+            if (modifiers & Qt::ShiftModifier)   newMod |= 0x0004;
+            if (modifiers & Qt::MetaModifier)    newMod |= 0x0008;
+
+            QString conflictMenuName;
+            for (int i = 0; i < static_cast<int>(m_menus.size()); ++i)
+            {
+                if (i == idx)
+                {
+                    continue;
+                }
+                if (m_menus[i].triggerVk == newVk && m_menus[i].triggerMod == newMod && newVk != 0)
+                {
+                    conflictMenuName = QString::fromStdString(m_menus[i].getName());
+                    break;
+                }
+            }
+
+            if (!conflictMenuName.isEmpty())
+            {
+                QMessageBox::warning(
+                    this,
+                    "Hotkey Already Used",
+                    QString("That hotkey is already assigned to \"%1\". "
+                            "Clear the other menu's hotkey first, or choose a different combination.")
+                        .arg(conflictMenuName));
+                m_isRecordingHotkey = false;
+                m_hotkeyRecordButton->releaseKeyboard();
+                updateHotkeyButtonText();
+                return true;
+            }
+
+            m_menus[idx].triggerVk = newVk;
+            m_menus[idx].triggerMod = newMod;
         }
 
         m_isRecordingHotkey = false;
@@ -1437,10 +1529,12 @@ void SettingsWindow::refreshMenuEditor()
     const QSignalBlocker releaseBlocker(m_executeOnReleaseCheck);
     const QSignalBlocker exitBlocker(m_exitOnActionCheck);
     const QSignalBlocker centerMouseBlocker(m_centerMouseOnOpenCheck);
+    const QSignalBlocker restoreMouseBlocker(m_restoreMouseOnCloseCheck);
     m_menuNameEdit->setText(QString::fromStdString(m_menus[index].getName()));
     m_executeOnReleaseCheck->setChecked(m_menus[index].executeOnRelease);
     m_exitOnActionCheck->setChecked(m_menus[index].exitOnAction);
     m_centerMouseOnOpenCheck->setChecked(m_menus[index].centerMouseOnOpen);
+    m_restoreMouseOnCloseCheck->setChecked(m_menus[index].restoreMouseOnClose);
 
     updateHotkeyButtonText();
     refreshSlotList();
@@ -1756,8 +1850,7 @@ void SettingsWindow::refreshItemDetail()
         const int levelIndex = m_cancelLevelCombo->findData(static_cast<int>(cancel->level));
         m_cancelLevelCombo->setCurrentIndex(levelIndex >= 0 ? levelIndex : 0);
         m_cancelChannelSpin->setValue(static_cast<int>(cancel->channel));
-        const bool needsChannel = cancel->level == CancelLevel::MostRecent || cancel->level == CancelLevel::Channel;
-        m_cancelChannelSpin->setEnabled(needsChannel);
+        updateCancelChannelVisibility(cancel->level);
         if (cancel->level == CancelLevel::MostRecent)
         {
             m_cancelHelpLabel->setText(
@@ -1782,6 +1875,7 @@ void SettingsWindow::refreshItemDetail()
         const QSignalBlocker blocker(m_nthSpin);
         m_nthSpin->setValue(std::max(1, recent->n));
         m_nthHelpLabel->setText("Runs the Nth most recently launched action from the wheel (1 = most recent).");
+        m_resetFrequenciesButton->hide();
         m_itemDetailStack->setCurrentWidget(m_itemNthPage);
         return;
     }
@@ -1791,6 +1885,7 @@ void SettingsWindow::refreshItemDetail()
         const QSignalBlocker blocker(m_nthSpin);
         m_nthSpin->setValue(std::max(1, frequent->n));
         m_nthHelpLabel->setText("Runs the Nth most frequently launched action from the wheel (1 = most used).");
+        m_resetFrequenciesButton->show();
         m_itemDetailStack->setCurrentWidget(m_itemNthPage);
         return;
     }
@@ -2088,9 +2183,14 @@ QString SettingsWindow::keyDisplayName(int vk) const
     {
         return QString(QChar(vk));
     }
-    if (vk >= 0x70 && vk <= 0x7B)
+    // VK_F1 (0x70) through VK_F24 (0x87)
+    if (vk >= 0x70 && vk <= 0x87)
     {
         return QString("F%1").arg(vk - 0x6F);
+    }
+    if (vk >= 0x60 && vk <= 0x69)
+    {
+        return QString("Numpad %1").arg(vk - 0x60);
     }
 
     switch (vk)
@@ -2115,6 +2215,63 @@ QString SettingsWindow::keyDisplayName(int vk) const
         return "Backspace";
     case 0x2E:
         return "Delete";
+    case 0x2D:
+        return "Insert";
+    case 0x24:
+        return "Home";
+    case 0x23:
+        return "End";
+    case 0x21:
+        return "Page Up";
+    case 0x22:
+        return "Page Down";
+    case 0x14:
+        return "Caps Lock";
+    case 0x90:
+        return "Num Lock";
+    case 0x91:
+        return "Scroll Lock";
+    case 0x2C:
+        return "Print Screen";
+    case 0x13:
+        return "Pause";
+    case 0x5D:
+        return "Menu";
+    // OEM / punctuation (US layout labels; Shift variants noted where useful)
+    case 0xBA:
+        return "; / :";
+    case 0xBB:
+        return "= / +";
+    case 0xBC:
+        return ", / <";
+    case 0xBD:
+        return "- / _";
+    case 0xBE:
+        return ". / >";
+    case 0xBF:
+        return "Slash / ?";
+    case 0xC0:
+        return "` / ~";
+    case 0xDB:
+        return "[ / {";
+    case 0xDC:
+        return "\\ / |";
+    case 0xDD:
+        return "] / }";
+    case 0xDE:
+        return "' / \"";
+    // Numpad operators
+    case 0x6A:
+        return "Numpad *";
+    case 0x6B:
+        return "Numpad +";
+    case 0x6D:
+        return "Numpad -";
+    case 0x6E:
+        return "Numpad .";
+    case 0x6F:
+        return "Numpad /";
+    // Media
     case 0xAD:
         return "Mute";
     case 0xAE:
@@ -2131,6 +2288,27 @@ QString SettingsWindow::keyDisplayName(int vk) const
         return "Play/Pause";
     case 0xB5:
         return "Media Select";
+    // Browser / launch
+    case 0xA6:
+        return "Browser Back";
+    case 0xA7:
+        return "Browser Forward";
+    case 0xA8:
+        return "Browser Refresh";
+    case 0xA9:
+        return "Browser Stop";
+    case 0xAA:
+        return "Browser Search";
+    case 0xAB:
+        return "Browser Favorites";
+    case 0xAC:
+        return "Browser Home";
+    case 0xB4:
+        return "Launch Mail";
+    case 0xB6:
+        return "Launch App 1";
+    case 0xB7:
+        return "Launch App 2";
     default:
         return QString("Key %1").arg(vk);
     }
@@ -2167,16 +2345,79 @@ void SettingsWindow::populateHotkeyKeyCombo()
         m_hotkeyKeyCombo->addItem(QString(QChar(key)), key);
     }
 
-    const std::vector<int> extraKeys = {
-        0x0D, 0x09, 0x1B, 0x20, 0x25, 0x26, 0x27, 0x28, 0x08, 0x2E,
-        0x70, 0x71, 0x72, 0x73, 0x74, 0x75,
-        0x76, 0x77, 0x78, 0x79, 0x7A, 0x7B};
-    for (int key : extraKeys)
+    // Editing / navigation
+    const std::vector<int> navKeys = {
+        0x0D, // Enter
+        0x09, // Tab
+        0x1B, // Esc
+        0x20, // Space
+        0x08, // Backspace
+        0x2E, // Delete
+        0x2D, // Insert
+        0x25, // Left
+        0x26, // Up
+        0x27, // Right
+        0x28, // Down
+        0x24, // Home
+        0x23, // End
+        0x21, // Page Up
+        0x22, // Page Down
+        0x14, // Caps Lock
+        0x90, // Num Lock
+        0x91, // Scroll Lock
+        0x2C, // Print Screen
+        0x13, // Pause
+        0x5D, // Menu (Apps)
+    };
+    for (int key : navKeys)
     {
         m_hotkeyKeyCombo->addItem(keyDisplayName(key), key);
     }
 
-    // Windows media keys (VK_VOLUME_* / VK_MEDIA_*). Sent without modifiers.
+    // F1–F24
+    for (int key = 0x70; key <= 0x87; ++key)
+    {
+        m_hotkeyKeyCombo->addItem(keyDisplayName(key), key);
+    }
+
+    // OEM punctuation (US layout). Use Shift modifier for the shifted glyph
+    // (e.g. Shift + "- / _" for underscore, Shift + "= / +" for plus).
+    const std::vector<int> symbolKeys = {
+        0xBD, // - / _
+        0xBB, // = / +
+        0xBA, // ; / :
+        0xDE, // ' / "
+        0xBC, // , / <
+        0xBE, // . / >
+        0xBF, // / / ?
+        0xC0, // ` / ~
+        0xDB, // [ / {
+        0xDD, // ] / }
+        0xDC, // \ / |
+    };
+    for (int key : symbolKeys)
+    {
+        m_hotkeyKeyCombo->addItem(keyDisplayName(key), key);
+    }
+
+    // Numpad 0–9 and operators
+    for (int key = 0x60; key <= 0x69; ++key)
+    {
+        m_hotkeyKeyCombo->addItem(keyDisplayName(key), key);
+    }
+    const std::vector<int> numpadOps = {
+        0x6A, // *
+        0x6B, // +
+        0x6D, // -
+        0x6E, // .
+        0x6F, // /
+    };
+    for (int key : numpadOps)
+    {
+        m_hotkeyKeyCombo->addItem(keyDisplayName(key), key);
+    }
+
+    // Windows media keys. Sent without modifiers.
     const std::vector<int> mediaKeys = {
         0xB3, // Play/Pause
         0xB0, // Next Track
@@ -2190,6 +2431,24 @@ void SettingsWindow::populateHotkeyKeyCombo()
     for (int key : mediaKeys)
     {
         m_hotkeyKeyCombo->addItem(QString("Media: %1").arg(keyDisplayName(key)), key);
+    }
+
+    // Browser / launch keys (same SendInput path as media).
+    const std::vector<int> browserKeys = {
+        0xA6, // Browser Back
+        0xA7, // Browser Forward
+        0xA8, // Browser Refresh
+        0xA9, // Browser Stop
+        0xAA, // Browser Search
+        0xAB, // Browser Favorites
+        0xAC, // Browser Home
+        0xB4, // Launch Mail
+        0xB6, // Launch App 1
+        0xB7, // Launch App 2
+    };
+    for (int key : browserKeys)
+    {
+        m_hotkeyKeyCombo->addItem(keyDisplayName(key), key);
     }
 }
 
@@ -2260,6 +2519,7 @@ void SettingsWindow::deleteActionReferences(const std::string &actionId)
                          menu.executeOnRelease,
                          menu.exitOnAction,
                          menu.centerMouseOnOpen,
+                         menu.restoreMouseOnClose,
                          menu.getName(),
                          keptIds,
                          menu.getId());
@@ -2516,8 +2776,9 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
     }
 
     std::vector<std::string> menuIds;
-    for (const Menu &menu : m_menus)
+    for (int menuIndex = 0; menuIndex < static_cast<int>(m_menus.size()); ++menuIndex)
     {
+        const Menu &menu = m_menus[menuIndex];
         if (menu.getId().empty())
         {
             errorMessage = "Every menu must have a non-empty ID.";
@@ -2529,6 +2790,21 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
             return false;
         }
         menuIds.push_back(menu.getId());
+
+        if (menu.triggerVk != 0)
+        {
+            for (int otherIndex = 0; otherIndex < menuIndex; ++otherIndex)
+            {
+                const Menu &other = m_menus[otherIndex];
+                if (other.triggerVk == menu.triggerVk && other.triggerMod == menu.triggerMod)
+                {
+                    errorMessage = QString("Menus '%1' and '%2' share the same trigger hotkey.")
+                                       .arg(QString::fromStdString(other.getName()))
+                                       .arg(QString::fromStdString(menu.getName()));
+                    return false;
+                }
+            }
+        }
 
         for (const std::string &actionId : menu.getActionIds())
         {

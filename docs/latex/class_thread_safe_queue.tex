@@ -1,0 +1,219 @@
+\doxysection{Thread\+Safe\+Queue\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{class_thread_safe_queue}{}\label{class_thread_safe_queue}\index{ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}}
+
+
+Multi-\/producer /\+ multi-\/consumer FIFO queue.  
+
+
+
+
+{\ttfamily \+\#include $<$Thread\+Safe\+Queue.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_thread_safe_queue_af45207558b0c6b3b110ba35424c7b28d}{Thread\+Safe\+Queue}} ()=default
+\item 
+\doxymbox{\hyperlink{class_thread_safe_queue_abf15d4efc97a505a5bf0886d865d002d}{Thread\+Safe\+Queue}} (const \doxymbox{\hyperlink{class_thread_safe_queue}{Thread\+Safe\+Queue}} \&)=delete
+\item 
+\doxymbox{\hyperlink{class_thread_safe_queue_a95be21b53187837d16f248ffbc05538c}{Thread\+Safe\+Queue}} (\doxymbox{\hyperlink{class_thread_safe_queue}{Thread\+Safe\+Queue}} \&\&)=delete
+\item 
+\doxymbox{\hyperlink{class_thread_safe_queue}{Thread\+Safe\+Queue}} \& \doxymbox{\hyperlink{class_thread_safe_queue_a0b7b29586d4f7857bdf49b5eef6c748c}{operator=}} (const \doxymbox{\hyperlink{class_thread_safe_queue}{Thread\+Safe\+Queue}} \&)=delete
+\item 
+\doxymbox{\hyperlink{class_thread_safe_queue}{Thread\+Safe\+Queue}} \& \doxymbox{\hyperlink{class_thread_safe_queue_a7c8718f55d3522b1423d4261f24b08dc}{operator=}} (\doxymbox{\hyperlink{class_thread_safe_queue}{Thread\+Safe\+Queue}} \&\&)=delete
+\item 
+\doxymbox{\hyperlink{class_thread_safe_queue_a30ee67e6ef7e1b46879213dfa2e418a4}{\texorpdfstring{$\sim$}{\string~}\+Thread\+Safe\+Queue}} ()
+\item 
+void \doxymbox{\hyperlink{class_thread_safe_queue_ac6d515e0f2ccfd91e7f4394cfaaf36e7}{push}} (T value)
+\begin{DoxyCompactList}\small\item\em Enqueues an item and wakes one waiter. Ignored if the queue has already been stopped. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_thread_safe_queue_af59fea1a8e680ffdf6f6d4a228010f22}{pop}} (T \&out)
+\begin{DoxyCompactList}\small\item\em Blocks until an item is available, or the queue is stopped and empty. \end{DoxyCompactList}\item 
+Queue\+Wait\+Status \doxymbox{\hyperlink{class_thread_safe_queue_aa31aa9499fd42c797afb060e1543bcfc}{pop\+Wait\+Until}} (T \&out, std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point deadline)
+\begin{DoxyCompactList}\small\item\em Waits until an item is available, {\ttfamily deadline} passes, or the queue stops. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_thread_safe_queue_a1be9bdb2d196ceb99309d7dbb83a0d9a}{try\+Pop}} (T \&out)
+\begin{DoxyCompactList}\small\item\em Tries to pop without blocking. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_thread_safe_queue_a17b5a31b1c132ce8ea7e5171be6a3cc3}{empty}} () const
+\begin{DoxyCompactList}\small\item\em Whether the queue currently holds no items. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_thread_safe_queue_a29ab143c781412ccf8b68f50301fb327}{clear}} ()
+\begin{DoxyCompactList}\small\item\em Discards all queued items. In-\/flight pop waiters are not given discarded elements. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_thread_safe_queue_ab96cd24a1ffe6bcc62ab10c76357a91e}{stop}} ()
+\begin{DoxyCompactList}\small\item\em Permanently stops the queue and wakes all waiters. Remaining items can still be popped until the queue is drained. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_thread_safe_queue_a4c75a3a772412c8b2fcbc9fd136423c0}{stopped}} () const
+\begin{DoxyCompactList}\small\item\em Whether \doxylink{class_thread_safe_queue_ab96cd24a1ffe6bcc62ab10c76357a91e}{stop()} has been called. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename T$>$\newline
+class Thread\+Safe\+Queue$<$ T $>$}
+Multi-\/producer /\+ multi-\/consumer FIFO queue. 
+
+Suitable for worker inbound/\+outbound queues and the scheduler mailbox.
+
+Lifecycle:\+
+\begin{DoxyItemize}
+\item push /\+ pop while running.
+\item \doxylink{class_thread_safe_queue_ab96cd24a1ffe6bcc62ab10c76357a91e}{stop()} is permanent; further pushes are ignored.
+\item After \doxylink{class_thread_safe_queue_ab96cd24a1ffe6bcc62ab10c76357a91e}{stop()}, consumers drain remaining items; then pop returns false /\+ Stopped. 
+\end{DoxyItemize}
+
+\label{class_thread_safe_queue_doc-constructors}
+\Hypertarget{class_thread_safe_queue_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_thread_safe_queue_af45207558b0c6b3b110ba35424c7b28d}\index{ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}!ThreadSafeQueue@{ThreadSafeQueue}}
+\index{ThreadSafeQueue@{ThreadSafeQueue}!ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ThreadSafeQueue()}{ThreadSafeQueue()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{class_thread_safe_queue_af45207558b0c6b3b110ba35424c7b28d} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{class_application_1_1_thread_safe_queue}{Application::\+\+Thread\+Safe\+Queue}}$<$ T $>$::\+\+Thread\+Safe\+Queue (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+\Hypertarget{class_thread_safe_queue_abf15d4efc97a505a5bf0886d865d002d}\index{ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}!ThreadSafeQueue@{ThreadSafeQueue}}
+\index{ThreadSafeQueue@{ThreadSafeQueue}!ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ThreadSafeQueue()}{ThreadSafeQueue()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{class_thread_safe_queue_abf15d4efc97a505a5bf0886d865d002d} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{class_application_1_1_thread_safe_queue}{Application::\+\+Thread\+Safe\+Queue}}$<$ T $>$::\+\+Thread\+Safe\+Queue (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_thread_safe_queue}{Thread\+Safe\+Queue}}$<$ T $>$ \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_thread_safe_queue_a95be21b53187837d16f248ffbc05538c}\index{ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}!ThreadSafeQueue@{ThreadSafeQueue}}
+\index{ThreadSafeQueue@{ThreadSafeQueue}!ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ThreadSafeQueue()}{ThreadSafeQueue()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{class_thread_safe_queue_a95be21b53187837d16f248ffbc05538c} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{class_application_1_1_thread_safe_queue}{Application::\+\+Thread\+Safe\+Queue}}$<$ T $>$::\+\+Thread\+Safe\+Queue (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_thread_safe_queue}{Thread\+Safe\+Queue}}$<$ T $>$ \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_thread_safe_queue_a30ee67e6ef7e1b46879213dfa2e418a4}\index{ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}!````~ThreadSafeQueue@{\texorpdfstring{$\sim$}{\string~}ThreadSafeQueue}}
+\index{````~ThreadSafeQueue@{\texorpdfstring{$\sim$}{\string~}ThreadSafeQueue}!ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}ThreadSafeQueue()}{\string~ThreadSafeQueue()}}
+{\footnotesize\ttfamily \label{class_thread_safe_queue_a30ee67e6ef7e1b46879213dfa2e418a4} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{class_application_1_1_thread_safe_queue}{Application::\+\+Thread\+Safe\+Queue}}$<$ T $>$::\+\texorpdfstring{$\sim$}{\string~}\doxymbox{\hyperlink{class_thread_safe_queue}{Thread\+Safe\+Queue}} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\label{class_thread_safe_queue_doc-func-members}
+\Hypertarget{class_thread_safe_queue_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_thread_safe_queue_a29ab143c781412ccf8b68f50301fb327}\index{ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}!clear@{clear}}
+\index{clear@{clear}!ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{clear()}{clear()}}
+{\footnotesize\ttfamily \label{class_thread_safe_queue_a29ab143c781412ccf8b68f50301fb327} 
+template$<$typename T$>$ \\
+void \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue}{Application::\+\+Thread\+Safe\+Queue}}$<$ T $>$::\+clear (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Discards all queued items. In-\/flight pop waiters are not given discarded elements. 
+
+\Hypertarget{class_thread_safe_queue_a17b5a31b1c132ce8ea7e5171be6a3cc3}\index{ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}!empty@{empty}}
+\index{empty@{empty}!ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{empty()}{empty()}}
+{\footnotesize\ttfamily \label{class_thread_safe_queue_a17b5a31b1c132ce8ea7e5171be6a3cc3} 
+template$<$typename T$>$ \\
+bool \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue}{Application::\+\+Thread\+Safe\+Queue}}$<$ T $>$::\+empty (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Whether the queue currently holds no items. 
+
+\Hypertarget{class_thread_safe_queue_a0b7b29586d4f7857bdf49b5eef6c748c}\index{ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_thread_safe_queue_a0b7b29586d4f7857bdf49b5eef6c748c} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{class_thread_safe_queue}{Thread\+Safe\+Queue}} \& \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue}{Application::\+\+Thread\+Safe\+Queue}}$<$ T $>$::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_thread_safe_queue}{Thread\+Safe\+Queue}}$<$ T $>$ \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_thread_safe_queue_a7c8718f55d3522b1423d4261f24b08dc}\index{ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}!operator=@{operator=}}
+\index{operator=@{operator=}!ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_thread_safe_queue_a7c8718f55d3522b1423d4261f24b08dc} 
+template$<$typename T$>$ \\
+\doxymbox{\hyperlink{class_thread_safe_queue}{Thread\+Safe\+Queue}} \& \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue}{Application::\+\+Thread\+Safe\+Queue}}$<$ T $>$::\+operator= (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_thread_safe_queue}{Thread\+Safe\+Queue}}$<$ T $>$ \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_thread_safe_queue_af59fea1a8e680ffdf6f6d4a228010f22}\index{ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}!pop@{pop}}
+\index{pop@{pop}!ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{pop()}{pop()}}
+{\footnotesize\ttfamily \label{class_thread_safe_queue_af59fea1a8e680ffdf6f6d4a228010f22} 
+template$<$typename T$>$ \\
+bool \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue}{Application::\+\+Thread\+Safe\+Queue}}$<$ T $>$::\+pop (\begin{DoxyParamCaption}\item[{T \&}]{out}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Blocks until an item is available, or the queue is stopped and empty. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{out}}  & {\em out} & Receives the popped value on success. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if {\ttfamily out} received an item; false if stopped and drained. 
+\end{DoxyReturn}
+\Hypertarget{class_thread_safe_queue_aa31aa9499fd42c797afb060e1543bcfc}\index{ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}!popWaitUntil@{popWaitUntil}}
+\index{popWaitUntil@{popWaitUntil}!ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{popWaitUntil()}{popWaitUntil()}}
+{\footnotesize\ttfamily \label{class_thread_safe_queue_aa31aa9499fd42c797afb060e1543bcfc} 
+template$<$typename T$>$ \\
+Queue\+Wait\+Status \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue}{Application::\+\+Thread\+Safe\+Queue}}$<$ T $>$::\+pop\+Wait\+Until (\begin{DoxyParamCaption}\item[{T \&}]{out}{, }\item[{std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point}]{deadline}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Waits until an item is available, {\ttfamily deadline} passes, or the queue stops. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\doxymbox{\texttt{out}}  & {\em out} & Receives the popped value when status is Item. \\
+\hline
+ & {\em deadline} & Steady-\/clock time to wake if still empty. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_thread_safe_queue_ac6d515e0f2ccfd91e7f4394cfaaf36e7}\index{ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}!push@{push}}
+\index{push@{push}!ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{push()}{push()}}
+{\footnotesize\ttfamily \label{class_thread_safe_queue_ac6d515e0f2ccfd91e7f4394cfaaf36e7} 
+template$<$typename T$>$ \\
+void \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue}{Application::\+\+Thread\+Safe\+Queue}}$<$ T $>$::\+push (\begin{DoxyParamCaption}\item[{T}]{value}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Enqueues an item and wakes one waiter. Ignored if the queue has already been stopped. 
+
+\Hypertarget{class_thread_safe_queue_ab96cd24a1ffe6bcc62ab10c76357a91e}\index{ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}!stop@{stop}}
+\index{stop@{stop}!ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{stop()}{stop()}}
+{\footnotesize\ttfamily \label{class_thread_safe_queue_ab96cd24a1ffe6bcc62ab10c76357a91e} 
+template$<$typename T$>$ \\
+void \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue}{Application::\+\+Thread\+Safe\+Queue}}$<$ T $>$::\+stop (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Permanently stops the queue and wakes all waiters. Remaining items can still be popped until the queue is drained. 
+
+\Hypertarget{class_thread_safe_queue_a4c75a3a772412c8b2fcbc9fd136423c0}\index{ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}!stopped@{stopped}}
+\index{stopped@{stopped}!ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{stopped()}{stopped()}}
+{\footnotesize\ttfamily \label{class_thread_safe_queue_a4c75a3a772412c8b2fcbc9fd136423c0} 
+template$<$typename T$>$ \\
+bool \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue}{Application::\+\+Thread\+Safe\+Queue}}$<$ T $>$::\+stopped (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Whether \doxylink{class_thread_safe_queue_ab96cd24a1ffe6bcc62ab10c76357a91e}{stop()} has been called. 
+
+\Hypertarget{class_thread_safe_queue_a1be9bdb2d196ceb99309d7dbb83a0d9a}\index{ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}!tryPop@{tryPop}}
+\index{tryPop@{tryPop}!ThreadSafeQueue$<$ T $>$@{ThreadSafeQueue$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{tryPop()}{tryPop()}}
+{\footnotesize\ttfamily \label{class_thread_safe_queue_a1be9bdb2d196ceb99309d7dbb83a0d9a} 
+template$<$typename T$>$ \\
+bool \doxymbox{\hyperlink{class_application_1_1_thread_safe_queue}{Application::\+\+Thread\+Safe\+Queue}}$<$ T $>$::\+try\+Pop (\begin{DoxyParamCaption}\item[{T \&}]{out}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}}
+
+
+
+Tries to pop without blocking. 
+
+\begin{DoxyReturn}{Returns}
+true if {\ttfamily out} received an item. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_thread_safe_queue_8hpp}{Thread\+Safe\+Queue.\+hpp}}\end{DoxyCompactItemize}

@@ -101,8 +101,6 @@ namespace Application
         QLabel *m_titleLabel{nullptr};
         RadialMenuWidget *m_radialMenu{nullptr};
         QPushButton *m_settingsButton{nullptr};
-        /// @brief Kept for now so the older UI affordance still exists visually.
-        QPushButton *m_editButton{nullptr};
         OverlayMode m_overlayMode{OverlayMode::Dormant};
     };
 }

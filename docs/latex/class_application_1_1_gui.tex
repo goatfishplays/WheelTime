@@ -1,0 +1,264 @@
+\doxysection{Application::\+Gui Class Reference}
+\hypertarget{class_application_1_1_gui}{}\label{class_application_1_1_gui}\index{Application::Gui@{Application::Gui}}
+
+
+Hosts the wheel widget and top-\/level launcher controls.  
+
+
+
+
+{\ttfamily \+\#include $<$Gui.\+hpp$>$}
+
+Inheritance diagram for Application::\+Gui:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_application_1_1_gui}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Signals}
+\begin{DoxyCompactItemize}
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_gui_a0acfabe787f4d77a3ad8bc39995d80c9}{escape\+Pressed}} ()
+\begin{DoxyCompactList}\small\item\em Emitted when the launcher should be dismissed with Escape. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_gui_a6a932fe7ca79f8671d2ab90624cf8e84}{Gui}} (QWidget \texorpdfstring{$\ast$}{*}parent=nullptr)
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_gui_aeaf4b881c04117913c6f63ff755ea7c6}{on\+Select\+Change}} (int selection\+Ind)
+\begin{DoxyCompactList}\small\item\em Updates hover/\+selection presentation for the active slot. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_gui_a2b0c8627f1572ca9a34ef1e529e73ef5}{set\+Menu}} (const \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \&menu, const std::\+vector$<$ \doxymbox{\hyperlink{struct_application_1_1_action_slot_visual}{Action\+Slot\+Visual}} $>$ \&slot\+Visuals)
+\begin{DoxyCompactList}\small\item\em Displays a menu plus the resolved labels/\+icons for its action slots. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_gui_a979949769a57216c85992831e1fc9aaf}{enter\+Interactive\+Overlay}} ()
+\begin{DoxyCompactList}\small\item\em Puts the overlay into visible, mouse-\/interactive mode. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_gui_ac5185bbff4d07ddf1092e2448d73a177}{enter\+Dormant\+Overlay}} ()
+\begin{DoxyCompactList}\small\item\em Hides launcher visuals and leaves the shell alive for click-\/through mode. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_gui_a48d241b53c0793406de96ce11733ef3c}{show\+Settings\+Panel}} (\doxymbox{\hyperlink{class_application_1_1_settings_window}{Settings\+Window}} \texorpdfstring{$\ast$}{*}settings\+Window)
+\begin{DoxyCompactList}\small\item\em Shows the settings editor inside the overlay shell. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_gui_ad1e0b8d2ebeedfac6a322e926cf78713}{hide\+Settings\+Panel}} ()
+\begin{DoxyCompactList}\small\item\em Hides the embedded settings editor without destroying it. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_gui_a8f2b23955a1d9ca0ac30ecdb3b2f3c2b}{show\+Search\+Panel}} (const \doxymbox{\hyperlink{struct_application_1_1_search_config}{Search\+Config}} \&config)
+\begin{DoxyCompactList}\small\item\em Shows the search palette inside the overlay shell. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_gui_a784a16eecf2656c26071417aad9e11e3}{hide\+Search\+Panel}} ()
+\begin{DoxyCompactList}\small\item\em Hides the search palette without destroying it. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_gui_aea7d5eb588fbe38332db34c78ce822ad}{focus\+Search\+Input}} ()
+\begin{DoxyCompactList}\small\item\em Puts keyboard focus in the search palette\textquotesingle{}s input field. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_gui_a3564048ab1384ca1d689e3ce012ae969}{preload\+Search\+Index}} ()
+\begin{DoxyCompactList}\small\item\em Kicks off the background program-\/index scan at startup so the first search open is instant. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_gui_a022414fc173978080f57bcff78176b18}{is\+Launcher\+Visible}} () const
+\begin{DoxyCompactList}\small\item\em Whether the launcher visuals are currently visible. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_gui_ad0a78260802f6cbe9aef2e106087f280}{is\+Settings\+Visible}} () const
+\begin{DoxyCompactList}\small\item\em Whether the overlay is currently showing the embedded settings editor. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_gui_a2a8b7743158e15b5e8e77f827841be8d}{is\+Search\+Visible}} () const
+\begin{DoxyCompactList}\small\item\em Whether the overlay is currently showing the search palette. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_gui_a4615bfb312c4d5b3b72a2dd2d57bca09}{refresh\+Selection\+From\+Cursor}} ()
+\begin{DoxyCompactList}\small\item\em Seeds Distance-\/mode selection from the current cursor position. \end{DoxyCompactList}\item 
+int \doxymbox{\hyperlink{class_application_1_1_gui_a85a0a8e551e8b2623334a4f8b5fc82ee}{selected\+Action\+Index}} () const
+\begin{DoxyCompactList}\small\item\em Currently selected wheel slot, or -\/1 when none. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \doxymbox{\hyperlink{class_application_1_1_gui_acde0313879b68f06db5d4c19ff128b3b}{event\+Filter}} (QObject \texorpdfstring{$\ast$}{*}watched, QEvent \texorpdfstring{$\ast$}{*}event) override
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_gui_aabe07a671c9edf148eb6e6b371fb9dd5}{key\+Press\+Event}} (QKey\+Event \texorpdfstring{$\ast$}{*}event) override
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Hosts the wheel widget and top-\/level launcher controls. 
+
+{\ttfamily \doxylink{class_application_1_1_gui}{Gui}} is intentionally thin:\+ it shows a menu, forwards selection changes, and exposes a couple of high-\/level signals while the heavier editing logic lives in {\ttfamily \doxylink{class_application_1_1_settings_window}{Settings\+Window}}. 
+
+\label{class_application_1_1_gui_doc-constructors}
+\Hypertarget{class_application_1_1_gui_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_gui_a6a932fe7ca79f8671d2ab90624cf8e84}\index{Application::Gui@{Application::Gui}!Gui@{Gui}}
+\index{Gui@{Gui}!Application::Gui@{Application::Gui}}
+\doxysubsubsection{\texorpdfstring{Gui()}{Gui()}}
+{\footnotesize\ttfamily \label{class_application_1_1_gui_a6a932fe7ca79f8671d2ab90624cf8e84} 
+Gui::\+\+Gui (\begin{DoxyParamCaption}\item[{QWidget \texorpdfstring{$\ast$}{*}}]{parent}{ = {\ttfamily nullptr}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+\label{class_application_1_1_gui_doc-func-members}
+\Hypertarget{class_application_1_1_gui_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_gui_ac5185bbff4d07ddf1092e2448d73a177}\index{Application::Gui@{Application::Gui}!enterDormantOverlay@{enterDormantOverlay}}
+\index{enterDormantOverlay@{enterDormantOverlay}!Application::Gui@{Application::Gui}}
+\doxysubsubsection{\texorpdfstring{enterDormantOverlay()}{enterDormantOverlay()}}
+{\footnotesize\ttfamily \label{class_application_1_1_gui_ac5185bbff4d07ddf1092e2448d73a177} 
+void Gui::\+enter\+Dormant\+Overlay (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Hides launcher visuals and leaves the shell alive for click-\/through mode. 
+
+\Hypertarget{class_application_1_1_gui_a979949769a57216c85992831e1fc9aaf}\index{Application::Gui@{Application::Gui}!enterInteractiveOverlay@{enterInteractiveOverlay}}
+\index{enterInteractiveOverlay@{enterInteractiveOverlay}!Application::Gui@{Application::Gui}}
+\doxysubsubsection{\texorpdfstring{enterInteractiveOverlay()}{enterInteractiveOverlay()}}
+{\footnotesize\ttfamily \label{class_application_1_1_gui_a979949769a57216c85992831e1fc9aaf} 
+void Gui::\+enter\+Interactive\+Overlay (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Puts the overlay into visible, mouse-\/interactive mode. 
+
+\Hypertarget{class_application_1_1_gui_a0acfabe787f4d77a3ad8bc39995d80c9}\index{Application::Gui@{Application::Gui}!escapePressed@{escapePressed}}
+\index{escapePressed@{escapePressed}!Application::Gui@{Application::Gui}}
+\doxysubsubsection{\texorpdfstring{escapePressed}{escapePressed}}
+{\footnotesize\ttfamily \label{class_application_1_1_gui_a0acfabe787f4d77a3ad8bc39995d80c9} 
+void Application::\+\+Gui::\+escape\+Pressed (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [signal]}}
+
+
+
+Emitted when the launcher should be dismissed with Escape. 
+
+\Hypertarget{class_application_1_1_gui_acde0313879b68f06db5d4c19ff128b3b}\index{Application::Gui@{Application::Gui}!eventFilter@{eventFilter}}
+\index{eventFilter@{eventFilter}!Application::Gui@{Application::Gui}}
+\doxysubsubsection{\texorpdfstring{eventFilter()}{eventFilter()}}
+{\footnotesize\ttfamily \label{class_application_1_1_gui_acde0313879b68f06db5d4c19ff128b3b} 
+bool Gui::\+event\+Filter (\begin{DoxyParamCaption}\item[{QObject \texorpdfstring{$\ast$}{*}}]{watched}{, }\item[{QEvent \texorpdfstring{$\ast$}{*}}]{event}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}}
+
+\Hypertarget{class_application_1_1_gui_aea7d5eb588fbe38332db34c78ce822ad}\index{Application::Gui@{Application::Gui}!focusSearchInput@{focusSearchInput}}
+\index{focusSearchInput@{focusSearchInput}!Application::Gui@{Application::Gui}}
+\doxysubsubsection{\texorpdfstring{focusSearchInput()}{focusSearchInput()}}
+{\footnotesize\ttfamily \label{class_application_1_1_gui_aea7d5eb588fbe38332db34c78ce822ad} 
+void Gui::\+focus\+Search\+Input (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Puts keyboard focus in the search palette\textquotesingle{}s input field. 
+
+\Hypertarget{class_application_1_1_gui_a784a16eecf2656c26071417aad9e11e3}\index{Application::Gui@{Application::Gui}!hideSearchPanel@{hideSearchPanel}}
+\index{hideSearchPanel@{hideSearchPanel}!Application::Gui@{Application::Gui}}
+\doxysubsubsection{\texorpdfstring{hideSearchPanel()}{hideSearchPanel()}}
+{\footnotesize\ttfamily \label{class_application_1_1_gui_a784a16eecf2656c26071417aad9e11e3} 
+void Gui::\+hide\+Search\+Panel (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Hides the search palette without destroying it. 
+
+\Hypertarget{class_application_1_1_gui_ad1e0b8d2ebeedfac6a322e926cf78713}\index{Application::Gui@{Application::Gui}!hideSettingsPanel@{hideSettingsPanel}}
+\index{hideSettingsPanel@{hideSettingsPanel}!Application::Gui@{Application::Gui}}
+\doxysubsubsection{\texorpdfstring{hideSettingsPanel()}{hideSettingsPanel()}}
+{\footnotesize\ttfamily \label{class_application_1_1_gui_ad1e0b8d2ebeedfac6a322e926cf78713} 
+void Gui::\+hide\+Settings\+Panel (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Hides the embedded settings editor without destroying it. 
+
+\Hypertarget{class_application_1_1_gui_a022414fc173978080f57bcff78176b18}\index{Application::Gui@{Application::Gui}!isLauncherVisible@{isLauncherVisible}}
+\index{isLauncherVisible@{isLauncherVisible}!Application::Gui@{Application::Gui}}
+\doxysubsubsection{\texorpdfstring{isLauncherVisible()}{isLauncherVisible()}}
+{\footnotesize\ttfamily \label{class_application_1_1_gui_a022414fc173978080f57bcff78176b18} 
+bool Gui::\+is\+Launcher\+Visible (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Whether the launcher visuals are currently visible. 
+
+\Hypertarget{class_application_1_1_gui_a2a8b7743158e15b5e8e77f827841be8d}\index{Application::Gui@{Application::Gui}!isSearchVisible@{isSearchVisible}}
+\index{isSearchVisible@{isSearchVisible}!Application::Gui@{Application::Gui}}
+\doxysubsubsection{\texorpdfstring{isSearchVisible()}{isSearchVisible()}}
+{\footnotesize\ttfamily \label{class_application_1_1_gui_a2a8b7743158e15b5e8e77f827841be8d} 
+bool Gui::\+is\+Search\+Visible (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Whether the overlay is currently showing the search palette. 
+
+\Hypertarget{class_application_1_1_gui_ad0a78260802f6cbe9aef2e106087f280}\index{Application::Gui@{Application::Gui}!isSettingsVisible@{isSettingsVisible}}
+\index{isSettingsVisible@{isSettingsVisible}!Application::Gui@{Application::Gui}}
+\doxysubsubsection{\texorpdfstring{isSettingsVisible()}{isSettingsVisible()}}
+{\footnotesize\ttfamily \label{class_application_1_1_gui_ad0a78260802f6cbe9aef2e106087f280} 
+bool Gui::\+is\+Settings\+Visible (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+
+
+Whether the overlay is currently showing the embedded settings editor. 
+
+\Hypertarget{class_application_1_1_gui_aabe07a671c9edf148eb6e6b371fb9dd5}\index{Application::Gui@{Application::Gui}!keyPressEvent@{keyPressEvent}}
+\index{keyPressEvent@{keyPressEvent}!Application::Gui@{Application::Gui}}
+\doxysubsubsection{\texorpdfstring{keyPressEvent()}{keyPressEvent()}}
+{\footnotesize\ttfamily \label{class_application_1_1_gui_aabe07a671c9edf148eb6e6b371fb9dd5} 
+void Gui::\+key\+Press\+Event (\begin{DoxyParamCaption}\item[{QKey\+Event \texorpdfstring{$\ast$}{*}}]{event}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}}
+
+\Hypertarget{class_application_1_1_gui_aeaf4b881c04117913c6f63ff755ea7c6}\index{Application::Gui@{Application::Gui}!onSelectChange@{onSelectChange}}
+\index{onSelectChange@{onSelectChange}!Application::Gui@{Application::Gui}}
+\doxysubsubsection{\texorpdfstring{onSelectChange()}{onSelectChange()}}
+{\footnotesize\ttfamily \label{class_application_1_1_gui_aeaf4b881c04117913c6f63ff755ea7c6} 
+void Gui::\+on\+Select\+Change (\begin{DoxyParamCaption}\item[{int}]{selection\+Ind}{}\end{DoxyParamCaption})}
+
+
+
+Updates hover/\+selection presentation for the active slot. 
+
+\Hypertarget{class_application_1_1_gui_a3564048ab1384ca1d689e3ce012ae969}\index{Application::Gui@{Application::Gui}!preloadSearchIndex@{preloadSearchIndex}}
+\index{preloadSearchIndex@{preloadSearchIndex}!Application::Gui@{Application::Gui}}
+\doxysubsubsection{\texorpdfstring{preloadSearchIndex()}{preloadSearchIndex()}}
+{\footnotesize\ttfamily \label{class_application_1_1_gui_a3564048ab1384ca1d689e3ce012ae969} 
+void Gui::\+preload\+Search\+Index (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Kicks off the background program-\/index scan at startup so the first search open is instant. 
+
+\Hypertarget{class_application_1_1_gui_a4615bfb312c4d5b3b72a2dd2d57bca09}\index{Application::Gui@{Application::Gui}!refreshSelectionFromCursor@{refreshSelectionFromCursor}}
+\index{refreshSelectionFromCursor@{refreshSelectionFromCursor}!Application::Gui@{Application::Gui}}
+\doxysubsubsection{\texorpdfstring{refreshSelectionFromCursor()}{refreshSelectionFromCursor()}}
+{\footnotesize\ttfamily \label{class_application_1_1_gui_a4615bfb312c4d5b3b72a2dd2d57bca09} 
+void Gui::\+refresh\+Selection\+From\+Cursor (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Seeds Distance-\/mode selection from the current cursor position. 
+
+\Hypertarget{class_application_1_1_gui_a85a0a8e551e8b2623334a4f8b5fc82ee}\index{Application::Gui@{Application::Gui}!selectedActionIndex@{selectedActionIndex}}
+\index{selectedActionIndex@{selectedActionIndex}!Application::Gui@{Application::Gui}}
+\doxysubsubsection{\texorpdfstring{selectedActionIndex()}{selectedActionIndex()}}
+{\footnotesize\ttfamily \label{class_application_1_1_gui_a85a0a8e551e8b2623334a4f8b5fc82ee} 
+int Gui::\+selected\+Action\+Index (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Currently selected wheel slot, or -\/1 when none. 
+
+\Hypertarget{class_application_1_1_gui_a2b0c8627f1572ca9a34ef1e529e73ef5}\index{Application::Gui@{Application::Gui}!setMenu@{setMenu}}
+\index{setMenu@{setMenu}!Application::Gui@{Application::Gui}}
+\doxysubsubsection{\texorpdfstring{setMenu()}{setMenu()}}
+{\footnotesize\ttfamily \label{class_application_1_1_gui_a2b0c8627f1572ca9a34ef1e529e73ef5} 
+void Gui::\+set\+Menu (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \&}]{menu}{, }\item[{const std::\+vector$<$ \doxymbox{\hyperlink{struct_application_1_1_action_slot_visual}{Action\+Slot\+Visual}} $>$ \&}]{slot\+Visuals}{}\end{DoxyParamCaption})}
+
+
+
+Displays a menu plus the resolved labels/\+icons for its action slots. 
+
+\Hypertarget{class_application_1_1_gui_a8f2b23955a1d9ca0ac30ecdb3b2f3c2b}\index{Application::Gui@{Application::Gui}!showSearchPanel@{showSearchPanel}}
+\index{showSearchPanel@{showSearchPanel}!Application::Gui@{Application::Gui}}
+\doxysubsubsection{\texorpdfstring{showSearchPanel()}{showSearchPanel()}}
+{\footnotesize\ttfamily \label{class_application_1_1_gui_a8f2b23955a1d9ca0ac30ecdb3b2f3c2b} 
+void Gui::\+show\+Search\+Panel (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{struct_application_1_1_search_config}{Search\+Config}} \&}]{config}{}\end{DoxyParamCaption})}
+
+
+
+Shows the search palette inside the overlay shell. 
+
+\Hypertarget{class_application_1_1_gui_a48d241b53c0793406de96ce11733ef3c}\index{Application::Gui@{Application::Gui}!showSettingsPanel@{showSettingsPanel}}
+\index{showSettingsPanel@{showSettingsPanel}!Application::Gui@{Application::Gui}}
+\doxysubsubsection{\texorpdfstring{showSettingsPanel()}{showSettingsPanel()}}
+{\footnotesize\ttfamily \label{class_application_1_1_gui_a48d241b53c0793406de96ce11733ef3c} 
+void Gui::\+show\+Settings\+Panel (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_application_1_1_settings_window}{Settings\+Window}} \texorpdfstring{$\ast$}{*}}]{settings\+Window}{}\end{DoxyParamCaption})}
+
+
+
+Shows the settings editor inside the overlay shell. 
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_gui_8hpp}{Gui.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\doxymbox{\hyperlink{_gui_8cpp}{Gui.\+cpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+build/\+app/\+\+App\+\_\+autogen/\+\+OIU322\+L6\+L6/\+\doxymbox{\hyperlink{moc___gui_8cpp}{moc\+\_\+\+Gui.\+cpp}}\end{DoxyCompactItemize}

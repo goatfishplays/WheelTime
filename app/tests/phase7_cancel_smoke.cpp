@@ -366,6 +366,63 @@ bool testCancelChannelLeavesOthers()
     return true;
 }
 
+bool testCancelChannelDoesNotPromoteWaiter()
+{
+    // Repro: A = count -> delay -> count on channel 1; B queued behind A.
+    // cancelChannel must not promote B onto a worker before B is cancelled,
+    // or B's leading count still runs (same bug as typing both leading 'c's).
+    std::atomic<int> first{0};
+    std::atomic<int> second{0};
+
+    std::vector<std::unique_ptr<ActionItem>> aItems;
+    aItems.push_back(std::make_unique<CountingItem>(&first));
+    aItems.push_back(std::make_unique<DelayItem>(std::chrono::milliseconds(500)));
+    aItems.push_back(std::make_unique<CountingItem>(&first));
+
+    std::vector<std::unique_ptr<ActionItem>> bItems;
+    bItems.push_back(std::make_unique<CountingItem>(&second));
+    bItems.push_back(std::make_unique<DelayItem>(std::chrono::milliseconds(500)));
+    bItems.push_back(std::make_unique<CountingItem>(&second));
+
+    Scheduler scheduler{4};
+    scheduler.submit(makeAction(std::move(aItems), 1));
+    if (!waitUntil(first, 1, std::chrono::seconds(2)))
+    {
+        std::cerr << "cancel_channel_waiter: first never started\n";
+        scheduler.stop();
+        return false;
+    }
+    scheduler.submit(makeAction(std::move(bItems), 1));
+    // Let A park on the delay while B sits in the channel waiting queue.
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    if (second.load() != 0)
+    {
+        std::cerr << "cancel_channel_waiter: second ran before cancel\n";
+        scheduler.stop();
+        return false;
+    }
+
+    // Run many times conceptually via repeated cancel path; order of id
+    // iteration is unordered_map so one shot already stresses the bad order.
+    scheduler.cancelChannel(1);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    scheduler.stop();
+
+    if (second.load() != 0)
+    {
+        std::cerr << "cancel_channel_waiter: promoted waiter still ran (count="
+                  << second.load() << ")\n";
+        return false;
+    }
+    if (first.load() != 1)
+    {
+        std::cerr << "cancel_channel_waiter: first post-delay item ran (count="
+                  << first.load() << ")\n";
+        return false;
+    }
+    return true;
+}
+
 bool testCancelUnknownId()
 {
     Scheduler scheduler{1};
@@ -391,6 +448,7 @@ int main()
         {"uncancelable_survives_all", testUncancelableSurvivesCancelAll},
         {"cancel_flush_immediate", testCancelFlushRunsImmediately},
         {"cancel_channel_leaves_others", testCancelChannelLeavesOthers},
+        {"cancel_channel_does_not_promote_waiter", testCancelChannelDoesNotPromoteWaiter},
         {"cancel_unknown_id", testCancelUnknownId},
     };
 

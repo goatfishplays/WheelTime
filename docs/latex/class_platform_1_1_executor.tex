@@ -1,0 +1,149 @@
+\doxysection{Platform::\+Executor Class Reference}
+\hypertarget{class_platform_1_1_executor}{}\label{class_platform_1_1_executor}\index{Platform::Executor@{Platform::Executor}}
+
+
+{\ttfamily \+\#include $<$Execute.\+hpp$>$}
+
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{class_platform_1_1_executor_1_1_impl}{Impl}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_platform_1_1_executor_a59859cde6f1a56663b95e78d9ed2e068}{Executor}} ()
+\item 
+\doxymbox{\hyperlink{class_platform_1_1_executor_a784e38d0dc2b28604ee432d64512c789}{\texorpdfstring{$\sim$}{\string~}\+Executor}} ()
+\item 
+void \doxymbox{\hyperlink{class_platform_1_1_executor_a0471c71e08e6d83c288fd6009b82f1a2}{set\+Mouse\+Pos}} (int x, int y)
+\item 
+void \doxymbox{\hyperlink{class_platform_1_1_executor_adaee2e65b23afa132f86a2f34b324539}{execute\+Key}} (\doxymbox{\hyperlink{struct_platform_1_1_input_bind}{Input\+Bind}} key)
+\item 
+void \doxymbox{\hyperlink{class_platform_1_1_executor_a4514e260610e972df8900c57b5f6e73a}{key\+Down}} (\doxymbox{\hyperlink{struct_platform_1_1_input_bind}{Input\+Bind}} key)
+\item 
+void \doxymbox{\hyperlink{class_platform_1_1_executor_a19d1bed741b70f9f3bf5b8988a97691d}{key\+Up}} (\doxymbox{\hyperlink{struct_platform_1_1_input_bind}{Input\+Bind}} key)
+\item 
+void \doxymbox{\hyperlink{class_platform_1_1_executor_adc4839d2498d76d306852e66bb2fcf4f}{modifiers\+Down}} (int mod)
+\begin{DoxyCompactList}\small\item\em Press modifier keys only (same mask as \doxylink{struct_platform_1_1_input_bind_abe0f6bb5b2e070810e7e57e7eaf496c3}{Input\+Bind::\+mod}). \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_platform_1_1_executor_a22f837d029d1dbfb8f39289ccd13a676}{modifiers\+Up}} (int mod)
+\begin{DoxyCompactList}\small\item\em Release modifier keys only (same mask as \doxylink{struct_platform_1_1_input_bind_abe0f6bb5b2e070810e7e57e7eaf496c3}{Input\+Bind::\+mod}). \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_platform_1_1_executor_a811466b8a9415dded9c5fbacc4874c5f}{mouse\+Button}} (int button, bool down)
+\begin{DoxyCompactList}\small\item\em Mouse button press/\+release. {\ttfamily button}:\+ 0 left, 1 right, 2 middle. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_platform_1_1_executor_ae1dda416e435481f301fe57371f19821}{execute\+Script}} (std::\+string filepath)
+\item 
+void \doxymbox{\hyperlink{class_platform_1_1_executor_afe9e45a3969b402d69af12d416870f3f}{execute\+Launch\+Preset}} (std::\+string preset\+Id)
+\begin{DoxyCompactList}\small\item\em Launches one of the built-\/in app presets using platform-\/specific resolution. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_platform_1_1_executor_adce73f184117d232943487ab693f390f}{send\+Socket}} (const \doxymbox{\hyperlink{struct_platform_1_1_socket_send_request}{Socket\+Send\+Request}} \&request)
+\begin{DoxyCompactList}\small\item\em Synchronous one-\/shot send (UDP/\+\+TCP/\+\+HTTP/\+\+Web\+Socket). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{class_platform_1_1_executor_doc-constructors}
+\Hypertarget{class_platform_1_1_executor_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_platform_1_1_executor_a59859cde6f1a56663b95e78d9ed2e068}\index{Platform::Executor@{Platform::Executor}!Executor@{Executor}}
+\index{Executor@{Executor}!Platform::Executor@{Platform::Executor}}
+\doxysubsubsection{\texorpdfstring{Executor()}{Executor()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_executor_a59859cde6f1a56663b95e78d9ed2e068} 
+Platform::\+\+Executor::\+\+Executor (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_platform_1_1_executor_a784e38d0dc2b28604ee432d64512c789}\index{Platform::Executor@{Platform::Executor}!````~Executor@{\texorpdfstring{$\sim$}{\string~}Executor}}
+\index{````~Executor@{\texorpdfstring{$\sim$}{\string~}Executor}!Platform::Executor@{Platform::Executor}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}Executor()}{\string~Executor()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_executor_a784e38d0dc2b28604ee432d64512c789} 
+Platform::\+\+Executor::\+\texorpdfstring{$\sim$}{\string~}\+Executor (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+
+
+\label{class_platform_1_1_executor_doc-func-members}
+\Hypertarget{class_platform_1_1_executor_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_platform_1_1_executor_adaee2e65b23afa132f86a2f34b324539}\index{Platform::Executor@{Platform::Executor}!executeKey@{executeKey}}
+\index{executeKey@{executeKey}!Platform::Executor@{Platform::Executor}}
+\doxysubsubsection{\texorpdfstring{executeKey()}{executeKey()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_executor_adaee2e65b23afa132f86a2f34b324539} 
+void Platform::\+\+Executor::\+execute\+Key (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_platform_1_1_input_bind}{Input\+Bind}}}]{key}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_platform_1_1_executor_afe9e45a3969b402d69af12d416870f3f}\index{Platform::Executor@{Platform::Executor}!executeLaunchPreset@{executeLaunchPreset}}
+\index{executeLaunchPreset@{executeLaunchPreset}!Platform::Executor@{Platform::Executor}}
+\doxysubsubsection{\texorpdfstring{executeLaunchPreset()}{executeLaunchPreset()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_executor_afe9e45a3969b402d69af12d416870f3f} 
+void Platform::\+\+Executor::\+execute\+Launch\+Preset (\begin{DoxyParamCaption}\item[{std::\+string}]{preset\+Id}{}\end{DoxyParamCaption})}
+
+
+
+Launches one of the built-\/in app presets using platform-\/specific resolution. 
+
+Example preset IDs currently include {\ttfamily browser}, {\ttfamily explorer}, {\ttfamily calculator}, {\ttfamily notepad}, {\ttfamily paint}, and {\ttfamily taskmgr}. \Hypertarget{class_platform_1_1_executor_ae1dda416e435481f301fe57371f19821}\index{Platform::Executor@{Platform::Executor}!executeScript@{executeScript}}
+\index{executeScript@{executeScript}!Platform::Executor@{Platform::Executor}}
+\doxysubsubsection{\texorpdfstring{executeScript()}{executeScript()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_executor_ae1dda416e435481f301fe57371f19821} 
+void Platform::\+\+Executor::\+execute\+Script (\begin{DoxyParamCaption}\item[{std::\+string}]{filepath}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_platform_1_1_executor_a4514e260610e972df8900c57b5f6e73a}\index{Platform::Executor@{Platform::Executor}!keyDown@{keyDown}}
+\index{keyDown@{keyDown}!Platform::Executor@{Platform::Executor}}
+\doxysubsubsection{\texorpdfstring{keyDown()}{keyDown()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_executor_a4514e260610e972df8900c57b5f6e73a} 
+void Platform::\+\+Executor::\+key\+Down (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_platform_1_1_input_bind}{Input\+Bind}}}]{key}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_platform_1_1_executor_a19d1bed741b70f9f3bf5b8988a97691d}\index{Platform::Executor@{Platform::Executor}!keyUp@{keyUp}}
+\index{keyUp@{keyUp}!Platform::Executor@{Platform::Executor}}
+\doxysubsubsection{\texorpdfstring{keyUp()}{keyUp()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_executor_a19d1bed741b70f9f3bf5b8988a97691d} 
+void Platform::\+\+Executor::\+key\+Up (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_platform_1_1_input_bind}{Input\+Bind}}}]{key}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_platform_1_1_executor_adc4839d2498d76d306852e66bb2fcf4f}\index{Platform::Executor@{Platform::Executor}!modifiersDown@{modifiersDown}}
+\index{modifiersDown@{modifiersDown}!Platform::Executor@{Platform::Executor}}
+\doxysubsubsection{\texorpdfstring{modifiersDown()}{modifiersDown()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_executor_adc4839d2498d76d306852e66bb2fcf4f} 
+void Platform::\+\+Executor::\+modifiers\+Down (\begin{DoxyParamCaption}\item[{int}]{mod}{}\end{DoxyParamCaption})}
+
+
+
+Press modifier keys only (same mask as \doxylink{struct_platform_1_1_input_bind_abe0f6bb5b2e070810e7e57e7eaf496c3}{Input\+Bind::\+mod}). 
+
+\Hypertarget{class_platform_1_1_executor_a22f837d029d1dbfb8f39289ccd13a676}\index{Platform::Executor@{Platform::Executor}!modifiersUp@{modifiersUp}}
+\index{modifiersUp@{modifiersUp}!Platform::Executor@{Platform::Executor}}
+\doxysubsubsection{\texorpdfstring{modifiersUp()}{modifiersUp()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_executor_a22f837d029d1dbfb8f39289ccd13a676} 
+void Platform::\+\+Executor::\+modifiers\+Up (\begin{DoxyParamCaption}\item[{int}]{mod}{}\end{DoxyParamCaption})}
+
+
+
+Release modifier keys only (same mask as \doxylink{struct_platform_1_1_input_bind_abe0f6bb5b2e070810e7e57e7eaf496c3}{Input\+Bind::\+mod}). 
+
+\Hypertarget{class_platform_1_1_executor_a811466b8a9415dded9c5fbacc4874c5f}\index{Platform::Executor@{Platform::Executor}!mouseButton@{mouseButton}}
+\index{mouseButton@{mouseButton}!Platform::Executor@{Platform::Executor}}
+\doxysubsubsection{\texorpdfstring{mouseButton()}{mouseButton()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_executor_a811466b8a9415dded9c5fbacc4874c5f} 
+void Platform::\+\+Executor::\+mouse\+Button (\begin{DoxyParamCaption}\item[{int}]{button}{, }\item[{bool}]{down}{}\end{DoxyParamCaption})}
+
+
+
+Mouse button press/\+release. {\ttfamily button}:\+ 0 left, 1 right, 2 middle. 
+
+\Hypertarget{class_platform_1_1_executor_adce73f184117d232943487ab693f390f}\index{Platform::Executor@{Platform::Executor}!sendSocket@{sendSocket}}
+\index{sendSocket@{sendSocket}!Platform::Executor@{Platform::Executor}}
+\doxysubsubsection{\texorpdfstring{sendSocket()}{sendSocket()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_executor_adce73f184117d232943487ab693f390f} 
+bool Platform::\+\+Executor::\+send\+Socket (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{struct_platform_1_1_socket_send_request}{Socket\+Send\+Request}} \&}]{request}{}\end{DoxyParamCaption})}
+
+
+
+Synchronous one-\/shot send (UDP/\+\+TCP/\+\+HTTP/\+\+Web\+Socket). 
+
+\begin{DoxyReturn}{Returns}
+false on failure; logs the reason. Never throws. 
+\end{DoxyReturn}
+\Hypertarget{class_platform_1_1_executor_a0471c71e08e6d83c288fd6009b82f1a2}\index{Platform::Executor@{Platform::Executor}!setMousePos@{setMousePos}}
+\index{setMousePos@{setMousePos}!Platform::Executor@{Platform::Executor}}
+\doxysubsubsection{\texorpdfstring{setMousePos()}{setMousePos()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_executor_a0471c71e08e6d83c288fd6009b82f1a2} 
+void Platform::\+\+Executor::\+set\+Mouse\+Pos (\begin{DoxyParamCaption}\item[{int}]{x}{, }\item[{int}]{y}{}\end{DoxyParamCaption})}
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+platform/\+include/\+\+Platform/\+\doxymbox{\hyperlink{_execute_8hpp}{Execute.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+platform/\+src/\+windows/\+\doxymbox{\hyperlink{_execute_8cpp}{Execute.\+cpp}}\end{DoxyCompactItemize}

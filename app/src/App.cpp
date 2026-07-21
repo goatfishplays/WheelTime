@@ -101,7 +101,7 @@ App::App()
         std::vector<std::unique_ptr<ActionItem>> items;
         items.push_back(std::make_unique<AI_Close>());
         actionLibrary.push_back(Action(std::move(items), "Config missing", "", "action-config-missing"));
-        loadedMenus.push_back(new Menu(0, 0, false, false, true, "Config Error", {"action-config-missing"}, "menu-config-error"));
+        loadedMenus.push_back(new Menu(0, 0, false, false, true, false, "Config Error", {"action-config-missing"}, "menu-config-error"));
     }
 
     bool anyHotkey = false;
@@ -151,6 +151,14 @@ App::App()
     QObject::connect(m_releaseWatchTimer, &QTimer::timeout, [this]()
                      { onExecuteOnReleaseTick(); });
 
+    // The wheel overlay is intentionally non-activating / NoFocus so games keep
+    // keyboard focus. Qt never delivers Escape to Gui::keyPressEvent in that
+    // mode, so poll the physical key the same way execute-on-release does.
+    m_escapeWatchTimer = new QTimer(qApp);
+    m_escapeWatchTimer->setInterval(16);
+    QObject::connect(m_escapeWatchTimer, &QTimer::timeout, [this]()
+                     { onEscapeWatchTick(); });
+
     QTimer::singleShot(0, [this]() { showSettingsWindow(); });
 }
 
@@ -176,16 +184,22 @@ App::~App()
         m_settingsWindow = nullptr;
     }
 
-    clearMenus();
-
-    // Unregister hotkey
-    for (Menu* m : loadedMenus) {
-        if (m->triggerMod == 0 && m->triggerVk == 0) continue;
-        Platform::InputBind bind;
-        bind.mod = m->triggerMod;
-        bind.input = m->triggerVk;
-        m_inputRcvr.unregisterInputBinding(bind);
+    // Release OS hotkeys before deleting menu objects.
+    if (!m_hotkeysSuspended)
+    {
+        for (Menu *m : loadedMenus)
+        {
+            if (m == nullptr || (m->triggerMod == 0 && m->triggerVk == 0))
+            {
+                continue;
+            }
+            Platform::InputBind bind;
+            bind.mod = m->triggerMod;
+            bind.input = m->triggerVk;
+            m_inputRcvr.unregisterInputBinding(bind);
+        }
     }
+    clearMenus();
 }
 
 void App::clearMenus()
@@ -195,6 +209,50 @@ void App::clearMenus()
         delete loadedMenus[i];
     }
     loadedMenus.clear();
+}
+
+void App::suspendHotkeys()
+{
+    if (m_hotkeysSuspended)
+    {
+        return;
+    }
+
+    // RegisterHotKey consumes matching KeyPresses, so the settings recorder
+    // cannot capture a chord that is still bound. Drop live binds while editing.
+    for (Menu *m : loadedMenus)
+    {
+        if (m == nullptr || (m->triggerMod == 0 && m->triggerVk == 0))
+        {
+            continue;
+        }
+        Platform::InputBind bind;
+        bind.mod = m->triggerMod;
+        bind.input = m->triggerVk;
+        m_inputRcvr.unregisterInputBinding(bind);
+    }
+    m_hotkeysSuspended = true;
+}
+
+void App::resumeHotkeys()
+{
+    if (!m_hotkeysSuspended)
+    {
+        return;
+    }
+
+    for (Menu *m : loadedMenus)
+    {
+        if (m == nullptr || (m->triggerMod == 0 && m->triggerVk == 0))
+        {
+            continue;
+        }
+        Platform::InputBind bind;
+        bind.mod = m->triggerMod;
+        bind.input = m->triggerVk;
+        m_inputRcvr.registerInputBinding(bind);
+    }
+    m_hotkeysSuspended = false;
 }
 
 void App::onHotkeyTriggered(int hotkeyId)
@@ -225,11 +283,16 @@ void App::onHotkeyTriggered(int hotkeyId)
         }
     }
 
-    // Second press / visible launcher always dismisses (and disarms release-watch).
+    // Same-menu hotkey (or unmatched) toggles closed while the wheel is up.
+    // A different menu's hotkey switches to that menu instead of dismissing.
     if (gui.isLauncherVisible())
     {
-        hideGui();
-        return;
+        if (targetMenu == nullptr || targetMenu == activeMenu)
+        {
+            hideGui();
+            return;
+        }
+        disarmExecuteOnRelease();
     }
 
     Menu *menuToShow = targetMenu;
@@ -276,6 +339,43 @@ void App::disarmExecuteOnRelease()
     {
         m_releaseWatchTimer->stop();
     }
+}
+
+void App::armEscapeDismiss()
+{
+    // Seed with the current key state so a held Escape does not instantly close.
+    m_escapeWasDown = m_inputRcvr.isVirtualKeyDown(0x1B); // VK_ESCAPE
+    if (m_escapeWatchTimer != nullptr)
+    {
+        m_escapeWatchTimer->start();
+    }
+}
+
+void App::disarmEscapeDismiss()
+{
+    m_escapeWasDown = false;
+    if (m_escapeWatchTimer != nullptr)
+    {
+        m_escapeWatchTimer->stop();
+    }
+}
+
+void App::onEscapeWatchTick()
+{
+    if (!gui.isLauncherVisible())
+    {
+        disarmEscapeDismiss();
+        return;
+    }
+
+    const bool escapeDown = m_inputRcvr.isVirtualKeyDown(0x1B); // VK_ESCAPE
+    if (escapeDown && !m_escapeWasDown)
+    {
+        m_escapeWasDown = true;
+        hideGui();
+        return;
+    }
+    m_escapeWasDown = escapeDown;
 }
 
 void App::onExecuteOnReleaseTick()
@@ -425,8 +525,11 @@ void App::gatherPriors()
 void App::restorePriors()
 {
     // The non-activating overlay should leave keyboard focus where it already
-    // is, so we intentionally avoid restoring focus here. Mouse restore can be
-    // revisited later if users want the cursor snapped back after overlay use.
+    // is, so we intentionally avoid restoring focus here.
+    if (activeMenu != nullptr && activeMenu->restoreMouseOnClose)
+    {
+        inputRcvr.setAbsoluteMousePosition(priorMousePos);
+    }
 }
 
 void App::initializeOverlay()
@@ -525,6 +628,7 @@ void App::showGui(Menu *menu)
     overlayWindow.setClickThrough(false);
     overlayWindow.showNoActivate();
     gui.enterInteractiveOverlay();
+    armEscapeDismiss();
 }
 
 void App::hideGui()
@@ -543,6 +647,7 @@ void App::hideGui()
     }
 
     disarmExecuteOnRelease();
+    disarmEscapeDismiss();
     initializeOverlay();
     gui.enterDormantOverlay();
     Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
@@ -769,6 +874,12 @@ void App::saveActionHistory()
     m_actionHistory.save(historyPath());
 }
 
+void App::resetActionFrequencies()
+{
+    m_actionHistory.clearFrequencies();
+    saveActionHistory();
+}
+
 Scheduler &App::scheduler() noexcept
 {
     return *m_scheduler;
@@ -824,6 +935,8 @@ void App::showSettingsWindow()
 
     // Pause macros while editing; resume when the window closes.
     m_scheduler->pause();
+    // Drop OS hotkeys so the recorder can capture chords that are already bound.
+    suspendHotkeys();
     m_settingsWindow->loadWorkingCopy(m_appConfig, actionLibrary, getMenuCopies());
     gui.showSettingsPanel(m_settingsWindow);
     gui.show();
@@ -842,6 +955,7 @@ void App::restoreOverlayAfterSettings()
     // with Qt by only using showNoActivate after styles are restored.
     gui.hideSettingsPanel();
     gui.enterDormantOverlay();
+    resumeHotkeys();
     Platform::Window overlayWindow(reinterpret_cast<void *>(gui.winId()));
     overlayWindow.setTransparentOverlay(true);
     overlayWindow.setNonActivating(true);
@@ -857,13 +971,21 @@ bool App::saveConfig()
 
 bool App::applyConfig(const AppConfig &appConfig, const std::vector<Action> &actions, const std::vector<Menu> &menus)
 {
-    // Unregister old hotkey
-    for (Menu* m : loadedMenus) {
-        if (m->triggerMod == 0 && m->triggerVk == 0) continue;
-        Platform::InputBind oldBind;
-        oldBind.mod = m->triggerMod;
-        oldBind.input = m->triggerVk;
-        m_inputRcvr.unregisterInputBinding(oldBind);
+    // Skip unregister while settings has hotkeys suspended; resumeHotkeys will
+    // bind whatever ends up in loadedMenus when the editor closes.
+    if (!m_hotkeysSuspended)
+    {
+        for (Menu *m : loadedMenus)
+        {
+            if (m == nullptr || (m->triggerMod == 0 && m->triggerVk == 0))
+            {
+                continue;
+            }
+            Platform::InputBind oldBind;
+            oldBind.mod = m->triggerMod;
+            oldBind.input = m->triggerVk;
+            m_inputRcvr.unregisterInputBinding(oldBind);
+        }
     }
 
     m_appConfig = appConfig;
@@ -885,12 +1007,19 @@ bool App::applyConfig(const AppConfig &appConfig, const std::vector<Action> &act
         loadedMenus.push_back(new Menu(menu));
     }
 
-    for (Menu* m : loadedMenus) {
-        if (m->triggerMod == 0 && m->triggerVk == 0) continue;
-        Platform::InputBind newBind;
-        newBind.mod = m->triggerMod;
-        newBind.input = m->triggerVk;
-        m_inputRcvr.registerInputBinding(newBind);
+    if (!m_hotkeysSuspended)
+    {
+        for (Menu *m : loadedMenus)
+        {
+            if (m == nullptr || (m->triggerMod == 0 && m->triggerVk == 0))
+            {
+                continue;
+            }
+            Platform::InputBind newBind;
+            newBind.mod = m->triggerMod;
+            newBind.input = m->triggerVk;
+            m_inputRcvr.registerInputBinding(newBind);
+        }
     }
 
     activeMenu = previousActiveMenuId.empty() ? nullptr : findMenuById(previousActiveMenuId);

@@ -78,9 +78,7 @@ Gui::Gui(QWidget *parent)
     bottomRow->addStretch();
 
     m_settingsButton = new QPushButton("Settings", m_overlayPanel);
-    m_editButton = new QPushButton("Edit", m_overlayPanel);
     bottomRow->addWidget(m_settingsButton);
-    bottomRow->addWidget(m_editButton);
     panelLayout->addLayout(bottomRow);
 
     // Ring radius tracks the radial panel size (monitor body after chrome).
@@ -89,8 +87,6 @@ Gui::Gui(QWidget *parent)
 
     connect(m_radialMenu, &RadialMenuWidget::selectedIndexChanged, this, &Gui::onSelectChange);
     connect(m_settingsButton, &QPushButton::clicked, []()
-            { App::getInstance().showSettingsWindow(); });
-    connect(m_editButton, &QPushButton::clicked, []()
             { App::getInstance().showSettingsWindow(); });
     connect(m_radialMenu, &RadialMenuWidget::buttonTriggered, this, [](int index)
             { App::getInstance().executeAction(index); });
@@ -192,7 +188,7 @@ bool Gui::eventFilter(QObject *watched, QEvent *event)
 
         if (mouseEvent->button() == Qt::LeftButton)
         {
-            if (clickedChild == m_settingsButton || clickedChild == m_editButton)
+            if (clickedChild == m_settingsButton)
             {
                 return QWidget::eventFilter(watched, event);
             }

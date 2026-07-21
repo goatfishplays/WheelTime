@@ -9,19 +9,37 @@ OS agnostic input receiver.
 
 {\ttfamily \+\#include $<$Inputs.\+hpp$>$}
 
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \doxymbox{\hyperlink{class_input_rcvr_1_1_impl}{Impl}}
+\end{DoxyCompactItemize}
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\doxymbox{\hyperlink{class_platform_1_1_input_rcvr_ab4515f10ee7adde317ee4d9a1556d399}{Input\+Rcvr}} ()
+\doxymbox{\hyperlink{class_platform_1_1_input_rcvr_a7c537b9d919c1d65fc2797ffa926ade3}{Input\+Rcvr}} ()
 \item 
-\doxymbox{\hyperlink{class_platform_1_1_input_rcvr_aa8d43c61b8b55decf1e55c8d34dcfc32}{\texorpdfstring{$\sim$}{\string~}\+Input\+Rcvr}} ()
+\doxymbox{\hyperlink{class_platform_1_1_input_rcvr_ab725ad346a56db864c9cdac182eb787a}{\texorpdfstring{$\sim$}{\string~}\+Input\+Rcvr}} ()
 \item 
-\doxymbox{\hyperlink{struct_platform_1_1_vec2}{Vec2}} \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_a7876b5f6c8a133340fce671a742873db}{get\+Absolute\+Mouse\+Position}} ()
+\doxymbox{\hyperlink{struct_platform_1_1_vec2}{Vec2}} \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_a0676aa3593514ad5295eb4d26724fff7}{get\+Absolute\+Mouse\+Position}} ()
 \begin{DoxyCompactList}\small\item\em Get mouse position relative to the monitor. \end{DoxyCompactList}\item 
-\doxymbox{\hyperlink{struct_platform_1_1_vec2}{Vec2}} \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_aeced2a888895a39a85974ab096a01f9a}{get\+Relative\+Mouse\+Position}} ()
-\begin{DoxyCompactList}\small\item\em Get mouse position relative to window,. \end{DoxyCompactList}\item 
-void \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_addbec4b23b0cbb7f8d199943c7f00c7f}{register\+Input\+Binding}} (\doxymbox{\hyperlink{struct_platform_1_1_hotkey}{Hotkey}})
-\begin{DoxyCompactList}\small\item\em Registers an input to be tracked. \end{DoxyCompactList}\end{DoxyCompactItemize}
+void \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_a561f308a6a45f67401126b9b2a45705a}{set\+Absolute\+Mouse\+Position}} (\doxymbox{\hyperlink{struct_platform_1_1_vec2}{Vec2}} position)
+\begin{DoxyCompactList}\small\item\em Moves the system cursor to an absolute screen position. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_a787efab3f34947b839127756042eb960}{register\+Input\+Binding}} (\doxymbox{\hyperlink{struct_platform_1_1_input_bind}{Input\+Bind}})
+\begin{DoxyCompactList}\small\item\em Registers an input to be tracked. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_ac4b52e195fe95c2fd7cdacfe7e870a93}{unregister\+Input\+Binding}} (\doxymbox{\hyperlink{struct_platform_1_1_input_bind}{Input\+Bind}})
+\begin{DoxyCompactList}\small\item\em Unregisters an input being tracked. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_aa03f134c83216220e5a98f6da586c404}{is\+Virtual\+Key\+Down}} (int vk) const
+\begin{DoxyCompactList}\small\item\em True if {\ttfamily vk} is currently physically down. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_ae71c44aa55351e5bb4a0dbda9606ac82}{is\+Chord\+Held}} (int mod, int vk) const
+\begin{DoxyCompactList}\small\item\em True if the hotkey chord is still held. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_a960d57eed94039b7f15ff49de200b09d}{is\+Chord\+Fully\+Released}} (int mod, int vk) const
+\begin{DoxyCompactList}\small\item\em True when the primary key and every required modifier are up. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static bool \doxymbox{\hyperlink{class_platform_1_1_input_rcvr_ac83ac9c9974d67947c37c19e2a20b61e}{is\+Hotkey\+Message}} (void \texorpdfstring{$\ast$}{*}message, int \&hotkey\+Id\+Out)
+\begin{DoxyCompactList}\small\item\em Check if native message is a hotkey message. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -30,55 +48,106 @@ OS agnostic input receiver.
 \label{class_platform_1_1_input_rcvr_doc-constructors}
 \Hypertarget{class_platform_1_1_input_rcvr_doc-constructors}
 \doxysubsection{Constructor \& Destructor Documentation}
-\Hypertarget{class_platform_1_1_input_rcvr_ab4515f10ee7adde317ee4d9a1556d399}\index{Platform::InputRcvr@{Platform::InputRcvr}!InputRcvr@{InputRcvr}}
+\Hypertarget{class_platform_1_1_input_rcvr_a7c537b9d919c1d65fc2797ffa926ade3}\index{Platform::InputRcvr@{Platform::InputRcvr}!InputRcvr@{InputRcvr}}
 \index{InputRcvr@{InputRcvr}!Platform::InputRcvr@{Platform::InputRcvr}}
 \doxysubsubsection{\texorpdfstring{InputRcvr()}{InputRcvr()}}
-{\footnotesize\ttfamily \label{class_platform_1_1_input_rcvr_ab4515f10ee7adde317ee4d9a1556d399} 
-Platform::\+\+Input\+Rcvr::\+\+Input\+Rcvr (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{class_platform_1_1_input_rcvr_a7c537b9d919c1d65fc2797ffa926ade3} 
+Input\+Rcvr::\+\+Input\+Rcvr (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
 
-\Hypertarget{class_platform_1_1_input_rcvr_aa8d43c61b8b55decf1e55c8d34dcfc32}\index{Platform::InputRcvr@{Platform::InputRcvr}!````~InputRcvr@{\texorpdfstring{$\sim$}{\string~}InputRcvr}}
+\Hypertarget{class_platform_1_1_input_rcvr_ab725ad346a56db864c9cdac182eb787a}\index{Platform::InputRcvr@{Platform::InputRcvr}!````~InputRcvr@{\texorpdfstring{$\sim$}{\string~}InputRcvr}}
 \index{````~InputRcvr@{\texorpdfstring{$\sim$}{\string~}InputRcvr}!Platform::InputRcvr@{Platform::InputRcvr}}
 \doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}InputRcvr()}{\string~InputRcvr()}}
-{\footnotesize\ttfamily \label{class_platform_1_1_input_rcvr_aa8d43c61b8b55decf1e55c8d34dcfc32} 
-Platform::\+\+Input\+Rcvr::\+\texorpdfstring{$\sim$}{\string~}\+Input\+Rcvr (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{class_platform_1_1_input_rcvr_ab725ad346a56db864c9cdac182eb787a} 
+Input\+Rcvr::\+\texorpdfstring{$\sim$}{\string~}\+Input\+Rcvr (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
 
 
 
 \label{class_platform_1_1_input_rcvr_doc-func-members}
 \Hypertarget{class_platform_1_1_input_rcvr_doc-func-members}
 \doxysubsection{Member Function Documentation}
-\Hypertarget{class_platform_1_1_input_rcvr_a7876b5f6c8a133340fce671a742873db}\index{Platform::InputRcvr@{Platform::InputRcvr}!getAbsoluteMousePosition@{getAbsoluteMousePosition}}
+\Hypertarget{class_platform_1_1_input_rcvr_a0676aa3593514ad5295eb4d26724fff7}\index{Platform::InputRcvr@{Platform::InputRcvr}!getAbsoluteMousePosition@{getAbsoluteMousePosition}}
 \index{getAbsoluteMousePosition@{getAbsoluteMousePosition}!Platform::InputRcvr@{Platform::InputRcvr}}
 \doxysubsubsection{\texorpdfstring{getAbsoluteMousePosition()}{getAbsoluteMousePosition()}}
-{\footnotesize\ttfamily \label{class_platform_1_1_input_rcvr_a7876b5f6c8a133340fce671a742873db} 
-\doxymbox{\hyperlink{struct_platform_1_1_vec2}{Vec2}} Platform::\+\+Input\+Rcvr::\+get\+Absolute\+Mouse\+Position (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{class_platform_1_1_input_rcvr_a0676aa3593514ad5295eb4d26724fff7} 
+\doxymbox{\hyperlink{struct_platform_1_1_vec2}{Vec2}} Input\+Rcvr::\+get\+Absolute\+Mouse\+Position (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
 
 
 
 Get mouse position relative to the monitor. 
 
-Note:\+ Position is x:\+ left to right, y:\+ top to bottom \Hypertarget{class_platform_1_1_input_rcvr_aeced2a888895a39a85974ab096a01f9a}\index{Platform::InputRcvr@{Platform::InputRcvr}!getRelativeMousePosition@{getRelativeMousePosition}}
-\index{getRelativeMousePosition@{getRelativeMousePosition}!Platform::InputRcvr@{Platform::InputRcvr}}
-\doxysubsubsection{\texorpdfstring{getRelativeMousePosition()}{getRelativeMousePosition()}}
-{\footnotesize\ttfamily \label{class_platform_1_1_input_rcvr_aeced2a888895a39a85974ab096a01f9a} 
-\doxymbox{\hyperlink{struct_platform_1_1_vec2}{Vec2}} Platform::\+\+Input\+Rcvr::\+get\+Relative\+Mouse\+Position (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+Note:\+ Position is x:\+ left to right, y:\+ top to bottom \Hypertarget{class_platform_1_1_input_rcvr_a960d57eed94039b7f15ff49de200b09d}\index{Platform::InputRcvr@{Platform::InputRcvr}!isChordFullyReleased@{isChordFullyReleased}}
+\index{isChordFullyReleased@{isChordFullyReleased}!Platform::InputRcvr@{Platform::InputRcvr}}
+\doxysubsubsection{\texorpdfstring{isChordFullyReleased()}{isChordFullyReleased()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_input_rcvr_a960d57eed94039b7f15ff49de200b09d} 
+bool Input\+Rcvr::\+is\+Chord\+Fully\+Released (\begin{DoxyParamCaption}\item[{int}]{mod}{, }\item[{int}]{vk}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
 
 
 
-Get mouse position relative to window,. 
+True when the primary key and every required modifier are up. 
 
-Note:\+ Position is x:\+ left to right, y:\+ top to bottom \Hypertarget{class_platform_1_1_input_rcvr_addbec4b23b0cbb7f8d199943c7f00c7f}\index{Platform::InputRcvr@{Platform::InputRcvr}!registerInputBinding@{registerInputBinding}}
+Used for execute-\/on-\/release so injected keys are not combined with leftover Ctrl/\+\+Shift/\+\+Alt/\+\+Win from the launcher chord. \Hypertarget{class_platform_1_1_input_rcvr_ae71c44aa55351e5bb4a0dbda9606ac82}\index{Platform::InputRcvr@{Platform::InputRcvr}!isChordHeld@{isChordHeld}}
+\index{isChordHeld@{isChordHeld}!Platform::InputRcvr@{Platform::InputRcvr}}
+\doxysubsubsection{\texorpdfstring{isChordHeld()}{isChordHeld()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_input_rcvr_ae71c44aa55351e5bb4a0dbda9606ac82} 
+bool Input\+Rcvr::\+is\+Chord\+Held (\begin{DoxyParamCaption}\item[{int}]{mod}{, }\item[{int}]{vk}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+True if the hotkey chord is still held. 
+
+Requires {\ttfamily vk} down and every modifier bit in {\ttfamily mod} still down. {\ttfamily mod} uses the same flags as Register\+Hot\+Key (without MOD\+\_\+\+NOREPEAT). \Hypertarget{class_platform_1_1_input_rcvr_ac83ac9c9974d67947c37c19e2a20b61e}\index{Platform::InputRcvr@{Platform::InputRcvr}!isHotkeyMessage@{isHotkeyMessage}}
+\index{isHotkeyMessage@{isHotkeyMessage}!Platform::InputRcvr@{Platform::InputRcvr}}
+\doxysubsubsection{\texorpdfstring{isHotkeyMessage()}{isHotkeyMessage()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_input_rcvr_ac83ac9c9974d67947c37c19e2a20b61e} 
+bool Input\+Rcvr::\+is\+Hotkey\+Message (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{message}{, }\item[{int \&}]{hotkey\+Id\+Out}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Check if native message is a hotkey message. 
+
+\Hypertarget{class_platform_1_1_input_rcvr_aa03f134c83216220e5a98f6da586c404}\index{Platform::InputRcvr@{Platform::InputRcvr}!isVirtualKeyDown@{isVirtualKeyDown}}
+\index{isVirtualKeyDown@{isVirtualKeyDown}!Platform::InputRcvr@{Platform::InputRcvr}}
+\doxysubsubsection{\texorpdfstring{isVirtualKeyDown()}{isVirtualKeyDown()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_input_rcvr_aa03f134c83216220e5a98f6da586c404} 
+bool Input\+Rcvr::\+is\+Virtual\+Key\+Down (\begin{DoxyParamCaption}\item[{int}]{vk}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+True if {\ttfamily vk} is currently physically down. 
+
+\Hypertarget{class_platform_1_1_input_rcvr_a787efab3f34947b839127756042eb960}\index{Platform::InputRcvr@{Platform::InputRcvr}!registerInputBinding@{registerInputBinding}}
 \index{registerInputBinding@{registerInputBinding}!Platform::InputRcvr@{Platform::InputRcvr}}
 \doxysubsubsection{\texorpdfstring{registerInputBinding()}{registerInputBinding()}}
-{\footnotesize\ttfamily \label{class_platform_1_1_input_rcvr_addbec4b23b0cbb7f8d199943c7f00c7f} 
-void Platform::\+\+Input\+Rcvr::\+register\+Input\+Binding (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_platform_1_1_hotkey}{Hotkey}}}]{}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{class_platform_1_1_input_rcvr_a787efab3f34947b839127756042eb960} 
+void Input\+Rcvr::\+register\+Input\+Binding (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_platform_1_1_input_bind}{Input\+Bind}}}]{bind}{}\end{DoxyParamCaption})}
 
 
 
 Registers an input to be tracked. 
 
+Currently only aim to support keyboard inputs \Hypertarget{class_platform_1_1_input_rcvr_a561f308a6a45f67401126b9b2a45705a}\index{Platform::InputRcvr@{Platform::InputRcvr}!setAbsoluteMousePosition@{setAbsoluteMousePosition}}
+\index{setAbsoluteMousePosition@{setAbsoluteMousePosition}!Platform::InputRcvr@{Platform::InputRcvr}}
+\doxysubsubsection{\texorpdfstring{setAbsoluteMousePosition()}{setAbsoluteMousePosition()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_input_rcvr_a561f308a6a45f67401126b9b2a45705a} 
+void Input\+Rcvr::\+set\+Absolute\+Mouse\+Position (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_platform_1_1_vec2}{Vec2}}}]{position}{}\end{DoxyParamCaption})}
+
+
+
+Moves the system cursor to an absolute screen position. 
+
+\Hypertarget{class_platform_1_1_input_rcvr_ac4b52e195fe95c2fd7cdacfe7e870a93}\index{Platform::InputRcvr@{Platform::InputRcvr}!unregisterInputBinding@{unregisterInputBinding}}
+\index{unregisterInputBinding@{unregisterInputBinding}!Platform::InputRcvr@{Platform::InputRcvr}}
+\doxysubsubsection{\texorpdfstring{unregisterInputBinding()}{unregisterInputBinding()}}
+{\footnotesize\ttfamily \label{class_platform_1_1_input_rcvr_ac4b52e195fe95c2fd7cdacfe7e870a93} 
+void Input\+Rcvr::\+unregister\+Input\+Binding (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_platform_1_1_input_bind}{Input\+Bind}}}]{bind}{}\end{DoxyParamCaption})}
+
+
+
+Unregisters an input being tracked. 
+
 Currently only aim to support keyboard inputs 
 
-The documentation for this class was generated from the following file:\+\begin{DoxyCompactItemize}
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
 \item 
-E:\+/\+\+Github/\+\+Wheel\+Time/\+platform/\+include/\+\+Platform/\+\doxymbox{\hyperlink{_inputs_8hpp}{Inputs.\+hpp}}\end{DoxyCompactItemize}
+E:\+/\+\+Github/\+\+Wheel\+Time/\+platform/\+include/\+\+Platform/\+\doxymbox{\hyperlink{_inputs_8hpp}{Inputs.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+platform/\+src/\+windows/\+\doxymbox{\hyperlink{_inputs_8cpp}{Inputs.\+cpp}}\end{DoxyCompactItemize}

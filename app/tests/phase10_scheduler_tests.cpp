@@ -869,6 +869,51 @@ bool testCancelChannelLeavesOthers()
     return ch1.load() == 1;
 }
 
+bool testCancelChannelDoesNotPromoteWaiter()
+{
+    std::atomic<int> first{0};
+    std::atomic<int> second{0};
+
+    std::vector<std::unique_ptr<ActionItem>> aItems;
+    aItems.push_back(std::make_unique<CountingItem>(&first));
+    aItems.push_back(std::make_unique<DelayItem>(std::chrono::milliseconds(500)));
+    aItems.push_back(std::make_unique<CountingItem>(&first));
+
+    std::vector<std::unique_ptr<ActionItem>> bItems;
+    bItems.push_back(std::make_unique<CountingItem>(&second));
+    bItems.push_back(std::make_unique<DelayItem>(std::chrono::milliseconds(500)));
+    bItems.push_back(std::make_unique<CountingItem>(&second));
+
+    Scheduler scheduler{4};
+    scheduler.submit(makeAction(std::move(aItems), 1));
+    if (!waitUntil(first, 1, std::chrono::seconds(2)))
+    {
+        std::cerr << "cancel_channel_waiter: first never started\n";
+        scheduler.stop();
+        return false;
+    }
+    scheduler.submit(makeAction(std::move(bItems), 1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    if (second.load() != 0)
+    {
+        std::cerr << "cancel_channel_waiter: second ran before cancel\n";
+        scheduler.stop();
+        return false;
+    }
+
+    scheduler.cancelChannel(1);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    scheduler.stop();
+
+    if (second.load() != 0)
+    {
+        std::cerr << "cancel_channel_waiter: promoted waiter still ran (count="
+                  << second.load() << ")\n";
+        return false;
+    }
+    return first.load() == 1;
+}
+
 // ---------------------------------------------------------------------------
 // Pause / resume
 // ---------------------------------------------------------------------------
@@ -1665,6 +1710,7 @@ int main()
         {"cancel_flush_immediate", testCancelFlushImmediate},
         {"uncancelable_survives", testUncancelableSurvives},
         {"cancel_channel_leaves_others", testCancelChannelLeavesOthers},
+        {"cancel_channel_does_not_promote_waiter", testCancelChannelDoesNotPromoteWaiter},
         // Pause / resume
         {"pause_stops_dispatch", testPauseStopsDispatch},
         {"submit_while_paused", testSubmitWhilePaused},

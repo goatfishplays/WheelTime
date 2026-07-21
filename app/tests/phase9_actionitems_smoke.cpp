@@ -300,6 +300,93 @@ bool testNthItemDefaults()
     return true;
 }
 
+constexpr int kSocketStressIterations = 50;
+constexpr DWORD kSocketRecvTimeoutMs = 2000;
+
+struct WinsockScope
+{
+    bool ok = false;
+
+    WinsockScope()
+    {
+        WSADATA wsa{};
+        ok = WSAStartup(MAKEWORD(2, 2), &wsa) == 0;
+    }
+
+    ~WinsockScope()
+    {
+        if (ok)
+        {
+            WSACleanup();
+        }
+    }
+
+    WinsockScope(const WinsockScope &) = delete;
+    WinsockScope &operator=(const WinsockScope &) = delete;
+};
+
+bool bindLoopback(SOCKET sock, sockaddr_in &addr)
+{
+    addr = {};
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+    addr.sin_port = 0;
+    if (bind(sock, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)) != 0)
+    {
+        return false;
+    }
+    int addrLen = sizeof(addr);
+    return getsockname(sock, reinterpret_cast<sockaddr *>(&addr), &addrLen) == 0;
+}
+
+std::string loopbackDestination(const sockaddr_in &addr)
+{
+    return "127.0.0.1:" + std::to_string(ntohs(addr.sin_port));
+}
+
+bool recvExactUdp(SOCKET listener, const std::string &expected)
+{
+    char buffer[512]{};
+    sockaddr_in from{};
+    int fromLen = sizeof(from);
+    const int received = recvfrom(
+        listener, buffer, static_cast<int>(sizeof(buffer)), 0,
+        reinterpret_cast<sockaddr *>(&from), &fromLen);
+    return received == static_cast<int>(expected.size())
+        && std::memcmp(buffer, expected.data(), expected.size()) == 0;
+}
+
+bool recvExactTcp(SOCKET listener, const std::string &expected)
+{
+    SOCKET client = accept(listener, nullptr, nullptr);
+    if (client == INVALID_SOCKET)
+    {
+        return false;
+    }
+
+    DWORD timeoutMs = kSocketRecvTimeoutMs;
+    setsockopt(client, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char *>(&timeoutMs),
+               sizeof(timeoutMs));
+
+    std::string received;
+    received.resize(expected.size());
+    int total = 0;
+    while (total < static_cast<int>(expected.size()))
+    {
+        const int n = recv(
+            client, received.data() + total,
+            static_cast<int>(expected.size()) - total, 0);
+        if (n <= 0)
+        {
+            closesocket(client);
+            return false;
+        }
+        total += n;
+    }
+    closesocket(client);
+    return received == expected;
+}
+
 bool testSocketInvalidDestination()
 {
     Platform::Executor executor;
@@ -332,8 +419,8 @@ bool testSocketInvalidDestination()
 
 bool testSocketUdpRoundTrip()
 {
-    WSADATA wsa{};
-    if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+    WinsockScope winsock;
+    if (!winsock.ok)
     {
         std::cerr << "udp: WSAStartup failed\n";
         return false;
@@ -343,38 +430,23 @@ bool testSocketUdpRoundTrip()
     if (listener == INVALID_SOCKET)
     {
         std::cerr << "udp: listener socket failed\n";
-        WSACleanup();
         return false;
     }
 
     sockaddr_in addr{};
-    addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-    addr.sin_port = 0;
-    if (bind(listener, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)) != 0)
+    if (!bindLoopback(listener, addr))
     {
         std::cerr << "udp: bind failed\n";
         closesocket(listener);
-        WSACleanup();
         return false;
     }
 
-    int addrLen = sizeof(addr);
-    if (getsockname(listener, reinterpret_cast<sockaddr *>(&addr), &addrLen) != 0)
-    {
-        std::cerr << "udp: getsockname failed\n";
-        closesocket(listener);
-        WSACleanup();
-        return false;
-    }
-
-    DWORD timeoutMs = 2000;
+    DWORD timeoutMs = kSocketRecvTimeoutMs;
     setsockopt(listener, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char *>(&timeoutMs),
                sizeof(timeoutMs));
 
     const std::string payload = "wheeltime-udp-smoke";
-    const std::string destination =
-        "127.0.0.1:" + std::to_string(ntohs(addr.sin_port));
+    const std::string destination = loopbackDestination(addr);
 
     Platform::Executor executor;
     Platform::SocketSendRequest request;
@@ -385,25 +457,337 @@ bool testSocketUdpRoundTrip()
     {
         std::cerr << "udp: sendSocket failed\n";
         closesocket(listener);
-        WSACleanup();
         return false;
     }
 
-    char buffer[256]{};
-    sockaddr_in from{};
-    int fromLen = sizeof(from);
-    const int received = recvfrom(
-        listener, buffer, static_cast<int>(sizeof(buffer)), 0,
-        reinterpret_cast<sockaddr *>(&from), &fromLen);
+    const bool ok = recvExactUdp(listener, payload);
     closesocket(listener);
-    WSACleanup();
-
-    if (received != static_cast<int>(payload.size())
-        || std::memcmp(buffer, payload.data(), payload.size()) != 0)
+    if (!ok)
     {
-        std::cerr << "udp: payload mismatch (received=" << received << ")\n";
+        std::cerr << "udp: payload mismatch\n";
         return false;
     }
+    return true;
+}
+
+bool testSocketTcpRoundTrip()
+{
+    WinsockScope winsock;
+    if (!winsock.ok)
+    {
+        std::cerr << "tcp: WSAStartup failed\n";
+        return false;
+    }
+
+    SOCKET listener = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (listener == INVALID_SOCKET)
+    {
+        std::cerr << "tcp: listener socket failed\n";
+        return false;
+    }
+
+    sockaddr_in addr{};
+    if (!bindLoopback(listener, addr) || listen(listener, 1) != 0)
+    {
+        std::cerr << "tcp: bind/listen failed\n";
+        closesocket(listener);
+        return false;
+    }
+
+    DWORD timeoutMs = kSocketRecvTimeoutMs;
+    setsockopt(listener, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char *>(&timeoutMs),
+               sizeof(timeoutMs));
+
+    const std::string payload = "wheeltime-tcp-smoke";
+    const std::string destination = loopbackDestination(addr);
+
+    Platform::Executor executor;
+    Platform::SocketSendRequest request;
+    request.protocol = Platform::SocketProtocol::Tcp;
+    request.destination = destination;
+    request.message = payload;
+    if (!executor.sendSocket(request))
+    {
+        std::cerr << "tcp: sendSocket failed\n";
+        closesocket(listener);
+        return false;
+    }
+
+    const bool ok = recvExactTcp(listener, payload);
+    closesocket(listener);
+    if (!ok)
+    {
+        std::cerr << "tcp: payload mismatch\n";
+        return false;
+    }
+    return true;
+}
+
+bool testSocketInvalidDestinationStress()
+{
+    Platform::Executor executor;
+    for (int i = 0; i < kSocketStressIterations; ++i)
+    {
+        Platform::SocketSendRequest udp;
+        udp.protocol = Platform::SocketProtocol::Udp;
+        udp.destination = "not-a-host-port";
+        udp.message = "stress-" + std::to_string(i);
+        if (executor.sendSocket(udp))
+        {
+            std::cerr << "socket_invalid_stress: udp succeeded on iter " << i << '\n';
+            return false;
+        }
+
+        Platform::SocketSendRequest tcp;
+        tcp.protocol = Platform::SocketProtocol::Tcp;
+        tcp.destination = "badhost";
+        tcp.message = "x";
+        if (executor.sendSocket(tcp))
+        {
+            std::cerr << "socket_invalid_stress: tcp succeeded on iter " << i << '\n';
+            return false;
+        }
+
+        Platform::SocketSendRequest http;
+        http.protocol = Platform::SocketProtocol::Http;
+        http.destination = "ftp://example.com/";
+        http.message = "x";
+        if (executor.sendSocket(http))
+        {
+            std::cerr << "socket_invalid_stress: http succeeded on iter " << i << '\n';
+            return false;
+        }
+
+        Platform::SocketSendRequest ws;
+        ws.protocol = Platform::SocketProtocol::WebSocket;
+        ws.destination = "not-a-ws-url";
+        ws.message = "x";
+        if (executor.sendSocket(ws))
+        {
+            std::cerr << "socket_invalid_stress: websocket succeeded on iter " << i << '\n';
+            return false;
+        }
+    }
+    return true;
+}
+
+bool testSocketUdpRoundTripStress()
+{
+    WinsockScope winsock;
+    if (!winsock.ok)
+    {
+        std::cerr << "udp_stress: WSAStartup failed\n";
+        return false;
+    }
+
+    SOCKET listener = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (listener == INVALID_SOCKET)
+    {
+        std::cerr << "udp_stress: listener socket failed\n";
+        return false;
+    }
+
+    sockaddr_in addr{};
+    if (!bindLoopback(listener, addr))
+    {
+        std::cerr << "udp_stress: bind failed\n";
+        closesocket(listener);
+        return false;
+    }
+
+    DWORD timeoutMs = kSocketRecvTimeoutMs;
+    setsockopt(listener, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char *>(&timeoutMs),
+               sizeof(timeoutMs));
+
+    const std::string destination = loopbackDestination(addr);
+    Platform::Executor executor;
+
+    for (int i = 0; i < kSocketStressIterations; ++i)
+    {
+        const std::string payload = "udp-stress-" + std::to_string(i);
+        Platform::SocketSendRequest request;
+        request.protocol = Platform::SocketProtocol::Udp;
+        request.destination = destination;
+        request.message = payload;
+        if (!executor.sendSocket(request))
+        {
+            std::cerr << "udp_stress: sendSocket failed on iter " << i << '\n';
+            closesocket(listener);
+            return false;
+        }
+        if (!recvExactUdp(listener, payload))
+        {
+            std::cerr << "udp_stress: payload mismatch on iter " << i << '\n';
+            closesocket(listener);
+            return false;
+        }
+    }
+
+    closesocket(listener);
+    return true;
+}
+
+bool testSocketTcpRoundTripStress()
+{
+    WinsockScope winsock;
+    if (!winsock.ok)
+    {
+        std::cerr << "tcp_stress: WSAStartup failed\n";
+        return false;
+    }
+
+    SOCKET listener = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (listener == INVALID_SOCKET)
+    {
+        std::cerr << "tcp_stress: listener socket failed\n";
+        return false;
+    }
+
+    sockaddr_in addr{};
+    if (!bindLoopback(listener, addr) || listen(listener, SOMAXCONN) != 0)
+    {
+        std::cerr << "tcp_stress: bind/listen failed\n";
+        closesocket(listener);
+        return false;
+    }
+
+    DWORD timeoutMs = kSocketRecvTimeoutMs;
+    setsockopt(listener, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char *>(&timeoutMs),
+               sizeof(timeoutMs));
+
+    const std::string destination = loopbackDestination(addr);
+    Platform::Executor executor;
+
+    for (int i = 0; i < kSocketStressIterations; ++i)
+    {
+        const std::string payload = "tcp-stress-" + std::to_string(i);
+        Platform::SocketSendRequest request;
+        request.protocol = Platform::SocketProtocol::Tcp;
+        request.destination = destination;
+        request.message = payload;
+        if (!executor.sendSocket(request))
+        {
+            std::cerr << "tcp_stress: sendSocket failed on iter " << i << '\n';
+            closesocket(listener);
+            return false;
+        }
+        if (!recvExactTcp(listener, payload))
+        {
+            std::cerr << "tcp_stress: payload mismatch on iter " << i << '\n';
+            closesocket(listener);
+            return false;
+        }
+    }
+
+    closesocket(listener);
+    return true;
+}
+
+bool testSocketActionItemExecuteStress()
+{
+    WinsockScope winsock;
+    if (!winsock.ok)
+    {
+        std::cerr << "ai_socket_stress: WSAStartup failed\n";
+        return false;
+    }
+
+    SOCKET udpListener = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    SOCKET tcpListener = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (udpListener == INVALID_SOCKET || tcpListener == INVALID_SOCKET)
+    {
+        std::cerr << "ai_socket_stress: listener sockets failed\n";
+        if (udpListener != INVALID_SOCKET)
+        {
+            closesocket(udpListener);
+        }
+        if (tcpListener != INVALID_SOCKET)
+        {
+            closesocket(tcpListener);
+        }
+        return false;
+    }
+
+    sockaddr_in udpAddr{};
+    sockaddr_in tcpAddr{};
+    if (!bindLoopback(udpListener, udpAddr) || !bindLoopback(tcpListener, tcpAddr)
+        || listen(tcpListener, SOMAXCONN) != 0)
+    {
+        std::cerr << "ai_socket_stress: bind/listen failed\n";
+        closesocket(udpListener);
+        closesocket(tcpListener);
+        return false;
+    }
+
+    DWORD timeoutMs = kSocketRecvTimeoutMs;
+    setsockopt(udpListener, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char *>(&timeoutMs),
+               sizeof(timeoutMs));
+    setsockopt(tcpListener, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<const char *>(&timeoutMs),
+               sizeof(timeoutMs));
+
+    const std::string udpDst = loopbackDestination(udpAddr);
+    const std::string tcpDst = loopbackDestination(tcpAddr);
+    ActionExecutionContext ctx{std::make_unique<Action>(
+        std::vector<std::unique_ptr<ActionItem>>{}, "socket-stress", "", "socket-stress", 0)};
+
+    for (int i = 0; i < kSocketStressIterations; ++i)
+    {
+        const std::string udpPayload = "ai-udp-" + std::to_string(i);
+        AI_Socket udpItem{Platform::SocketProtocol::Udp, udpDst, udpPayload};
+        if (udpItem.execute(ctx).type() != ExecuteResult::Type::Continue)
+        {
+            std::cerr << "ai_socket_stress: udp execute not Continue on iter " << i << '\n';
+            closesocket(udpListener);
+            closesocket(tcpListener);
+            return false;
+        }
+        if (!recvExactUdp(udpListener, udpPayload))
+        {
+            std::cerr << "ai_socket_stress: udp payload mismatch on iter " << i << '\n';
+            closesocket(udpListener);
+            closesocket(tcpListener);
+            return false;
+        }
+
+        const std::string tcpPayload = "ai-tcp-" + std::to_string(i);
+        AI_Socket tcpItem{Platform::SocketProtocol::Tcp, tcpDst, tcpPayload};
+        if (tcpItem.execute(ctx).type() != ExecuteResult::Type::Continue)
+        {
+            std::cerr << "ai_socket_stress: tcp execute not Continue on iter " << i << '\n';
+            closesocket(udpListener);
+            closesocket(tcpListener);
+            return false;
+        }
+        if (!recvExactTcp(tcpListener, tcpPayload))
+        {
+            std::cerr << "ai_socket_stress: tcp payload mismatch on iter " << i << '\n';
+            closesocket(udpListener);
+            closesocket(tcpListener);
+            return false;
+        }
+
+        // Failures still continue the action chain.
+        AI_Socket bad{Platform::SocketProtocol::Udp, "not-a-host-port", "x"};
+        if (bad.execute(ctx).type() != ExecuteResult::Type::Continue)
+        {
+            std::cerr << "ai_socket_stress: bad dest should still Continue on iter " << i << '\n';
+            closesocket(udpListener);
+            closesocket(tcpListener);
+            return false;
+        }
+
+        auto cloned = udpItem.clone();
+        if (cloned == nullptr || cloned->kind() != ActionItemKind::Socket)
+        {
+            std::cerr << "ai_socket_stress: clone failed on iter " << i << '\n';
+            closesocket(udpListener);
+            closesocket(tcpListener);
+            return false;
+        }
+    }
+
+    closesocket(udpListener);
+    closesocket(tcpListener);
     return true;
 }
 
@@ -426,6 +810,11 @@ int main(int argc, char *argv[])
         {"nth_item_defaults", testNthItemDefaults},
         {"socket_invalid_destination", testSocketInvalidDestination},
         {"socket_udp_roundtrip", testSocketUdpRoundTrip},
+        {"socket_tcp_roundtrip", testSocketTcpRoundTrip},
+        {"socket_invalid_destination_stress", testSocketInvalidDestinationStress},
+        {"socket_udp_roundtrip_stress", testSocketUdpRoundTripStress},
+        {"socket_tcp_roundtrip_stress", testSocketTcpRoundTripStress},
+        {"socket_action_item_execute_stress", testSocketActionItemExecuteStress},
     };
 
     int failed = 0;

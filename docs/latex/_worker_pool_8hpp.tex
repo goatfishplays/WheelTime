@@ -1,0 +1,35 @@
+\doxysection{E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\+Worker\+Pool.hpp File Reference}
+\hypertarget{_worker_pool_8hpp}{}\label{_worker_pool_8hpp}\index{E:/Github/WheelTime/app/include/App/WorkerPool.hpp@{E:/Github/WheelTime/app/include/App/WorkerPool.hpp}}
+
+
+Executes Action\+Execution\+Contexts on a pool of worker threads.  
+
+
+{\ttfamily \+\#include $<$atomic$>$}\newline
+{\ttfamily \+\#include $<$chrono$>$}\newline
+{\ttfamily \+\#include $<$condition\+\_\+variable$>$}\newline
+{\ttfamily \+\#include $<$cstddef$>$}\newline
+{\ttfamily \+\#include $<$functional$>$}\newline
+{\ttfamily \+\#include $<$memory$>$}\newline
+{\ttfamily \+\#include $<$mutex$>$}\newline
+{\ttfamily \+\#include $<$thread$>$}\newline
+{\ttfamily \+\#include $<$vector$>$}\newline
+{\ttfamily \+\#include "{}App/\+\+Action\+Execution\+Context.\+hpp"{}}\newline
+{\ttfamily \+\#include "{}App/\+\+Thread\+Safe\+Queue.\+hpp"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \doxymbox{\hyperlink{struct_application_1_1_worker_result}{Application::\+\+Worker\+Result}}
+\begin{DoxyCompactList}\small\item\em Outcome of a worker\textquotesingle{}s run over an \doxylink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}. \end{DoxyCompactList}\item 
+class \doxymbox{\hyperlink{class_application_1_1_worker_pool}{Application::\+\+Worker\+Pool}}
+\begin{DoxyCompactList}\small\item\em Worker thread pool with no scheduling policy. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \doxymbox{\hyperlink{namespace_application}{Application}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Executes Action\+Execution\+Contexts on a pool of worker threads. 
+

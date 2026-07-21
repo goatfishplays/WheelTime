@@ -2,6 +2,7 @@
     "actions": [
         {
             "channel": 0,
+            "icon": "E:/Media/Images/Reference/microphone.png",
             "id": "action-new-action-2",
             "items": [
                 {
@@ -16,6 +17,7 @@
         },
         {
             "channel": 0,
+            "icon": "E:/Media/Images/Reference/headphones.png",
             "id": "action-new-action-5",
             "items": [
                 {
@@ -30,19 +32,7 @@
         },
         {
             "channel": 0,
-            "icon": "C:/Users/Torpin Pascual/Pictures/Screenshots/Screenshot 2026-07-15 144429.png",
-            "id": "action-new-action",
-            "items": [
-                {
-                    "customTarget": "notepad.exe",
-                    "presetId": "notepad",
-                    "type": "launch_app"
-                }
-            ],
-            "name": "Test Action"
-        },
-        {
-            "channel": 0,
+            "icon": "E:/Media/Images/Reference/pause-play.png",
             "id": "action-new-action-3",
             "items": [
                 {
@@ -57,6 +47,7 @@
         },
         {
             "channel": 0,
+            "icon": "E:/Media/Images/Reference/searching-bar.png",
             "id": "action-search",
             "items": [
                 {
@@ -71,16 +62,33 @@
             "name": "Search"
         },
         {
-            "channel": 0,
-            "icon": "C:/Users/Torpin Pascual/Pictures/Screenshots/Screenshot 2025-08-13 144050.png",
-            "id": "action-new-action-6",
+            "channel": 1,
+            "id": "action-new-action-4",
             "items": [
                 {
-                    "holdDuration": 0,
-                    "keycode": 69,
+                    "holdDuration": 5.199999809265137,
+                    "keycode": 65,
                     "modifiers": 0,
                     "proceed": false,
                     "type": "hotkey"
+                },
+                {
+                    "holdDuration": 0,
+                    "keycode": 66,
+                    "modifiers": 0,
+                    "proceed": false,
+                    "type": "hotkey"
+                }
+            ],
+            "name": "a5b"
+        },
+        {
+            "channel": 0,
+            "id": "action-new-action-6",
+            "items": [
+                {
+                    "level": "all",
+                    "type": "cancel"
                 }
             ],
             "name": "New Action"
@@ -91,7 +99,6 @@
             "actionIds": [
                 "action-new-action-2",
                 "action-new-action-5",
-                "action-new-action",
                 "action-new-action-3",
                 "action-search"
             ],
@@ -99,34 +106,38 @@
             "executeOnRelease": true,
             "exitOnAction": true,
             "id": "menu-example",
-            "name": "GAMBLING",
+            "name": "Main",
+            "restoreMouseOnClose": true,
             "triggerMod": 6,
             "triggerVk": 192
         },
         {
             "actionIds": [
                 "action-new-action-2",
-                "action-search",
-                "action-new-action-6"
+                "action-search"
             ],
             "centerMouseOnOpen": true,
             "executeOnRelease": false,
             "exitOnAction": false,
             "id": "menu-new-menu",
-            "name": "test 1",
-            "triggerMod": 0,
-            "triggerVk": 0
+            "name": "Video Demo",
+            "restoreMouseOnClose": true,
+            "triggerMod": 6,
+            "triggerVk": 186
         },
         {
             "actionIds": [
+                "action-new-action-4",
+                "action-new-action-6"
             ],
             "centerMouseOnOpen": true,
             "executeOnRelease": false,
             "exitOnAction": false,
             "id": "menu-new-menu-2",
             "name": "New Menu",
-            "triggerMod": 0,
-            "triggerVk": 0
+            "restoreMouseOnClose": true,
+            "triggerMod": 6,
+            "triggerVk": 222
         }
     ]
 }

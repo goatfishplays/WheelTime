@@ -1,8 +1,25 @@
 var searchData=
 [
-  ['getabsolutemouseposition_0',['getAbsoluteMousePosition',['../classPlatform_1_1InputRcvr.html#a7876b5f6c8a133340fce671a742873db',1,'Platform::InputRcvr']]],
-  ['getactivemenu_1',['getActiveMenu',['../classApp_1_1App.html#a929ff86eb4dd3edad7f9bab285b78ca5',1,'App::App']]],
-  ['getrelativemouseposition_2',['getRelativeMousePosition',['../classPlatform_1_1InputRcvr.html#aeced2a888895a39a85974ab096a01f9a',1,'Platform::InputRcvr']]],
-  ['goal_3',['Sprint 1 Goal',['../index.html#autotoc_md15',1,'']]],
-  ['goals_4',['Project Goals',['../index.html#autotoc_md12',1,'']]]
+  ['backlog_0',['Backlog',['../md_scrum_2_sprint_plan_01_0g2.html#autotoc_md95',1,'&lt;b&gt;User Story 4 - Low Priority (Backlog)&lt;/b&gt;'],['../md_scrum_2_release_01_plan.html#autotoc_md31',1,'Backlog']]],
+  ['base_1',['Base',['../namespace_application.html#ac713faa8cc99e4514a1a5c6a6336f1bca095a1b43effec73955e31e790438de49',1,'Application']]],
+  ['based_20on_20the_20product_20owners_20vision_2',['-Product Owner had looked over the codes functionality (Not a code review, just checking if it does the right thing based on the Product Owners vision).',['../md__acceptance_01_criteria.html#autotoc_md6',1,'']]],
+  ['batch_3',['Running Scripts Safely (Powershell / Batch)',['../md__e_1_2_github_2_wheel_time_2notes_2secure-launching.html#autotoc_md155',1,'']]],
+  ['being_20reviewed_20by_20one_20other_20does_20the_20documentation_20make_20sense_4',['-After being reviewed by one other, does the documentation make sense?',['../md__acceptance_01_criteria.html#autotoc_md11',1,'']]],
+  ['being_20worked_20on_5',['&lt;b&gt;Not updating each other often on what&apos;s currently being worked on&lt;/b&gt;',['../md_scrum_2_sprint_01_0g3_01_report.html#autotoc_md52',1,'']]],
+  ['best_20practices_6',['Powershell Best Practices',['../md__e_1_2_github_2_wheel_time_2notes_2secure-launching.html#autotoc_md156',1,'']]],
+  ['bind_7',['bind',['../class_application_1_1_channel_manager.html#a8da6ba97fb97286d75effce4788f4049',1,'Application::ChannelManager']]],
+  ['board_8',['Board',['../md_scrum_2_sprint_plan_01_0g2.html#autotoc_md102',1,'&lt;b&gt;Initial Scrum Board&lt;/b&gt;'],['../md_scrum_2_sprint_plan_01_0g3.html#autotoc_md115',1,'&lt;b&gt;Initial Scrum Board&lt;/b&gt;'],['../md_scrum_2_sprint_plan_01_0g4.html#autotoc_md129',1,'&lt;b&gt;Initial Scrum Board&lt;/b&gt;'],['../md_scrum_2_sprint_plan1.html#autotoc_md143',1,'&lt;b&gt;Initial Scrum Board&lt;/b&gt;']]],
+  ['board_9',['&lt;b&gt;Keep actively using the Trello board&lt;/b&gt;',['../md_scrum_2_sprint_01_0g2_01_report.html#autotoc_md38',1,'']]],
+  ['board_20more_20often_10',['&lt;b&gt;Start updating the scrum board more often&lt;/b&gt;',['../md_scrum_2_sprint_01_report_01_0g1.html#autotoc_md73',1,'']]],
+  ['braces_3a_11',['Braces:',['../md__c_09_09_01_coding_01_standards_01_document.html#autotoc_md18',1,'']]],
+  ['build_12',['Configure and Build',['../index.html#autotoc_md171',1,'']]],
+  ['build_20instructions_13',['Build Instructions',['../index.html#autotoc_md169',1,'']]],
+  ['build_20the_20right_20thing_14',['Did you build the right thing?',['../md__acceptance_01_criteria.html',1,'']]],
+  ['building_20modular_20abstraction_20structures_15',['&lt;b&gt;Keep building modular abstraction structures&lt;/b&gt;',['../md_scrum_2_sprint_01_0g3_01_report.html#autotoc_md57',1,'']]],
+  ['buildwebsearchurl_16',['buildWebSearchUrl',['../class_application_1_1_search_palette_widget.html#ad8783302d82d6a4ffbe81f42cb090920',1,'Application::SearchPaletteWidget']]],
+  ['burnup_20chart_17',['Burnup Chart',['../md_scrum_2_sprint_01_0g2_01_report.html#autotoc_md48',1,'&lt;b&gt;Final Burnup Chart&lt;/b&gt;'],['../md_scrum_2_sprint_01_0g3_01_report.html#autotoc_md65',1,'&lt;b&gt;Final Burnup Chart&lt;/b&gt;'],['../md_scrum_2_sprint_01_report_01_0g1.html#autotoc_md87',1,'&lt;b&gt;Final Burnup Chart&lt;/b&gt;'],['../md_scrum_2_sprint_plan_01_0g2.html#autotoc_md101',1,'&lt;b&gt;Initial Burnup Chart&lt;/b&gt;'],['../md_scrum_2_sprint_plan_01_0g3.html#autotoc_md114',1,'&lt;b&gt;Initial Burnup Chart&lt;/b&gt;'],['../md_scrum_2_sprint_plan_01_0g4.html#autotoc_md128',1,'&lt;b&gt;Initial Burnup Chart&lt;/b&gt;'],['../md_scrum_2_sprint_plan1.html#autotoc_md142',1,'&lt;b&gt;Initial Burnup Chart&lt;/b&gt;']]],
+  ['button_18',['button',['../class_application_1_1_a_i___mouse_button.html#a65292069e0ba05aae613c77ac025b374',1,'Application::AI_MouseButton::button'],['../class_application_1_1_a_i___mouse_button_release.html#a3adbb674fce4d06cb92d3c2db3e20272',1,'Application::AI_MouseButtonRelease::button']]],
+  ['buttontriggered_19',['buttonTriggered',['../class_application_1_1_radial_menu_widget.html#acff7066baf0ebb603065a46bce10d352',1,'Application::RadialMenuWidget']]],
+  ['by_20one_20other_20does_20the_20documentation_20make_20sense_20',['-After being reviewed by one other, does the documentation make sense?',['../md__acceptance_01_criteria.html#autotoc_md11',1,'']]],
+  ['by_20user_20story_21',['by User Story',['../md_scrum_2_sprint_plan_01_0g2.html#autotoc_md91',1,'&lt;b&gt;Task Listing by User Story&lt;/b&gt;'],['../md_scrum_2_sprint_plan_01_0g3.html#autotoc_md106',1,'&lt;b&gt;Task Listing by User Story&lt;/b&gt;'],['../md_scrum_2_sprint_plan_01_0g4.html#autotoc_md119',1,'&lt;b&gt;Task Listing by User Story&lt;/b&gt;'],['../md_scrum_2_sprint_plan1.html#autotoc_md133',1,'&lt;b&gt;Task Listing by User Story&lt;/b&gt;']]]
 ];

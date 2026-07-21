@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['registerinputbinding_0',['registerInputBinding',['../classPlatform_1_1InputRcvr.html#addbec4b23b0cbb7f8d199943c7f00c7f',1,'Platform::InputRcvr']]],
-  ['remaction_1',['remAction',['../classApp_1_1Menu.html#a67e1668fbe6313c7ec6454929bcc20e0',1,'App::Menu']]],
-  ['removeitem_2',['removeItem',['../classApp_1_1Action.html#a64fa3ccfc83ccb4a1c78da3fa80022d2',1,'App::Action']]],
-  ['runaction_3',['runAction',['../classApp_1_1App.html#a8953b968ef9a8941cf5f3906020e8af6',1,'App::App']]]
+  ['leaveevent_0',['leaveEvent',['../class_application_1_1_hover_button.html#a248a80651155cda519d96a6eead9d719',1,'Application::HoverButton']]],
+  ['load_1',['load',['../class_application_1_1_action_history.html#a975106634e1f1d5de46b89b3f9d25af4',1,'Application::ActionHistory']]],
+  ['loadconfig_2',['loadConfig',['../class_application_1_1_menu_config_loader.html#a01daced57db74b2948970e122bfb0855',1,'Application::MenuConfigLoader']]],
+  ['loadworkingcopy_3',['loadWorkingCopy',['../class_application_1_1_settings_window.html#a598169088f9d94df7f24cfa03482f731',1,'Application::SettingsWindow']]]
 ];

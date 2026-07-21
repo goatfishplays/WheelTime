@@ -1,0 +1,143 @@
+\doxysection{Application::\+Action\+History Class Reference}
+\hypertarget{class_application_1_1_action_history}{}\label{class_application_1_1_action_history}\index{Application::ActionHistory@{Application::ActionHistory}}
+
+
+Tracks which library Actions the user has launched from the wheel.  
+
+
+
+
+{\ttfamily \+\#include $<$Action\+History.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_history_a42b17cdb632eec6c80db9f92141de041}{Action\+History}} (std::\+size\+\_\+t max\+Recent=64)
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_action_history_a54f5114bcafd178b97c93d9c7d5a4a49}{record\+Use}} (const std::\+string \&action\+Id)
+\begin{DoxyCompactList}\small\item\em Records a user launch of {\ttfamily action\+Id} (ignored if empty). \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_application_1_1_action_history_a8592cdca26b45fdfd8c50159af0bd6b4}{nth\+Recent\+Id}} (int n) const
+\begin{DoxyCompactList}\small\item\em Library action id at 1-\/based recent rank {\ttfamily n}. \end{DoxyCompactList}\item 
+std::\+string \doxymbox{\hyperlink{class_application_1_1_action_history_ae35ad3c0963dd0ec066a23e8faf25ba7}{nth\+Frequent\+Id}} (int n) const
+\begin{DoxyCompactList}\small\item\em Library action id at 1-\/based frequency rank {\ttfamily n}. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_action_history_a933dd61a86f541788b0e1912b09700ce}{prune\+To\+Library}} (const std::\+vector$<$ std::\+string $>$ \&valid\+Ids)
+\begin{DoxyCompactList}\small\item\em Drops ids that are not in {\ttfamily valid\+Ids} (e.\+g. after config reload). \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_action_history_a975106634e1f1d5de46b89b3f9d25af4}{load}} (const QString \&path)
+\begin{DoxyCompactList}\small\item\em Loads recent/\+frequent state from JSON at {\ttfamily path} (missing file is ok). \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_action_history_af4f6a3728b40549b24ad90db5dbc73b3}{save}} (const QString \&path) const
+\begin{DoxyCompactList}\small\item\em Writes recent/\+frequent state to JSON at {\ttfamily path}. \end{DoxyCompactList}\item 
+std::\+size\+\_\+t \doxymbox{\hyperlink{class_application_1_1_action_history_af0329c53451a68656622e50c2dfe7caf}{recent\+Count}} () const
+\item 
+std::\+size\+\_\+t \doxymbox{\hyperlink{class_application_1_1_action_history_a73c20ae833fc956b31780c1e7e73e900}{frequent\+Entry\+Count}} () const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Tracks which library Actions the user has launched from the wheel. 
+
+
+\begin{DoxyItemize}
+\item Recent:\+ unique MRU list (index 0 = most recent).
+\item Frequent:\+ launch counts keyed by library action id.
+\end{DoxyItemize}
+
+Lookups are 1-\/based (n=1 is most recent /\+ most frequent). Thread-\/safe. 
+
+\label{class_application_1_1_action_history_doc-constructors}
+\Hypertarget{class_application_1_1_action_history_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_action_history_a42b17cdb632eec6c80db9f92141de041}\index{Application::ActionHistory@{Application::ActionHistory}!ActionHistory@{ActionHistory}}
+\index{ActionHistory@{ActionHistory}!Application::ActionHistory@{Application::ActionHistory}}
+\doxysubsubsection{\texorpdfstring{ActionHistory()}{ActionHistory()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_history_a42b17cdb632eec6c80db9f92141de041} 
+Application::\+\+Action\+History::\+\+Action\+History (\begin{DoxyParamCaption}\item[{std::\+size\+\_\+t}]{max\+Recent}{ = {\ttfamily 64}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+\label{class_application_1_1_action_history_doc-func-members}
+\Hypertarget{class_application_1_1_action_history_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_action_history_a73c20ae833fc956b31780c1e7e73e900}\index{Application::ActionHistory@{Application::ActionHistory}!frequentEntryCount@{frequentEntryCount}}
+\index{frequentEntryCount@{frequentEntryCount}!Application::ActionHistory@{Application::ActionHistory}}
+\doxysubsubsection{\texorpdfstring{frequentEntryCount()}{frequentEntryCount()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_history_a73c20ae833fc956b31780c1e7e73e900} 
+std::\+size\+\_\+t Application::\+\+Action\+History::\+frequent\+Entry\+Count (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{class_application_1_1_action_history_a975106634e1f1d5de46b89b3f9d25af4}\index{Application::ActionHistory@{Application::ActionHistory}!load@{load}}
+\index{load@{load}!Application::ActionHistory@{Application::ActionHistory}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_history_a975106634e1f1d5de46b89b3f9d25af4} 
+bool Application::\+\+Action\+History::\+load (\begin{DoxyParamCaption}\item[{const QString \&}]{path}{}\end{DoxyParamCaption})}
+
+
+
+Loads recent/\+frequent state from JSON at {\ttfamily path} (missing file is ok). 
+
+\Hypertarget{class_application_1_1_action_history_ae35ad3c0963dd0ec066a23e8faf25ba7}\index{Application::ActionHistory@{Application::ActionHistory}!nthFrequentId@{nthFrequentId}}
+\index{nthFrequentId@{nthFrequentId}!Application::ActionHistory@{Application::ActionHistory}}
+\doxysubsubsection{\texorpdfstring{nthFrequentId()}{nthFrequentId()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_history_ae35ad3c0963dd0ec066a23e8faf25ba7} 
+std::\+string Application::\+\+Action\+History::\+nth\+Frequent\+Id (\begin{DoxyParamCaption}\item[{int}]{n}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Library action id at 1-\/based frequency rank {\ttfamily n}. 
+
+Ties break toward the more recently used id. \begin{DoxyReturn}{Returns}
+Empty string if {\ttfamily n} is out of range or no history. 
+\end{DoxyReturn}
+\Hypertarget{class_application_1_1_action_history_a8592cdca26b45fdfd8c50159af0bd6b4}\index{Application::ActionHistory@{Application::ActionHistory}!nthRecentId@{nthRecentId}}
+\index{nthRecentId@{nthRecentId}!Application::ActionHistory@{Application::ActionHistory}}
+\doxysubsubsection{\texorpdfstring{nthRecentId()}{nthRecentId()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_history_a8592cdca26b45fdfd8c50159af0bd6b4} 
+std::\+string Application::\+\+Action\+History::\+nth\+Recent\+Id (\begin{DoxyParamCaption}\item[{int}]{n}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Library action id at 1-\/based recent rank {\ttfamily n}. 
+
+\begin{DoxyReturn}{Returns}
+Empty string if {\ttfamily n} is out of range or no history. 
+\end{DoxyReturn}
+\Hypertarget{class_application_1_1_action_history_a933dd61a86f541788b0e1912b09700ce}\index{Application::ActionHistory@{Application::ActionHistory}!pruneToLibrary@{pruneToLibrary}}
+\index{pruneToLibrary@{pruneToLibrary}!Application::ActionHistory@{Application::ActionHistory}}
+\doxysubsubsection{\texorpdfstring{pruneToLibrary()}{pruneToLibrary()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_history_a933dd61a86f541788b0e1912b09700ce} 
+void Application::\+\+Action\+History::\+prune\+To\+Library (\begin{DoxyParamCaption}\item[{const std::\+vector$<$ std::\+string $>$ \&}]{valid\+Ids}{}\end{DoxyParamCaption})}
+
+
+
+Drops ids that are not in {\ttfamily valid\+Ids} (e.\+g. after config reload). 
+
+\Hypertarget{class_application_1_1_action_history_af0329c53451a68656622e50c2dfe7caf}\index{Application::ActionHistory@{Application::ActionHistory}!recentCount@{recentCount}}
+\index{recentCount@{recentCount}!Application::ActionHistory@{Application::ActionHistory}}
+\doxysubsubsection{\texorpdfstring{recentCount()}{recentCount()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_history_af0329c53451a68656622e50c2dfe7caf} 
+std::\+size\+\_\+t Application::\+\+Action\+History::\+recent\+Count (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{class_application_1_1_action_history_a54f5114bcafd178b97c93d9c7d5a4a49}\index{Application::ActionHistory@{Application::ActionHistory}!recordUse@{recordUse}}
+\index{recordUse@{recordUse}!Application::ActionHistory@{Application::ActionHistory}}
+\doxysubsubsection{\texorpdfstring{recordUse()}{recordUse()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_history_a54f5114bcafd178b97c93d9c7d5a4a49} 
+void Application::\+\+Action\+History::\+record\+Use (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{action\+Id}{}\end{DoxyParamCaption})}
+
+
+
+Records a user launch of {\ttfamily action\+Id} (ignored if empty). 
+
+\Hypertarget{class_application_1_1_action_history_af4f6a3728b40549b24ad90db5dbc73b3}\index{Application::ActionHistory@{Application::ActionHistory}!save@{save}}
+\index{save@{save}!Application::ActionHistory@{Application::ActionHistory}}
+\doxysubsubsection{\texorpdfstring{save()}{save()}}
+{\footnotesize\ttfamily \label{class_application_1_1_action_history_af4f6a3728b40549b24ad90db5dbc73b3} 
+bool Application::\+\+Action\+History::\+save (\begin{DoxyParamCaption}\item[{const QString \&}]{path}{}\end{DoxyParamCaption}) const}
+
+
+
+Writes recent/\+frequent state to JSON at {\ttfamily path}. 
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_action_history_8hpp}{Action\+History.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\doxymbox{\hyperlink{_action_history_8cpp}{Action\+History.\+cpp}}\end{DoxyCompactItemize}

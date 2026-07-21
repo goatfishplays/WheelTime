@@ -1,0 +1,112 @@
+\doxysection{Search\+Palette\+Widget.\+hpp}
+\hypertarget{_search_palette_widget_8hpp_source}{}\label{_search_palette_widget_8hpp_source}\index{E:/Github/WheelTime/app/include/App/SearchPaletteWidget.hpp@{E:/Github/WheelTime/app/include/App/SearchPaletteWidget.hpp}}
+\doxymbox{\hyperlink{_search_palette_widget_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <QHash>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <QIcon>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <QLabel>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <QLineEdit>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <QListWidget>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <QString>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <QToolButton>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <QWidget>}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_program_index_8hpp}{App/ProgramIndex.hpp}}"{}}}
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_search_config_8hpp}{App/SearchConfig.hpp}}"{}}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }QTimer;}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00026\ \{}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00035\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_search_palette_widget_aa353587bf2da94c97f388748649b23b1}{SearchPaletteWidget}}\ :\ \textcolor{keyword}{public}\ QWidget}
+\DoxyCodeLine{00036\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ Q\_OBJECT}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{explicit}\ \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_aa353587bf2da94c97f388748649b23b1}{SearchPaletteWidget}}(QWidget\ *parent\ =\ \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_ad6e50dd8b53c94ae8ffb66245c701da5}{openWithConfig}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{struct_application_1_1_search_config}{SearchConfig}}\ \&config);}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_a4254e98cbd74c5ab5ac098e54ecf2018}{focusInput}}();}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_a5f3ca00b6f4767881c413340b8d00342}{preloadIndex}}();}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00053\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ QString\ \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_ad8783302d82d6a4ffbe81f42cb090920}{buildWebSearchUrl}}(\textcolor{keyword}{const}\ QString\ \&urlTemplate,\ \textcolor{keyword}{const}\ QString\ \&query);}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{comment}{//\ Introspection\ for\ tests/automation.}}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_ac8d432f29b00f84b1922291b4de09f98}{setQueryText}}(\textcolor{keyword}{const}\ QString\ \&text);}
+\DoxyCodeLine{00059\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_a79fc41874b400d73a5a8a03168edd576}{resultCount}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00061\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{int}\ \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_a237fd5815ecc77a979536715416ee2de}{selectedRow}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00063\ \ \ \ \ [[nodiscard]]\ QString\ \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_a8428bc5835ea28341866586409b2f0e8}{resultLabelAt}}(\textcolor{keywordtype}{int}\ row)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00065\ \ \ \ \ [[nodiscard]]\ QString\ \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_aa9a39c4fedfd0a7157a6725c7f5cfded}{resultCategoryAt}}(\textcolor{keywordtype}{int}\ row)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_a0cb9fe7b466023c8781732c40b602021}{eventFilter}}(QObject\ *watched,\ QEvent\ *event)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_search_palette_widget_a60e1f16d26328ace444116a2472828b5}{keyPressEvent}}(QKeyEvent\ *event)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{enum\ class}\ ResultKind}
+\DoxyCodeLine{00073\ \ \ \ \ \{}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_action}{Action}},}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ Program,}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}},}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ Web}
+\DoxyCodeLine{00078\ \ \ \ \ \};}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{struct\ }ResultEntry}
+\DoxyCodeLine{00081\ \ \ \ \ \{}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ ResultKind\ kind\{ResultKind::Action\};}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ QString\ label;}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ QIcon\ icon;}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ std::string\ target;}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ score\{0\};}
+\DoxyCodeLine{00088\ \ \ \ \ \};}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{struct\ }ResultRow}
+\DoxyCodeLine{00092\ \ \ \ \ \{}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ QListWidgetItem\ *item\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ QLabel\ *iconLabel\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ QLabel\ *nameLabel\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ QLabel\ *categoryLabel\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00097\ \ \ \ \ \};}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordtype}{void}\ refreshResults();}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{void}\ collectActionResults(\textcolor{keyword}{const}\ QString\ \&query,\ std::vector<ResultEntry>\ \&out);}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordtype}{void}\ collectProgramResults(\textcolor{keyword}{const}\ QString\ \&query,\ std::vector<ResultEntry>\ \&out);}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{void}\ collectMenuResults(\textcolor{keyword}{const}\ QString\ \&query,\ std::vector<ResultEntry>\ \&out)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{void}\ ensureRowPool(\textcolor{keywordtype}{int}\ rowCount);}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordtype}{void}\ applyEntryToRow(\textcolor{keywordtype}{int}\ row);}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordtype}{void}\ startPendingIconFill();}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordtype}{void}\ fillPendingIconsChunk();}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordtype}{void}\ moveSelection(\textcolor{keywordtype}{int}\ delta);}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keywordtype}{void}\ activateRow(\textcolor{keywordtype}{int}\ row);}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordtype}{void}\ activateEntry(\textcolor{keyword}{const}\ ResultEntry\ \&entry);}
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keywordtype}{bool}\ handlePaletteKey(QKeyEvent\ *keyEvent);}
+\DoxyCodeLine{00111\ \ \ \ \ QString\ categoryName(ResultKind\ kind)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00112\ \ \ \ \ QIcon\ resolveActionIcon(\textcolor{keyword}{const}\ std::string\ \&iconFilepath);}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ QLineEdit\ *m\_input\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00115\ \ \ \ \ QToolButton\ *m\_filterActions\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00116\ \ \ \ \ QToolButton\ *m\_filterPrograms\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00117\ \ \ \ \ QToolButton\ *m\_filterMenus\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00118\ \ \ \ \ QToolButton\ *m\_filterWeb\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00119\ \ \ \ \ QListWidget\ *m\_results\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00120\ \ \ \ \ QTimer\ *m\_iconFillTimer\{\textcolor{keyword}{nullptr}\};}
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \ \ \ \ \doxymbox{\hyperlink{struct_application_1_1_search_config}{SearchConfig}}\ m\_config;}
+\DoxyCodeLine{00123\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_program_index}{ProgramIndex}}\ m\_programIndex;}
+\DoxyCodeLine{00124\ \ \ \ \ std::vector<ResultEntry>\ m\_entries;}
+\DoxyCodeLine{00125\ \ \ \ \ std::vector<ResultRow>\ m\_rows;}
+\DoxyCodeLine{00127\ \ \ \ \ std::vector<int>\ m\_pendingIconRows;}
+\DoxyCodeLine{00129\ \ \ \ \ QHash<QString,\ QIcon>\ m\_actionIconCache;}
+\DoxyCodeLine{00130\ \};}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00132\ \}\ \textcolor{comment}{//\ namespace\ Application}}
+
+\end{DoxyCode}

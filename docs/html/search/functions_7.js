@@ -1,6 +1,11 @@
 var searchData=
 [
-  ['main_0',['main',['../launcher_2src_2main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'main():&#160;main.cpp'],['../Wheel-Time_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97',1,'main(int argc, char *argv[]):&#160;main.cpp']]],
-  ['mousemoveevent_1',['mouseMoveEvent',['../classEmoteWheel.html#ae4fc5e7ba2168a0a9ca28b727dfe5035',1,'EmoteWheel']]],
-  ['mousepressevent_2',['mousePressEvent',['../classEmoteWheel.html#a8ce13cc0d6cca96174b844877ef07eaf',1,'EmoteWheel']]]
+  ['haspendingschedulerrequests_0',['hasPendingSchedulerRequests',['../class_application_1_1_action_execution_context.html#ad8501c567ba2bc26057c465ca664b06d',1,'Application::ActionExecutionContext']]],
+  ['hide_1',['hide',['../class_platform_1_1_window.html#a4626829d3cb9d01285f739d2bbc69b74',1,'Platform::Window']]],
+  ['hidegui_2',['hideGui',['../class_application_1_1_app.html#aa1c397e61a39f446db934b05d27b61ff',1,'Application::App']]],
+  ['hidesearchoverlay_3',['hideSearchOverlay',['../class_application_1_1_app.html#a31b33d1bfc91bd088e0bd97557ab76e2',1,'Application::App']]],
+  ['hidesearchpanel_4',['hideSearchPanel',['../class_application_1_1_gui.html#a784a16eecf2656c26071417aad9e11e3',1,'Application::Gui']]],
+  ['hidesettingspanel_5',['hideSettingsPanel',['../class_application_1_1_gui.html#ad1e0b8d2ebeedfac6a322e926cf78713',1,'Application::Gui']]],
+  ['hotkeyfilter_6',['HotkeyFilter',['../class_hotkey_filter.html#a9e2d17f0160fb55b3e83844d577e5791',1,'HotkeyFilter']]],
+  ['hoverbutton_7',['HoverButton',['../class_application_1_1_hover_button.html#a93499926de65ed2f4a33ddc1dcba008a',1,'Application::HoverButton']]]
 ];

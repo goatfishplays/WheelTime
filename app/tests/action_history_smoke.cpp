@@ -112,7 +112,7 @@ bool installSmokeFixtures(App &app)
     if (app.loadedMenus.empty())
     {
         app.loadedMenus.push_back(
-            new Menu(0, 0, false, false, true, "Smoke Menu", {}, "menu-smoke"));
+            new Menu(0, 0, false, false, true, false, "Smoke Menu", {}, "menu-smoke"));
     }
 
     Menu *menu = app.loadedMenus.front();

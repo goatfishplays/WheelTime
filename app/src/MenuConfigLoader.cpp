@@ -291,6 +291,7 @@ namespace
                 menuObject.value("executeOnRelease").toBool(false),
                 menuObject.value("exitOnAction").toBool(false),
                 menuObject.value("centerMouseOnOpen").toBool(true),
+                menuObject.value("restoreMouseOnClose").toBool(false),
                 menuObject.value("name").toString("Unnamed Menu").toStdString(),
                 actionIds,
                 menuObject.value("id").toString().toStdString()));
@@ -342,6 +343,7 @@ namespace
                 menuObject.value("executeOnRelease").toBool(false),
                 menuObject.value("exitOnAction").toBool(false),
                 menuObject.value("centerMouseOnOpen").toBool(true),
+                menuObject.value("restoreMouseOnClose").toBool(false),
                 menuObject.value("name").toString("Unnamed Menu").toStdString(),
                 menuActionIds,
                 menuId));
@@ -560,6 +562,7 @@ bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appC
         menuObject.insert("executeOnRelease", menu->executeOnRelease);
         menuObject.insert("exitOnAction", menu->exitOnAction);
         menuObject.insert("centerMouseOnOpen", menu->centerMouseOnOpen);
+        menuObject.insert("restoreMouseOnClose", menu->restoreMouseOnClose);
         menuObject.insert("triggerMod", menu->triggerMod);
         menuObject.insert("triggerVk", menu->triggerVk);
 

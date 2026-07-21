@@ -1,0 +1,93 @@
+\doxysection{Channel\+Manager.\+hpp}
+\hypertarget{_channel_manager_8hpp_source}{}\label{_channel_manager_8hpp_source}\index{E:/Github/WheelTime/app/include/App/ChannelManager.hpp@{E:/Github/WheelTime/app/include/App/ChannelManager.hpp}}
+\doxymbox{\hyperlink{_channel_manager_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <chrono>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <functional>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <queue>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_action_8hpp}{App/Action.hpp}}"{}}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ "{}\doxymbox{\hyperlink{_action_execution_context_8hpp}{App/ActionExecutionContext.hpp}}"{}}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00020\ \{}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{struct\ }\doxymbox{\hyperlink{struct_application_1_1_channel_dispatch}{ChannelDispatch}}}
+\DoxyCodeLine{00028\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{enum\ class}\ \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9}{Type}}}
+\DoxyCodeLine{00030\ \ \ \ \ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9a6adf97f83acf6453d4a6a4b1070f3754}{None}},\ \ \ \ \ \ }
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9af3f2b34bcc3eeb20a5756e3acbb05443}{RunNow}},\ \ \ \ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9afe2ae5c55e06cfa6277abc5562a0132e}{ParkUntil}}\ \ }
+\DoxyCodeLine{00034\ \ \ \ \ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9}{Type}}\ \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_a654abbf0b6587e2cdb10798e11e1394c}{type}}\ =\ \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9a6adf97f83acf6453d4a6a4b1070f3754}{Type::None}};}
+\DoxyCodeLine{00037\ \ \ \ \ std::unique\_ptr<ActionExecutionContext>\ \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_aca814fccc1a36ad6bf4a5caba6c30b15}{context}};}
+\DoxyCodeLine{00038\ \ \ \ \ std::chrono::steady\_clock::time\_point\ \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_ae01f278e8def340f08722d950175cad4}{wakeTime}}\{\};}
+\DoxyCodeLine{00039\ \};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_channel_manager_a2398f19cf73097d9a60a2600e0b2b9b5}{ChannelManager}}}
+\DoxyCodeLine{00049\ \{}
+\DoxyCodeLine{00050\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00051\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_channel_manager_a2398f19cf73097d9a60a2600e0b2b9b5}{ChannelManager}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_channel_manager_aaf9867e9216aab7f6a108af3b0c66575}{ChannelManager}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_application_1_1_channel_manager_a2398f19cf73097d9a60a2600e0b2b9b5}{ChannelManager}}\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00054\ \ \ \ \ \doxymbox{\hyperlink{class_application_1_1_channel_manager_a2398f19cf73097d9a60a2600e0b2b9b5}{ChannelManager}}\ \&\doxymbox{\hyperlink{class_application_1_1_channel_manager_aa1fd892a77295288a7e9d36912b52ef8}{operator=}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_application_1_1_channel_manager_a2398f19cf73097d9a60a2600e0b2b9b5}{ChannelManager}}\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00059\ \ \ \ \ [[nodiscard]]\ uint32\_t\ \doxymbox{\hyperlink{class_application_1_1_channel_manager_af4106222831397c403510b99c13df7c7}{resolveKey}}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_application_1_1_action}{Action}}\ \&action);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_channel_manager_a8da6ba97fb97286d75effce4788f4049}{bind}}(uint64\_t\ actionId,\ uint32\_t\ channelKey);}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00067\ \ \ \ \ [[nodiscard]]\ std::optional<uint32\_t>\ \doxymbox{\hyperlink{class_application_1_1_channel_manager_a870d42eff9a21d9c51f64d7bf713bfa9}{channelFor}}(uint64\_t\ actionId)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_channel_manager_a2632ba5c8c242e5fd630797a9ba289fa}{unbind}}(uint64\_t\ actionId);}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00078\ \ \ \ \ [[nodiscard]]\ \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch}{ChannelDispatch}}\ \doxymbox{\hyperlink{class_application_1_1_channel_manager_ab56822f7633c1d83e7bea733acf4c71a}{admit}}(}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ std::unique\_ptr<ActionExecutionContext>\ context,}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ std::chrono::steady\_clock::time\_point\ earliestStart,}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ std::chrono::steady\_clock::time\_point\ now);}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00086\ \ \ \ \ [[nodiscard]]\ \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch}{ChannelDispatch}}\ \doxymbox{\hyperlink{class_application_1_1_channel_manager_ac2c64cccf6793481059f1923e8ba462c}{releaseAndTakeNext}}(}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ uint32\_t\ channelKey,}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ std::chrono::steady\_clock::time\_point\ now);}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00094\ \ \ \ \ [[nodiscard]]\ std::vector<std::unique\_ptr<ActionExecutionContext>>\ \doxymbox{\hyperlink{class_application_1_1_channel_manager_a33f6cdb4cdcc05e32105919b692538c0}{removeWaitingIf}}(}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::function<\textcolor{keywordtype}{bool}(\textcolor{keyword}{const}\ \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{ActionExecutionContext}}\ \&)>\ \&predicate);}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_channel_manager_ab6aa075efc35ac3568562bd9b623787c}{shiftWaitingStarts}}(std::chrono::steady\_clock::duration\ delta);}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ [[nodiscard]]\ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_channel_manager_a5e443abaf5e50635c137410d5672e410}{isBusy}}(uint32\_t\ channelKey)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keyword}{struct\ }WaitingEntry}
+\DoxyCodeLine{00106\ \ \ \ \ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ std::unique\_ptr<ActionExecutionContext>\ context;}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ std::chrono::steady\_clock::time\_point\ earliestStart\{\};}
+\DoxyCodeLine{00109\ \ \ \ \ \};}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keyword}{struct\ }ChannelState}
+\DoxyCodeLine{00112\ \ \ \ \ \{}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ busy\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ std::queue<WaitingEntry>\ waiting;}
+\DoxyCodeLine{00115\ \ \ \ \ \};}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ \ \ [[nodiscard]]\ ChannelDispatch\ takeNextLocked(}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ ChannelState\ \&channel,}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ std::chrono::steady\_clock::time\_point\ now);}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \ \ std::unordered\_map<uint32\_t,\ ChannelState>\ m\_channels;}
+\DoxyCodeLine{00122\ \ \ \ \ std::unordered\_map<uint64\_t,\ uint32\_t>\ m\_channelByActionId;}
+\DoxyCodeLine{00123\ \ \ \ \ uint32\_t\ m\_nextPrivateChannel\ =\ 0x80000000u;}
+\DoxyCodeLine{00124\ \};}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \}\ \textcolor{comment}{//\ namespace\ Application}}
+
+\end{DoxyCode}

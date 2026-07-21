@@ -1,0 +1,69 @@
+\doxysection{Application::\+Scheduled\+Action Struct Reference}
+\hypertarget{struct_application_1_1_scheduled_action}{}\label{struct_application_1_1_scheduled_action}\index{Application::ScheduledAction@{Application::ScheduledAction}}
+
+
+An \doxylink{class_application_1_1_action}{Action} recorded during execute() for the scheduler to submit later.  
+
+
+
+
+{\ttfamily \+\#include $<$Action\+Execution\+Context.\+hpp$>$}
+
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$ \doxymbox{\hyperlink{struct_application_1_1_scheduled_action_a273159e9f4624ba545ea43a375bd8cbf}{action}}
+\item 
+std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point \doxymbox{\hyperlink{struct_application_1_1_scheduled_action_a8412b2cb1517a74dc125c856011c46b1}{wake\+Time}}
+\item 
+uint64\+\_\+t \doxymbox{\hyperlink{struct_application_1_1_scheduled_action_a05d48a293a5ff47a312e0dfe20a8c205}{parent\+Action\+Id}} = 0
+\begin{DoxyCompactList}\small\item\em Parent that scheduled this (for cancel-\/linked cleanup). \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{struct_application_1_1_scheduled_action_a44d17f8f60c42bd58a0e69222b6f7ae1}{remove\+If\+Parent\+Cancelled}} = false
+\begin{DoxyCompactList}\small\item\em If true, discard this from Delay\+Queue/\+waiting when the parent is cancelled. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+An \doxylink{class_application_1_1_action}{Action} recorded during execute() for the scheduler to submit later. 
+
+Action\+Items call \doxylink{class_application_1_1_action_execution_context_a9bde69e5887b05935ba12198c1a63a16}{Action\+Execution\+Context::\+schedule\+Action} instead of talking to the \doxylink{class_application_1_1_scheduler}{Scheduler} directly. The scheduler drains these after execute() returns (when the worker yields Continue /\+ Delayed /\+ Completed). 
+
+\label{struct_application_1_1_scheduled_action_doc-variable-members}
+\Hypertarget{struct_application_1_1_scheduled_action_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_application_1_1_scheduled_action_a273159e9f4624ba545ea43a375bd8cbf}\index{Application::ScheduledAction@{Application::ScheduledAction}!action@{action}}
+\index{action@{action}!Application::ScheduledAction@{Application::ScheduledAction}}
+\doxysubsubsection{\texorpdfstring{action}{action}}
+{\footnotesize\ttfamily \label{struct_application_1_1_scheduled_action_a273159e9f4624ba545ea43a375bd8cbf} 
+std::\+unique\+\_\+ptr$<$\doxymbox{\hyperlink{class_application_1_1_action}{Action}}$>$ Application::\+\+Scheduled\+Action::\+action}
+
+\Hypertarget{struct_application_1_1_scheduled_action_a05d48a293a5ff47a312e0dfe20a8c205}\index{Application::ScheduledAction@{Application::ScheduledAction}!parentActionId@{parentActionId}}
+\index{parentActionId@{parentActionId}!Application::ScheduledAction@{Application::ScheduledAction}}
+\doxysubsubsection{\texorpdfstring{parentActionId}{parentActionId}}
+{\footnotesize\ttfamily \label{struct_application_1_1_scheduled_action_a05d48a293a5ff47a312e0dfe20a8c205} 
+uint64\+\_\+t Application::\+\+Scheduled\+Action::\+parent\+Action\+Id = 0}
+
+
+
+Parent that scheduled this (for cancel-\/linked cleanup). 
+
+\Hypertarget{struct_application_1_1_scheduled_action_a44d17f8f60c42bd58a0e69222b6f7ae1}\index{Application::ScheduledAction@{Application::ScheduledAction}!removeIfParentCancelled@{removeIfParentCancelled}}
+\index{removeIfParentCancelled@{removeIfParentCancelled}!Application::ScheduledAction@{Application::ScheduledAction}}
+\doxysubsubsection{\texorpdfstring{removeIfParentCancelled}{removeIfParentCancelled}}
+{\footnotesize\ttfamily \label{struct_application_1_1_scheduled_action_a44d17f8f60c42bd58a0e69222b6f7ae1} 
+bool Application::\+\+Scheduled\+Action::\+remove\+If\+Parent\+Cancelled = false}
+
+
+
+If true, discard this from Delay\+Queue/\+waiting when the parent is cancelled. 
+
+\Hypertarget{struct_application_1_1_scheduled_action_a8412b2cb1517a74dc125c856011c46b1}\index{Application::ScheduledAction@{Application::ScheduledAction}!wakeTime@{wakeTime}}
+\index{wakeTime@{wakeTime}!Application::ScheduledAction@{Application::ScheduledAction}}
+\doxysubsubsection{\texorpdfstring{wakeTime}{wakeTime}}
+{\footnotesize\ttfamily \label{struct_application_1_1_scheduled_action_a8412b2cb1517a74dc125c856011c46b1} 
+std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point Application::\+\+Scheduled\+Action::\+wake\+Time}
+
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_action_execution_context_8hpp}{Action\+Execution\+Context.\+hpp}}\end{DoxyCompactItemize}

@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['sprint_201_20goal_0',['Sprint 1 Goal',['../index.html#autotoc_md15',1,'']]],
-  ['sprint_201_20tasks_1',['Sprint 1 Tasks',['../index.html#autotoc_md16',1,'']]],
-  ['stack_2',['Tech Stack',['../index.html#autotoc_md14',1,'']]]
+  ['just_20checking_20if_20it_20does_20the_20right_20thing_20based_20on_20the_20product_20owners_20vision_0',['-Product Owner had looked over the codes functionality (Not a code review, just checking if it does the right thing based on the Product Owners vision).',['../md__acceptance_01_criteria.html#autotoc_md6',1,'']]]
 ];

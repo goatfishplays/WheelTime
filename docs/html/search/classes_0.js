@@ -1,11 +1,25 @@
 var searchData=
 [
-  ['action_0',['Action',['../classApp_1_1Action.html',1,'App']]],
-  ['actionitem_1',['ActionItem',['../classApp_1_1ActionItem.html',1,'App']]],
-  ['ai_5fclose_2',['AI_Close',['../classApp_1_1AI__Close.html',1,'App']]],
-  ['ai_5fdelay_3',['AI_Delay',['../classApp_1_1AI__Delay.html',1,'App']]],
-  ['ai_5fkeystroke_4',['AI_Keystroke',['../classApp_1_1AI__Keystroke.html',1,'App']]],
-  ['ai_5fmenu_5',['AI_Menu',['../classApp_1_1AI__Menu.html',1,'App']]],
-  ['ai_5fscript_6',['AI_Script',['../classApp_1_1AI__Script.html',1,'App']]],
-  ['app_7',['App',['../classApp_1_1App.html',1,'App']]]
+  ['action_0',['Action',['../class_application_1_1_action.html',1,'Application']]],
+  ['actionexecutioncontext_1',['ActionExecutionContext',['../class_application_1_1_action_execution_context.html',1,'Application']]],
+  ['actionhistory_2',['ActionHistory',['../class_application_1_1_action_history.html',1,'Application']]],
+  ['actionitem_3',['ActionItem',['../class_application_1_1_action_item.html',1,'Application']]],
+  ['actionslotvisual_4',['ActionSlotVisual',['../struct_application_1_1_action_slot_visual.html',1,'Application']]],
+  ['ai_5fcancel_5',['AI_Cancel',['../class_application_1_1_a_i___cancel.html',1,'Application']]],
+  ['ai_5fclose_6',['AI_Close',['../class_application_1_1_a_i___close.html',1,'Application']]],
+  ['ai_5fdelay_7',['AI_Delay',['../class_application_1_1_a_i___delay.html',1,'Application']]],
+  ['ai_5fkeyrelease_8',['AI_KeyRelease',['../class_application_1_1_a_i___key_release.html',1,'Application']]],
+  ['ai_5fkeystroke_9',['AI_Keystroke',['../class_application_1_1_a_i___keystroke.html',1,'Application']]],
+  ['ai_5flaunchapp_10',['AI_LaunchApp',['../class_application_1_1_a_i___launch_app.html',1,'Application']]],
+  ['ai_5fmenu_11',['AI_Menu',['../class_application_1_1_a_i___menu.html',1,'Application']]],
+  ['ai_5fmousebutton_12',['AI_MouseButton',['../class_application_1_1_a_i___mouse_button.html',1,'Application']]],
+  ['ai_5fmousebuttonrelease_13',['AI_MouseButtonRelease',['../class_application_1_1_a_i___mouse_button_release.html',1,'Application']]],
+  ['ai_5fmousemove_14',['AI_MouseMove',['../class_application_1_1_a_i___mouse_move.html',1,'Application']]],
+  ['ai_5fnthfrequent_15',['AI_NthFrequent',['../class_application_1_1_a_i___nth_frequent.html',1,'Application']]],
+  ['ai_5fnthrecent_16',['AI_NthRecent',['../class_application_1_1_a_i___nth_recent.html',1,'Application']]],
+  ['ai_5fscript_17',['AI_Script',['../class_application_1_1_a_i___script.html',1,'Application']]],
+  ['ai_5fsearch_18',['AI_Search',['../class_application_1_1_a_i___search.html',1,'Application']]],
+  ['ai_5fsocket_19',['AI_Socket',['../class_application_1_1_a_i___socket.html',1,'Application']]],
+  ['app_20',['App',['../class_application_1_1_app.html',1,'Application']]],
+  ['appconfig_21',['AppConfig',['../struct_application_1_1_app_config.html',1,'Application']]]
 ];

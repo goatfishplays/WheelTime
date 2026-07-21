@@ -1,0 +1,92 @@
+\doxysection{Application::\+Channel\+Dispatch Struct Reference}
+\hypertarget{struct_application_1_1_channel_dispatch}{}\label{struct_application_1_1_channel_dispatch}\index{Application::ChannelDispatch@{Application::ChannelDispatch}}
+
+
+Result of admitting or promoting work on a channel.  
+
+
+
+
+{\ttfamily \+\#include $<$Channel\+Manager.\+hpp$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum class \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9}{Type}} \{ \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9a6adf97f83acf6453d4a6a4b1070f3754}{None}}
+, \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9af3f2b34bcc3eeb20a5756e3acbb05443}{Run\+Now}}
+, \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9afe2ae5c55e06cfa6277abc5562a0132e}{Park\+Until}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9}{Type}} \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_a654abbf0b6587e2cdb10798e11e1394c}{type}} = \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9a6adf97f83acf6453d4a6a4b1070f3754}{Type::\+\+None}}
+\item 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} $>$ \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_aca814fccc1a36ad6bf4a5caba6c30b15}{context}}
+\item 
+std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_ae01f278e8def340f08722d950175cad4}{wake\+Time}} \{\}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Result of admitting or promoting work on a channel. 
+
+Not thread-\/safe — owned and used only by the scheduler thread. 
+
+\label{struct_application_1_1_channel_dispatch_doc-enum-members}
+\Hypertarget{struct_application_1_1_channel_dispatch_doc-enum-members}
+\doxysubsection{Member Enumeration Documentation}
+\Hypertarget{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9}\index{Application::ChannelDispatch@{Application::ChannelDispatch}!Type@{Type}}
+\index{Type@{Type}!Application::ChannelDispatch@{Application::ChannelDispatch}}
+\doxysubsubsection{\texorpdfstring{Type}{Type}}
+{\footnotesize\ttfamily \label{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9} 
+enum class \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9}{Application::\+\+Channel\+Dispatch::\+\+Type}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{None@{None}!Application::ChannelDispatch@{Application::ChannelDispatch}}
+\index{Application::ChannelDispatch@{Application::ChannelDispatch}!None@{None}}
+}\Hypertarget{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9a6adf97f83acf6453d4a6a4b1070f3754}\label{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9a6adf97f83acf6453d4a6a4b1070f3754} 
+None&Nothing to run (queued behind another \doxylink{class_application_1_1_action}{Action}, or channel idle). \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{RunNow@{RunNow}!Application::ChannelDispatch@{Application::ChannelDispatch}}
+\index{Application::ChannelDispatch@{Application::ChannelDispatch}!RunNow@{RunNow}}
+}\Hypertarget{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9af3f2b34bcc3eeb20a5756e3acbb05443}\label{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9af3f2b34bcc3eeb20a5756e3acbb05443} 
+Run\+Now&Hand \doxylink{struct_application_1_1_channel_dispatch_aca814fccc1a36ad6bf4a5caba6c30b15}{context} to \doxylink{class_application_1_1_worker_pool}{Worker\+Pool} immediately. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ParkUntil@{ParkUntil}!Application::ChannelDispatch@{Application::ChannelDispatch}}
+\index{Application::ChannelDispatch@{Application::ChannelDispatch}!ParkUntil@{ParkUntil}}
+}\Hypertarget{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9afe2ae5c55e06cfa6277abc5562a0132e}\label{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9afe2ae5c55e06cfa6277abc5562a0132e} 
+Park\+Until&Channel stays busy; park \doxylink{struct_application_1_1_channel_dispatch_aca814fccc1a36ad6bf4a5caba6c30b15}{context} on \doxylink{class_application_1_1_delay_queue}{Delay\+Queue} until \doxylink{struct_application_1_1_channel_dispatch_ae01f278e8def340f08722d950175cad4}{wake\+Time}. \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{struct_application_1_1_channel_dispatch_doc-variable-members}
+\Hypertarget{struct_application_1_1_channel_dispatch_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_application_1_1_channel_dispatch_aca814fccc1a36ad6bf4a5caba6c30b15}\index{Application::ChannelDispatch@{Application::ChannelDispatch}!context@{context}}
+\index{context@{context}!Application::ChannelDispatch@{Application::ChannelDispatch}}
+\doxysubsubsection{\texorpdfstring{context}{context}}
+{\footnotesize\ttfamily \label{struct_application_1_1_channel_dispatch_aca814fccc1a36ad6bf4a5caba6c30b15} 
+std::\+unique\+\_\+ptr$<$\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}}$>$ Application::\+\+Channel\+Dispatch::\+context}
+
+\Hypertarget{struct_application_1_1_channel_dispatch_a654abbf0b6587e2cdb10798e11e1394c}\index{Application::ChannelDispatch@{Application::ChannelDispatch}!type@{type}}
+\index{type@{type}!Application::ChannelDispatch@{Application::ChannelDispatch}}
+\doxysubsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily \label{struct_application_1_1_channel_dispatch_a654abbf0b6587e2cdb10798e11e1394c} 
+\doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9}{Type}} Application::\+\+Channel\+Dispatch::\+type = \doxymbox{\hyperlink{struct_application_1_1_channel_dispatch_a062c43a2ad8796c996c021944eb9f6c9a6adf97f83acf6453d4a6a4b1070f3754}{Type::\+\+None}}}
+
+\Hypertarget{struct_application_1_1_channel_dispatch_ae01f278e8def340f08722d950175cad4}\index{Application::ChannelDispatch@{Application::ChannelDispatch}!wakeTime@{wakeTime}}
+\index{wakeTime@{wakeTime}!Application::ChannelDispatch@{Application::ChannelDispatch}}
+\doxysubsubsection{\texorpdfstring{wakeTime}{wakeTime}}
+{\footnotesize\ttfamily \label{struct_application_1_1_channel_dispatch_ae01f278e8def340f08722d950175cad4} 
+std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point Application::\+\+Channel\+Dispatch::\+wake\+Time \{\}}
+
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_channel_manager_8hpp}{Channel\+Manager.\+hpp}}\end{DoxyCompactItemize}

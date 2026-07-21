@@ -1,0 +1,170 @@
+\doxysection{Application::\+Worker\+Pool Class Reference}
+\hypertarget{class_application_1_1_worker_pool}{}\label{class_application_1_1_worker_pool}\index{Application::WorkerPool@{Application::WorkerPool}}
+
+
+Worker thread pool with no scheduling policy.  
+
+
+
+
+{\ttfamily \+\#include $<$Worker\+Pool.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_worker_pool_a6890b2975494c276e17a2a6b0f140e8a}{Worker\+Pool}} (std::\+size\+\_\+t worker\+Count)
+\begin{DoxyCompactList}\small\item\em Creates {\ttfamily worker\+Count} workers; results are retrieved with \doxylink{class_application_1_1_worker_pool_a9fb3d58ab4ecf62ba638991971bdaf75}{wait\+Result()}. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_application_1_1_worker_pool_ab788604ac6f71177fdc37ba98919cd48}{Worker\+Pool}} (std::\+size\+\_\+t worker\+Count, std::\+function$<$ void(\doxymbox{\hyperlink{struct_application_1_1_worker_result}{Worker\+Result}})$>$ result\+Handler)
+\begin{DoxyCompactList}\small\item\em Creates {\ttfamily worker\+Count} workers and delivers each result to {\ttfamily result\+Handler}. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_application_1_1_worker_pool_aee86388efdf100673065b4c8759235dc}{\texorpdfstring{$\sim$}{\string~}\+Worker\+Pool}} ()
+\begin{DoxyCompactList}\small\item\em Stops the pool and joins all workers. \end{DoxyCompactList}\item 
+\doxymbox{\hyperlink{class_application_1_1_worker_pool_a96d344a16343b1416f0af6c2119b4810}{Worker\+Pool}} (const Worker\+Pool \&)=delete
+\item 
+\doxymbox{\hyperlink{class_application_1_1_worker_pool_a6890b2975494c276e17a2a6b0f140e8a}{Worker\+Pool}} \& \doxymbox{\hyperlink{class_application_1_1_worker_pool_ad5bf90677f343c68dd39b0735316f29d}{operator=}} (const \doxymbox{\hyperlink{class_application_1_1_worker_pool_a6890b2975494c276e17a2a6b0f140e8a}{Worker\+Pool}} \&)=delete
+\item 
+void \doxymbox{\hyperlink{class_application_1_1_worker_pool_a68e931d25ce8df6b4cf2239cec4c14fc}{submit}} (std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} $>$ context)
+\begin{DoxyCompactList}\small\item\em Queues {\ttfamily context} for a worker (thread-\/safe). Ignored if the pool has been stopped or {\ttfamily context} is null. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_worker_pool_aa1a921c091516a3e3904f77a5f963643}{submit\+Urgent}} (std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} $>$ context)
+\begin{DoxyCompactList}\small\item\em Queues {\ttfamily context} that may run even while the pool is paused. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_worker_pool_ad18f24ddd61e712793441bfdcbfc4729}{set\+Paused}} (bool paused)
+\begin{DoxyCompactList}\small\item\em When paused, workers finish the current item then stop taking inbound work. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_worker_pool_ab3e48c59d7fc6ff4801dcc59910e895b}{is\+Paused}} () const noexcept
+\begin{DoxyCompactList}\small\item\em Whether set\+Paused(true) is in effect. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_worker_pool_a9fb3d58ab4ecf62ba638991971bdaf75}{wait\+Result}} (\doxymbox{\hyperlink{struct_application_1_1_worker_result}{Worker\+Result}} \&out)
+\begin{DoxyCompactList}\small\item\em Blocks until a worker posts a result, or the pool has stopped and drained. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_application_1_1_worker_pool_a2bf1d8069fb9a16c1dd53592562982df}{stop}} ()
+\begin{DoxyCompactList}\small\item\em Stops the inbound queue, joins workers, then stops the outbound queue. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Worker thread pool with no scheduling policy. 
+
+Workers:\+
+\begin{DoxyItemize}
+\item Wait for Action\+Execution\+Contexts on an inbound queue.
+\item Execute Action\+Items until finish, cancel, Delay\+Until, or pending schedule\+Action /\+ set\+Cancel\+Flush side effects (then yield Continue).
+\item Never sleep for delays and never decide channels /\+ ordering.
+\item Return a \doxylink{struct_application_1_1_worker_result}{Worker\+Result} via \doxylink{class_application_1_1_worker_pool_a9fb3d58ab4ecf62ba638991971bdaf75}{wait\+Result} or an optional result handler.
+\item When paused, finish the current \doxylink{class_application_1_1_action_item}{Action\+Item} then do not take new inbound work.
+\item Cancel-\/flush cleanups may still run via \doxylink{class_application_1_1_worker_pool_aa1a921c091516a3e3904f77a5f963643}{submit\+Urgent()}. 
+\end{DoxyItemize}
+
+\label{class_application_1_1_worker_pool_doc-constructors}
+\Hypertarget{class_application_1_1_worker_pool_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_worker_pool_a6890b2975494c276e17a2a6b0f140e8a}\index{Application::WorkerPool@{Application::WorkerPool}!WorkerPool@{WorkerPool}}
+\index{WorkerPool@{WorkerPool}!Application::WorkerPool@{Application::WorkerPool}}
+\doxysubsubsection{\texorpdfstring{WorkerPool()}{WorkerPool()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{class_application_1_1_worker_pool_a6890b2975494c276e17a2a6b0f140e8a} 
+Application::\+\+Worker\+Pool::\+\+Worker\+Pool (\begin{DoxyParamCaption}\item[{std::\+size\+\_\+t}]{worker\+Count}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Creates {\ttfamily worker\+Count} workers; results are retrieved with \doxylink{class_application_1_1_worker_pool_a9fb3d58ab4ecf62ba638991971bdaf75}{wait\+Result()}. 
+
+\Hypertarget{class_application_1_1_worker_pool_ab788604ac6f71177fdc37ba98919cd48}\index{Application::WorkerPool@{Application::WorkerPool}!WorkerPool@{WorkerPool}}
+\index{WorkerPool@{WorkerPool}!Application::WorkerPool@{Application::WorkerPool}}
+\doxysubsubsection{\texorpdfstring{WorkerPool()}{WorkerPool()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{class_application_1_1_worker_pool_ab788604ac6f71177fdc37ba98919cd48} 
+Application::\+\+Worker\+Pool::\+\+Worker\+Pool (\begin{DoxyParamCaption}\item[{std::\+size\+\_\+t}]{worker\+Count}{, }\item[{std::\+function$<$ void(\doxymbox{\hyperlink{struct_application_1_1_worker_result}{Worker\+Result}})$>$}]{result\+Handler}{}\end{DoxyParamCaption})}
+
+
+
+Creates {\ttfamily worker\+Count} workers and delivers each result to {\ttfamily result\+Handler}. 
+
+Used by \doxylink{class_application_1_1_scheduler}{Scheduler} to feed a unified mailbox. When a handler is set, results are not stored for \doxylink{class_application_1_1_worker_pool_a9fb3d58ab4ecf62ba638991971bdaf75}{wait\+Result()}. \Hypertarget{class_application_1_1_worker_pool_aee86388efdf100673065b4c8759235dc}\index{Application::WorkerPool@{Application::WorkerPool}!````~WorkerPool@{\texorpdfstring{$\sim$}{\string~}WorkerPool}}
+\index{````~WorkerPool@{\texorpdfstring{$\sim$}{\string~}WorkerPool}!Application::WorkerPool@{Application::WorkerPool}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}WorkerPool()}{\string~WorkerPool()}}
+{\footnotesize\ttfamily \label{class_application_1_1_worker_pool_aee86388efdf100673065b4c8759235dc} 
+Application::\+\+Worker\+Pool::\+\texorpdfstring{$\sim$}{\string~}\+Worker\+Pool (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Stops the pool and joins all workers. 
+
+\Hypertarget{class_application_1_1_worker_pool_a96d344a16343b1416f0af6c2119b4810}\index{Application::WorkerPool@{Application::WorkerPool}!WorkerPool@{WorkerPool}}
+\index{WorkerPool@{WorkerPool}!Application::WorkerPool@{Application::WorkerPool}}
+\doxysubsubsection{\texorpdfstring{WorkerPool()}{WorkerPool()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{class_application_1_1_worker_pool_a96d344a16343b1416f0af6c2119b4810} 
+Application::\+\+Worker\+Pool::\+\+Worker\+Pool (\begin{DoxyParamCaption}\item[{const Worker\+Pool \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+\label{class_application_1_1_worker_pool_doc-func-members}
+\Hypertarget{class_application_1_1_worker_pool_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_worker_pool_ab3e48c59d7fc6ff4801dcc59910e895b}\index{Application::WorkerPool@{Application::WorkerPool}!isPaused@{isPaused}}
+\index{isPaused@{isPaused}!Application::WorkerPool@{Application::WorkerPool}}
+\doxysubsubsection{\texorpdfstring{isPaused()}{isPaused()}}
+{\footnotesize\ttfamily \label{class_application_1_1_worker_pool_ab3e48c59d7fc6ff4801dcc59910e895b} 
+bool Application::\+\+Worker\+Pool::\+is\+Paused (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [noexcept]}}
+
+
+
+Whether set\+Paused(true) is in effect. 
+
+\Hypertarget{class_application_1_1_worker_pool_ad5bf90677f343c68dd39b0735316f29d}\index{Application::WorkerPool@{Application::WorkerPool}!operator=@{operator=}}
+\index{operator=@{operator=}!Application::WorkerPool@{Application::WorkerPool}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \label{class_application_1_1_worker_pool_ad5bf90677f343c68dd39b0735316f29d} 
+\doxymbox{\hyperlink{class_application_1_1_worker_pool_a6890b2975494c276e17a2a6b0f140e8a}{Worker\+Pool}} \& Application::\+\+Worker\+Pool::\+operator= (\begin{DoxyParamCaption}\item[{const \doxymbox{\hyperlink{class_application_1_1_worker_pool_a6890b2975494c276e17a2a6b0f140e8a}{Worker\+Pool}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_application_1_1_worker_pool_ad18f24ddd61e712793441bfdcbfc4729}\index{Application::WorkerPool@{Application::WorkerPool}!setPaused@{setPaused}}
+\index{setPaused@{setPaused}!Application::WorkerPool@{Application::WorkerPool}}
+\doxysubsubsection{\texorpdfstring{setPaused()}{setPaused()}}
+{\footnotesize\ttfamily \label{class_application_1_1_worker_pool_ad18f24ddd61e712793441bfdcbfc4729} 
+void Application::\+\+Worker\+Pool::\+set\+Paused (\begin{DoxyParamCaption}\item[{bool}]{paused}{}\end{DoxyParamCaption})}
+
+
+
+When paused, workers finish the current item then stop taking inbound work. 
+
+Thread-\/safe. Idempotent. Used by \doxylink{class_application_1_1_scheduler}{Scheduler} pause/\+resume; cancel-\/flush may still run via \doxylink{class_application_1_1_worker_pool_aa1a921c091516a3e3904f77a5f963643}{submit\+Urgent()}. \Hypertarget{class_application_1_1_worker_pool_a2bf1d8069fb9a16c1dd53592562982df}\index{Application::WorkerPool@{Application::WorkerPool}!stop@{stop}}
+\index{stop@{stop}!Application::WorkerPool@{Application::WorkerPool}}
+\doxysubsubsection{\texorpdfstring{stop()}{stop()}}
+{\footnotesize\ttfamily \label{class_application_1_1_worker_pool_a2bf1d8069fb9a16c1dd53592562982df} 
+void Application::\+\+Worker\+Pool::\+stop (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Stops the inbound queue, joins workers, then stops the outbound queue. 
+
+\Hypertarget{class_application_1_1_worker_pool_a68e931d25ce8df6b4cf2239cec4c14fc}\index{Application::WorkerPool@{Application::WorkerPool}!submit@{submit}}
+\index{submit@{submit}!Application::WorkerPool@{Application::WorkerPool}}
+\doxysubsubsection{\texorpdfstring{submit()}{submit()}}
+{\footnotesize\ttfamily \label{class_application_1_1_worker_pool_a68e931d25ce8df6b4cf2239cec4c14fc} 
+void Application::\+\+Worker\+Pool::\+submit (\begin{DoxyParamCaption}\item[{std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} $>$}]{context}{}\end{DoxyParamCaption})}
+
+
+
+Queues {\ttfamily context} for a worker (thread-\/safe). Ignored if the pool has been stopped or {\ttfamily context} is null. 
+
+\Hypertarget{class_application_1_1_worker_pool_aa1a921c091516a3e3904f77a5f963643}\index{Application::WorkerPool@{Application::WorkerPool}!submitUrgent@{submitUrgent}}
+\index{submitUrgent@{submitUrgent}!Application::WorkerPool@{Application::WorkerPool}}
+\doxysubsubsection{\texorpdfstring{submitUrgent()}{submitUrgent()}}
+{\footnotesize\ttfamily \label{class_application_1_1_worker_pool_aa1a921c091516a3e3904f77a5f963643} 
+void Application::\+\+Worker\+Pool::\+submit\+Urgent (\begin{DoxyParamCaption}\item[{std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} $>$}]{context}{}\end{DoxyParamCaption})}
+
+
+
+Queues {\ttfamily context} that may run even while the pool is paused. 
+
+Used for cancel-\/flush cleanups so Key\+Up-\/style work can run during pause. \Hypertarget{class_application_1_1_worker_pool_a9fb3d58ab4ecf62ba638991971bdaf75}\index{Application::WorkerPool@{Application::WorkerPool}!waitResult@{waitResult}}
+\index{waitResult@{waitResult}!Application::WorkerPool@{Application::WorkerPool}}
+\doxysubsubsection{\texorpdfstring{waitResult()}{waitResult()}}
+{\footnotesize\ttfamily \label{class_application_1_1_worker_pool_a9fb3d58ab4ecf62ba638991971bdaf75} 
+bool Application::\+\+Worker\+Pool::\+wait\+Result (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{struct_application_1_1_worker_result}{Worker\+Result}} \&}]{out}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Blocks until a worker posts a result, or the pool has stopped and drained. 
+
+\begin{DoxyReturn}{Returns}
+false if stopped and no results remain (only when no result handler is set). 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_worker_pool_8hpp}{Worker\+Pool.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\doxymbox{\hyperlink{_worker_pool_8cpp}{Worker\+Pool.\+cpp}}\end{DoxyCompactItemize}

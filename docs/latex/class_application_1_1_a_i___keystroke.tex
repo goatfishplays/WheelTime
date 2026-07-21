@@ -1,0 +1,136 @@
+\doxysection{Application::\+AI\+\_\+\+Keystroke Class Reference}
+\hypertarget{class_application_1_1_a_i___keystroke}{}\label{class_application_1_1_a_i___keystroke}\index{Application::AI\_Keystroke@{Application::AI\_Keystroke}}
+
+
+Simulates a hotkey with optional modifiers and hold behavior.  
+
+
+
+
+{\ttfamily \+\#include $<$Keystroke.\+hpp$>$}
+
+Inheritance diagram for Application::\+AI\+\_\+\+Keystroke:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_application_1_1_a_i___keystroke}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_a4a5d0be8fea61cc1b1be89eabeeac56f}{AI\+\_\+\+Keystroke}} (int keycode=0, int modifiers=0, float hold\+Duration=0.\+0f, bool proceed=false)
+\item 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} $>$ \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_a35c6d9e013b8d7bb01e54de735a440b2}{clone}} () const override
+\item 
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_aa0afec9d626fbece88cf98f7c5b7c5da}{kind}} () const override
+\item 
+\doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}} \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_ae76bef72f12f58244919419b6ccf534e}{execute}} (\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&context) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{class_application_1_1_action_item}{Application::\+\+Action\+Item}}}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} ()=default
+\item 
+virtual \doxymbox{\hyperlink{class_application_1_1_action_item_a475b8d6aff3774c90b9f0a4512959bf5}{\texorpdfstring{$\sim$}{\string~}\+Action\+Item}} ()=default
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_a46f32dc6a5def31aa110d2a4cdf734de}{keycode}} = 0
+\item 
+int \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_aedc1c3f5ce56a687c7c646386b62cd83}{modifiers}} = 0
+\item 
+float \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_a1acf093c89b5a42bf5e1cdd9b5c6f3c1}{hold\+Duration}} = 0.\+0f
+\begin{DoxyCompactList}\small\item\em Hold time in seconds. \end{DoxyCompactList}\item 
+bool \doxymbox{\hyperlink{class_application_1_1_a_i___keystroke_ae5dc171ec203190580c400b5b7b0ec66}{proceed}} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Simulates a hotkey with optional modifiers and hold behavior. 
+
+Hold uses key\+Down + delayed key\+Up (cancel-\/flush + scheduled cleanup). 
+
+\label{class_application_1_1_a_i___keystroke_doc-constructors}
+\Hypertarget{class_application_1_1_a_i___keystroke_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_a_i___keystroke_a4a5d0be8fea61cc1b1be89eabeeac56f}\index{Application::AI\_Keystroke@{Application::AI\_Keystroke}!AI\_Keystroke@{AI\_Keystroke}}
+\index{AI\_Keystroke@{AI\_Keystroke}!Application::AI\_Keystroke@{Application::AI\_Keystroke}}
+\doxysubsubsection{\texorpdfstring{AI\_Keystroke()}{AI\_Keystroke()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___keystroke_a4a5d0be8fea61cc1b1be89eabeeac56f} 
+Application::\+\+AI\+\_\+\+Keystroke::\+\+AI\+\_\+\+Keystroke (\begin{DoxyParamCaption}\item[{int}]{keycode}{ = {\ttfamily 0}, }\item[{int}]{modifiers}{ = {\ttfamily 0}, }\item[{float}]{hold\+Duration}{ = {\ttfamily 0.0f}, }\item[{bool}]{proceed}{ = {\ttfamily false}}\end{DoxyParamCaption})}
+
+
+
+\label{class_application_1_1_a_i___keystroke_doc-func-members}
+\Hypertarget{class_application_1_1_a_i___keystroke_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_a_i___keystroke_a35c6d9e013b8d7bb01e54de735a440b2}\index{Application::AI\_Keystroke@{Application::AI\_Keystroke}!clone@{clone}}
+\index{clone@{clone}!Application::AI\_Keystroke@{Application::AI\_Keystroke}}
+\doxysubsubsection{\texorpdfstring{clone()}{clone()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___keystroke_a35c6d9e013b8d7bb01e54de735a440b2} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} $>$ Application::\+\+AI\+\_\+\+Keystroke::\+clone (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_afd400c3edd7ad9e074a28d462421789c}{Application::\+\+Action\+Item}}.
+
+\Hypertarget{class_application_1_1_a_i___keystroke_ae76bef72f12f58244919419b6ccf534e}\index{Application::AI\_Keystroke@{Application::AI\_Keystroke}!execute@{execute}}
+\index{execute@{execute}!Application::AI\_Keystroke@{Application::AI\_Keystroke}}
+\doxysubsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___keystroke_ae76bef72f12f58244919419b6ccf534e} 
+\doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}} Application::\+\+AI\+\_\+\+Keystroke::\+execute (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&}]{context}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_aeeaf1c44a2f6741be0fdaad53da67e54}{Application::\+\+Action\+Item}}.
+
+\Hypertarget{class_application_1_1_a_i___keystroke_aa0afec9d626fbece88cf98f7c5b7c5da}\index{Application::AI\_Keystroke@{Application::AI\_Keystroke}!kind@{kind}}
+\index{kind@{kind}!Application::AI\_Keystroke@{Application::AI\_Keystroke}}
+\doxysubsubsection{\texorpdfstring{kind()}{kind()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___keystroke_aa0afec9d626fbece88cf98f7c5b7c5da} 
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} Application::\+\+AI\+\_\+\+Keystroke::\+kind (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_ab51b1298eb1b325512ca99d2f090fa75}{Application::\+\+Action\+Item}}.
+
+
+
+\label{class_application_1_1_a_i___keystroke_doc-variable-members}
+\Hypertarget{class_application_1_1_a_i___keystroke_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_application_1_1_a_i___keystroke_a1acf093c89b5a42bf5e1cdd9b5c6f3c1}\index{Application::AI\_Keystroke@{Application::AI\_Keystroke}!holdDuration@{holdDuration}}
+\index{holdDuration@{holdDuration}!Application::AI\_Keystroke@{Application::AI\_Keystroke}}
+\doxysubsubsection{\texorpdfstring{holdDuration}{holdDuration}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___keystroke_a1acf093c89b5a42bf5e1cdd9b5c6f3c1} 
+float Application::\+\+AI\+\_\+\+Keystroke::\+hold\+Duration = 0.\+0f}
+
+
+
+Hold time in seconds. 
+
+\Hypertarget{class_application_1_1_a_i___keystroke_a46f32dc6a5def31aa110d2a4cdf734de}\index{Application::AI\_Keystroke@{Application::AI\_Keystroke}!keycode@{keycode}}
+\index{keycode@{keycode}!Application::AI\_Keystroke@{Application::AI\_Keystroke}}
+\doxysubsubsection{\texorpdfstring{keycode}{keycode}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___keystroke_a46f32dc6a5def31aa110d2a4cdf734de} 
+int Application::\+\+AI\+\_\+\+Keystroke::\+keycode = 0}
+
+\Hypertarget{class_application_1_1_a_i___keystroke_aedc1c3f5ce56a687c7c646386b62cd83}\index{Application::AI\_Keystroke@{Application::AI\_Keystroke}!modifiers@{modifiers}}
+\index{modifiers@{modifiers}!Application::AI\_Keystroke@{Application::AI\_Keystroke}}
+\doxysubsubsection{\texorpdfstring{modifiers}{modifiers}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___keystroke_aedc1c3f5ce56a687c7c646386b62cd83} 
+int Application::\+\+AI\+\_\+\+Keystroke::\+modifiers = 0}
+
+\Hypertarget{class_application_1_1_a_i___keystroke_ae5dc171ec203190580c400b5b7b0ec66}\index{Application::AI\_Keystroke@{Application::AI\_Keystroke}!proceed@{proceed}}
+\index{proceed@{proceed}!Application::AI\_Keystroke@{Application::AI\_Keystroke}}
+\doxysubsubsection{\texorpdfstring{proceed}{proceed}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___keystroke_ae5dc171ec203190580c400b5b7b0ec66} 
+bool Application::\+\+AI\+\_\+\+Keystroke::\+proceed = false}
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\+Action\+Items/\+\doxymbox{\hyperlink{_keystroke_8hpp}{Keystroke.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\+Action\+Items/\+\doxymbox{\hyperlink{_keystroke_8cpp}{Keystroke.\+cpp}}\end{DoxyCompactItemize}

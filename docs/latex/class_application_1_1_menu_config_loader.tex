@@ -1,0 +1,66 @@
+\doxysection{Application::\+Menu\+Config\+Loader Class Reference}
+\hypertarget{class_application_1_1_menu_config_loader}{}\label{class_application_1_1_menu_config_loader}\index{Application::MenuConfigLoader@{Application::MenuConfigLoader}}
+
+
+Converts between the JSON config file and runtime menu/\+action models.  
+
+
+
+
+{\ttfamily \+\#include $<$Menu\+Config\+Loader.\+hpp$>$}
+
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static bool \doxymbox{\hyperlink{class_application_1_1_menu_config_loader_a01daced57db74b2948970e122bfb0855}{load\+Config}} (const QString \&filepath, \doxymbox{\hyperlink{struct_application_1_1_app_config}{App\+Config}} \&app\+Config, std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$ \&actions, std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \texorpdfstring{$\ast$}{*} $>$ \&menus)
+\begin{DoxyCompactList}\small\item\em Loads actions and menus from disk into runtime objects. \end{DoxyCompactList}\item 
+static bool \doxymbox{\hyperlink{class_application_1_1_menu_config_loader_a8fe2f69667cd18f2964b6bacf28e4945}{save\+Config}} (const QString \&filepath, const \doxymbox{\hyperlink{struct_application_1_1_app_config}{App\+Config}} \&app\+Config, const std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$ \&actions, const std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \texorpdfstring{$\ast$}{*} $>$ \&menus)
+\begin{DoxyCompactList}\small\item\em Saves the current shared action library and menu references. \end{DoxyCompactList}\item 
+static QString \doxymbox{\hyperlink{class_application_1_1_menu_config_loader_a85f55526bf92bdd743159e53fad25597}{default\+Config\+Path}} ()
+\begin{DoxyCompactList}\small\item\em Finds the default repo-\/local config path using common run dirs. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Converts between the JSON config file and runtime menu/\+action models. 
+
+This is the single format boundary for the app. It accepts both the older menu-\/owned action schema and the newer shared action-\/library schema so the rest of the runtime can stay on one internal model. 
+
+\label{class_application_1_1_menu_config_loader_doc-func-members}
+\Hypertarget{class_application_1_1_menu_config_loader_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_menu_config_loader_a85f55526bf92bdd743159e53fad25597}\index{Application::MenuConfigLoader@{Application::MenuConfigLoader}!defaultConfigPath@{defaultConfigPath}}
+\index{defaultConfigPath@{defaultConfigPath}!Application::MenuConfigLoader@{Application::MenuConfigLoader}}
+\doxysubsubsection{\texorpdfstring{defaultConfigPath()}{defaultConfigPath()}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_config_loader_a85f55526bf92bdd743159e53fad25597} 
+QString Menu\+Config\+Loader::\+default\+Config\+Path (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Finds the default repo-\/local config path using common run dirs. 
+
+\Hypertarget{class_application_1_1_menu_config_loader_a01daced57db74b2948970e122bfb0855}\index{Application::MenuConfigLoader@{Application::MenuConfigLoader}!loadConfig@{loadConfig}}
+\index{loadConfig@{loadConfig}!Application::MenuConfigLoader@{Application::MenuConfigLoader}}
+\doxysubsubsection{\texorpdfstring{loadConfig()}{loadConfig()}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_config_loader_a01daced57db74b2948970e122bfb0855} 
+bool Menu\+Config\+Loader::\+load\+Config (\begin{DoxyParamCaption}\item[{const QString \&}]{filepath}{, }\item[{\doxymbox{\hyperlink{struct_application_1_1_app_config}{App\+Config}} \&}]{app\+Config}{, }\item[{std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$ \&}]{actions}{, }\item[{std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \texorpdfstring{$\ast$}{*} $>$ \&}]{menus}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Loads actions and menus from disk into runtime objects. 
+
+\Hypertarget{class_application_1_1_menu_config_loader_a8fe2f69667cd18f2964b6bacf28e4945}\index{Application::MenuConfigLoader@{Application::MenuConfigLoader}!saveConfig@{saveConfig}}
+\index{saveConfig@{saveConfig}!Application::MenuConfigLoader@{Application::MenuConfigLoader}}
+\doxysubsubsection{\texorpdfstring{saveConfig()}{saveConfig()}}
+{\footnotesize\ttfamily \label{class_application_1_1_menu_config_loader_a8fe2f69667cd18f2964b6bacf28e4945} 
+bool Menu\+Config\+Loader::\+save\+Config (\begin{DoxyParamCaption}\item[{const QString \&}]{filepath}{, }\item[{const \doxymbox{\hyperlink{struct_application_1_1_app_config}{App\+Config}} \&}]{app\+Config}{, }\item[{const std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_action}{Action}} $>$ \&}]{actions}{, }\item[{const std::\+vector$<$ \doxymbox{\hyperlink{class_application_1_1_menu}{Menu}} \texorpdfstring{$\ast$}{*} $>$ \&}]{menus}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Saves the current shared action library and menu references. 
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_menu_config_loader_8hpp}{Menu\+Config\+Loader.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\doxymbox{\hyperlink{_menu_config_loader_8cpp}{Menu\+Config\+Loader.\+cpp}}\end{DoxyCompactItemize}

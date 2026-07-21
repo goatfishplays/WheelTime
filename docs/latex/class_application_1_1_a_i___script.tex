@@ -1,0 +1,106 @@
+\doxysection{Application::\+AI\+\_\+\+Script Class Reference}
+\hypertarget{class_application_1_1_a_i___script}{}\label{class_application_1_1_a_i___script}\index{Application::AI\_Script@{Application::AI\_Script}}
+
+
+Launches an arbitrary app or script path.  
+
+
+
+
+{\ttfamily \+\#include $<$Script.\+hpp$>$}
+
+Inheritance diagram for Application::\+AI\+\_\+\+Script:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_application_1_1_a_i___script}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_a_i___script_a2cd2d3a983c7a06dfc292a6ad687983c}{AI\+\_\+\+Script}} (std::\+string filepath=\{\})
+\item 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} $>$ \doxymbox{\hyperlink{class_application_1_1_a_i___script_a540a29dbe4768e324b478014c4b7a8a5}{clone}} () const override
+\item 
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} \doxymbox{\hyperlink{class_application_1_1_a_i___script_a507daf6e8a29328cb784ca39e08cec3c}{kind}} () const override
+\item 
+\doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}} \doxymbox{\hyperlink{class_application_1_1_a_i___script_ad788a0cd7c8992d932c061fcecb10cf5}{execute}} (\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&context) override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{class_application_1_1_action_item}{Application::\+\+Action\+Item}}}
+\begin{DoxyCompactItemize}
+\item 
+\doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} ()=default
+\item 
+virtual \doxymbox{\hyperlink{class_application_1_1_action_item_a475b8d6aff3774c90b9f0a4512959bf5}{\texorpdfstring{$\sim$}{\string~}\+Action\+Item}} ()=default
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std::\+string \doxymbox{\hyperlink{class_application_1_1_a_i___script_adb27f5dfd23566be2d003ccaa4345472}{filepath}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Launches an arbitrary app or script path. 
+
+\label{class_application_1_1_a_i___script_doc-constructors}
+\Hypertarget{class_application_1_1_a_i___script_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_application_1_1_a_i___script_a2cd2d3a983c7a06dfc292a6ad687983c}\index{Application::AI\_Script@{Application::AI\_Script}!AI\_Script@{AI\_Script}}
+\index{AI\_Script@{AI\_Script}!Application::AI\_Script@{Application::AI\_Script}}
+\doxysubsubsection{\texorpdfstring{AI\_Script()}{AI\_Script()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___script_a2cd2d3a983c7a06dfc292a6ad687983c} 
+Application::\+\+AI\+\_\+\+Script::\+\+AI\+\_\+\+Script (\begin{DoxyParamCaption}\item[{std::\+string}]{filepath}{ = {\ttfamily \{\}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+\label{class_application_1_1_a_i___script_doc-func-members}
+\Hypertarget{class_application_1_1_a_i___script_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_application_1_1_a_i___script_a540a29dbe4768e324b478014c4b7a8a5}\index{Application::AI\_Script@{Application::AI\_Script}!clone@{clone}}
+\index{clone@{clone}!Application::AI\_Script@{Application::AI\_Script}}
+\doxysubsubsection{\texorpdfstring{clone()}{clone()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___script_a540a29dbe4768e324b478014c4b7a8a5} 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_item_aed3b89c183382cdbdfe073a86a857758}{Action\+Item}} $>$ Application::\+\+AI\+\_\+\+Script::\+clone (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_afd400c3edd7ad9e074a28d462421789c}{Application::\+\+Action\+Item}}.
+
+\Hypertarget{class_application_1_1_a_i___script_ad788a0cd7c8992d932c061fcecb10cf5}\index{Application::AI\_Script@{Application::AI\_Script}!execute@{execute}}
+\index{execute@{execute}!Application::AI\_Script@{Application::AI\_Script}}
+\doxysubsubsection{\texorpdfstring{execute()}{execute()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___script_ad788a0cd7c8992d932c061fcecb10cf5} 
+\doxymbox{\hyperlink{class_application_1_1_execute_result}{Execute\+Result}} Application::\+\+AI\+\_\+\+Script::\+execute (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} \&}]{context}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_aeeaf1c44a2f6741be0fdaad53da67e54}{Application::\+\+Action\+Item}}.
+
+\Hypertarget{class_application_1_1_a_i___script_a507daf6e8a29328cb784ca39e08cec3c}\index{Application::AI\_Script@{Application::AI\_Script}!kind@{kind}}
+\index{kind@{kind}!Application::AI\_Script@{Application::AI\_Script}}
+\doxysubsubsection{\texorpdfstring{kind()}{kind()}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___script_a507daf6e8a29328cb784ca39e08cec3c} 
+\doxymbox{\hyperlink{namespace_application_ac713faa8cc99e4514a1a5c6a6336f1bc}{Action\+Item\+Kind}} Application::\+\+AI\+\_\+\+Script::\+kind (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_application_1_1_action_item_ab51b1298eb1b325512ca99d2f090fa75}{Application::\+\+Action\+Item}}.
+
+
+
+\label{class_application_1_1_a_i___script_doc-variable-members}
+\Hypertarget{class_application_1_1_a_i___script_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_application_1_1_a_i___script_adb27f5dfd23566be2d003ccaa4345472}\index{Application::AI\_Script@{Application::AI\_Script}!filepath@{filepath}}
+\index{filepath@{filepath}!Application::AI\_Script@{Application::AI\_Script}}
+\doxysubsubsection{\texorpdfstring{filepath}{filepath}}
+{\footnotesize\ttfamily \label{class_application_1_1_a_i___script_adb27f5dfd23566be2d003ccaa4345472} 
+std::\+string Application::\+\+AI\+\_\+\+Script::\+filepath}
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\+Action\+Items/\+\doxymbox{\hyperlink{_script_8hpp}{Script.\+hpp}}\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+src/\+\+Action\+Items/\+\doxymbox{\hyperlink{_script_8cpp}{Script.\+cpp}}\end{DoxyCompactItemize}

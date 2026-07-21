@@ -17,6 +17,7 @@ Menu::Menu(int triggerMod,
            bool executeOnRelease,
            bool exitOnAction,
            bool centerMouseOnOpen,
+           bool restoreMouseOnClose,
            std::string name,
            std::vector<std::string> actionIds,
            std::string id)
@@ -25,6 +26,7 @@ Menu::Menu(int triggerMod,
     , executeOnRelease(executeOnRelease)
     , exitOnAction(exitOnAction)
     , centerMouseOnOpen(centerMouseOnOpen)
+    , restoreMouseOnClose(restoreMouseOnClose)
     , m_name(std::move(name))
     , m_id(std::move(id))
     , m_actionIds(std::move(actionIds))

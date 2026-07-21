@@ -1,0 +1,50 @@
+\doxysection{Action\+History.\+hpp}
+\hypertarget{_action_history_8hpp_source}{}\label{_action_history_8hpp_source}\index{E:/Github/WheelTime/app/include/App/ActionHistory.hpp@{E:/Github/WheelTime/app/include/App/ActionHistory.hpp}}
+\doxymbox{\hyperlink{_action_history_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <cstddef>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <QString>}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{namespace\ }\doxymbox{\hyperlink{namespace_application}{Application}}}
+\DoxyCodeLine{00018\ \{}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00028\ \textcolor{keyword}{class\ }\doxymbox{\hyperlink{class_application_1_1_action_history_a42b17cdb632eec6c80db9f92141de041}{ActionHistory}}}
+\DoxyCodeLine{00029\ \{}
+\DoxyCodeLine{00030\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{explicit}\ \doxymbox{\hyperlink{class_application_1_1_action_history_a42b17cdb632eec6c80db9f92141de041}{ActionHistory}}(std::size\_t\ maxRecent\ =\ 64);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_action_history_a54f5114bcafd178b97c93d9c7d5a4a49}{recordUse}}(\textcolor{keyword}{const}\ std::string\ \&actionId);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00040\ \ \ \ \ [[nodiscard]]\ std::string\ \doxymbox{\hyperlink{class_application_1_1_action_history_a8592cdca26b45fdfd8c50159af0bd6b4}{nthRecentId}}(\textcolor{keywordtype}{int}\ n)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00048\ \ \ \ \ [[nodiscard]]\ std::string\ \doxymbox{\hyperlink{class_application_1_1_action_history_ae35ad3c0963dd0ec066a23e8faf25ba7}{nthFrequentId}}(\textcolor{keywordtype}{int}\ n)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{void}\ \doxymbox{\hyperlink{class_application_1_1_action_history_a933dd61a86f541788b0e1912b09700ce}{pruneToLibrary}}(\textcolor{keyword}{const}\ std::vector<std::string>\ \&validIds);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_action_history_a975106634e1f1d5de46b89b3f9d25af4}{load}}(\textcolor{keyword}{const}\ QString\ \&path);}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keywordtype}{bool}\ \doxymbox{\hyperlink{class_application_1_1_action_history_af4f6a3728b40549b24ad90db5dbc73b3}{save}}(\textcolor{keyword}{const}\ QString\ \&path)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ [[nodiscard]]\ std::size\_t\ \doxymbox{\hyperlink{class_application_1_1_action_history_af0329c53451a68656622e50c2dfe7caf}{recentCount}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00060\ \ \ \ \ [[nodiscard]]\ std::size\_t\ \doxymbox{\hyperlink{class_application_1_1_action_history_a73c20ae833fc956b31780c1e7e73e900}{frequentEntryCount}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{mutable}\ std::mutex\ m\_mutex;}
+\DoxyCodeLine{00064\ \ \ \ \ std::vector<std::string>\ m\_recent;}
+\DoxyCodeLine{00065\ \ \ \ \ std::unordered\_map<std::string,\ std::uint64\_t>\ m\_counts;}
+\DoxyCodeLine{00066\ \ \ \ \ std::size\_t\ m\_maxRecent;}
+\DoxyCodeLine{00067\ \};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \}\ \textcolor{comment}{//\ namespace\ Application}}
+
+\end{DoxyCode}

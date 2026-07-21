@@ -1,0 +1,103 @@
+\doxysection{Application::\+Worker\+Result Struct Reference}
+\hypertarget{struct_application_1_1_worker_result}{}\label{struct_application_1_1_worker_result}\index{Application::WorkerResult@{Application::WorkerResult}}
+
+
+Outcome of a worker\textquotesingle{}s run over an \doxylink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}.  
+
+
+
+
+{\ttfamily \+\#include $<$Worker\+Pool.\+hpp$>$}
+
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum class \doxymbox{\hyperlink{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1}{Status}} \{ \doxymbox{\hyperlink{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1a07ca5050e697392c9ed47e6453f1453f}{Completed}}
+, \doxymbox{\hyperlink{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1aa0bfb8e59e6c13fc8d990781f77694fe}{Continue}}
+, \doxymbox{\hyperlink{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1a6e04a0730cfc0bca398610196b5f8467}{Delayed}}
+, \doxymbox{\hyperlink{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1aa149e85a44aeec9140e92733d9ed694e}{Cancelled}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std::\+unique\+\_\+ptr$<$ \doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}} $>$ \doxymbox{\hyperlink{struct_application_1_1_worker_result_aefb7186849daff06ad20063e925ff279}{context}}
+\item 
+\doxymbox{\hyperlink{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1}{Status}} \doxymbox{\hyperlink{struct_application_1_1_worker_result_a4b7a582ba7176d8c1cb0dbb50b370649}{status}} = \doxymbox{\hyperlink{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1a07ca5050e697392c9ed47e6453f1453f}{Status::\+\+Completed}}
+\item 
+std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point \doxymbox{\hyperlink{struct_application_1_1_worker_result_a3d10f94bb411b03ac6d65a9a5e0fc107}{wake\+Time}} \{\}
+\begin{DoxyCompactList}\small\item\em Valid when \doxylink{struct_application_1_1_worker_result_a4b7a582ba7176d8c1cb0dbb50b370649}{status} is Delayed. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Outcome of a worker\textquotesingle{}s run over an \doxylink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}. 
+
+Produced when the worker needs the scheduler:\+ the \doxylink{class_application_1_1_action}{Action} finished, was cancelled between items, an item returned Delay\+Until, or an item recorded schedule\+Action /\+ set\+Cancel\+Flush side effects (Continue). Nested requests remain on \doxylink{struct_application_1_1_worker_result_aefb7186849daff06ad20063e925ff279}{context} for the scheduler to drain — workers never process them. 
+
+\label{struct_application_1_1_worker_result_doc-enum-members}
+\Hypertarget{struct_application_1_1_worker_result_doc-enum-members}
+\doxysubsection{Member Enumeration Documentation}
+\Hypertarget{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1}\index{Application::WorkerResult@{Application::WorkerResult}!Status@{Status}}
+\index{Status@{Status}!Application::WorkerResult@{Application::WorkerResult}}
+\doxysubsubsection{\texorpdfstring{Status}{Status}}
+{\footnotesize\ttfamily \label{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1} 
+enum class \doxymbox{\hyperlink{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1}{Application::\+\+Worker\+Result::\+\+Status}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Completed@{Completed}!Application::WorkerResult@{Application::WorkerResult}}
+\index{Application::WorkerResult@{Application::WorkerResult}!Completed@{Completed}}
+}\Hypertarget{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1a07ca5050e697392c9ed47e6453f1453f}\label{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1a07ca5050e697392c9ed47e6453f1453f} 
+Completed&All items ran (or none remained). \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Continue@{Continue}!Application::WorkerResult@{Application::WorkerResult}}
+\index{Application::WorkerResult@{Application::WorkerResult}!Continue@{Continue}}
+}\Hypertarget{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1aa0bfb8e59e6c13fc8d990781f77694fe}\label{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1aa0bfb8e59e6c13fc8d990781f77694fe} 
+Continue&Finished one item with pending scheduler requests; resume after ingest. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Delayed@{Delayed}!Application::WorkerResult@{Application::WorkerResult}}
+\index{Application::WorkerResult@{Application::WorkerResult}!Delayed@{Delayed}}
+}\Hypertarget{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1a6e04a0730cfc0bca398610196b5f8467}\label{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1a6e04a0730cfc0bca398610196b5f8467} 
+Delayed&Stopped after Delay\+Until; \doxylink{struct_application_1_1_worker_result_a3d10f94bb411b03ac6d65a9a5e0fc107}{wake\+Time} is set; channel should be held. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Cancelled@{Cancelled}!Application::WorkerResult@{Application::WorkerResult}}
+\index{Application::WorkerResult@{Application::WorkerResult}!Cancelled@{Cancelled}}
+}\Hypertarget{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1aa149e85a44aeec9140e92733d9ed694e}\label{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1aa149e85a44aeec9140e92733d9ed694e} 
+Cancelled&Stopped because the context was cancelled between Action\+Items. \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\label{struct_application_1_1_worker_result_doc-variable-members}
+\Hypertarget{struct_application_1_1_worker_result_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_application_1_1_worker_result_aefb7186849daff06ad20063e925ff279}\index{Application::WorkerResult@{Application::WorkerResult}!context@{context}}
+\index{context@{context}!Application::WorkerResult@{Application::WorkerResult}}
+\doxysubsubsection{\texorpdfstring{context}{context}}
+{\footnotesize\ttfamily \label{struct_application_1_1_worker_result_aefb7186849daff06ad20063e925ff279} 
+std::\+unique\+\_\+ptr$<$\doxymbox{\hyperlink{class_application_1_1_action_execution_context}{Action\+Execution\+Context}}$>$ Application::\+\+Worker\+Result::\+context}
+
+\Hypertarget{struct_application_1_1_worker_result_a4b7a582ba7176d8c1cb0dbb50b370649}\index{Application::WorkerResult@{Application::WorkerResult}!status@{status}}
+\index{status@{status}!Application::WorkerResult@{Application::WorkerResult}}
+\doxysubsubsection{\texorpdfstring{status}{status}}
+{\footnotesize\ttfamily \label{struct_application_1_1_worker_result_a4b7a582ba7176d8c1cb0dbb50b370649} 
+\doxymbox{\hyperlink{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1}{Status}} Application::\+\+Worker\+Result::\+status = \doxymbox{\hyperlink{struct_application_1_1_worker_result_afdf950582b3c2a1b6901de9dea7581c1a07ca5050e697392c9ed47e6453f1453f}{Status::\+\+Completed}}}
+
+\Hypertarget{struct_application_1_1_worker_result_a3d10f94bb411b03ac6d65a9a5e0fc107}\index{Application::WorkerResult@{Application::WorkerResult}!wakeTime@{wakeTime}}
+\index{wakeTime@{wakeTime}!Application::WorkerResult@{Application::WorkerResult}}
+\doxysubsubsection{\texorpdfstring{wakeTime}{wakeTime}}
+{\footnotesize\ttfamily \label{struct_application_1_1_worker_result_a3d10f94bb411b03ac6d65a9a5e0fc107} 
+std::\+chrono::\+steady\+\_\+clock::\+time\+\_\+point Application::\+\+Worker\+Result::\+wake\+Time \{\}}
+
+
+
+Valid when \doxylink{struct_application_1_1_worker_result_a4b7a582ba7176d8c1cb0dbb50b370649}{status} is Delayed. 
+
+
+
+The documentation for this struct was generated from the following file:\+\begin{DoxyCompactItemize}
+\item 
+E:\+/\+\+Github/\+\+Wheel\+Time/\+app/\+include/\+\+App/\+\doxymbox{\hyperlink{_worker_pool_8hpp}{Worker\+Pool.\+hpp}}\end{DoxyCompactItemize}
