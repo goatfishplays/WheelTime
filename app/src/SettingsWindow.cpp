@@ -1296,6 +1296,15 @@ bool SettingsWindow::eventFilter(QObject *obj, QEvent *event)
             return true;
         }
 
+        // Escape cancels recording without changing the existing bind.
+        if (key == Qt::Key_Escape)
+        {
+            m_isRecordingHotkey = false;
+            m_hotkeyRecordButton->releaseKeyboard();
+            updateHotkeyButtonText();
+            return true;
+        }
+
         int idx = currentMenuIndex();
         if (idx >= 0)
         {
