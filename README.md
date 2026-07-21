@@ -15,7 +15,7 @@ WheelTime is a Windows radial launcher for quick actions, app launches, hotkeys,
 
 ### Option 1: Installer
 
-Download `WheelTimeSetup.exe` from a release and run it.
+[Download WheelTime](https://github.com/goatfishplays/WheelTime/releases/latest)
 
 - Installs per user under `%LOCALAPPDATA%\WheelTime`.
 - Does not require admin rights.
