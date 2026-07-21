@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(GNUInstallDirs)
 
 # add qt
-find_package(Qt6 REQUIRED COMPONENTS Widgets Gui Core)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Gui Core Network)
 qt_standard_project_setup()
 
 # Let each subdir handle its own making

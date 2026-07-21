@@ -15,6 +15,7 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE 
         App 
         Qt6::Widgets
+        Qt6::Network
         # Qt6::Core
 )  
 
