@@ -120,7 +120,8 @@ As a linux user, I want to have my uses cached so I can quickly execute the most
 * **Muneeb Syed:** User Story 3, connected launcher GUI buttons to test actions, updated action handling to use Executor, updated CMake build targets, and updated README.  
 * **Mithil Harish:** User Story 1 and 3, Scrum Master duties, test launching Notepad/Calculator logic, and hotkey research/setup.
 
-## **Initial Burnup Chart** (https://github.com/goatfishplays/WheelTime/blob/main/docs/images/initial-burnup-chart-s2.png)
+## **Initial Burnup Chart**
+![Sprint 2 Initial Burnup Chart](https://github.com/goatfishplays/WheelTime/blob/main/docs/images/final-burnup-chart-s2.png)
 
 **The initial burnup chart for Sprint 2 should show 0 completed ideal hours out of 67.5 total estimated ideal hours at the start of the sprint.**
 
