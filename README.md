@@ -62,6 +62,26 @@ Allow the launcher to open and close quickly using a hotkey and run basic action
 - Log bugs and open issues in GitHub
 - Update README with hotkey usage instructions
 
+## Sprint 3 Goal
+
+Allow users to configure launcher actions without editing code.
+
+## Sprint 3 Tasks
+
+- Design settings window layout
+- Create settings dialog/window using QT
+- Load current settings into UI controls
+- Save settings when user clicks Apply/OK
+- Validate user settings before saving/applying
+- Connect settings to main application
+- Add default restore settings button
+- Implement cancel/discard changes
+- Testing the functionality with configurations we add
+- Implement custom launcher action management
+- Integrate actions with the radial menu
+- Ability to delete launcher actions
+- Test the launch integration with running applications
+
 ## Build Instructions
 
 ### Requirements

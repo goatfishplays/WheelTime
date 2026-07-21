@@ -187,21 +187,21 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     auto *menuForm = new QFormLayout(menuSettingsGroup);
     m_menuNameEdit = new QLineEdit(menuSettingsGroup);
     m_hotkeyRecordButton = new QPushButton("Unassigned", menuSettingsGroup);
-    m_hotkeyClearButton = new QPushButton("X", menuSettingsGroup);
+    m_hotkeyClearButton = new QPushButton("✕", menuSettingsGroup);
     m_hotkeyClearButton->setFixedWidth(30);
     m_hotkeyClearButton->setCursor(Qt::PointingHandCursor);
     m_hotkeyClearButton->setStyleSheet(
         "QPushButton {"
-        "   color: #e53935;"
+        "   color: #5f6368;"
+        "   background-color: transparent;"
         "   font-family: 'Segoe UI', sans-serif;"
-        "   font-weight: bold;"
-        "   font-size: 11px;"
-        "   border: 1px solid transparent;"
+        "   font-size: 14px;"
+        "   border: none;"
         "   border-radius: 4px;"
         "}"
         "QPushButton:hover {"
-        "   background-color: #ffebee;"
-        "   border: 1px solid #ef9a9a;"
+        "   background-color: #e81123;"
+        "   color: white;"
         "}"
     );
 

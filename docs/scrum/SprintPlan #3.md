@@ -33,6 +33,15 @@ Allow users to configure launcher actions without editing code.
 
 **Total for User Story 1:** **38 hours**
 
+**Acceptance Criteria:**
+
+* The user can open a settings menu from the launcher.
+* The settings menu allows the user to add a new action.
+* The user can add the new action to the menu.
+* The user can save settings changes.
+* After saving, the new action is visible when the launcher menu is opened again.
+* The user does not need to directly modify code or a text file to add the action.
+
 ### **User Story 2 \- Medium-High Priority**
 
 **As a user, I want to customize my launcher actions so I can choose the programs/scripts I use most often. (8 Points)**
@@ -50,6 +59,18 @@ Allow users to configure launcher actions without editing code.
 * Test the launch integration with running applications \- 3 hours
 
 **Total for User Story 2: 26 hours**
+
+**Acceptance Criteria:**
+
+* The user can open the settings/action management menu.
+* The user can add a new launcher action without editing code directly.
+* The user can choose a program or script for the custom action.
+* The custom action can be saved to the user’s launcher configuration.
+* The custom action appears in the launcher menu after it is saved.
+* The user can run the custom action from the launcher interface.
+* The user can delete or remove a custom action from the launcher.
+* The system handles invalid or missing program/script paths without crashing.
+
 
 ### **Sprint 3 Spikes**
 
@@ -80,39 +101,26 @@ Allow users to configure launcher actions without editing code.
 
 ## **Initial Task Assignment**
 
-* **Ronan Wong:**   
-* **Aedan Benavides:**   
-* **Ethan Jackson:**   
-* **Muneeb Syed:**   
-* **Mithil Harish:** 
+* **Ronan Wong:** User Story 2, parallel action execution with action item polishing
+* **Aedan Benavides:** User Story 1, documentation, create definition of done and acceptance criteria
+* **Ethan Jackson:** User Story 2, testing launcher, research secure execution, handle launch errors
+* **Muneeb Syed:** User Story 2, implement launcher base, integrate actions with radial menu
+* **Mithil Harish:** User Story 1, add settings base, add setting to change default hotkey
 
 ## **Initial Burnup Chart**
 
-The initial burnup chart for Sprint 3 should show **0 completed ideal hours out of 64 total estimated ideal hours** at the start of the sprint.
+The initial burnup chart for Sprint 3 shows **5 completed ideal hours out of 64 total estimated ideal hours** at the start of the sprint.
 
-The Sprint 3 burnup chart will be updated as tasks are completed and should be available in the team workspace/lab.
+![Sprint 3 Burnup Chart](https://raw.githubusercontent.com/goatfishplays/WheelTime/refs/heads/main/docs/images/initial-burnup-chart-s3.png)
 
 ## **Initial Scrum Board**
 
-The Sprint 3 scrum board should be labeled:
-
-**Sprint 3 — Wheel Time**
-
-The board should include the following columns:
-
-1. **User Stories**  
-2. **Tasks Not Started**  
-3. **Tasks In Progress**  
-4. **Tasks Completed**
-
-Initial cards should include:
-
-**User Stories**
+### **User Stories**
 
 * Create a configurable settings menu  
 * Customize launcher actions
 
-**Tasks Not Started**
+### **Tasks Not Started**
 
 * Design settings UI  
 * Implement settings dialog  
@@ -121,21 +129,13 @@ Initial cards should include:
 * Integrate launcher actions  
 * Testing
 
-**Tasks In Progress**
-
-* 
-
-**Tasks Completed**
-
-* 
-
 ## **Scrum Times**
 
 The team will meet/check in at least three times during the sprint:
 
-* **Tuesday:** 5:30 PM — Discord check-in (full meeting)  
-* **Thursday:** 5:30 PM — Sprint check in / task distribution  
-* **Monday:** 8:00 PM — Sprint conclusion
+* **Tuesday:** 5:30 PM - Discord check-in (full meeting)  
+* **Thursday:** 5:30 PM - Sprint check in / task distribution  
+* **Monday:** 8:00 PM - Sprint conclusion
 
 **TA/Tutor Visit:** During Tuesday and Thursday meeting 
 

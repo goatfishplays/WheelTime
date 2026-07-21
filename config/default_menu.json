@@ -34,11 +34,9 @@
             "id": "action-new-action",
             "items": [
                 {
-                    "destination": "https://httpbin.org/post",
-                    "httpMethod": "POST",
-                    "message": "{\n    \"username\": \"TestUser\",\n    \"message\": \"Hello from my macro application!\",\n    \"number\": 42,\n    \"enabled\": true\n}",
-                    "protocol": "http",
-                    "type": "socket"
+                    "customTarget": "notepad.exe",
+                    "presetId": "notepad",
+                    "type": "launch_app"
                 }
             ],
             "name": "Test Action"
@@ -59,18 +57,6 @@
         },
         {
             "channel": 0,
-            "id": "action-new-action-4",
-            "items": [
-                {
-                    "customTarget": "",
-                    "presetId": "calculator",
-                    "type": "launch_app"
-                }
-            ],
-            "name": "New Action"
-        },
-        {
-            "channel": 0,
             "id": "action-search",
             "items": [
                 {
@@ -83,6 +69,21 @@
                 }
             ],
             "name": "Search"
+        },
+        {
+            "channel": 0,
+            "icon": "C:/Users/Torpin Pascual/Pictures/Screenshots/Screenshot 2025-08-13 144050.png",
+            "id": "action-new-action-6",
+            "items": [
+                {
+                    "holdDuration": 0,
+                    "keycode": 69,
+                    "modifiers": 0,
+                    "proceed": false,
+                    "type": "hotkey"
+                }
+            ],
+            "name": "New Action"
         }
     ],
     "menus": [
@@ -101,6 +102,30 @@
             "name": "GAMBLING",
             "triggerMod": 6,
             "triggerVk": 192
+        },
+        {
+            "actionIds": [
+                "action-new-action-2",
+                "action-search",
+                "action-new-action-6"
+            ],
+            "centerMouseOnOpen": true,
+            "executeOnRelease": false,
+            "exitOnAction": false,
+            "id": "menu-new-menu",
+            "name": "test 1",
+            "triggerMod": 0,
+            "triggerVk": 0
+        },
+        {
+            "actionIds": [],
+            "centerMouseOnOpen": true,
+            "executeOnRelease": false,
+            "exitOnAction": false,
+            "id": "menu-new-menu-2",
+            "name": "New Menu",
+            "triggerMod": 0,
+            "triggerVk": 0
         }
     ]
 }
