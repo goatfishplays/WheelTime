@@ -10,13 +10,13 @@
 
 ### **Not updating each other often on what's currently being worked on**
 
-The team should update each other more often on what we are working on. Doing so helps prevent conflicts where multiple people work on the same misc extra tasks.
+The team should update each other more often on what we are currently working on. Doing so helps prevent conflicts where multiple people work on the same misc extra tasks.
 
 ## **Actions to Start Doing**
 
 ### **Start strictly enforcing the "User Story Done" workflow**
 
-The team needs to transition fully to the new Trello process established at the beginning of this sprint, so that we mark users stories that are fully completed off in the new User Story Done column.
+The team needs to transition fully to the new Trello process established at the beginning of this sprint, so that we mark users stories which are fully completed off in the new User Story Done column.
 
 ## **Actions to Keep Doing**
 
