@@ -179,7 +179,7 @@ The recent action feature successfully re-ran the previous action.
 **Status:** Pass  
 
 **User Story:**  
-As a Linux/general user, I want to be able to search for programs that I don’t have set on my interface so I don’t need a separate application launcher for more general usage.
+As a general user, I want to be able to search for programs that I don’t have set on my interface so I don’t need a separate application launcher for more general usage.
 
 **Steps:**
 

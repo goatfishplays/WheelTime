@@ -6,7 +6,7 @@
 
 ## Overview
 
-Wheel Time Release 1.0 is a lightweight real-time application launcher designed to help users quickly open actions, scripts, programs, and hotkeys from a visual wheel interface. The main goal of the release is to give users one fast interface for running common actions without needing to leave their current workflow, remember many hotkeys, or search through the desktop.
+Wheel Time Release 0.1.0 is a lightweight real-time application launcher designed to help users quickly open actions, scripts, programs, and hotkeys from a visual wheel interface. The main goal of the release is to give users one fast interface for running common actions without needing to leave their current workflow, remember many hotkeys, or search through the desktop.
 
 The release focuses on Windows functionality, including a launcher overlay, hotkey activation, visual action selection, configurable actions, search-based launching, and basic automation/action execution.
 
@@ -37,7 +37,7 @@ As a gamer, I want the interface to not obscure the entire screen so I can still
 **Acceptance Criteria:**
 
 - The launcher interface has a basic window or GUI skeleton.
-- The GUI does not take up the full screen.
+- The launcher visuals do not obscure the full screen.
 - The interface includes placeholder buttons or visible UI elements for future launcher actions.
 - The team has documented research on transparency, overlay behavior, or ways to avoid blocking the screen.
 - The GUI prototype can be shown through code, a screenshot, or a design sketch.
@@ -154,11 +154,11 @@ As a gamer, I want the interface to be lightweight so I can run it without worry
 
 ## Known Problems
 
-The following known problems, limitations, and design shortcuts are part of the Release 1.0 version.
+The following known problems, limitations, and design shortcuts are part of the Release 0.1.0 version.
 
 ### Windows-Focused Release
 
-Wheel Time Release 1.0 mainly focuses on Windows functionality. Some user stories mention Linux/general launcher behavior, but full Linux support is not complete in this release. As such there is some code that may need to be moved to the platform layer or changed to support such environments(in particular search and the non-activating overlay code).
+Wheel Time Release 0.1.0 mainly focuses on Windows functionality. Some user stories mention Linux/general launcher behavior, but full Linux support is not complete in this release. As such there is some code that may need to be moved to the platform layer or changed to support such environments (in particular search and the non-activating overlay code).
 
 ### Limited Automated GUI Testing
 
@@ -190,7 +190,7 @@ Basic performance and responsiveness were tested, but deeper benchmark testing i
 
 ### Heavily Suggested to Set Exit on Action to True for Mouse Inputs
 
-(This one is debatable whether it should be here or in non-issues) Currently due to the way Windows handles mouse inputs we cannot pass through simulated mouse clicks to the underlying application while the menu is open. This may result in infinite action loops caused by actions triggered by actions. This may be intentional and useful, allowing for infinitely running/self repeating macros but may also be accidental. It is recomended to ensure you exit the menu before simulating a left click if you do not want this behavior.
+Currently, due to the way Windows handles mouse inputs, Wheel Time cannot pass simulated mouse clicks through to the underlying application while the menu is open. This may result in repeated action loops caused by actions triggering other actions. That behavior may be intentional for self-repeating macros, but users should enable exit-on-action before simulating a left click if they do not want the launcher to stay open.
 
 ---
 
@@ -199,7 +199,7 @@ Some behaviors may seem unintuitive but are by design and are not considered pro
 
 ### Cancel Requires Main Action to be Running
 
-Some actions such as simulating keystrokes fire off a separate subaction for cleanup(running a keyup in this case). The main action when set to "Continue Immediately" will finish and thus be uncancelable, this is by design but may be unintuitive to some users, if you need the action to remain cancelable it is recommended to either unset "Continue Immediately" or add a delay to the end of the action that spans the excess duration.
+Some actions such as simulating keystrokes fire off a separate subaction for cleanup (running a keyup in this case). The main action, when set to "Continue Immediately", will finish and thus be uncancelable. This is by design but may be unintuitive to some users. If the action needs to remain cancelable, it is recommended to either unset "Continue Immediately" or add a delay to the end of the action that spans the excess duration.
 
 ### Actions Attempt Pause in Settings
 Actions that contain time delays or durations will attempt to pause their delays and durations while the settings menu is open and may be canceled if the settings are updated while there to attempt to avoid invalid states.
@@ -276,6 +276,6 @@ The following high-priority user stories and bug fixes should guide future work 
 
 ## Release Status
 
-Wheel Time Release 1.0 is ready for project review with known limitations. The release supports the core project goal: a lightweight visual launcher that can open quickly, close quickly, run actions, support configurable behavior, and search for programs/actions.
+Wheel Time Release 0.1.0 is ready for project review with known limitations. The release supports the core project goal: a lightweight visual launcher that can open quickly, close quickly, run actions, support configurable behavior, and search for programs/actions.
 
 The most important follow-on work is improving validation, polishing the settings/action workflow, expanding automated testing, and strengthening support for full-screen applications and edge cases.
