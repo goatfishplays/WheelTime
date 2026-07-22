@@ -12,7 +12,7 @@ namespace Application
 {
 
 AI_Delay::AI_Delay(int durationMs)
-    : duration{durationMs}
+    : durationMs{durationMs}
 {
 }
 
@@ -28,9 +28,9 @@ ActionItemKind AI_Delay::kind() const
 
 ExecuteResult AI_Delay::execute(ActionExecutionContext & /*context*/)
 {
-    std::cerr << "[AI_Delay] durationMs=" << duration << '\n';
+    std::cerr << "[AI_Delay] durationMs=" << durationMs << '\n';
     return ExecuteResult::DelayUntil(
-        std::chrono::steady_clock::now() + std::chrono::milliseconds(duration));
+        std::chrono::steady_clock::now() + std::chrono::milliseconds(durationMs));
 }
 
 } // namespace Application

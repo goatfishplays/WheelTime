@@ -1,8 +1,0 @@
-var namespace_q_t___w_a_r_n_i_n_g___d_i_s_a_b_l_e___d_e_p_r_e_c_a_t_e_d =
-[
-    [ "qt_meta_tag_ZN11Application11HoverButtonE_t", "struct_q_t___w_a_r_n_i_n_g___d_i_s_a_b_l_e___d_e_p_r_e_c_a_t_e_d_1_1qt__meta__tag___z_n11_application11_hover_button_e__t.html", null ],
-    [ "qt_meta_tag_ZN11Application14SettingsWindowE_t", "struct_q_t___w_a_r_n_i_n_g___d_i_s_a_b_l_e___d_e_p_r_e_c_a_t_e_d_1_1qt__meta__tag___z_n11_application14_settings_window_e__t.html", null ],
-    [ "qt_meta_tag_ZN11Application16RadialMenuWidgetE_t", "struct_q_t___w_a_r_n_i_n_g___d_i_s_a_b_l_e___d_e_p_r_e_c_a_t_e_d_1_1qt__meta__tag___z_n11_application16_radial_menu_widget_e__t.html", null ],
-    [ "qt_meta_tag_ZN11Application19SearchPaletteWidgetE_t", "struct_q_t___w_a_r_n_i_n_g___d_i_s_a_b_l_e___d_e_p_r_e_c_a_t_e_d_1_1qt__meta__tag___z_n11_applica8eb73d15a58572e08152952d525535f.html", null ],
-    [ "qt_meta_tag_ZN11Application3GuiE_t", "struct_q_t___w_a_r_n_i_n_g___d_i_s_a_b_l_e___d_e_p_r_e_c_a_t_e_d_1_1qt__meta__tag___z_n11_application3_gui_e__t.html", null ]
-];

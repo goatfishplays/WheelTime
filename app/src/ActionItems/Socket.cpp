@@ -69,7 +69,7 @@ ExecuteResult AI_Socket::execute(ActionExecutionContext & /*context*/)
     }
     std::cerr << " msg='" << socketMsg << "'\n";
 
-    if (!App::getInstance().executor.sendSocket(request))
+    if (!App::instance().executor().sendSocket(request))
     {
         std::cerr << "[AI_Socket] send failed protocol=" << socketProtocolName(protocol)
                   << " dst='" << outputDst << "'\n";

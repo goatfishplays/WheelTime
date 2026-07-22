@@ -72,6 +72,9 @@ Testing/
 # Local usage history next to menu config
 config/action_history.json
 
+# Generated Doxygen HTML (regenerate with: cd docs && doxygen Doxyfile)
+docs/html/
+
 # vscode settings
 .vscode/settings.json
 .vs

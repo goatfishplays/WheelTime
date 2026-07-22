@@ -1,9 +1,16 @@
 #include "App/Gui.hpp"
-// TODO: segment this into multiple files
+
+// TODO: Split Gui into overlay shell vs launcher/settings/search presentation helpers.
+
+#include "App/Action.hpp"
+#include "App/App.hpp"
+#include "App/SearchPaletteWidget.hpp"
+#include "App/SettingsWindow.hpp"
+
 #include <QAbstractButton>
 #include <QApplication>
-#include <QDebug>
 #include <QCursor>
+#include <QDebug>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QFormLayout>
@@ -14,12 +21,8 @@
 #include <QTableWidget>
 #include <QTableWidgetItem>
 #include <QVBoxLayout>
-#include <cmath>
 
-#include "App/App.hpp"
-#include "App/Action.hpp"
-#include "App/SearchPaletteWidget.hpp"
-#include "App/SettingsWindow.hpp"
+#include <cmath>
 
 using namespace Application;
 
@@ -87,9 +90,9 @@ Gui::Gui(QWidget *parent)
 
     connect(m_radialMenu, &RadialMenuWidget::selectedIndexChanged, this, &Gui::onSelectChange);
     connect(m_settingsButton, &QPushButton::clicked, []()
-            { App::getInstance().showSettingsWindow(); });
+            { App::instance().showSettingsWindow(); });
     connect(m_radialMenu, &RadialMenuWidget::buttonTriggered, this, [](int index)
-            { App::getInstance().executeAction(index); });
+            { App::instance().executeAction(index); });
 
     // Settings shares the long-lived overlay shell so it feels like part of
     // WheelTime instead of an unrelated always-on-top window. It is only shown
@@ -130,9 +133,9 @@ Gui::Gui(QWidget *parent)
     enterDormantOverlay();
 }
 
-void Gui::onSelectChange(int index)
+void Gui::onSelectChange(int selectionIndex)
 {
-    qDebug() << "Selected index changed:" << index;
+    qDebug() << "Selected index changed:" << selectionIndex;
 }
 
 bool Gui::eventFilter(QObject *watched, QEvent *event)
@@ -145,7 +148,7 @@ bool Gui::eventFilter(QObject *watched, QEvent *event)
             if (mouseEvent->button() == Qt::RightButton)
             {
                 // Right click anywhere dismisses, mirroring wheel behavior.
-                App::getInstance().hideSearchOverlay();
+                App::instance().hideSearchOverlay();
                 return true;
             }
             if (mouseEvent->button() == Qt::LeftButton && m_searchPalette != nullptr)
@@ -155,7 +158,7 @@ bool Gui::eventFilter(QObject *watched, QEvent *event)
                 if (!m_searchPalette->rect().contains(paletteLocal))
                 {
                     // Left click outside the palette panel dismisses.
-                    App::getInstance().hideSearchOverlay();
+                    App::instance().hideSearchOverlay();
                     return true;
                 }
             }
@@ -164,7 +167,7 @@ bool Gui::eventFilter(QObject *watched, QEvent *event)
         {
             // Alt-tab away closes the palette; the user picked a new focus
             // target themselves, so do not fight it by restoring priors.
-            App::getInstance().hideSearchOverlay(/*restoreFocus=*/false);
+            App::instance().hideSearchOverlay(/*restoreFocus=*/false);
         }
         return QWidget::eventFilter(watched, event);
     }
@@ -201,13 +204,13 @@ bool Gui::eventFilter(QObject *watched, QEvent *event)
 
             // Any left click on the fullscreen overlay runs the currently selected action.
             m_radialMenu->updateSelectionFromGlobalMousePosition(globalPos);
-            App::getInstance().executeAction(m_radialMenu->getSelectedIndex());
+            App::instance().executeAction(m_radialMenu->selectedIndex());
             return true;
         }
 
         if (mouseEvent->button() == Qt::RightButton)
         {
-            App::getInstance().hideGui();
+            App::instance().hideGui();
             return true;
         }
     }
@@ -217,7 +220,9 @@ bool Gui::eventFilter(QObject *watched, QEvent *event)
 
 void Gui::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Escape)
+    // Settings is dismissed with Close, not Escape (Escape cancels hotkey
+    // recording inside the editor and must not tear the overlay down).
+    if (event->key() == Qt::Key_Escape && m_overlayMode != OverlayMode::Settings)
     {
         emit escapePressed();
     }
@@ -229,7 +234,7 @@ void Gui::keyPressEvent(QKeyEvent *event)
 
 void Gui::setMenu(const Menu &menu, const std::vector<ActionSlotVisual> &slotVisuals)
 {
-    m_titleLabel->setText(QString::fromStdString(menu.getName()));
+    m_titleLabel->setText(QString::fromStdString(menu.name()));
     m_radialMenu->setMenu(menu, slotVisuals);
 }
 
@@ -394,5 +399,5 @@ int Gui::selectedActionIndex() const
     {
         return -1;
     }
-    return m_radialMenu->getSelectedIndex();
+    return m_radialMenu->selectedIndex();
 }

@@ -6,7 +6,7 @@
  * clone / JSON round-trip, history-meta classification, ProgramIndex
  * invariants, and SearchPaletteWidget result assembly (filters, category
  * priority, websearch fallback, selection). Widget tests install fixture
- * actions/menus on the App singleton, mirroring action_history_smoke.
+ * actions/menus on the App singleton, mirroring action_history_tests.
  */
 
 #include "App/Action.hpp"
@@ -236,11 +236,11 @@ const AI_Search *findSearchItem(const std::vector<Action> &actions, const std::s
 {
     for (const Action &action : actions)
     {
-        if (action.getId() != actionId)
+        if (action.id() != actionId)
         {
             continue;
         }
-        for (const auto &item : action.getItems())
+        for (const auto &item : action.items())
         {
             if (item && item->kind() == ActionItemKind::Search)
             {
@@ -299,21 +299,11 @@ bool testConfigParseDefaultsAndValues()
 
     AppConfig appConfig;
     std::vector<Action> actions;
-    std::vector<Menu *> menus;
+    std::vector<std::unique_ptr<Menu>> menus;
     const bool loaded = MenuConfigLoader::loadConfig(path, appConfig, actions, menus);
-    const auto cleanup = [&menus]()
-    {
-        for (Menu *m : menus)
-        {
-            delete m;
-        }
-        menus.clear();
-    };
-
     if (!loaded)
     {
         std::cerr << "config: load failed\n";
-        cleanup();
         return false;
     }
 
@@ -324,7 +314,6 @@ bool testConfigParseDefaultsAndValues()
         || explicitSearch->config.webSearchUrl != "https://example.test/?q={query}")
     {
         std::cerr << "config: explicit search item parsed wrong\n";
-        cleanup();
         return false;
     }
 
@@ -335,11 +324,9 @@ bool testConfigParseDefaultsAndValues()
         || bareSearch->config.webSearchUrl != "https://www.google.com/search?q={query}")
     {
         std::cerr << "config: bare search item should get defaults\n";
-        cleanup();
         return false;
     }
 
-    cleanup();
     return true;
 }
 
@@ -365,16 +352,13 @@ bool testConfigSaveLoadRoundTrip()
         items.push_back(std::make_unique<AI_Search>(config));
         actions.emplace_back(std::move(items), "RT Search", "", "act-rt", 0);
     }
-    std::vector<Menu *> menus;
-    menus.push_back(new Menu(0, 0, false, false, true, false, "RT Menu", {"act-rt"}, "menu-rt"));
+    std::vector<std::unique_ptr<Menu>> menus;
+    menus.push_back(std::make_unique<Menu>(0, 0, false, false, true, false, "RT Menu",
+                                           std::vector<std::string>{"act-rt"}, "menu-rt"));
 
     const QString path = dir.filePath("roundtrip.json");
     AppConfig appConfig;
     const bool saved = MenuConfigLoader::saveConfig(path, appConfig, actions, menus);
-    for (Menu *m : menus)
-    {
-        delete m;
-    }
     menus.clear();
     if (!saved)
     {
@@ -383,20 +367,12 @@ bool testConfigSaveLoadRoundTrip()
     }
 
     std::vector<Action> reloadedActions;
-    std::vector<Menu *> reloadedMenus;
+    std::vector<std::unique_ptr<Menu>> reloadedMenus;
     if (!MenuConfigLoader::loadConfig(path, appConfig, reloadedActions, reloadedMenus))
     {
         std::cerr << "roundtrip: reload failed\n";
         return false;
     }
-    const auto cleanup = [&reloadedMenus]()
-    {
-        for (Menu *m : reloadedMenus)
-        {
-            delete m;
-        }
-        reloadedMenus.clear();
-    };
 
     const AI_Search *reloaded = findSearchItem(reloadedActions, "act-rt");
     if (reloaded == nullptr || reloaded->config.searchActions != config.searchActions
@@ -406,11 +382,9 @@ bool testConfigSaveLoadRoundTrip()
         || reloaded->config.webSearchUrl != config.webSearchUrl)
     {
         std::cerr << "roundtrip: search config not preserved\n";
-        cleanup();
         return false;
     }
 
-    cleanup();
     return true;
 }
 
@@ -508,15 +482,15 @@ bool testProgramIndexInvariants()
 
 void upsertAction(App &app, Action action)
 {
-    for (Action &existing : app.actionLibrary)
+    for (Action &existing : app.actionLibrary())
     {
-        if (existing.getId() == action.getId())
+        if (existing.id() == action.id())
         {
             existing = std::move(action);
             return;
         }
     }
-    app.actionLibrary.push_back(std::move(action));
+    app.actionLibrary().push_back(std::move(action));
 }
 
 /// @brief Installs uniquely named fixture actions/menu (never saved to disk).
@@ -540,27 +514,36 @@ void installSearchFixtures(App &app)
 
     if (app.findMenuById(kFixtureMenuId) == nullptr)
     {
-        app.loadedMenus.push_back(new Menu(
-            0, 0, false, false, true, false, "Zzqx Fixture Menu", {kFixtureActionA}, kFixtureMenuId));
+        app.loadedMenus().push_back(std::make_unique<Menu>(
+            0, 0, false, false, true, false, "Zzqx Fixture Menu",
+            std::vector<std::string>{kFixtureActionA}, kFixtureMenuId));
     }
 }
 
 int categoryRank(const QString &category)
 {
     if (category == "Action")
+    {
         return 0;
+    }
     if (category == "Program")
+    {
         return 1;
+    }
     if (category == "Menu")
+    {
         return 2;
+    }
     if (category == "Web")
+    {
         return 3;
+    }
     return 99;
 }
 
 bool testPaletteFiltersAndPriority()
 {
-    App &app = App::getInstance();
+    App &app = App::instance();
     installSearchFixtures(app);
 
     SearchPaletteWidget palette;
@@ -630,7 +613,7 @@ bool testPaletteFiltersAndPriority()
 
 bool testPaletteFilterTogglesAndFallback()
 {
-    App &app = App::getInstance();
+    App &app = App::instance();
     installSearchFixtures(app);
 
     SearchPaletteWidget palette;
@@ -695,14 +678,14 @@ bool testPaletteFilterTogglesAndFallback()
 
 bool testExecuteActionByIdRecordsHistory()
 {
-    App &app = App::getInstance();
+    App &app = App::instance();
     installSearchFixtures(app);
 
     app.executeActionById(kFixtureActionB);
     app.scheduler().cancelAll();
 
     Action *mostRecent = app.nthRecentAction(1);
-    if (mostRecent == nullptr || mostRecent->getId() != kFixtureActionB)
+    if (mostRecent == nullptr || mostRecent->id() != kFixtureActionB)
     {
         std::cerr << "history: executeActionById should record usage\n";
         return false;
@@ -715,7 +698,7 @@ bool testExecuteActionByIdRecordsHistory()
     app.executeActionById(kFixtureCancel);
     app.scheduler().cancelAll();
     mostRecent = app.nthRecentAction(1);
-    if (mostRecent == nullptr || mostRecent->getId() == kFixtureCancel)
+    if (mostRecent == nullptr || mostRecent->id() == kFixtureCancel)
     {
         std::cerr << "history: meta action leaked into history\n";
         return false;

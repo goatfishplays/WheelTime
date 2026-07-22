@@ -46,10 +46,10 @@ std::unique_ptr<Action> makeMouseButtonReleaseAction(int button, int modifiers)
 
 } // namespace
 
-AI_MouseButton::AI_MouseButton(int button, float holdDuration, bool proceed, int modifiers)
+AI_MouseButton::AI_MouseButton(int button, float holdDurationSec, bool proceed, int modifiers)
     : button{button}
     , modifiers{modifiers}
-    , holdDuration{holdDuration}
+    , holdDurationSec{holdDurationSec}
     , proceed{proceed}
 {
 }
@@ -66,9 +66,9 @@ ActionItemKind AI_MouseButton::kind() const
 
 ExecuteResult AI_MouseButton::execute(ActionExecutionContext &context)
 {
-    auto &executor = App::getInstance().executor;
+    auto &executor = App::instance().executor();
 
-    if (holdDuration <= 0.0f)
+    if (holdDurationSec <= 0.0f)
     {
         std::cerr << "[AI_MouseButton] tap button=" << mouseButtonName(button) << " ("
                   << button << ") mods=" << modifiers << '\n';
@@ -80,7 +80,7 @@ ExecuteResult AI_MouseButton::execute(ActionExecutionContext &context)
     }
 
     const auto hold = std::chrono::duration_cast<std::chrono::steady_clock::duration>(
-        std::chrono::duration<float>(holdDuration));
+        std::chrono::duration<float>(holdDurationSec));
     const auto holdMs =
         std::chrono::duration_cast<std::chrono::milliseconds>(hold).count();
 
@@ -99,7 +99,7 @@ ExecuteResult AI_MouseButton::execute(ActionExecutionContext &context)
         std::move(delayedItems), "mouse-hold-release", "", "mouse-hold-release", 0);
     delayed->setCancelable(false);
     // Start now; AI_Delay inside holds for `holdMs`. Do not also wake at
-    // now+hold or the release waits 2x holdDuration.
+    // now+hold or the release waits 2x holdDurationSec.
     context.scheduleAction(
         std::move(delayed),
         std::chrono::steady_clock::now(),
@@ -133,7 +133,7 @@ ActionItemKind AI_MouseButtonRelease::kind() const
 
 ExecuteResult AI_MouseButtonRelease::execute(ActionExecutionContext & /*context*/)
 {
-    auto &executor = App::getInstance().executor;
+    auto &executor = App::instance().executor();
     std::cerr << "[AI_MouseButtonRelease] release button=" << mouseButtonName(button) << " ("
               << button << ") mods=" << modifiers << '\n';
     executor.mouseButton(button, false);

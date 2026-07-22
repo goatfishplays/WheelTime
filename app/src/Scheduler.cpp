@@ -405,7 +405,7 @@ void Scheduler::flushCleanups(uint64_t actionId)
         flush->setCancelable(false);
         const uint64_t flushId = allocateActionId();
         std::cerr << "[Scheduler] submit cancel-flush runtimeId=" << flushId
-                  << " id=" << flush->getId() << " name=" << flush->getName()
+                  << " id=" << flush->id() << " name=" << flush->name()
                   << " forParentRuntimeId=" << actionId << '\n';
         SubmitRequest request;
         request.action = std::move(flush);

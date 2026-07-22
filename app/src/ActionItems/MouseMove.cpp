@@ -31,7 +31,7 @@ ActionItemKind AI_MouseMove::kind() const
 ExecuteResult AI_MouseMove::execute(ActionExecutionContext & /*context*/)
 {
     std::cerr << "[AI_MouseMove] setMousePos x=" << x << " y=" << y << '\n';
-    App::getInstance().executor.setMousePos(x, y);
+    App::instance().executor().setMousePos(x, y);
     return ExecuteResult::Continue();
 }
 

@@ -29,7 +29,7 @@ ActionItemKind AI_Menu::kind() const
 
 ExecuteResult AI_Menu::execute(ActionExecutionContext & /*context*/)
 {
-    App &app = App::getInstance();
+    App &app = App::instance();
     Menu *targetMenu = app.findMenuById(menuId);
     if (targetMenu != nullptr)
     {

@@ -39,15 +39,15 @@ ExecuteResult AI_NthRecent::execute(ActionExecutionContext &context)
         return ExecuteResult::Continue();
     }
 
-    Action *recent = App::getInstance().nthRecentAction(n);
+    Action *recent = App::instance().nthRecentAction(n);
     if (recent == nullptr)
     {
         std::cerr << "[AI_NthRecent] no history entry for n=" << n << '\n';
         return ExecuteResult::Continue();
     }
 
-    std::cerr << "[AI_NthRecent] n=" << n << " -> actionId=" << recent->getId()
-              << " name=" << recent->getName() << '\n';
+    std::cerr << "[AI_NthRecent] n=" << n << " -> actionId=" << recent->id()
+              << " name=" << recent->name() << '\n';
     context.scheduleAction(
         std::make_unique<Action>(*recent),
         std::chrono::steady_clock::now());

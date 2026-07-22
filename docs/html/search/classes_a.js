@@ -1,8 +1,0 @@
-var searchData=
-[
-  ['qt_5fmeta_5ftag_5fzn11application11hoverbuttone_5ft_0',['qt_meta_tag_ZN11Application11HoverButtonE_t',['../struct_q_t___w_a_r_n_i_n_g___d_i_s_a_b_l_e___d_e_p_r_e_c_a_t_e_d_1_1qt__meta__tag___z_n11_application11_hover_button_e__t.html',1,'QT_WARNING_DISABLE_DEPRECATED']]],
-  ['qt_5fmeta_5ftag_5fzn11application14settingswindowe_5ft_1',['qt_meta_tag_ZN11Application14SettingsWindowE_t',['../struct_q_t___w_a_r_n_i_n_g___d_i_s_a_b_l_e___d_e_p_r_e_c_a_t_e_d_1_1qt__meta__tag___z_n11_application14_settings_window_e__t.html',1,'QT_WARNING_DISABLE_DEPRECATED']]],
-  ['qt_5fmeta_5ftag_5fzn11application16radialmenuwidgete_5ft_2',['qt_meta_tag_ZN11Application16RadialMenuWidgetE_t',['../struct_q_t___w_a_r_n_i_n_g___d_i_s_a_b_l_e___d_e_p_r_e_c_a_t_e_d_1_1qt__meta__tag___z_n11_application16_radial_menu_widget_e__t.html',1,'QT_WARNING_DISABLE_DEPRECATED']]],
-  ['qt_5fmeta_5ftag_5fzn11application19searchpalettewidgete_5ft_3',['qt_meta_tag_ZN11Application19SearchPaletteWidgetE_t',['../struct_q_t___w_a_r_n_i_n_g___d_i_s_a_b_l_e___d_e_p_r_e_c_a_t_e_d_1_1qt__meta__tag___z_n11_applica8eb73d15a58572e08152952d525535f.html',1,'QT_WARNING_DISABLE_DEPRECATED']]],
-  ['qt_5fmeta_5ftag_5fzn11application3guie_5ft_4',['qt_meta_tag_ZN11Application3GuiE_t',['../struct_q_t___w_a_r_n_i_n_g___d_i_s_a_b_l_e___d_e_p_r_e_c_a_t_e_d_1_1qt__meta__tag___z_n11_application3_gui_e__t.html',1,'QT_WARNING_DISABLE_DEPRECATED']]]
-];

@@ -2,7 +2,7 @@
 
 **Product Name:** Wheel Time  
 **Team Name:** Wheelest Wheels  
-**Date:** 7/18/2026  
+**Date:** 7/21/2026  
 
 ## Purpose
 
@@ -337,86 +337,69 @@ The application remained lightweight during normal use and launcher testing.
 
 ## Automated Tests
 
-Automated tests are located in `app/tests`.
+Automated tests live in `app/tests` and are built as CMake targets of the same name. Shared scheduler stubs live in `TestFakes.hpp`.
 
-The automated tests mainly cover the action history, scheduler system, search palette behavior, and action item logic.
+### `thread_safe_queue_tests`
 
-### Action History / Scheduler Tests
+- Concurrent MPMC FIFO behavior.
+- Clear and stop/drain.
+- Move-only value support for `ThreadSafeQueue`.
 
-The action history and scheduler tests include both unit tests and integration tests.
+### `scheduler_tests`
 
-**Phase 2**
+- Proper return values and execution of fake action items used by the scheduler.
+- Channels, parallel actions, and FIFO ordering.
+- Delay-queue ordering and wake timing.
+- Stress coverage for channels, ordering, and time behavior.
+- Canceling actions on channels and flushing running actions.
+- Pause and resume.
+- Integration and stress tests of the full scheduler system, including randomized scheduling.
 
-- Unit tests on concurrency functionality.
+### `action_items_tests`
 
-**Phase 3**
+- Built-in ActionItems that can run without the GUI.
+- Keystroke hold/cleanup and blocking when not proceeding.
+- Cancel, socket, and related ActionItem cases that are automatically testable.
 
-- Unit tests for proper return values on fake action items.
+### `action_history_tests`
 
-**Phase 4**
+- MRU/MFU ranking.
+- Persist round-trip and prune.
+- Nth-recent / nth-frequent integration with the action library.
 
-- Unit tests for channels, parallel actions, and FIFO ordering.
+### `search_palette_tests`
 
-**Phase 5**
-
-- Unit tests on the delay queue to ensure proper ordering.
-
-**Phase 6**
-
-- Stress tests on channels, ordering, and time behavior.
-
-**Phase 7**
-
-- Unit tests for canceling actions on channels.
-- Unit tests for flushing running actions.
-
-**Phase 8**
-
-- Unit tests for pause and resume functionality.
-
-**Phase 9**
-
-- Unit tests for action items that can be automatically tested.
-
-**Phase 10**
-
-- Integration test and stress tests of the full scheduler system.
-
-### Search Palette Tests
-
-The search palette automated tests include:
-
-- Unit tests for fuzzy matching.
-- Unit tests for URL building.
-- Unit tests for result ordering.
-- Unit tests for search behavior and action selection.
+- Fuzzy matching and ranking.
+- Web-search URL building.
+- Result ordering and filter/priority behavior.
+- Search config save/load round-trip.
+- Search behavior and action selection where testable without the full GUI.
 
 ---
 
 ## Unit Test Report
 
-The project includes automated tests in the `app/tests` directory. These tests cover core logic that can be tested without relying fully on manual GUI interaction.
+The project includes automated tests in `app/tests`. These cover core logic that can be exercised without full manual GUI interaction.
 
 **Automated test areas:**
 
-- Action history.
-- Scheduler behavior.
-- Concurrency.
-- Channels.
-- Parallel actions.
-- FIFO ordering.
-- Delay queue ordering.
-- Canceling actions.
-- Flushing running actions.
-- Pause and resume.
-- Search palette fuzzy matching.
-- URL building.
-- Search result ordering.
-- Automatically testable action items.
+- Thread-safe queue concurrency.
+- Action history (ranking, persistence, prune).
+- Scheduler behavior (fake item returns, FIFO, channels, parallel actions, delays, cancel/flush, pause/resume, stress).
+- Automatically testable ActionItems.
+- Search palette fuzzy matching, URL building, result ordering, and config round-trip.
 
 **Automated Test Status:** Pass  
 
-No known automated test failures are being reported for the released version.
+No known automated test failures are being reported for the released version. Re-run after building with, for example:
+
+```text
+thread_safe_queue_tests
+scheduler_tests
+action_items_tests
+action_history_tests
+search_palette_tests
+```
 
 ---
 
@@ -443,8 +426,8 @@ No known automated test failures are being reported for the released version.
 
 ## Overall Result
 
-The Wheel Time project passed the planned system test scenarios for the release version. The launcher was able to open quickly through a hotkey, close quickly, launch programs, simulate hotkey actions, support settings-based action creation, re-run recent actions, search for programs/actions, and remain lightweight during normal use.
+The Wheel Time project passed the planned system test scenarios for the release version. The launcher was able to open quickly through a hotkey, close quickly, launch programs, simulate keystroke actions, support settings-based action creation, re-run recent actions, search for programs/actions, and remain lightweight during normal use.
 
-The project also includes automated tests in `app/tests` for the core action history, scheduler, search palette, and action item behavior. Most GUI and user-interaction behavior was tested manually because those features depend on Windows API behavior, overlay rendering, hotkey input, and direct user interaction.
+The project also includes automated tests in `app/tests` (`thread_safe_queue_tests`, `scheduler_tests`, `action_items_tests`, `action_history_tests`, `search_palette_tests`) for core queue, scheduler, action-item, history, and search-palette behavior. Most GUI and user-interaction behavior was tested manually because those features depend on Windows API behavior, overlay rendering, hotkey input, and direct user interaction.
 
 Future improvements should include more automated tests for GUI-adjacent behavior, settings validation, invalid path handling, and full end-to-end launcher workflows.

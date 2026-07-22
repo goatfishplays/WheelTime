@@ -37,7 +37,7 @@ enum class ActionItemKind
     Search
 };
 
-/// @brief Short console label for @p kind (e.g. "cancel", "hotkey").
+/// @brief Short console label for @p kind (e.g. "cancel", "keystroke").
 [[nodiscard]] const char *actionItemKindName(ActionItemKind kind) noexcept;
 
 /**

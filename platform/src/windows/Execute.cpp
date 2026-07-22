@@ -723,7 +723,7 @@ public:
         std::cerr << "Unknown launch preset: " << presetId << "\n";
     }
 
-    void keyDown(InputBind key)
+    void keyDown(InputBinding key)
     {
         std::vector<INPUT> inputs;
         inputs.reserve(5);
@@ -732,7 +732,7 @@ public:
         sendInputs(inputs);
     }
 
-    void keyUp(InputBind key)
+    void keyUp(InputBinding key)
     {
         std::vector<INPUT> inputs;
         inputs.reserve(5);
@@ -765,7 +765,7 @@ public:
         sendInputs(inputs);
     }
 
-    void executeKey(InputBind key)
+    void executeKey(InputBinding key)
     {
         keyDown(key);
         keyUp(key);
@@ -842,17 +842,17 @@ void Executor::executeLaunchPreset(std::string presetId)
     m_impl->executeLaunchPreset(presetId);
 }
 
-void Executor::executeKey(InputBind key)
+void Executor::executeKey(InputBinding key)
 {
     m_impl->executeKey(key);
 }
 
-void Executor::keyDown(InputBind key)
+void Executor::keyDown(InputBinding key)
 {
     m_impl->keyDown(key);
 }
 
-void Executor::keyUp(InputBind key)
+void Executor::keyUp(InputBinding key)
 {
     m_impl->keyUp(key);
 }

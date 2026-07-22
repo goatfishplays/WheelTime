@@ -38,12 +38,12 @@ ExecuteResult AI_LaunchApp::execute(ActionExecutionContext & /*context*/)
             return ExecuteResult::Continue();
         }
         std::cerr << "[AI_LaunchApp] custom target='" << customTarget << "'\n";
-        App::getInstance().executor.executeScript(customTarget);
+        App::instance().executor().executeScript(customTarget);
         return ExecuteResult::Continue();
     }
 
     std::cerr << "[AI_LaunchApp] preset='" << presetId << "'\n";
-    App::getInstance().executor.executeLaunchPreset(presetId);
+    App::instance().executor().executeLaunchPreset(presetId);
     return ExecuteResult::Continue();
 }
 

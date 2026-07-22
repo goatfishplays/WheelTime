@@ -3,14 +3,15 @@
  * @brief WheelTime launcher entry point.
  */
 
+#include "App/App.hpp"
+
 #include <QApplication>
 #include <QCoreApplication>
+#include <QDebug>
+#include <QFile>
 #include <QIODevice>
 #include <QLocalServer>
 #include <QLocalSocket>
-#include <App/App.hpp>
-#include <QFile>
-#include <QDebug>
 
 int main(int argc, char *argv[])
 {
@@ -46,7 +47,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    Application::App &app = Application::App::getInstance();
+    Application::App &app = Application::App::instance();
     QObject::connect(&singleInstanceServer, &QLocalServer::newConnection, [&singleInstanceServer, &app]()
                      {
                          const auto handleCommand = [&app](QLocalSocket *client)

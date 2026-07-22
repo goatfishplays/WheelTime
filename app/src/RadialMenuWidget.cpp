@@ -1,7 +1,5 @@
 #include "App/RadialMenuWidget.hpp"
 
-#include <algorithm>
-#include <cmath>
 #include <QCursor>
 #include <QDialog>
 #include <QDialogButtonBox>
@@ -14,6 +12,9 @@
 #include <QStyle>
 #include <QToolButton>
 #include <QVBoxLayout>
+
+#include <algorithm>
+#include <cmath>
 
 using namespace Application;
 
@@ -40,7 +41,7 @@ void RadialMenuWidget::setMenu(const Menu &menu, const std::vector<ActionSlotVis
 {
     // Hotkey open calls setMenu every time; skip a full tear-down/rebuild when
     // nothing visible changed (icon decode + QToolButton construction is costly).
-    const bool unchanged = m_menu.getId() == menu.getId() && m_slotVisuals == slotVisuals
+    const bool unchanged = m_menu.id() == menu.id() && m_slotVisuals == slotVisuals
         && static_cast<int>(m_buttons.size()) == static_cast<int>(slotVisuals.size());
     m_menu = menu;
     m_slotVisuals = slotVisuals;
@@ -52,7 +53,7 @@ void RadialMenuWidget::setMenu(const Menu &menu, const std::vector<ActionSlotVis
     }
 
     m_selectedIndex = -1;
-    setCenterText(QString::fromStdString(menu.getName()));
+    setCenterText(QString::fromStdString(menu.name()));
     rebuildButtons();
 }
 
@@ -90,12 +91,12 @@ void RadialMenuWidget::setMaxDistance(double maxDistance)
     m_maxDistance = maxDistance;
 }
 
-int RadialMenuWidget::getSelectedIndex() const
+int RadialMenuWidget::selectedIndex() const
 {
     return m_selectedIndex;
 }
 
-void RadialMenuWidget::setSelectedIndex(int newVal)
+void RadialMenuWidget::setSelectedIndex(int selectedIndex)
 {
     HoverButton *button = nullptr;
     if (m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(m_buttons.size()))
@@ -107,7 +108,7 @@ void RadialMenuWidget::setSelectedIndex(int newVal)
         button->update();
     }
 
-    m_selectedIndex = newVal;
+    m_selectedIndex = selectedIndex;
     if (m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(m_buttons.size()))
     {
         button = m_buttons[m_selectedIndex];
@@ -123,7 +124,7 @@ void RadialMenuWidget::setSelectedIndex(int newVal)
     }
     else
     {
-        setCenterText(QString::fromStdString(m_menu.getName()));
+        setCenterText(QString::fromStdString(m_menu.name()));
     }
 
     // Size can change with selection styling; recentre slots on the ring.

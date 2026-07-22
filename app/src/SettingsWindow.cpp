@@ -1,24 +1,25 @@
 #include "App/SettingsWindow.hpp"
 
-#include <algorithm>
+#include "App/ActionItems.hpp"
+
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QFormLayout>
 #include <QFrame>
 #include <QGroupBox>
 #include <QHBoxLayout>
+#include <QKeyEvent>
 #include <QLabel>
 #include <QMessageBox>
 #include <QPixmap>
-#include <QRegularExpression>
 #include <QPushButton>
+#include <QRegularExpression>
 #include <QScrollArea>
 #include <QSignalBlocker>
 #include <QSplitter>
 #include <QVBoxLayout>
-#include <QKeyEvent>
 
-#include "App/ActionItems.hpp"
+#include <algorithm>
 
 using namespace Application;
 
@@ -186,11 +187,11 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     auto *menuSettingsGroup = new QGroupBox("Menu Settings", m_menuEditor);
     auto *menuForm = new QFormLayout(menuSettingsGroup);
     m_menuNameEdit = new QLineEdit(menuSettingsGroup);
-    m_hotkeyRecordButton = new QPushButton("Unassigned", menuSettingsGroup);
-    m_hotkeyClearButton = new QPushButton("✕", menuSettingsGroup);
-    m_hotkeyClearButton->setFixedWidth(30);
-    m_hotkeyClearButton->setCursor(Qt::PointingHandCursor);
-    m_hotkeyClearButton->setStyleSheet(
+    m_keystrokeRecordButton = new QPushButton("Unassigned", menuSettingsGroup);
+    m_keystrokeClearButton = new QPushButton("✕", menuSettingsGroup);
+    m_keystrokeClearButton->setFixedWidth(30);
+    m_keystrokeClearButton->setCursor(Qt::PointingHandCursor);
+    m_keystrokeClearButton->setStyleSheet(
         "QPushButton {"
         "   color: #5f6368;"
         "   background-color: transparent;"
@@ -205,18 +206,18 @@ SettingsWindow::SettingsWindow(QWidget *parent)
         "}"
     );
 
-    auto *hotkeyLayout = new QHBoxLayout();
-    hotkeyLayout->addWidget(m_hotkeyRecordButton);
-    hotkeyLayout->addWidget(m_hotkeyClearButton);
-    hotkeyLayout->setContentsMargins(0, 0, 0, 0);
+    auto *keystrokeLayout = new QHBoxLayout();
+    keystrokeLayout->addWidget(m_keystrokeRecordButton);
+    keystrokeLayout->addWidget(m_keystrokeClearButton);
+    keystrokeLayout->setContentsMargins(0, 0, 0, 0);
 
-    m_hotkeyRecordButton->installEventFilter(this);
+    m_keystrokeRecordButton->installEventFilter(this);
     m_executeOnReleaseCheck = new QCheckBox("Execute on release", menuSettingsGroup);
     m_exitOnActionCheck = new QCheckBox("Exit on action", menuSettingsGroup);
     m_centerMouseOnOpenCheck = new QCheckBox("Center mouse on open", menuSettingsGroup);
     m_restoreMouseOnCloseCheck = new QCheckBox("Restore mouse on close", menuSettingsGroup);
     menuForm->addRow("Menu Name", m_menuNameEdit);
-    menuForm->addRow("Trigger Hotkey", hotkeyLayout);
+    menuForm->addRow("Trigger Keystroke", keystrokeLayout);
     menuForm->addRow("", m_executeOnReleaseCheck);
     menuForm->addRow("", m_exitOnActionCheck);
     menuForm->addRow("", m_centerMouseOnOpenCheck);
@@ -311,7 +312,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
         m_newItemTypeCombo->addItem(label, typeId);
     };
     addItemType("Launch App", "launch_app");
-    addItemType("Press Hotkey", "hotkey");
+    addItemType("Press Keystroke", "keystroke");
     addItemType("Mouse Button", "mouse_button");
     addItemType("Mouse Move", "mouse_move");
     addItemType("Delay", "delay");
@@ -379,33 +380,33 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_menuTargetCombo = new QComboBox(m_itemMenuPage);
     menuTargetForm->addRow("Target Menu", m_menuTargetCombo);
 
-    m_itemHotkeyPage = new QWidget(m_itemDetailStack);
-    auto *hotkeyForm = new QFormLayout(m_itemHotkeyPage);
-    auto *hotkeyModifiers = new QWidget(m_itemHotkeyPage);
-    auto *hotkeyModifiersLayout = new QHBoxLayout(hotkeyModifiers);
-    hotkeyModifiersLayout->setContentsMargins(0, 0, 0, 0);
-    hotkeyModifiersLayout->setSpacing(8);
-    m_hotkeyCtrlCheck = new QCheckBox("Ctrl", hotkeyModifiers);
-    m_hotkeyAltCheck = new QCheckBox("Alt", hotkeyModifiers);
-    m_hotkeyShiftCheck = new QCheckBox("Shift", hotkeyModifiers);
-    m_hotkeyWinCheck = new QCheckBox("Win", hotkeyModifiers);
-    hotkeyModifiersLayout->addWidget(m_hotkeyCtrlCheck);
-    hotkeyModifiersLayout->addWidget(m_hotkeyAltCheck);
-    hotkeyModifiersLayout->addWidget(m_hotkeyShiftCheck);
-    hotkeyModifiersLayout->addWidget(m_hotkeyWinCheck);
-    hotkeyModifiersLayout->addStretch();
-    m_hotkeyKeyCombo = new QComboBox(m_itemHotkeyPage);
-    populateHotkeyKeyCombo();
-    m_hotkeyHoldSpin = new QDoubleSpinBox(m_itemHotkeyPage);
-    m_hotkeyHoldSpin->setRange(0.0, 3600.0); // up to 1 hour
-    m_hotkeyHoldSpin->setDecimals(2);
-    m_hotkeyHoldSpin->setSingleStep(0.1);
-    m_hotkeyHoldSpin->setSuffix(" s");
-    m_hotkeyProceedCheck = new QCheckBox("Continue immediately", m_itemHotkeyPage);
-    hotkeyForm->addRow("Modifiers", hotkeyModifiers);
-    hotkeyForm->addRow("Main Key", m_hotkeyKeyCombo);
-    hotkeyForm->addRow("Hold Time", m_hotkeyHoldSpin);
-    hotkeyForm->addRow("", m_hotkeyProceedCheck);
+    m_itemKeystrokePage = new QWidget(m_itemDetailStack);
+    auto *keystrokeForm = new QFormLayout(m_itemKeystrokePage);
+    auto *keystrokeModifiers = new QWidget(m_itemKeystrokePage);
+    auto *keystrokeModifiersLayout = new QHBoxLayout(keystrokeModifiers);
+    keystrokeModifiersLayout->setContentsMargins(0, 0, 0, 0);
+    keystrokeModifiersLayout->setSpacing(8);
+    m_keystrokeCtrlCheck = new QCheckBox("Ctrl", keystrokeModifiers);
+    m_keystrokeAltCheck = new QCheckBox("Alt", keystrokeModifiers);
+    m_keystrokeShiftCheck = new QCheckBox("Shift", keystrokeModifiers);
+    m_keystrokeWinCheck = new QCheckBox("Win", keystrokeModifiers);
+    keystrokeModifiersLayout->addWidget(m_keystrokeCtrlCheck);
+    keystrokeModifiersLayout->addWidget(m_keystrokeAltCheck);
+    keystrokeModifiersLayout->addWidget(m_keystrokeShiftCheck);
+    keystrokeModifiersLayout->addWidget(m_keystrokeWinCheck);
+    keystrokeModifiersLayout->addStretch();
+    m_keystrokeKeyCombo = new QComboBox(m_itemKeystrokePage);
+    populateKeystrokeKeyCombo();
+    m_keystrokeHoldSpin = new QDoubleSpinBox(m_itemKeystrokePage);
+    m_keystrokeHoldSpin->setRange(0.0, 3600.0); // up to 1 hour
+    m_keystrokeHoldSpin->setDecimals(2);
+    m_keystrokeHoldSpin->setSingleStep(0.1);
+    m_keystrokeHoldSpin->setSuffix(" s");
+    m_keystrokeProceedCheck = new QCheckBox("Continue immediately", m_itemKeystrokePage);
+    keystrokeForm->addRow("Modifiers", keystrokeModifiers);
+    keystrokeForm->addRow("Main Key", m_keystrokeKeyCombo);
+    keystrokeForm->addRow("Hold Time", m_keystrokeHoldSpin);
+    keystrokeForm->addRow("", m_keystrokeProceedCheck);
 
     m_itemMouseMovePage = new QWidget(m_itemDetailStack);
     auto *mouseMoveForm = new QFormLayout(m_itemMouseMovePage);
@@ -530,7 +531,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_itemDetailStack->addWidget(m_itemDelayPage);
     m_itemDetailStack->addWidget(m_itemClosePage);
     m_itemDetailStack->addWidget(m_itemMenuPage);
-    m_itemDetailStack->addWidget(m_itemHotkeyPage);
+    m_itemDetailStack->addWidget(m_itemKeystrokePage);
     m_itemDetailStack->addWidget(m_itemMouseMovePage);
     m_itemDetailStack->addWidget(m_itemMouseButtonPage);
     m_itemDetailStack->addWidget(m_itemCancelPage);
@@ -576,21 +577,21 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 }
                 emit saveRequested(); });
 
-    connect(m_hotkeyRecordButton, &QPushButton::clicked, this, [this]()
+    connect(m_keystrokeRecordButton, &QPushButton::clicked, this, [this]()
             {
-                if (!m_isRecordingHotkey) {
-                    m_isRecordingHotkey = true;
-                    m_hotkeyRecordButton->setText("Press any key combination...");
-                    m_hotkeyRecordButton->grabKeyboard();
+                if (!m_isRecordingKeystroke) {
+                    m_isRecordingKeystroke = true;
+                    m_keystrokeRecordButton->setText("Press any key combination...");
+                    m_keystrokeRecordButton->grabKeyboard();
                 } });
 
-    connect(m_hotkeyClearButton, &QPushButton::clicked, this, [this]()
+    connect(m_keystrokeClearButton, &QPushButton::clicked, this, [this]()
             {
                 int index = currentMenuIndex();
                 if (index >= 0) {
-                    m_menus[index].triggerMod = 0;
-                    m_menus[index].triggerVk = 0;
-                    updateHotkeyButtonText();
+                    m_menus[index].setTriggerMod(0);
+                    m_menus[index].setTriggerVk(0);
+                    updateKeystrokeButtonText();
                 } });
 
     connect(m_menuList, &QListWidget::currentRowChanged, this, [this](int row)
@@ -631,7 +632,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 {
                     return;
                 }
-                const std::string removedMenuId = m_menus[index].getId();
+                const std::string removedMenuId = m_menus[index].id();
                 m_menus.erase(m_menus.begin() + index);
                 clearMenuReferences(removedMenuId);
                 refreshLists();
@@ -650,7 +651,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 {
                     return;
                 }
-                const std::string removedActionId = m_actions[index].getId();
+                const std::string removedActionId = m_actions[index].id();
                 m_actions.erase(m_actions.begin() + index);
                 deleteActionReferences(removedActionId);
                 refreshLists();
@@ -669,28 +670,28 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 const int index = currentMenuIndex();
                 if (index >= 0)
                 {
-                    m_menus[index].executeOnRelease = checked;
+                    m_menus[index].setExecuteOnRelease(checked);
                 } });
     connect(m_exitOnActionCheck, &QCheckBox::toggled, this, [this](bool checked)
             {
                 const int index = currentMenuIndex();
                 if (index >= 0)
                 {
-                    m_menus[index].exitOnAction = checked;
+                    m_menus[index].setExitOnAction(checked);
                 } });
     connect(m_centerMouseOnOpenCheck, &QCheckBox::toggled, this, [this](bool checked)
             {
                 const int index = currentMenuIndex();
                 if (index >= 0)
                 {
-                    m_menus[index].centerMouseOnOpen = checked;
+                    m_menus[index].setCenterMouseOnOpen(checked);
                 } });
     connect(m_restoreMouseOnCloseCheck, &QCheckBox::toggled, this, [this](bool checked)
             {
                 const int index = currentMenuIndex();
                 if (index >= 0)
                 {
-                    m_menus[index].restoreMouseOnClose = checked;
+                    m_menus[index].setRestoreMouseOnClose(checked);
                 } });
     connect(addSlotButton, &QPushButton::clicked, this, [this]()
             {
@@ -704,7 +705,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                     QMessageBox::information(this, "No Actions", "Create an action first, then assign it to a menu slot.");
                     return;
                 }
-                m_menus[menuIndex].addActionId(-1, m_actions.front().getId());
+                m_menus[menuIndex].addActionId(-1, m_actions.front().id());
                 refreshMenuEditor(); });
     connect(removeSlotButton, &QPushButton::clicked, this, [this]()
             {
@@ -781,7 +782,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 const QString selectedPath = QFileDialog::getOpenFileName(
                     this,
                     "Choose Action Icon",
-                    QString::fromStdString(m_actions[index].getIconFilepath()),
+                    QString::fromStdString(m_actions[index].iconFilepath()),
                     "Images (*.png *.jpg *.jpeg *.bmp *.gif *.svg *.ico);;All Files (*.*)");
                 if (selectedPath.isEmpty())
                 {
@@ -835,7 +836,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 {
                     item = std::make_unique<AI_LaunchApp>("calculator", "");
                 }
-                else if (typeId == "hotkey")
+                else if (typeId == "keystroke")
                 {
                     item = std::make_unique<AI_Keystroke>('A', 0, 0.0f, false);
                 }
@@ -853,7 +854,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 }
                 else if (typeId == "menu")
                 {
-                    item = std::make_unique<AI_Menu>(m_menus.empty() ? "" : m_menus.front().getId());
+                    item = std::make_unique<AI_Menu>(m_menus.empty() ? "" : m_menus.front().id());
                 }
                 else if (typeId == "search")
                 {
@@ -931,7 +932,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 }
                 const int actionIndex = currentActionIndex();
                 const int itemIndex = currentActionItemIndex();
-                auto *item = actionIndex >= 0 ? dynamic_cast<AI_LaunchApp *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+                auto *item = actionIndex >= 0 ? dynamic_cast<AI_LaunchApp *>(m_actions[actionIndex].item(itemIndex)) : nullptr;
                 if (item == nullptr || comboIndex < 0)
                 {
                     return;
@@ -949,7 +950,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
             {
                 const int actionIndex = currentActionIndex();
                 const int itemIndex = currentActionItemIndex();
-                auto *item = actionIndex >= 0 ? dynamic_cast<AI_LaunchApp *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+                auto *item = actionIndex >= 0 ? dynamic_cast<AI_LaunchApp *>(m_actions[actionIndex].item(itemIndex)) : nullptr;
                 if (item != nullptr)
                 {
                     item->customTarget = text.toStdString();
@@ -960,7 +961,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
             {
                 const int actionIndex = currentActionIndex();
                 const int itemIndex = currentActionItemIndex();
-                auto *item = actionIndex >= 0 ? dynamic_cast<AI_LaunchApp *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+                auto *item = actionIndex >= 0 ? dynamic_cast<AI_LaunchApp *>(m_actions[actionIndex].item(itemIndex)) : nullptr;
                 if (item == nullptr)
                 {
                     return;
@@ -985,7 +986,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
             {
                 const int actionIndex = currentActionIndex();
                 const int itemIndex = currentActionItemIndex();
-                auto *item = actionIndex >= 0 ? dynamic_cast<AI_Script *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+                auto *item = actionIndex >= 0 ? dynamic_cast<AI_Script *>(m_actions[actionIndex].item(itemIndex)) : nullptr;
                 if (item != nullptr)
                 {
                     item->filepath = text.toStdString();
@@ -996,7 +997,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
             {
                 const int actionIndex = currentActionIndex();
                 const int itemIndex = currentActionItemIndex();
-                auto *item = actionIndex >= 0 ? dynamic_cast<AI_Script *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+                auto *item = actionIndex >= 0 ? dynamic_cast<AI_Script *>(m_actions[actionIndex].item(itemIndex)) : nullptr;
                 if (item == nullptr)
                 {
                     return;
@@ -1016,39 +1017,39 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 m_scriptPathEdit->setText(selectedPath);
                 refreshActionItemList();
                 refreshActionSummary(); });
-    auto hotkeyEditorChanged = [this]()
+    auto keystrokeEditorChanged = [this]()
     {
         const int actionIndex = currentActionIndex();
         const int itemIndex = currentActionItemIndex();
-        auto *item = actionIndex >= 0 ? dynamic_cast<AI_Keystroke *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+        auto *item = actionIndex >= 0 ? dynamic_cast<AI_Keystroke *>(m_actions[actionIndex].item(itemIndex)) : nullptr;
         if (item == nullptr)
         {
             return;
         }
 
         item->modifiers = modifierMask(
-            m_hotkeyCtrlCheck->isChecked(),
-            m_hotkeyAltCheck->isChecked(),
-            m_hotkeyShiftCheck->isChecked(),
-            m_hotkeyWinCheck->isChecked());
-        item->keycode = m_hotkeyKeyCombo->currentData().toInt();
-        item->holdDuration = static_cast<float>(m_hotkeyHoldSpin->value());
-        item->proceed = m_hotkeyProceedCheck->isChecked();
+            m_keystrokeCtrlCheck->isChecked(),
+            m_keystrokeAltCheck->isChecked(),
+            m_keystrokeShiftCheck->isChecked(),
+            m_keystrokeWinCheck->isChecked());
+        item->keycode = m_keystrokeKeyCombo->currentData().toInt();
+        item->holdDurationSec = static_cast<float>(m_keystrokeHoldSpin->value());
+        item->proceed = m_keystrokeProceedCheck->isChecked();
         refreshActionItemList();
         refreshActionSummary();
     };
-    connect(m_hotkeyCtrlCheck, &QCheckBox::toggled, this, [hotkeyEditorChanged](bool) { hotkeyEditorChanged(); });
-    connect(m_hotkeyAltCheck, &QCheckBox::toggled, this, [hotkeyEditorChanged](bool) { hotkeyEditorChanged(); });
-    connect(m_hotkeyShiftCheck, &QCheckBox::toggled, this, [hotkeyEditorChanged](bool) { hotkeyEditorChanged(); });
-    connect(m_hotkeyWinCheck, &QCheckBox::toggled, this, [hotkeyEditorChanged](bool) { hotkeyEditorChanged(); });
-    connect(m_hotkeyKeyCombo, qOverload<int>(&QComboBox::currentIndexChanged), this, [this, hotkeyEditorChanged](int)
+    connect(m_keystrokeCtrlCheck, &QCheckBox::toggled, this, [keystrokeEditorChanged](bool) { keystrokeEditorChanged(); });
+    connect(m_keystrokeAltCheck, &QCheckBox::toggled, this, [keystrokeEditorChanged](bool) { keystrokeEditorChanged(); });
+    connect(m_keystrokeShiftCheck, &QCheckBox::toggled, this, [keystrokeEditorChanged](bool) { keystrokeEditorChanged(); });
+    connect(m_keystrokeWinCheck, &QCheckBox::toggled, this, [keystrokeEditorChanged](bool) { keystrokeEditorChanged(); });
+    connect(m_keystrokeKeyCombo, qOverload<int>(&QComboBox::currentIndexChanged), this, [this, keystrokeEditorChanged](int)
             {
                 if (!m_isRefreshing)
                 {
-                    hotkeyEditorChanged();
+                    keystrokeEditorChanged();
                 } });
-    connect(m_hotkeyHoldSpin, qOverload<double>(&QDoubleSpinBox::valueChanged), this, [hotkeyEditorChanged](double) { hotkeyEditorChanged(); });
-    connect(m_hotkeyProceedCheck, &QCheckBox::toggled, this, [hotkeyEditorChanged](bool) { hotkeyEditorChanged(); });
+    connect(m_keystrokeHoldSpin, qOverload<double>(&QDoubleSpinBox::valueChanged), this, [keystrokeEditorChanged](double) { keystrokeEditorChanged(); });
+    connect(m_keystrokeProceedCheck, &QCheckBox::toggled, this, [keystrokeEditorChanged](bool) { keystrokeEditorChanged(); });
     connect(m_mouseMoveXSpin, qOverload<int>(&QSpinBox::valueChanged), this, [this](int value)
             {
                 if (m_isRefreshing)
@@ -1057,7 +1058,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 }
                 const int actionIndex = currentActionIndex();
                 const int itemIndex = currentActionItemIndex();
-                auto *item = actionIndex >= 0 ? dynamic_cast<AI_MouseMove *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+                auto *item = actionIndex >= 0 ? dynamic_cast<AI_MouseMove *>(m_actions[actionIndex].item(itemIndex)) : nullptr;
                 if (item != nullptr)
                 {
                     item->x = value;
@@ -1072,7 +1073,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 }
                 const int actionIndex = currentActionIndex();
                 const int itemIndex = currentActionItemIndex();
-                auto *item = actionIndex >= 0 ? dynamic_cast<AI_MouseMove *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+                auto *item = actionIndex >= 0 ? dynamic_cast<AI_MouseMove *>(m_actions[actionIndex].item(itemIndex)) : nullptr;
                 if (item != nullptr)
                 {
                     item->y = value;
@@ -1087,7 +1088,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
         }
         const int actionIndex = currentActionIndex();
         const int itemIndex = currentActionItemIndex();
-        auto *item = actionIndex >= 0 ? dynamic_cast<AI_MouseButton *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+        auto *item = actionIndex >= 0 ? dynamic_cast<AI_MouseButton *>(m_actions[actionIndex].item(itemIndex)) : nullptr;
         if (item == nullptr)
         {
             return;
@@ -1098,7 +1099,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
             m_mouseButtonAltCheck->isChecked(),
             m_mouseButtonShiftCheck->isChecked(),
             m_mouseButtonWinCheck->isChecked());
-        item->holdDuration = static_cast<float>(m_mouseButtonHoldSpin->value());
+        item->holdDurationSec = static_cast<float>(m_mouseButtonHoldSpin->value());
         item->proceed = m_mouseButtonProceedCheck->isChecked();
         refreshActionItemList();
         refreshActionSummary();
@@ -1125,7 +1126,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
         }
         const int actionIndex = currentActionIndex();
         const int itemIndex = currentActionItemIndex();
-        auto *item = actionIndex >= 0 ? dynamic_cast<AI_Cancel *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+        auto *item = actionIndex >= 0 ? dynamic_cast<AI_Cancel *>(m_actions[actionIndex].item(itemIndex)) : nullptr;
         if (item == nullptr)
         {
             return;
@@ -1167,11 +1168,11 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 {
                     return;
                 }
-                if (auto *recent = dynamic_cast<AI_NthRecent *>(m_actions[actionIndex].getItem(itemIndex)))
+                if (auto *recent = dynamic_cast<AI_NthRecent *>(m_actions[actionIndex].item(itemIndex)))
                 {
                     recent->n = value;
                 }
-                else if (auto *frequent = dynamic_cast<AI_NthFrequent *>(m_actions[actionIndex].getItem(itemIndex)))
+                else if (auto *frequent = dynamic_cast<AI_NthFrequent *>(m_actions[actionIndex].item(itemIndex)))
                 {
                     frequent->n = value;
                 }
@@ -1194,7 +1195,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 {
                     return;
                 }
-                App::getInstance().resetActionFrequencies();
+                App::instance().resetActionFrequencies();
                 QMessageBox::information(this, "Frequencies Reset",
                                          "All action launch frequencies have been cleared.");
             });
@@ -1206,7 +1207,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
         }
         const int actionIndex = currentActionIndex();
         const int itemIndex = currentActionItemIndex();
-        auto *item = actionIndex >= 0 ? dynamic_cast<AI_Socket *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+        auto *item = actionIndex >= 0 ? dynamic_cast<AI_Socket *>(m_actions[actionIndex].item(itemIndex)) : nullptr;
         if (item == nullptr)
         {
             return;
@@ -1240,7 +1241,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
         }
         const int actionIndex = currentActionIndex();
         const int itemIndex = currentActionItemIndex();
-        auto *item = actionIndex >= 0 ? dynamic_cast<AI_Search *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+        auto *item = actionIndex >= 0 ? dynamic_cast<AI_Search *>(m_actions[actionIndex].item(itemIndex)) : nullptr;
         if (item == nullptr)
         {
             return;
@@ -1273,10 +1274,10 @@ SettingsWindow::SettingsWindow(QWidget *parent)
             {
                 const int actionIndex = currentActionIndex();
                 const int itemIndex = currentActionItemIndex();
-                auto *item = actionIndex >= 0 ? dynamic_cast<AI_Delay *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+                auto *item = actionIndex >= 0 ? dynamic_cast<AI_Delay *>(m_actions[actionIndex].item(itemIndex)) : nullptr;
                 if (item != nullptr)
                 {
-                    item->duration = value;
+                    item->durationMs = value;
                     refreshActionItemList();
                     refreshActionSummary();
                 } });
@@ -1288,7 +1289,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 }
                 const int actionIndex = currentActionIndex();
                 const int itemIndex = currentActionItemIndex();
-                auto *item = actionIndex >= 0 ? dynamic_cast<AI_Menu *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+                auto *item = actionIndex >= 0 ? dynamic_cast<AI_Menu *>(m_actions[actionIndex].item(itemIndex)) : nullptr;
                 if (item != nullptr && comboIndex >= 0)
                 {
                     item->menuId = m_menuTargetCombo->itemData(comboIndex).toString().toStdString();
@@ -1300,23 +1301,41 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_itemDetailStack->setCurrentWidget(m_itemNonePage);
 }
 
-void SettingsWindow::updateHotkeyButtonText()
+void SettingsWindow::updateKeystrokeButtonText()
 {
     int idx = currentMenuIndex();
-    if (idx < 0) return;
-    int mod = m_menus[idx].triggerMod;
-    int vk = m_menus[idx].triggerVk;
+    if (idx < 0)
+    {
+        return;
+    }
+    int mod = m_menus[idx].triggerMod();
+    int vk = m_menus[idx].triggerVk();
 
     QString mods;
-    if (mod & 0x0002) mods += "Ctrl + ";
-    if (mod & 0x0008) mods += "Win + ";
-    if (mod & 0x0001) mods += "Alt + ";
-    if (mod & 0x0004) mods += "Shift + ";
-    
-    if (mod == 0 && vk == 0) {
-        m_hotkeyRecordButton->setText("Unassigned");
-    } else {
-        m_hotkeyRecordButton->setText(mods + keyDisplayName(vk));
+    if (mod & 0x0002)
+    {
+        mods += "Ctrl + ";
+    }
+    if (mod & 0x0008)
+    {
+        mods += "Win + ";
+    }
+    if (mod & 0x0001)
+    {
+        mods += "Alt + ";
+    }
+    if (mod & 0x0004)
+    {
+        mods += "Shift + ";
+    }
+
+    if (mod == 0 && vk == 0)
+    {
+        m_keystrokeRecordButton->setText("Unassigned");
+    }
+    else
+    {
+        m_keystrokeRecordButton->setText(mods + keyDisplayName(vk));
     }
 }
 
@@ -1335,7 +1354,7 @@ void SettingsWindow::updateCancelChannelVisibility(CancelLevel level)
 
 bool SettingsWindow::eventFilter(QObject *obj, QEvent *event)
 {
-    if (m_isRecordingHotkey && event->type() == QEvent::KeyPress)
+    if (m_isRecordingKeystroke && event->type() == QEvent::KeyPress)
     {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         int key = keyEvent->key();
@@ -1351,9 +1370,9 @@ bool SettingsWindow::eventFilter(QObject *obj, QEvent *event)
         // Escape cancels recording without changing the existing bind.
         if (key == Qt::Key_Escape)
         {
-            m_isRecordingHotkey = false;
-            m_hotkeyRecordButton->releaseKeyboard();
-            updateHotkeyButtonText();
+            m_isRecordingKeystroke = false;
+            m_keystrokeRecordButton->releaseKeyboard();
+            updateKeystrokeButtonText();
             return true;
         }
 
@@ -1376,9 +1395,9 @@ bool SettingsWindow::eventFilter(QObject *obj, QEvent *event)
                 {
                     continue;
                 }
-                if (m_menus[i].triggerVk == newVk && m_menus[i].triggerMod == newMod && newVk != 0)
+                if (m_menus[i].triggerVk() == newVk && m_menus[i].triggerMod() == newMod && newVk != 0)
                 {
-                    conflictMenuName = QString::fromStdString(m_menus[i].getName());
+                    conflictMenuName = QString::fromStdString(m_menus[i].name());
                     break;
                 }
             }
@@ -1387,23 +1406,23 @@ bool SettingsWindow::eventFilter(QObject *obj, QEvent *event)
             {
                 QMessageBox::warning(
                     this,
-                    "Hotkey Already Used",
-                    QString("That hotkey is already assigned to \"%1\". "
-                            "Clear the other menu's hotkey first, or choose a different combination.")
+                    "Keystroke Already Used",
+                    QString("That keystroke is already assigned to \"%1\". "
+                            "Clear the other menu's keystroke first, or choose a different combination.")
                         .arg(conflictMenuName));
-                m_isRecordingHotkey = false;
-                m_hotkeyRecordButton->releaseKeyboard();
-                updateHotkeyButtonText();
+                m_isRecordingKeystroke = false;
+                m_keystrokeRecordButton->releaseKeyboard();
+                updateKeystrokeButtonText();
                 return true;
             }
 
-            m_menus[idx].triggerVk = newVk;
-            m_menus[idx].triggerMod = newMod;
+            m_menus[idx].setTriggerVk(newVk);
+            m_menus[idx].setTriggerMod(newMod);
         }
 
-        m_isRecordingHotkey = false;
-        m_hotkeyRecordButton->releaseKeyboard();
-        updateHotkeyButtonText();
+        m_isRecordingKeystroke = false;
+        m_keystrokeRecordButton->releaseKeyboard();
+        updateKeystrokeButtonText();
         return true;
     }
     return QWidget::eventFilter(obj, event);
@@ -1411,14 +1430,14 @@ bool SettingsWindow::eventFilter(QObject *obj, QEvent *event)
 
 void SettingsWindow::closeEvent(QCloseEvent *event)
 {
-    if (m_isRecordingHotkey)
+    if (m_isRecordingKeystroke)
     {
-        m_isRecordingHotkey = false;
-        if (m_hotkeyRecordButton != nullptr)
+        m_isRecordingKeystroke = false;
+        if (m_keystrokeRecordButton != nullptr)
         {
-            m_hotkeyRecordButton->releaseKeyboard();
+            m_keystrokeRecordButton->releaseKeyboard();
         }
-        updateHotkeyButtonText();
+        updateKeystrokeButtonText();
     }
 
     QWidget::closeEvent(event);
@@ -1432,7 +1451,7 @@ void SettingsWindow::loadWorkingCopy(const AppConfig &appConfig, const std::vect
     m_menus = menus;
     m_selectionKind = SelectionKind::None;
     
-    updateHotkeyButtonText();
+    updateKeystrokeButtonText();
     
     refreshLists();
 
@@ -1470,7 +1489,7 @@ void SettingsWindow::refreshMenuList()
     m_menuList->clear();
     for (const Menu &menu : m_menus)
     {
-        m_menuList->addItem(QString::fromStdString(menu.getName()));
+        m_menuList->addItem(QString::fromStdString(menu.name()));
     }
     if (selected >= 0 && selected < m_menuList->count())
     {
@@ -1485,7 +1504,7 @@ void SettingsWindow::refreshActionList()
     m_actionList->clear();
     for (const Action &action : m_actions)
     {
-        QString label = QString::fromStdString(action.getName());
+        QString label = QString::fromStdString(action.name());
         if (action.channel() != 0)
         {
             label += QString(" · ch %1").arg(action.channel());
@@ -1530,13 +1549,13 @@ void SettingsWindow::refreshMenuEditor()
     const QSignalBlocker exitBlocker(m_exitOnActionCheck);
     const QSignalBlocker centerMouseBlocker(m_centerMouseOnOpenCheck);
     const QSignalBlocker restoreMouseBlocker(m_restoreMouseOnCloseCheck);
-    m_menuNameEdit->setText(QString::fromStdString(m_menus[index].getName()));
-    m_executeOnReleaseCheck->setChecked(m_menus[index].executeOnRelease);
-    m_exitOnActionCheck->setChecked(m_menus[index].exitOnAction);
-    m_centerMouseOnOpenCheck->setChecked(m_menus[index].centerMouseOnOpen);
-    m_restoreMouseOnCloseCheck->setChecked(m_menus[index].restoreMouseOnClose);
+    m_menuNameEdit->setText(QString::fromStdString(m_menus[index].name()));
+    m_executeOnReleaseCheck->setChecked(m_menus[index].executeOnRelease());
+    m_exitOnActionCheck->setChecked(m_menus[index].exitOnAction());
+    m_centerMouseOnOpenCheck->setChecked(m_menus[index].centerMouseOnOpen());
+    m_restoreMouseOnCloseCheck->setChecked(m_menus[index].restoreMouseOnClose());
 
-    updateHotkeyButtonText();
+    updateKeystrokeButtonText();
     refreshSlotList();
     refreshSlotActionCombo();
 }
@@ -1552,8 +1571,8 @@ void SettingsWindow::refreshActionEditor()
     const QSignalBlocker nameBlocker(m_actionNameEdit);
     const QSignalBlocker iconBlocker(m_actionIconEdit);
     const QSignalBlocker channelBlocker(m_actionChannelSpin);
-    m_actionNameEdit->setText(QString::fromStdString(m_actions[index].getName()));
-    m_actionIconEdit->setText(QString::fromStdString(m_actions[index].getIconFilepath()));
+    m_actionNameEdit->setText(QString::fromStdString(m_actions[index].name()));
+    m_actionIconEdit->setText(QString::fromStdString(m_actions[index].iconFilepath()));
     refreshActionIconPreview();
     const int channel = static_cast<int>(m_actions[index].channel());
     m_actionChannelSpin->setValue(channel);
@@ -1583,15 +1602,15 @@ void SettingsWindow::refreshSlotList()
     QSignalBlocker blocker(m_slotList);
     const int selected = m_slotList->currentRow();
     m_slotList->clear();
-    const std::vector<std::string> &actionIds = m_menus[menuIndex].getActionIds();
+    const std::vector<std::string> &actionIds = m_menus[menuIndex].actionIds();
     for (const std::string &actionId : actionIds)
     {
         QString label = "Missing Action";
         for (const Action &action : m_actions)
         {
-            if (action.getId() == actionId)
+            if (action.id() == actionId)
             {
-                label = QString::fromStdString(action.getName());
+                label = QString::fromStdString(action.name());
                 break;
             }
         }
@@ -1618,7 +1637,7 @@ void SettingsWindow::refreshActionItemList()
     QSignalBlocker blocker(m_actionItemList);
     const int selected = currentActionItemIndex();
     m_actionItemList->clear();
-    for (const auto &item : m_actions[actionIndex].getItems())
+    for (const auto &item : m_actions[actionIndex].items())
     {
         m_actionItemList->addItem(describeActionItem(item.get()));
     }
@@ -1642,7 +1661,7 @@ void SettingsWindow::refreshActionSummary()
     }
 
     QStringList parts;
-    for (const auto &item : m_actions[actionIndex].getItems())
+    for (const auto &item : m_actions[actionIndex].items())
     {
         parts.append(describeActionItem(item.get()));
     }
@@ -1664,14 +1683,14 @@ void SettingsWindow::refreshActionIconPreview()
     }
 
     const int index = currentActionIndex();
-    if (index < 0 || m_actions[index].getIconFilepath().empty())
+    if (index < 0 || m_actions[index].iconFilepath().empty())
     {
         m_actionIconPreview->setPixmap(QPixmap());
         m_actionIconPreview->setText("—");
         return;
     }
 
-    const QPixmap pixmap(QString::fromStdString(m_actions[index].getIconFilepath()));
+    const QPixmap pixmap(QString::fromStdString(m_actions[index].iconFilepath()));
     if (pixmap.isNull())
     {
         m_actionIconPreview->setPixmap(QPixmap());
@@ -1691,14 +1710,14 @@ void SettingsWindow::refreshSlotActionCombo()
     m_slotActionCombo->clear();
     for (const Action &action : m_actions)
     {
-        m_slotActionCombo->addItem(QString::fromStdString(action.getName()), QString::fromStdString(action.getId()));
+        m_slotActionCombo->addItem(QString::fromStdString(action.name()), QString::fromStdString(action.id()));
     }
 
     const int menuIndex = currentMenuIndex();
     const int slotIndex = m_slotList->currentRow();
     if (menuIndex >= 0 && slotIndex >= 0)
     {
-        const QString currentId = QString::fromStdString(m_menus[menuIndex].getActionId(slotIndex));
+        const QString currentId = QString::fromStdString(m_menus[menuIndex].actionId(slotIndex));
         const int comboIndex = m_slotActionCombo->findData(currentId);
         if (comboIndex >= 0)
         {
@@ -1715,12 +1734,12 @@ void SettingsWindow::refreshMenuTargetCombo()
     m_menuTargetCombo->clear();
     for (const Menu &menu : m_menus)
     {
-        m_menuTargetCombo->addItem(QString::fromStdString(menu.getName()), QString::fromStdString(menu.getId()));
+        m_menuTargetCombo->addItem(QString::fromStdString(menu.name()), QString::fromStdString(menu.id()));
     }
 
     const int actionIndex = currentActionIndex();
     const int itemIndex = currentActionItemIndex();
-    auto *item = actionIndex >= 0 ? dynamic_cast<AI_Menu *>(m_actions[actionIndex].getItem(itemIndex)) : nullptr;
+    auto *item = actionIndex >= 0 ? dynamic_cast<AI_Menu *>(m_actions[actionIndex].item(itemIndex)) : nullptr;
     if (item != nullptr)
     {
         const int comboIndex = m_menuTargetCombo->findData(QString::fromStdString(item->menuId));
@@ -1742,7 +1761,7 @@ void SettingsWindow::refreshItemDetail()
         return;
     }
 
-    ActionItem *item = m_actions[actionIndex].getItem(itemIndex);
+    ActionItem *item = m_actions[actionIndex].item(itemIndex);
     if (auto *launch = dynamic_cast<AI_LaunchApp *>(item))
     {
         const QSignalBlocker presetBlocker(m_launchPresetCombo);
@@ -1773,7 +1792,7 @@ void SettingsWindow::refreshItemDetail()
     if (auto *delay = dynamic_cast<AI_Delay *>(item))
     {
         QSignalBlocker blocker(m_delaySpin);
-        m_delaySpin->setValue(delay->duration);
+        m_delaySpin->setValue(delay->durationMs);
         m_itemDetailStack->setCurrentWidget(m_itemDelayPage);
         return;
     }
@@ -1791,24 +1810,24 @@ void SettingsWindow::refreshItemDetail()
         return;
     }
 
-    if (auto *hotkey = dynamic_cast<AI_Keystroke *>(item))
+    if (auto *keystroke = dynamic_cast<AI_Keystroke *>(item))
     {
-        const QSignalBlocker ctrlBlocker(m_hotkeyCtrlCheck);
-        const QSignalBlocker altBlocker(m_hotkeyAltCheck);
-        const QSignalBlocker shiftBlocker(m_hotkeyShiftCheck);
-        const QSignalBlocker winBlocker(m_hotkeyWinCheck);
-        const QSignalBlocker keyBlocker(m_hotkeyKeyCombo);
-        const QSignalBlocker holdBlocker(m_hotkeyHoldSpin);
-        const QSignalBlocker proceedBlocker(m_hotkeyProceedCheck);
-        m_hotkeyCtrlCheck->setChecked((hotkey->modifiers & 0x0002) != 0);
-        m_hotkeyAltCheck->setChecked((hotkey->modifiers & 0x0001) != 0);
-        m_hotkeyShiftCheck->setChecked((hotkey->modifiers & 0x0004) != 0);
-        m_hotkeyWinCheck->setChecked((hotkey->modifiers & 0x0008) != 0);
-        const int comboIndex = m_hotkeyKeyCombo->findData(hotkey->keycode);
-        m_hotkeyKeyCombo->setCurrentIndex(comboIndex >= 0 ? comboIndex : 0);
-        m_hotkeyHoldSpin->setValue(hotkey->holdDuration);
-        m_hotkeyProceedCheck->setChecked(hotkey->proceed);
-        m_itemDetailStack->setCurrentWidget(m_itemHotkeyPage);
+        const QSignalBlocker ctrlBlocker(m_keystrokeCtrlCheck);
+        const QSignalBlocker altBlocker(m_keystrokeAltCheck);
+        const QSignalBlocker shiftBlocker(m_keystrokeShiftCheck);
+        const QSignalBlocker winBlocker(m_keystrokeWinCheck);
+        const QSignalBlocker keyBlocker(m_keystrokeKeyCombo);
+        const QSignalBlocker holdBlocker(m_keystrokeHoldSpin);
+        const QSignalBlocker proceedBlocker(m_keystrokeProceedCheck);
+        m_keystrokeCtrlCheck->setChecked((keystroke->modifiers & 0x0002) != 0);
+        m_keystrokeAltCheck->setChecked((keystroke->modifiers & 0x0001) != 0);
+        m_keystrokeShiftCheck->setChecked((keystroke->modifiers & 0x0004) != 0);
+        m_keystrokeWinCheck->setChecked((keystroke->modifiers & 0x0008) != 0);
+        const int comboIndex = m_keystrokeKeyCombo->findData(keystroke->keycode);
+        m_keystrokeKeyCombo->setCurrentIndex(comboIndex >= 0 ? comboIndex : 0);
+        m_keystrokeHoldSpin->setValue(keystroke->holdDurationSec);
+        m_keystrokeProceedCheck->setChecked(keystroke->proceed);
+        m_itemDetailStack->setCurrentWidget(m_itemKeystrokePage);
         return;
     }
 
@@ -1837,7 +1856,7 @@ void SettingsWindow::refreshItemDetail()
         m_mouseButtonAltCheck->setChecked((mouseButton->modifiers & 0x0001) != 0);
         m_mouseButtonShiftCheck->setChecked((mouseButton->modifiers & 0x0004) != 0);
         m_mouseButtonWinCheck->setChecked((mouseButton->modifiers & 0x0008) != 0);
-        m_mouseButtonHoldSpin->setValue(mouseButton->holdDuration);
+        m_mouseButtonHoldSpin->setValue(mouseButton->holdDurationSec);
         m_mouseButtonProceedCheck->setChecked(mouseButton->proceed);
         m_itemDetailStack->setCurrentWidget(m_itemMouseButtonPage);
         return;
@@ -1931,7 +1950,7 @@ void SettingsWindow::refreshItemDetail()
     {
         m_keyReleaseHelpLabel->setText(
             QString("Internal key release (keycode %1, mods %2).\n"
-                    "Created automatically by Press Hotkey holds for cancel-flush / "
+                    "Created automatically by Press Keystroke holds for cancel-flush / "
                     "delayed release. Not added from the item picker.")
                 .arg(release->keycode)
                 .arg(release->modifiers));
@@ -1999,31 +2018,31 @@ QString SettingsWindow::describeActionItem(const ActionItem *item) const
         return fileName.isEmpty() ? QString("Custom Script/App: %1").arg(path) : QString("Custom Script/App: %1").arg(fileName);
     }
     case ActionItemKind::Delay:
-        return QString("Delay: %1 ms").arg(static_cast<const AI_Delay *>(item)->duration);
+        return QString("Delay: %1 ms").arg(static_cast<const AI_Delay *>(item)->durationMs);
     case ActionItemKind::Keystroke:
     {
-        const auto *hotkey = static_cast<const AI_Keystroke *>(item);
+        const auto *keystroke = static_cast<const AI_Keystroke *>(item);
         QStringList keys;
-        if ((hotkey->modifiers & 0x0002) != 0)
+        if ((keystroke->modifiers & 0x0002) != 0)
             keys << "Ctrl";
-        if ((hotkey->modifiers & 0x0001) != 0)
+        if ((keystroke->modifiers & 0x0001) != 0)
             keys << "Alt";
-        if ((hotkey->modifiers & 0x0004) != 0)
+        if ((keystroke->modifiers & 0x0004) != 0)
             keys << "Shift";
-        if ((hotkey->modifiers & 0x0008) != 0)
+        if ((keystroke->modifiers & 0x0008) != 0)
             keys << "Win";
-        if (hotkey->keycode != 0)
-            keys << keyDisplayName(hotkey->keycode);
-        return keys.isEmpty() ? "Press Hotkey: choose keys" : QString("Press Hotkey: %1").arg(keys.join("+"));
+        if (keystroke->keycode != 0)
+            keys << keyDisplayName(keystroke->keycode);
+        return keys.isEmpty() ? "Press Keystroke: choose keys" : QString("Press Keystroke: %1").arg(keys.join("+"));
     }
     case ActionItemKind::Menu:
     {
         const auto *menuItem = static_cast<const AI_Menu *>(item);
         for (const Menu &menu : m_menus)
         {
-            if (menu.getId() == menuItem->menuId)
+            if (menu.id() == menuItem->menuId)
             {
-                return QString("Open Menu: %1").arg(QString::fromStdString(menu.getName()));
+                return QString("Open Menu: %1").arg(QString::fromStdString(menu.name()));
             }
         }
         return "Open Menu: missing";
@@ -2328,21 +2347,21 @@ void SettingsWindow::populateLaunchPresetCombo()
     }
 }
 
-void SettingsWindow::populateHotkeyKeyCombo()
+void SettingsWindow::populateKeystrokeKeyCombo()
 {
-    if (m_hotkeyKeyCombo == nullptr)
+    if (m_keystrokeKeyCombo == nullptr)
     {
         return;
     }
 
-    m_hotkeyKeyCombo->clear();
+    m_keystrokeKeyCombo->clear();
     for (int key = 'A'; key <= 'Z'; ++key)
     {
-        m_hotkeyKeyCombo->addItem(QString(QChar(key)), key);
+        m_keystrokeKeyCombo->addItem(QString(QChar(key)), key);
     }
     for (int key = '0'; key <= '9'; ++key)
     {
-        m_hotkeyKeyCombo->addItem(QString(QChar(key)), key);
+        m_keystrokeKeyCombo->addItem(QString(QChar(key)), key);
     }
 
     // Editing / navigation
@@ -2371,13 +2390,13 @@ void SettingsWindow::populateHotkeyKeyCombo()
     };
     for (int key : navKeys)
     {
-        m_hotkeyKeyCombo->addItem(keyDisplayName(key), key);
+        m_keystrokeKeyCombo->addItem(keyDisplayName(key), key);
     }
 
     // F1–F24
     for (int key = 0x70; key <= 0x87; ++key)
     {
-        m_hotkeyKeyCombo->addItem(keyDisplayName(key), key);
+        m_keystrokeKeyCombo->addItem(keyDisplayName(key), key);
     }
 
     // OEM punctuation (US layout). Use Shift modifier for the shifted glyph
@@ -2397,13 +2416,13 @@ void SettingsWindow::populateHotkeyKeyCombo()
     };
     for (int key : symbolKeys)
     {
-        m_hotkeyKeyCombo->addItem(keyDisplayName(key), key);
+        m_keystrokeKeyCombo->addItem(keyDisplayName(key), key);
     }
 
     // Numpad 0–9 and operators
     for (int key = 0x60; key <= 0x69; ++key)
     {
-        m_hotkeyKeyCombo->addItem(keyDisplayName(key), key);
+        m_keystrokeKeyCombo->addItem(keyDisplayName(key), key);
     }
     const std::vector<int> numpadOps = {
         0x6A, // *
@@ -2414,7 +2433,7 @@ void SettingsWindow::populateHotkeyKeyCombo()
     };
     for (int key : numpadOps)
     {
-        m_hotkeyKeyCombo->addItem(keyDisplayName(key), key);
+        m_keystrokeKeyCombo->addItem(keyDisplayName(key), key);
     }
 
     // Windows media keys. Sent without modifiers.
@@ -2430,7 +2449,7 @@ void SettingsWindow::populateHotkeyKeyCombo()
     };
     for (int key : mediaKeys)
     {
-        m_hotkeyKeyCombo->addItem(QString("Media: %1").arg(keyDisplayName(key)), key);
+        m_keystrokeKeyCombo->addItem(QString("Media: %1").arg(keyDisplayName(key)), key);
     }
 
     // Browser / launch keys (same SendInput path as media).
@@ -2448,7 +2467,7 @@ void SettingsWindow::populateHotkeyKeyCombo()
     };
     for (int key : browserKeys)
     {
-        m_hotkeyKeyCombo->addItem(keyDisplayName(key), key);
+        m_keystrokeKeyCombo->addItem(keyDisplayName(key), key);
     }
 }
 
@@ -2506,7 +2525,7 @@ void SettingsWindow::deleteActionReferences(const std::string &actionId)
     for (Menu &menu : m_menus)
     {
         std::vector<std::string> keptIds;
-        for (const std::string &slotActionId : menu.getActionIds())
+        for (const std::string &slotActionId : menu.actionIds())
         {
             if (slotActionId != actionId)
             {
@@ -2514,15 +2533,15 @@ void SettingsWindow::deleteActionReferences(const std::string &actionId)
             }
         }
 
-        Menu replacement(menu.triggerMod,
-                         menu.triggerVk,
-                         menu.executeOnRelease,
-                         menu.exitOnAction,
-                         menu.centerMouseOnOpen,
-                         menu.restoreMouseOnClose,
-                         menu.getName(),
+        Menu replacement(menu.triggerMod(),
+                         menu.triggerVk(),
+                         menu.executeOnRelease(),
+                         menu.exitOnAction(),
+                         menu.centerMouseOnOpen(),
+                         menu.restoreMouseOnClose(),
+                         menu.name(),
                          keptIds,
-                         menu.getId());
+                         menu.id());
         menu = replacement;
     }
 }
@@ -2531,7 +2550,7 @@ void SettingsWindow::clearMenuReferences(const std::string &menuId)
 {
     for (Action &action : m_actions)
     {
-        for (const auto &itemPtr : action.getItems())
+        for (const auto &itemPtr : action.items())
         {
             auto *menuItem = dynamic_cast<AI_Menu *>(itemPtr.get());
             if (menuItem != nullptr && menuItem->menuId == menuId)
@@ -2553,7 +2572,7 @@ std::string SettingsWindow::makeUniqueActionId(const QString &seed) const
         bool exists = false;
         for (const Action &action : m_actions)
         {
-            if (action.getId() == candidate.toStdString())
+            if (action.id() == candidate.toStdString())
             {
                 exists = true;
                 break;
@@ -2578,7 +2597,7 @@ std::string SettingsWindow::makeUniqueMenuId(const QString &seed) const
         bool exists = false;
         for (const Menu &menu : m_menus)
         {
-            if (menu.getId() == candidate.toStdString())
+            if (menu.id() == candidate.toStdString())
             {
                 exists = true;
                 break;
@@ -2597,19 +2616,19 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
     std::vector<std::string> actionIds;
     for (const Action &action : m_actions)
     {
-        if (action.getId().empty())
+        if (action.id().empty())
         {
             errorMessage = "Every action must have a non-empty ID.";
             return false;
         }
-        if (std::find(actionIds.begin(), actionIds.end(), action.getId()) != actionIds.end())
+        if (std::find(actionIds.begin(), actionIds.end(), action.id()) != actionIds.end())
         {
             errorMessage = "Action IDs must be unique.";
             return false;
         }
-        actionIds.push_back(action.getId());
+        actionIds.push_back(action.id());
 
-        for (const auto &itemPtr : action.getItems())
+        for (const auto &itemPtr : action.items())
         {
             if (itemPtr == nullptr)
             {
@@ -2621,7 +2640,7 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
                 const auto *script = static_cast<const AI_Script *>(itemPtr.get());
                 if (QString::fromStdString(script->filepath).trimmed().isEmpty())
                 {
-                    errorMessage = QString("Advanced script/app item in '%1' has an empty path.").arg(QString::fromStdString(action.getName()));
+                    errorMessage = QString("Advanced script/app item in '%1' has an empty path.").arg(QString::fromStdString(action.name()));
                     return false;
                 }
             }
@@ -2630,35 +2649,35 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
                 const auto *launch = static_cast<const AI_LaunchApp *>(itemPtr.get());
                 if (launch->presetId.empty())
                 {
-                    errorMessage = QString("Launch App item in '%1' is missing its preset.").arg(QString::fromStdString(action.getName()));
+                    errorMessage = QString("Launch App item in '%1' is missing its preset.").arg(QString::fromStdString(action.name()));
                     return false;
                 }
                 if (launch->presetId == "custom" && QString::fromStdString(launch->customTarget).trimmed().isEmpty())
                 {
-                    errorMessage = QString("Launch App item in '%1' needs a custom app path.").arg(QString::fromStdString(action.getName()));
+                    errorMessage = QString("Launch App item in '%1' needs a custom app path.").arg(QString::fromStdString(action.name()));
                     return false;
                 }
             }
             else if (itemPtr->kind() == ActionItemKind::Delay)
             {
                 const auto *delay = static_cast<const AI_Delay *>(itemPtr.get());
-                if (delay->duration < 0)
+                if (delay->durationMs < 0)
                 {
-                    errorMessage = QString("Delay item in '%1' must be non-negative.").arg(QString::fromStdString(action.getName()));
+                    errorMessage = QString("Delay item in '%1' must be non-negative.").arg(QString::fromStdString(action.name()));
                     return false;
                 }
             }
             else if (itemPtr->kind() == ActionItemKind::Keystroke)
             {
-                const auto *hotkey = static_cast<const AI_Keystroke *>(itemPtr.get());
-                if (hotkey->keycode == 0)
+                const auto *keystroke = static_cast<const AI_Keystroke *>(itemPtr.get());
+                if (keystroke->keycode == 0)
                 {
-                    errorMessage = QString("Press Hotkey item in '%1' needs a main key.").arg(QString::fromStdString(action.getName()));
+                    errorMessage = QString("Press Keystroke item in '%1' needs a main key.").arg(QString::fromStdString(action.name()));
                     return false;
                 }
-                if (hotkey->holdDuration < 0.0f)
+                if (keystroke->holdDurationSec < 0.0f)
                 {
-                    errorMessage = QString("Press Hotkey item in '%1' has an invalid hold time.").arg(QString::fromStdString(action.getName()));
+                    errorMessage = QString("Press Keystroke item in '%1' has an invalid hold time.").arg(QString::fromStdString(action.name()));
                     return false;
                 }
             }
@@ -2668,7 +2687,7 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
                 bool foundMenu = false;
                 for (const Menu &menu : m_menus)
                 {
-                    if (menu.getId() == menuItem->menuId)
+                    if (menu.id() == menuItem->menuId)
                     {
                         foundMenu = true;
                         break;
@@ -2676,7 +2695,7 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
                 }
                 if (!foundMenu)
                 {
-                    errorMessage = QString("Menu action '%1' targets a missing menu.").arg(QString::fromStdString(action.getName()));
+                    errorMessage = QString("Menu action '%1' targets a missing menu.").arg(QString::fromStdString(action.name()));
                     return false;
                 }
             }
@@ -2685,12 +2704,12 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
                 const auto *button = static_cast<const AI_MouseButton *>(itemPtr.get());
                 if (button->button < 0 || button->button > 2)
                 {
-                    errorMessage = QString("Mouse Button item in '%1' has an invalid button.").arg(QString::fromStdString(action.getName()));
+                    errorMessage = QString("Mouse Button item in '%1' has an invalid button.").arg(QString::fromStdString(action.name()));
                     return false;
                 }
-                if (button->holdDuration < 0.0f)
+                if (button->holdDurationSec < 0.0f)
                 {
-                    errorMessage = QString("Mouse Button item in '%1' has an invalid hold time.").arg(QString::fromStdString(action.getName()));
+                    errorMessage = QString("Mouse Button item in '%1' has an invalid hold time.").arg(QString::fromStdString(action.name()));
                     return false;
                 }
             }
@@ -2699,7 +2718,7 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
                 const auto *release = static_cast<const AI_MouseButtonRelease *>(itemPtr.get());
                 if (release->button < 0 || release->button > 2)
                 {
-                    errorMessage = QString("Mouse Button Release item in '%1' has an invalid button.").arg(QString::fromStdString(action.getName()));
+                    errorMessage = QString("Mouse Button Release item in '%1' has an invalid button.").arg(QString::fromStdString(action.name()));
                     return false;
                 }
             }
@@ -2707,7 +2726,7 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
             {
                 if (static_cast<const AI_NthRecent *>(itemPtr.get())->n < 1)
                 {
-                    errorMessage = QString("Nth Recent item in '%1' must be >= 1.").arg(QString::fromStdString(action.getName()));
+                    errorMessage = QString("Nth Recent item in '%1' must be >= 1.").arg(QString::fromStdString(action.name()));
                     return false;
                 }
             }
@@ -2715,7 +2734,7 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
             {
                 if (static_cast<const AI_NthFrequent *>(itemPtr.get())->n < 1)
                 {
-                    errorMessage = QString("Nth Frequent item in '%1' must be >= 1.").arg(QString::fromStdString(action.getName()));
+                    errorMessage = QString("Nth Frequent item in '%1' must be >= 1.").arg(QString::fromStdString(action.name()));
                     return false;
                 }
             }
@@ -2725,7 +2744,7 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
                 const QString destination = QString::fromStdString(socket->outputDst).trimmed();
                 if (destination.isEmpty())
                 {
-                    errorMessage = QString("Socket Send item in '%1' needs a destination.").arg(QString::fromStdString(action.getName()));
+                    errorMessage = QString("Socket Send item in '%1' needs a destination.").arg(QString::fromStdString(action.name()));
                     return false;
                 }
                 const bool needsUrl = socket->protocol == Platform::SocketProtocol::Http
@@ -2742,7 +2761,7 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
                         errorMessage = QString(
                             "Socket Send item in '%1' needs a full URL "
                             "(http(s):// for HTTP, ws(s):// for WebSocket).")
-                                           .arg(QString::fromStdString(action.getName()));
+                                           .arg(QString::fromStdString(action.name()));
                         return false;
                     }
                 }
@@ -2750,7 +2769,7 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
                 {
                     errorMessage = QString(
                         "Socket Send item in '%1' needs host:port for UDP/TCP.")
-                                       .arg(QString::fromStdString(action.getName()));
+                                       .arg(QString::fromStdString(action.name()));
                     return false;
                 }
             }
@@ -2760,7 +2779,7 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
                 if (!search->config.searchActions && !search->config.searchPrograms
                     && !search->config.searchMenus && !search->config.webSearch)
                 {
-                    errorMessage = QString("Search Palette item in '%1' needs at least one filter enabled.").arg(QString::fromStdString(action.getName()));
+                    errorMessage = QString("Search Palette item in '%1' needs at least one filter enabled.").arg(QString::fromStdString(action.name()));
                     return false;
                 }
             }
@@ -2768,7 +2787,7 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
             {
                 if (static_cast<const AI_KeyRelease *>(itemPtr.get())->keycode == 0)
                 {
-                    errorMessage = QString("Key Release item in '%1' needs a main key.").arg(QString::fromStdString(action.getName()));
+                    errorMessage = QString("Key Release item in '%1' needs a main key.").arg(QString::fromStdString(action.name()));
                     return false;
                 }
             }
@@ -2779,38 +2798,38 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
     for (int menuIndex = 0; menuIndex < static_cast<int>(m_menus.size()); ++menuIndex)
     {
         const Menu &menu = m_menus[menuIndex];
-        if (menu.getId().empty())
+        if (menu.id().empty())
         {
             errorMessage = "Every menu must have a non-empty ID.";
             return false;
         }
-        if (std::find(menuIds.begin(), menuIds.end(), menu.getId()) != menuIds.end())
+        if (std::find(menuIds.begin(), menuIds.end(), menu.id()) != menuIds.end())
         {
             errorMessage = "Menu IDs must be unique.";
             return false;
         }
-        menuIds.push_back(menu.getId());
+        menuIds.push_back(menu.id());
 
-        if (menu.triggerVk != 0)
+        if (menu.triggerVk() != 0)
         {
             for (int otherIndex = 0; otherIndex < menuIndex; ++otherIndex)
             {
                 const Menu &other = m_menus[otherIndex];
-                if (other.triggerVk == menu.triggerVk && other.triggerMod == menu.triggerMod)
+                if (other.triggerVk() == menu.triggerVk() && other.triggerMod() == menu.triggerMod())
                 {
-                    errorMessage = QString("Menus '%1' and '%2' share the same trigger hotkey.")
-                                       .arg(QString::fromStdString(other.getName()))
-                                       .arg(QString::fromStdString(menu.getName()));
+                    errorMessage = QString("Menus '%1' and '%2' share the same trigger keystroke.")
+                                       .arg(QString::fromStdString(other.name()))
+                                       .arg(QString::fromStdString(menu.name()));
                     return false;
                 }
             }
         }
 
-        for (const std::string &actionId : menu.getActionIds())
+        for (const std::string &actionId : menu.actionIds())
         {
             if (std::find(actionIds.begin(), actionIds.end(), actionId) == actionIds.end())
             {
-                errorMessage = QString("Menu '%1' references a missing action.").arg(QString::fromStdString(menu.getName()));
+                errorMessage = QString("Menu '%1' references a missing action.").arg(QString::fromStdString(menu.name()));
                 return false;
             }
         }

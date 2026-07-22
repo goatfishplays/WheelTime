@@ -2,7 +2,7 @@
     "actions": [
         {
             "channel": 0,
-            "icon": "E:/Media/Images/Reference/microphone.png",
+            "icon": "E:/Media/Images/Other/microphone.png",
             "id": "action-new-action-2",
             "items": [
                 {
@@ -10,14 +10,14 @@
                     "keycode": 112,
                     "modifiers": 4,
                     "proceed": false,
-                    "type": "hotkey"
+                    "type": "keystroke"
                 }
             ],
             "name": "Discord Mute"
         },
         {
             "channel": 0,
-            "icon": "E:/Media/Images/Reference/headphones.png",
+            "icon": "E:/Media/Images/Other/headphones.png",
             "id": "action-new-action-5",
             "items": [
                 {
@@ -25,14 +25,14 @@
                     "keycode": 112,
                     "modifiers": 6,
                     "proceed": false,
-                    "type": "hotkey"
+                    "type": "keystroke"
                 }
             ],
             "name": "Discord Deafen"
         },
         {
             "channel": 0,
-            "icon": "E:/Media/Images/Reference/pause-play.png",
+            "icon": "E:/Media/Images/Other/pause-play.png",
             "id": "action-new-action-3",
             "items": [
                 {
@@ -40,14 +40,14 @@
                     "keycode": 179,
                     "modifiers": 0,
                     "proceed": false,
-                    "type": "hotkey"
+                    "type": "keystroke"
                 }
             ],
             "name": "Media Pause"
         },
         {
             "channel": 0,
-            "icon": "E:/Media/Images/Reference/searching-bar.png",
+            "icon": "E:/Media/Images/Other/searching-bar.png",
             "id": "action-search",
             "items": [
                 {
@@ -62,36 +62,165 @@
             "name": "Search"
         },
         {
-            "channel": 1,
-            "id": "action-new-action-4",
-            "items": [
-                {
-                    "holdDuration": 5.199999809265137,
-                    "keycode": 65,
-                    "modifiers": 0,
-                    "proceed": false,
-                    "type": "hotkey"
-                },
-                {
-                    "holdDuration": 0,
-                    "keycode": 66,
-                    "modifiers": 0,
-                    "proceed": false,
-                    "type": "hotkey"
-                }
-            ],
-            "name": "a5b"
-        },
-        {
             "channel": 0,
             "id": "action-new-action-6",
             "items": [
                 {
-                    "level": "all",
-                    "type": "cancel"
+                    "button": 0,
+                    "holdDuration": 0,
+                    "modifiers": 0,
+                    "proceed": false,
+                    "type": "mouse_button"
+                },
+                {
+                    "button": 0,
+                    "holdDuration": 0,
+                    "modifiers": 0,
+                    "proceed": false,
+                    "type": "mouse_button"
+                },
+                {
+                    "holdDuration": 0,
+                    "keycode": 67,
+                    "modifiers": 2,
+                    "proceed": false,
+                    "type": "keystroke"
+                },
+                {
+                    "duration": 3000,
+                    "type": "delay"
+                },
+                {
+                    "button": 0,
+                    "holdDuration": 0,
+                    "modifiers": 0,
+                    "proceed": false,
+                    "type": "mouse_button"
+                },
+                {
+                    "holdDuration": 0,
+                    "keycode": 86,
+                    "modifiers": 2,
+                    "proceed": false,
+                    "type": "keystroke"
                 }
             ],
-            "name": "New Action"
+            "name": "Copy, 3 seconds, paste"
+        },
+        {
+            "channel": 0,
+            "id": "action-new-action",
+            "items": [
+                {
+                    "menuId": "menu-new-menu",
+                    "type": "menu"
+                }
+            ],
+            "name": "Open Submenu"
+        },
+        {
+            "channel": 0,
+            "id": "action-new-action-4",
+            "items": [
+                {
+                    "holdDuration": 0,
+                    "keycode": 72,
+                    "modifiers": 4,
+                    "proceed": false,
+                    "type": "keystroke"
+                },
+                {
+                    "holdDuration": 0,
+                    "keycode": 69,
+                    "modifiers": 0,
+                    "proceed": false,
+                    "type": "keystroke"
+                },
+                {
+                    "holdDuration": 0,
+                    "keycode": 76,
+                    "modifiers": 0,
+                    "proceed": false,
+                    "type": "keystroke"
+                },
+                {
+                    "holdDuration": 0,
+                    "keycode": 76,
+                    "modifiers": 0,
+                    "proceed": false,
+                    "type": "keystroke"
+                },
+                {
+                    "holdDuration": 0,
+                    "keycode": 79,
+                    "modifiers": 0,
+                    "proceed": false,
+                    "type": "keystroke"
+                },
+                {
+                    "holdDuration": 0,
+                    "keycode": 188,
+                    "modifiers": 0,
+                    "proceed": false,
+                    "type": "keystroke"
+                },
+                {
+                    "holdDuration": 0,
+                    "keycode": 32,
+                    "modifiers": 0,
+                    "proceed": false,
+                    "type": "keystroke"
+                },
+                {
+                    "holdDuration": 0,
+                    "keycode": 87,
+                    "modifiers": 4,
+                    "proceed": false,
+                    "type": "keystroke"
+                },
+                {
+                    "holdDuration": 0,
+                    "keycode": 79,
+                    "modifiers": 0,
+                    "proceed": false,
+                    "type": "keystroke"
+                },
+                {
+                    "holdDuration": 0,
+                    "keycode": 82,
+                    "modifiers": 0,
+                    "proceed": false,
+                    "type": "keystroke"
+                },
+                {
+                    "holdDuration": 0,
+                    "keycode": 76,
+                    "modifiers": 0,
+                    "proceed": false,
+                    "type": "keystroke"
+                },
+                {
+                    "holdDuration": 0,
+                    "keycode": 68,
+                    "modifiers": 0,
+                    "proceed": false,
+                    "type": "keystroke"
+                }
+            ],
+            "name": "Hello, World"
+        },
+        {
+            "channel": 0,
+            "icon": "E:/Media/Images/Other/notes.png",
+            "id": "action-new-action-7",
+            "items": [
+                {
+                    "customTarget": "notepad.exe",
+                    "presetId": "notepad",
+                    "type": "launch_app"
+                }
+            ],
+            "name": "Notepad"
         }
     ],
     "menus": [
@@ -100,44 +229,46 @@
                 "action-new-action-2",
                 "action-new-action-5",
                 "action-new-action-3",
-                "action-search"
+                "action-search",
+                "action-new-action"
             ],
             "centerMouseOnOpen": true,
-            "executeOnRelease": true,
+            "executeOnRelease": false,
             "exitOnAction": true,
             "id": "menu-example",
-            "name": "Main",
-            "restoreMouseOnClose": true,
+            "name": "Gamering",
+            "restoreMouseOnClose": false,
             "triggerMod": 6,
             "triggerVk": 192
         },
         {
             "actionIds": [
-                "action-new-action-2",
-                "action-search"
+                "action-search",
+                "action-new-action-4"
             ],
             "centerMouseOnOpen": true,
             "executeOnRelease": false,
             "exitOnAction": false,
             "id": "menu-new-menu",
-            "name": "Video Demo",
+            "name": "Gamering 2",
             "restoreMouseOnClose": true,
-            "triggerMod": 6,
-            "triggerVk": 186
+            "triggerMod": 0,
+            "triggerVk": 0
         },
         {
             "actionIds": [
+                "action-new-action-2",
                 "action-new-action-4",
-                "action-new-action-6"
+                "action-new-action-7"
             ],
             "centerMouseOnOpen": true,
             "executeOnRelease": false,
             "exitOnAction": false,
             "id": "menu-new-menu-2",
-            "name": "New Menu",
-            "restoreMouseOnClose": true,
+            "name": "Video Demo",
+            "restoreMouseOnClose": false,
             "triggerMod": 6,
-            "triggerVk": 222
+            "triggerVk": 186
         }
     ]
 }

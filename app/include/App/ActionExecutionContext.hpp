@@ -94,7 +94,7 @@ public:
     /// @brief Forwards Action::channel() for the owned Action.
     [[nodiscard]] uint32_t channel() const noexcept;
 
-    /// @brief Forwards Action::cancelable().
+    /// @brief Forwards Action::isCancelable().
     [[nodiscard]] bool isCancelable() const noexcept;
 
     /// @brief Whether cancel() was requested; checked between ActionItems.
