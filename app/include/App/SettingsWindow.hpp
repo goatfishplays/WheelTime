@@ -116,6 +116,9 @@ private:
     QWidget *m_menuEditor{nullptr};
     QWidget *m_actionEditor{nullptr};
 
+    QGroupBox *m_globalGroup{nullptr};
+    QCheckBox *m_darkModeCheck{nullptr};
+
     QPushButton *m_keystrokeRecordButton{nullptr};
     QPushButton *m_keystrokeClearButton{nullptr};
 

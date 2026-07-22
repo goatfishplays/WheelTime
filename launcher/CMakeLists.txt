@@ -25,6 +25,7 @@ qt_add_resources(${PROJECT_NAME} "target"
     BASE "${CMAKE_SOURCE_DIR}/resources/styles"
     FILES
         "${CMAKE_SOURCE_DIR}/resources/styles/defaultWheel.qss"
+        "${CMAKE_SOURCE_DIR}/resources/styles/darkWheel.qss"
 )
 
 install(TARGETS ${PROJECT_NAME}

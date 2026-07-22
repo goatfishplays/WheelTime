@@ -28,6 +28,23 @@
 
 using namespace Application;
 
+void App::applyTheme(bool isDark)
+{
+    static int currentTheme = -1;
+    int newTheme = isDark ? 1 : 0;
+    if (currentTheme == newTheme)
+    {
+        return;
+    }
+
+    QFile file(isDark ? ":/styles/darkWheel.qss" : ":/styles/defaultWheel.qss");
+    if (file.open(QFile::ReadOnly))
+    {
+        qApp->setStyleSheet(file.readAll());
+        currentTheme = newTheme;
+    }
+}
+
 /// @brief True if @p action is a history/cancel helper that must not enter MRU/MFU.
 ///
 /// Recording nth-recent/nth-frequent (or cancel) would make "Most Recent" the most
@@ -98,6 +115,8 @@ App::App()
             0, 0, false, false, true, false, "Config Error",
             std::vector<std::string>{"action-config-missing"}, "menu-config-error"));
     }
+
+    applyTheme(m_appConfig.darkMode);
 
     bool anyHotkey = false;
     for (const auto &menuPtr : m_loadedMenus)
@@ -1036,6 +1055,7 @@ bool App::applyConfig(const AppConfig &appConfig, const std::vector<Action> &act
     }
 
     m_appConfig = appConfig;
+    applyTheme(m_appConfig.darkMode);
 
     // Drop in-flight macros that may reference old library Actions / menus.
     if (m_scheduler)
