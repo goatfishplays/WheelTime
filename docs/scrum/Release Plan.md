@@ -66,5 +66,3 @@ Release 1.0 | Deadline: 7/21/26 | Revision 4 Date 7/21/26
 - [ ] Linux support  
 - [ ] Nvim style macro recording  
 - [ ] Easy action item plugins via registry   
-- [ ] Render pipeline injection instead of passthrough window  
-  - [ ] Idk if this is actually better than the other approaches or not
