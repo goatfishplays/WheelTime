@@ -2,52 +2,6 @@
     "actions": [
         {
             "channel": 0,
-            "icon": "E:/Media/Images/Other/microphone.png",
-            "id": "action-new-action-2",
-            "items": [
-                {
-                    "holdDuration": 0,
-                    "keycode": 112,
-                    "modifiers": 4,
-                    "proceed": false,
-                    "type": "keystroke"
-                }
-            ],
-            "name": "Discord Mute"
-        },
-        {
-            "channel": 0,
-            "icon": "E:/Media/Images/Other/headphones.png",
-            "id": "action-new-action-5",
-            "items": [
-                {
-                    "holdDuration": 0,
-                    "keycode": 112,
-                    "modifiers": 6,
-                    "proceed": false,
-                    "type": "keystroke"
-                }
-            ],
-            "name": "Discord Deafen"
-        },
-        {
-            "channel": 0,
-            "icon": "E:/Media/Images/Other/pause-play.png",
-            "id": "action-new-action-3",
-            "items": [
-                {
-                    "holdDuration": 0,
-                    "keycode": 179,
-                    "modifiers": 0,
-                    "proceed": false,
-                    "type": "keystroke"
-                }
-            ],
-            "name": "Media Pause"
-        },
-        {
-            "channel": 0,
-            "icon": "E:/Media/Images/Other/searching-bar.png",
             "id": "action-search",
             "items": [
                 {
@@ -63,69 +17,40 @@
         },
         {
             "channel": 0,
-            "id": "action-new-action-6",
+            "id": "action-undo",
             "items": [
                 {
-                    "button": 0,
                     "holdDuration": 0,
-                    "modifiers": 0,
-                    "proceed": false,
-                    "type": "mouse_button"
-                },
-                {
-                    "button": 0,
-                    "holdDuration": 0,
-                    "modifiers": 0,
-                    "proceed": false,
-                    "type": "mouse_button"
-                },
-                {
-                    "holdDuration": 0,
-                    "keycode": 67,
-                    "modifiers": 2,
-                    "proceed": false,
-                    "type": "keystroke"
-                },
-                {
-                    "duration": 3000,
-                    "type": "delay"
-                },
-                {
-                    "button": 0,
-                    "holdDuration": 0,
-                    "modifiers": 0,
-                    "proceed": false,
-                    "type": "mouse_button"
-                },
-                {
-                    "holdDuration": 0,
-                    "keycode": 86,
+                    "keycode": 90,
                     "modifiers": 2,
                     "proceed": false,
                     "type": "keystroke"
                 }
             ],
-            "name": "Copy, 3 seconds, paste"
+            "name": "Undo"
         },
         {
             "channel": 0,
-            "id": "action-new-action",
+            "id": "action-redo",
             "items": [
                 {
-                    "menuId": "menu-new-menu",
-                    "type": "menu"
+                    "holdDuration": 0,
+                    "keycode": 89,
+                    "modifiers": 2,
+                    "proceed": false,
+                    "type": "keystroke"
                 }
             ],
-            "name": "Open Submenu"
+            "name": "Redo"
         },
         {
             "channel": 0,
-            "id": "action-new-action-4",
+            "id": "action-type-hello-world",
             "items": [
                 {
                     "holdDuration": 0,
                     "keycode": 72,
-                    "modifiers": 4,
+                    "modifiers": 0,
                     "proceed": false,
                     "type": "keystroke"
                 },
@@ -159,13 +84,6 @@
                 },
                 {
                     "holdDuration": 0,
-                    "keycode": 188,
-                    "modifiers": 0,
-                    "proceed": false,
-                    "type": "keystroke"
-                },
-                {
-                    "holdDuration": 0,
                     "keycode": 32,
                     "modifiers": 0,
                     "proceed": false,
@@ -174,7 +92,7 @@
                 {
                     "holdDuration": 0,
                     "keycode": 87,
-                    "modifiers": 4,
+                    "modifiers": 0,
                     "proceed": false,
                     "type": "keystroke"
                 },
@@ -207,12 +125,11 @@
                     "type": "keystroke"
                 }
             ],
-            "name": "Hello, World"
+            "name": "Type Hello World"
         },
         {
             "channel": 0,
-            "icon": "E:/Media/Images/Other/notes.png",
-            "id": "action-new-action-7",
+            "id": "action-open-notepad",
             "items": [
                 {
                     "customTarget": "notepad.exe",
@@ -220,55 +137,26 @@
                     "type": "launch_app"
                 }
             ],
-            "name": "Notepad"
+            "name": "Open Notepad"
         }
     ],
     "menus": [
         {
             "actionIds": [
-                "action-new-action-2",
-                "action-new-action-5",
-                "action-new-action-3",
                 "action-search",
-                "action-new-action"
+                "action-undo",
+                "action-redo",
+                "action-type-hello-world",
+                "action-open-notepad"
             ],
             "centerMouseOnOpen": true,
             "executeOnRelease": false,
             "exitOnAction": true,
-            "id": "menu-example",
-            "name": "Gamering",
+            "id": "menu-main",
+            "name": "Main",
             "restoreMouseOnClose": false,
             "triggerMod": 6,
             "triggerVk": 192
-        },
-        {
-            "actionIds": [
-                "action-search",
-                "action-new-action-4"
-            ],
-            "centerMouseOnOpen": true,
-            "executeOnRelease": false,
-            "exitOnAction": false,
-            "id": "menu-new-menu",
-            "name": "Gamering 2",
-            "restoreMouseOnClose": true,
-            "triggerMod": 0,
-            "triggerVk": 0
-        },
-        {
-            "actionIds": [
-                "action-new-action-2",
-                "action-new-action-4",
-                "action-new-action-7"
-            ],
-            "centerMouseOnOpen": true,
-            "executeOnRelease": false,
-            "exitOnAction": false,
-            "id": "menu-new-menu-2",
-            "name": "Video Demo",
-            "restoreMouseOnClose": false,
-            "triggerMod": 6,
-            "triggerVk": 186
         }
     ]
 }

@@ -15,7 +15,7 @@ WheelTime is a Windows radial launcher for quick actions, app launches, hotkeys,
 
 ### Option 1: Installer (Recommended Download)
 
-[Download WheelTime](https://github.com/goatfishplays/WheelTime/releases/latest)
+[Download WheelTime Installer](https://github.com/goatfishplays/WheelTime/releases/latest/download/WheelTimeSetup.exe)
 
 - Installs per user under `%LOCALAPPDATA%\WheelTime`.
 - Does not require admin rights.
@@ -39,8 +39,6 @@ Run `WheelTime.exe`, then use the configured menu hotkeys from `config/default_m
 Current default menu hotkeys:
 
 - `Ctrl+Shift+Backtick` opens `Main`.
-- `Ctrl+Shift+Semicolon` opens `Video Demo`.
-- `Ctrl+Shift+Apostrophe` opens `New Menu`.
 
 In the launcher:
 
