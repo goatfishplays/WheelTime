@@ -60,9 +60,13 @@ Release 1.0 | Deadline: 7/21/26 | Revision 4 Date 7/21/26
 
 
 
-## Backlog
+## Product Backlog High Level Goals
 
-- [ ] Custom shapes and rice support  
+- [ ] Custom shapes and rice support 
+  - [ ] User Story: As a user, I want be able to customize the graphics so it can better fit with the rest of my system theming.
 - [ ] Linux support  
+  - [ ] User Story: As a Linux user, I want Wheel Time to support Linux program launching and input behavior so I can use the same launcher outside Windows.
 - [ ] Nvim style macro recording  
+  - [ ] User Story: As a NVim user, I want to be able to record macros at use time so I don't have to open settings to create a macro that I will only be using for a short time.
 - [ ] Easy action item plugins via registry   
+  - [ ] User Story: As a developer, I want more automated tests and extensibility for settings, action validation, action items, and launcher behavior so future changes are safer and I can add custom behaviors.
