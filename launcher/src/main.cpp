@@ -3,15 +3,14 @@
  * @brief WheelTime launcher entry point.
  */
 
-#include "App/App.hpp"
-
 #include <QApplication>
 #include <QCoreApplication>
-#include <QDebug>
-#include <QFile>
 #include <QIODevice>
 #include <QLocalServer>
 #include <QLocalSocket>
+#include <App/App.hpp>
+#include <QFile>
+#include <QDebug>
 
 int main(int argc, char *argv[])
 {
@@ -71,16 +70,6 @@ int main(int argc, char *argv[])
                              }
                          }
                      });
-    QFile file(":/styles/defaultWheel.qss");
-
-    if (file.open(QFile::ReadOnly))
-    {
-        qApp->setStyleSheet(file.readAll());
-    }
-    else
-    {
-        qDebug() << "Failed to open resource";
-    }
     // QApplication::setStyle("Fusion");
 
     return qtApp.exec();

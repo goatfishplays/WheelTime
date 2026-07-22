@@ -303,9 +303,14 @@ namespace
         return Action(parseItems(actionObject.value("items").toArray()), name, icon, id, channel);
     }
 
-    bool loadNewSchema(const QJsonObject &rootObject, std::vector<Action> &actions,
+    bool loadNewSchema(const QJsonObject &rootObject, AppConfig &appConfig, std::vector<Action> &actions,
                        std::vector<std::unique_ptr<Menu>> &menus)
     {
+        if (rootObject.contains("darkMode") && rootObject["darkMode"].isBool())
+        {
+            appConfig.darkMode = rootObject["darkMode"].toBool();
+        }
+
         const QJsonArray actionsArray = rootObject.value("actions").toArray();
         const QJsonArray menusArray = rootObject.value("menus").toArray();
         if (menusArray.isEmpty())
@@ -343,9 +348,14 @@ namespace
         return !menus.empty();
     }
 
-    bool loadLegacySchema(const QJsonObject &rootObject, std::vector<Action> &actions,
+    bool loadLegacySchema(const QJsonObject &rootObject, AppConfig &appConfig, std::vector<Action> &actions,
                           std::vector<std::unique_ptr<Menu>> &menus)
     {
+        if (rootObject.contains("darkMode") && rootObject["darkMode"].isBool())
+        {
+            appConfig.darkMode = rootObject["darkMode"].toBool();
+        }
+
         const QJsonArray menusArray = rootObject.value("menus").toArray();
         if (menusArray.isEmpty())
         {
@@ -553,10 +563,10 @@ bool MenuConfigLoader::loadConfig(const QString &filepath, AppConfig &appConfig,
     // absent, treat the file as the older menu-owned schema for compatibility.
     if (rootObject.contains("actions"))
     {
-        return loadNewSchema(rootObject, actions, menus);
+        return loadNewSchema(rootObject, appConfig, actions, menus);
     }
 
-    return loadLegacySchema(rootObject, actions, menus);
+    return loadLegacySchema(rootObject, appConfig, actions, menus);
 }
 
 bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appConfig, const std::vector<Action> &actions,
@@ -615,6 +625,7 @@ bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appC
     }
 
     QJsonObject rootObject;
+    rootObject.insert("darkMode", appConfig.darkMode);
     rootObject.insert("actions", actionsArray);
     rootObject.insert("menus", menusArray);
 

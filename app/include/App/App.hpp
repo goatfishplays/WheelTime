@@ -30,6 +30,7 @@ class SettingsWindow;
 
 struct AppConfig
 {
+    bool darkMode = false;
 };
 
 /**
@@ -136,6 +137,12 @@ public:
     /// @brief The multithreaded Action scheduler used for all launcher macros.
     [[nodiscard]] Scheduler &scheduler() noexcept;
     [[nodiscard]] const Scheduler &scheduler() const noexcept;
+
+    /**
+     * @brief Applies the application's visual theme based on the given boolean.
+     * @param isDark True if the dark theme should be applied, false for the light theme.
+     */
+    void applyTheme(bool isDark);
 
 private:
     Menu *m_activeMenu;
