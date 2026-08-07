@@ -14,10 +14,14 @@
 #include <Platform/Window.hpp>
 
 #include <QAbstractNativeEventFilter>
+#include <QAction>
 #include <QApplication>
 #include <QDir>
 #include <QFileInfo>
+#include <QIcon>
+#include <QMenu>
 #include <QString>
+#include <QSystemTrayIcon>
 #include <QThread>
 #include <QTimer>
 
@@ -185,11 +189,18 @@ App::App()
     QObject::connect(m_escapeWatchTimer, &QTimer::timeout, [this]()
                      { onEscapeWatchTick(); });
 
+    setupTrayIcon();
+
     QTimer::singleShot(0, [this]() { showSettingsWindow(); });
 }
 
 App::~App()
 {
+    if (m_trayIcon != nullptr)
+    {
+        m_trayIcon->hide();
+    }
+
     saveActionHistory();
 
     if (m_scheduler)
@@ -953,6 +964,77 @@ Platform::Executor &App::executor() noexcept
 const Platform::Executor &App::executor() const noexcept
 {
     return m_executor;
+}
+
+void App::setupTrayIcon()
+{
+    if (!QSystemTrayIcon::isSystemTrayAvailable())
+    {
+        qWarning("WheelTime: system tray is unavailable; tray icon will not be shown.");
+        return;
+    }
+
+    const QIcon appIcon(QStringLiteral(":/icons/wheelTime.png"));
+    if (!appIcon.isNull())
+    {
+        qApp->setWindowIcon(appIcon);
+    }
+
+    // Parent to the long-lived Gui shell so lifetime matches App, not QApplication.
+    m_trayMenu = new QMenu(&m_gui);
+    QAction *openSettingsAction = m_trayMenu->addAction(QStringLiteral("Open Settings"));
+    QAction *searchActionsAction = m_trayMenu->addAction(QStringLiteral("Search Actions"));
+    QAction *searchMenusAction = m_trayMenu->addAction(QStringLiteral("Search Menus"));
+    m_trayMenu->addSeparator();
+    QAction *exitAction = m_trayMenu->addAction(QStringLiteral("Exit"));
+
+    QObject::connect(openSettingsAction, &QAction::triggered, [this]()
+                     { showSettingsWindow(); });
+    QObject::connect(searchActionsAction, &QAction::triggered, [this]()
+                     {
+                         SearchConfig config;
+                         config.searchActions = true;
+                         config.searchPrograms = false;
+                         config.searchMenus = false;
+                         config.webSearch = false;
+                         openSearchFromTray(config);
+                     });
+    QObject::connect(searchMenusAction, &QAction::triggered, [this]()
+                     {
+                         SearchConfig config;
+                         config.searchActions = false;
+                         config.searchPrograms = false;
+                         config.searchMenus = true;
+                         config.webSearch = false;
+                         openSearchFromTray(config);
+                     });
+    QObject::connect(exitAction, &QAction::triggered, qApp, &QApplication::quit);
+
+    m_trayIcon = new QSystemTrayIcon(appIcon, &m_gui);
+    m_trayIcon->setToolTip(QStringLiteral("WheelTime"));
+    m_trayIcon->setContextMenu(m_trayMenu);
+    QObject::connect(m_trayIcon, &QSystemTrayIcon::activated, [this](QSystemTrayIcon::ActivationReason reason)
+                     {
+                         if (reason == QSystemTrayIcon::Trigger || reason == QSystemTrayIcon::DoubleClick)
+                         {
+                             showSettingsWindow();
+                         }
+                     });
+    m_trayIcon->show();
+}
+
+void App::openSearchFromTray(const SearchConfig &config)
+{
+    if (m_gui.isSettingsVisible())
+    {
+        if (m_scheduler)
+        {
+            m_scheduler->resume();
+        }
+        restoreOverlayAfterSettings();
+    }
+
+    showSearchOverlay(config);
 }
 
 void App::showSettingsWindow()

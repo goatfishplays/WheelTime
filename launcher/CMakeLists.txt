@@ -28,6 +28,14 @@ qt_add_resources(${PROJECT_NAME} "target"
         "${CMAKE_SOURCE_DIR}/resources/styles/darkWheel.qss"
 )
 
+qt_add_resources(${PROJECT_NAME} "icons"
+    PREFIX "/icons"
+    BASE "${CMAKE_SOURCE_DIR}/resources"
+    FILES
+        "${CMAKE_SOURCE_DIR}/resources/wheelTime.png"
+        "${CMAKE_SOURCE_DIR}/resources/wheelTime.ico"
+)
+
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION "."
 )

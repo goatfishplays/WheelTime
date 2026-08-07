@@ -21,6 +21,8 @@
 #include <memory>
 #include <vector>
 
+class QMenu;
+class QSystemTrayIcon;
 class QTimer;
 
 namespace Application
@@ -172,6 +174,15 @@ private:
     void disarmEscapeDismiss();
     /// @brief QTimer callback: dismiss the wheel on Escape press edges.
     void onEscapeWatchTick();
+    /// @brief Creates the always-visible Windows tray icon and context menu.
+    void setupTrayIcon();
+    /**
+     * @brief Opens the search palette from a tray menu action.
+     *
+     * Dismisses Settings first when needed so search is not blocked by the
+     * mutual-exclusion guard in showSearchOverlay.
+     */
+    void openSearchFromTray(const SearchConfig &config);
     App();
     ~App();
 
@@ -183,6 +194,8 @@ private:
     Platform::InputReceiver m_inputReceiver;
     class QAbstractNativeEventFilter *m_hotkeyFilter;
     SettingsWindow *m_settingsWindow;
+    QSystemTrayIcon *m_trayIcon{nullptr};
+    QMenu *m_trayMenu{nullptr};
     /// @brief Absolute path to the JSON config file used for load/save.
     QString m_configPath;
     /// @brief Persistent MRU + frequency cache beside the menu config.
