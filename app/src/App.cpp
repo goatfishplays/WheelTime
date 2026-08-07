@@ -6,6 +6,7 @@
 #include "App/App.hpp"
 
 #include "App/ActionItems.hpp"
+#include "App/Log.hpp"
 #include "App/MenuConfigLoader.hpp"
 #include "App/SettingsWindow.hpp"
 
@@ -17,9 +18,11 @@
 #include <QAction>
 #include <QApplication>
 #include <QDir>
+#include <QFile>
 #include <QFileInfo>
 #include <QIcon>
 #include <QMenu>
+#include <QMetaObject>
 #include <QString>
 #include <QSystemTrayIcon>
 #include <QThread>
@@ -31,6 +34,34 @@
 #include <vector>
 
 using namespace Application;
+
+namespace
+{
+Platform::InputBinding bindingForMenu(const Menu &menu)
+{
+    Platform::InputBinding bind;
+    bind.mod = menu.triggerMod();
+    bind.input = menu.triggerVk();
+    bind.useLowLevelHook = menu.useLowLevelHook();
+    return bind;
+}
+
+void deliverLlHotkey(int hotkeyId, void *userData)
+{
+    auto *app = static_cast<App *>(userData);
+    // Queue onto the GUI loop — this may run inside WH_KEYBOARD_LL.
+    QMetaObject::invokeMethod(
+        qApp,
+        [app, hotkeyId]()
+        {
+            if (app != nullptr)
+            {
+                app->onHotkeyTriggered(hotkeyId);
+            }
+        },
+        Qt::QueuedConnection);
+}
+} // namespace
 
 void App::applyTheme(bool isDark)
 {
@@ -122,6 +153,8 @@ App::App()
 
     applyTheme(m_appConfig.darkMode);
 
+    m_inputReceiver.setHotkeyTriggeredHandler(&deliverLlHotkey, this);
+
     bool anyHotkey = false;
     for (const auto &menuPtr : m_loadedMenus)
     {
@@ -131,10 +164,7 @@ App::App()
             continue;
         }
         anyHotkey = true;
-        Platform::InputBinding bind;
-        bind.mod = m->triggerMod();
-        bind.input = m->triggerVk();
-        m_inputReceiver.registerInputBinding(bind);
+        m_inputReceiver.registerInputBinding(bindingForMenu(*m));
     }
 
     // Install native event filter to capture WM_HOTKEY
@@ -215,6 +245,8 @@ App::~App()
         m_hotkeyFilter = nullptr;
     }
 
+    m_inputReceiver.setHotkeyTriggeredHandler(nullptr, nullptr);
+
     if (m_settingsWindow != nullptr)
     {
         delete m_settingsWindow;
@@ -231,10 +263,7 @@ App::~App()
             {
                 continue;
             }
-            Platform::InputBinding bind;
-            bind.mod = m->triggerMod();
-            bind.input = m->triggerVk();
-            m_inputReceiver.unregisterInputBinding(bind);
+            m_inputReceiver.unregisterInputBinding(bindingForMenu(*m));
         }
     }
     clearMenus();
@@ -252,8 +281,8 @@ void App::suspendHotkeys()
         return;
     }
 
-    // RegisterHotKey consumes matching KeyPresses, so the settings recorder
-    // cannot capture a chord that is still bound. Drop live binds while editing.
+    // RegisterHotKey / LL hooks consume matching KeyPresses, so the settings
+    // recorder cannot capture a chord that is still bound. Drop live binds while editing.
     for (const auto &menuPtr : m_loadedMenus)
     {
         Menu *m = menuPtr.get();
@@ -261,10 +290,7 @@ void App::suspendHotkeys()
         {
             continue;
         }
-        Platform::InputBinding bind;
-        bind.mod = m->triggerMod();
-        bind.input = m->triggerVk();
-        m_inputReceiver.unregisterInputBinding(bind);
+        m_inputReceiver.unregisterInputBinding(bindingForMenu(*m));
     }
     m_hotkeysSuspended = true;
 }
@@ -283,10 +309,7 @@ void App::resumeHotkeys()
         {
             continue;
         }
-        Platform::InputBinding bind;
-        bind.mod = m->triggerMod();
-        bind.input = m->triggerVk();
-        m_inputReceiver.registerInputBinding(bind);
+        m_inputReceiver.registerInputBinding(bindingForMenu(*m));
     }
     m_hotkeysSuspended = false;
 }
@@ -983,6 +1006,7 @@ void App::setupTrayIcon()
     // Parent to the long-lived Gui shell so lifetime matches App, not QApplication.
     m_trayMenu = new QMenu(&m_gui);
     QAction *openSettingsAction = m_trayMenu->addAction(QStringLiteral("Open Settings"));
+    QAction *openLogAction = m_trayMenu->addAction(QStringLiteral("Open Log"));
     QAction *searchActionsAction = m_trayMenu->addAction(QStringLiteral("Search Actions"));
     QAction *searchMenusAction = m_trayMenu->addAction(QStringLiteral("Search Menus"));
     m_trayMenu->addSeparator();
@@ -990,6 +1014,8 @@ void App::setupTrayIcon()
 
     QObject::connect(openSettingsAction, &QAction::triggered, [this]()
                      { showSettingsWindow(); });
+    QObject::connect(openLogAction, &QAction::triggered, []()
+                     { Log::instance().showWindow(); });
     QObject::connect(searchActionsAction, &QAction::triggered, [this]()
                      {
                          SearchConfig config;
@@ -1111,6 +1137,16 @@ void App::restoreOverlayAfterSettings()
     overlayWindow.showNoActivate();
 }
 
+void App::beginTriggerCapture(Platform::ChordCaptureHandler handler, void *userData)
+{
+    m_inputReceiver.beginChordCapture(handler, userData);
+}
+
+void App::endTriggerCapture()
+{
+    m_inputReceiver.endChordCapture();
+}
+
 bool App::saveConfig()
 {
     return MenuConfigLoader::saveConfig(m_configPath, m_appConfig, m_actionLibrary, m_loadedMenus);
@@ -1129,10 +1165,7 @@ bool App::applyConfig(const AppConfig &appConfig, const std::vector<Action> &act
             {
                 continue;
             }
-            Platform::InputBinding oldBind;
-            oldBind.mod = m->triggerMod();
-            oldBind.input = m->triggerVk();
-            m_inputReceiver.unregisterInputBinding(oldBind);
+            m_inputReceiver.unregisterInputBinding(bindingForMenu(*m));
         }
     }
 
@@ -1165,10 +1198,7 @@ bool App::applyConfig(const AppConfig &appConfig, const std::vector<Action> &act
             {
                 continue;
             }
-            Platform::InputBinding newBind;
-            newBind.mod = m->triggerMod();
-            newBind.input = m->triggerVk();
-            m_inputReceiver.registerInputBinding(newBind);
+            m_inputReceiver.registerInputBinding(bindingForMenu(*m));
         }
     }
 

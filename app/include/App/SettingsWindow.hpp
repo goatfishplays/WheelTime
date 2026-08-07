@@ -82,6 +82,8 @@ private:
     void refreshItemDetail();
     void updateKeystrokeButtonText();
     void updateCancelChannelVisibility(CancelLevel level);
+    /// @brief Applies a chord from LL capture or Qt recording; (0,0) cancels.
+    void finishTriggerRecording(int newMod, int newVk);
     QString describeActionItem(const ActionItem *item) const;
     QString launchPresetDisplayName(const std::string &presetId) const;
     QString launchPresetTarget(const std::string &presetId) const;
@@ -124,6 +126,7 @@ private:
 
     QLineEdit *m_menuNameEdit{nullptr};
     QCheckBox *m_executeOnReleaseCheck{nullptr};
+    QCheckBox *m_useLowLevelHookCheck{nullptr};
     QCheckBox *m_exitOnActionCheck{nullptr};
     QCheckBox *m_centerMouseOnOpenCheck{nullptr};
     QCheckBox *m_restoreMouseOnCloseCheck{nullptr};

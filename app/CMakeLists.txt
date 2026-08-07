@@ -66,6 +66,10 @@ add_library(App
     include/App/MenuConfigLoader.hpp
     src/SettingsWindow.cpp
     include/App/SettingsWindow.hpp
+    src/Log.cpp
+    include/App/Log.hpp
+    src/LogWindow.cpp
+    include/App/LogWindow.hpp
 )
 
 target_include_directories(App 

@@ -16,7 +16,11 @@ The system is expected to handle invalid or failed actions safely, but more test
 
 ### Hotkey and Focus Edge Cases
 
-The launcher supports hotkey behavior, but edge cases may still exist depending on the active application, full-screen mode, Windows permissions, or focus behavior. Some games or protected applications may block overlays or input simulation. The Windows key currently does not work for menu activation due to Windows built in hotkeys being hard to override. Simulated key inputs may be inconsistent when physically holding modifiers alongside them because of the way they are handled by the OS. Settings menu may steal focus due to needing keyboard inputs leading to needing to manually refocus your active application after.
+The launcher supports hotkey behavior, but edge cases may still exist depending on the active application, full-screen mode, Windows permissions, or focus behavior. Some games or protected applications may block overlays or input simulation. Simulated key inputs may be inconsistent when physically holding modifiers alongside them because of the way they are handled by the OS. Settings menu may steal focus due to needing keyboard inputs leading to needing to manually refocus your active application after.
+
+### Full Screen Games May Or May Not Work
+
+Depending on if the game runs in exclusive fullscreen mode or not the UI will not be able to render on top. To fix this we would need to perform render pipeline injection which is currently above my paygrade :sob:
 
 ### Search Limitations
 

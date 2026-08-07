@@ -30,7 +30,8 @@ public:
          bool restoreMouseOnClose = false,
          std::string name = "Unnamed Menu",
          std::vector<std::string> actionIds = {},
-         std::string id = "");
+         std::string id = "",
+         bool useLowLevelHook = false);
     ~Menu();
 
     /// @brief Inserts an action reference at @p index, or appends when out of range.
@@ -75,6 +76,14 @@ public:
     [[nodiscard]] bool restoreMouseOnClose() const noexcept;
     void setRestoreMouseOnClose(bool enabled) noexcept;
 
+    /**
+     * @brief Capture this menu's trigger via WH_KEYBOARD_LL instead of RegisterHotKey.
+     *
+     * Needed for shell-reserved chords (Win+R, Win+S, …). Off by default.
+     */
+    [[nodiscard]] bool useLowLevelHook() const noexcept;
+    void setUseLowLevelHook(bool enabled) noexcept;
+
 private:
     int m_triggerMod = 0;
     int m_triggerVk = 0;
@@ -82,6 +91,7 @@ private:
     bool m_exitOnAction = false;
     bool m_centerMouseOnOpen = true;
     bool m_restoreMouseOnClose = false;
+    bool m_useLowLevelHook = false;
     std::string m_name;
     std::string m_id;
     std::vector<std::string> m_actionIds;

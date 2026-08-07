@@ -20,13 +20,15 @@ Menu::Menu(int triggerMod,
            bool restoreMouseOnClose,
            std::string name,
            std::vector<std::string> actionIds,
-           std::string id)
+           std::string id,
+           bool useLowLevelHook)
     : m_triggerMod(triggerMod)
     , m_triggerVk(triggerVk)
     , m_executeOnRelease(executeOnRelease)
     , m_exitOnAction(exitOnAction)
     , m_centerMouseOnOpen(centerMouseOnOpen)
     , m_restoreMouseOnClose(restoreMouseOnClose)
+    , m_useLowLevelHook(useLowLevelHook)
     , m_name(std::move(name))
     , m_id(std::move(id))
     , m_actionIds(std::move(actionIds))
@@ -173,6 +175,16 @@ bool Menu::restoreMouseOnClose() const noexcept
 void Menu::setRestoreMouseOnClose(bool enabled) noexcept
 {
     m_restoreMouseOnClose = enabled;
+}
+
+bool Menu::useLowLevelHook() const noexcept
+{
+    return m_useLowLevelHook;
+}
+
+void Menu::setUseLowLevelHook(bool enabled) noexcept
+{
+    m_useLowLevelHook = enabled;
 }
 
 } // namespace Application

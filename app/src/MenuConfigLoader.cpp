@@ -342,7 +342,8 @@ namespace
                 menuObject.value("restoreMouseOnClose").toBool(false),
                 menuObject.value("name").toString("Unnamed Menu").toStdString(),
                 actionIds,
-                menuObject.value("id").toString().toStdString()));
+                menuObject.value("id").toString().toStdString(),
+                menuObject.value("useLowLevelHook").toBool(false)));
         }
 
         return !menus.empty();
@@ -614,6 +615,7 @@ bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appC
         menuObject.insert("restoreMouseOnClose", menu.restoreMouseOnClose());
         menuObject.insert("triggerMod", menu.triggerMod());
         menuObject.insert("triggerVk", menu.triggerVk());
+        menuObject.insert("useLowLevelHook", menu.useLowLevelHook());
 
         QJsonArray actionIdsArray;
         for (const std::string &actionId : menu.actionIds())

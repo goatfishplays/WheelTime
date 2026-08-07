@@ -128,6 +128,14 @@ public:
     void showSettingsWindow();
     /// @brief Restores the dormant overlay shell after settings closes.
     void restoreOverlayAfterSettings();
+    /**
+     * @brief Starts LL-hook chord capture for the settings trigger recorder.
+     *
+     * Reports (0, 0) when the user presses Escape. Always pair with endTriggerCapture.
+     */
+    void beginTriggerCapture(Platform::ChordCaptureHandler handler, void *userData);
+    /// @brief Stops trigger capture started by beginTriggerCapture.
+    void endTriggerCapture();
     /// @brief Persists the current runtime config to disk.
     bool saveConfig();
     /// @brief Replaces the live runtime config with an edited working copy.

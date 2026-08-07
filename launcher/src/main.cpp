@@ -9,6 +9,7 @@
 #include <QLocalServer>
 #include <QLocalSocket>
 #include <App/App.hpp>
+#include <App/Log.hpp>
 #include <QFile>
 #include <QDebug>
 
@@ -23,6 +24,12 @@ int main(int argc, char *argv[])
     // Launcher shell is a Qt::Tool overlay and is ignored for "last window" checks.
     // Closing Settings (a real Qt::Window) must not quit the hotkey-resident app.
     qtApp.setQuitOnLastWindowClosed(false);
+
+    // Tee cout/cerr + Qt messages into AppConfigLocation/wheeltime.log (and the
+    // optional tray "Open Log" window) so WIN32 builds still surface diagnostics.
+    Application::Log::instance().install();
+    QObject::connect(&qtApp, &QCoreApplication::aboutToQuit, []()
+                     { Application::Log::instance().uninstall(); });
 
     const QString singleInstanceServerName = "WheelTime.SingleInstance";
     QLocalSocket existingInstance;

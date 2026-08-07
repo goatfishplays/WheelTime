@@ -11,11 +11,23 @@
 namespace Platform
 {
 
+/// @brief Invoked when a registered hotkey chord fires (RegisterHotKey or LL hook).
+using HotkeyTriggeredHandler = void (*)(int hotkeyId, void *userData);
+
+/**
+ * @brief One-shot chord capture for settings recording.
+ *
+ * @p mod / @p vk are 0 when the user cancelled with Escape.
+ */
+using ChordCaptureHandler = void (*)(int mod, int vk, void *userData);
+
 // TODO: Define a shared legend for special keys, mouse buttons, MIDI, etc.
 struct InputBinding
 {
     int input;
     int mod;
+    /// @brief When true, capture via WH_KEYBOARD_LL instead of RegisterHotKey.
+    bool useLowLevelHook = false;
 };
 
 struct Vec2
@@ -31,6 +43,9 @@ public:
     InputReceiver();
     ~InputReceiver();
 
+    InputReceiver(const InputReceiver &) = delete;
+    InputReceiver &operator=(const InputReceiver &) = delete;
+
     /// @brief Get absolute mouse position in screen coordinates.
     ///
     /// Note: Position is x: left to right, y: top to bottom.
@@ -45,6 +60,25 @@ public:
 
     /// @brief Unregisters an input being tracked.
     void unregisterInputBinding(InputBinding);
+
+    /**
+     * @brief Handler for LL-hook (and optionally other) hotkey deliveries.
+     *
+     * Called from the keyboard hook thread context for LL matches — keep it
+     * short (e.g. queue work onto the UI loop). RegisterHotKey still arrives
+     * via WM_HOTKEY / isHotkeyMessage.
+     */
+    void setHotkeyTriggeredHandler(HotkeyTriggeredHandler handler, void *userData);
+
+    /**
+     * @brief Install (or reuse) the LL hook to capture the next physical chord.
+     *
+     * Used by the settings trigger recorder so shell-reserved chords like Win+R
+     * can be bound. Escape reports (0, 0). Call endChordCapture when finished.
+     */
+    void beginChordCapture(ChordCaptureHandler handler, void *userData);
+    /// @brief Stops one-shot capture and uninstalls the hook when unused.
+    void endChordCapture();
 
     /// @brief Check if a native message is a hotkey message.
     static bool isHotkeyMessage(void *message, int &hotkeyIdOut);

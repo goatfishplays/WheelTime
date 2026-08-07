@@ -11,6 +11,7 @@
 #include <QKeyEvent>
 #include <QLabel>
 #include <QMessageBox>
+#include <QMetaObject>
 #include <QPixmap>
 #include <QPushButton>
 #include <QRegularExpression>
@@ -218,12 +219,19 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     keystrokeLayout->setContentsMargins(0, 0, 0, 0);
 
     m_keystrokeRecordButton->installEventFilter(this);
+    m_useLowLevelHookCheck = new QCheckBox("Use low-level keyboard hook", menuSettingsGroup);
+    m_useLowLevelHookCheck->setToolTip(
+        QStringLiteral("Capture this trigger with a low-level keyboard hook instead of "
+                       "RegisterHotKey. Enable this to steal shell-reserved chords such as "
+                       "Win+R / Win+S. May conflict with other hook-based apps, and can fail "
+                       "while an elevated window is focused."));
     m_executeOnReleaseCheck = new QCheckBox("Execute on release", menuSettingsGroup);
     m_exitOnActionCheck = new QCheckBox("Exit on action", menuSettingsGroup);
     m_centerMouseOnOpenCheck = new QCheckBox("Center mouse on open", menuSettingsGroup);
     m_restoreMouseOnCloseCheck = new QCheckBox("Restore mouse on close", menuSettingsGroup);
     menuForm->addRow("Menu Name", m_menuNameEdit);
     menuForm->addRow("Trigger Keystroke", keystrokeLayout);
+    menuForm->addRow("", m_useLowLevelHookCheck);
     menuForm->addRow("", m_executeOnReleaseCheck);
     menuForm->addRow("", m_exitOnActionCheck);
     menuForm->addRow("", m_centerMouseOnOpenCheck);
@@ -588,11 +596,29 @@ SettingsWindow::SettingsWindow(QWidget *parent)
 
     connect(m_keystrokeRecordButton, &QPushButton::clicked, this, [this]()
             {
-                if (!m_isRecordingKeystroke) {
-                    m_isRecordingKeystroke = true;
-                    m_keystrokeRecordButton->setText("Press any key combination...");
-                    m_keystrokeRecordButton->grabKeyboard();
-                } });
+                if (m_isRecordingKeystroke)
+                {
+                    return;
+                }
+                m_isRecordingKeystroke = true;
+                m_keystrokeRecordButton->setText("Press any key combination...");
+                m_keystrokeRecordButton->grabKeyboard();
+                // LL capture so shell-reserved chords (Win+R, …) can be recorded;
+                // Qt KeyPress alone never sees those.
+                App::instance().beginTriggerCapture(
+                    [](int mod, int vk, void *userData)
+                    {
+                        auto *self = static_cast<SettingsWindow *>(userData);
+                        QMetaObject::invokeMethod(
+                            self,
+                            [self, mod, vk]()
+                            {
+                                self->finishTriggerRecording(mod, vk);
+                            },
+                            Qt::QueuedConnection);
+                    },
+                    this);
+            });
 
     connect(m_keystrokeClearButton, &QPushButton::clicked, this, [this]()
             {
@@ -673,6 +699,13 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 {
                     m_menus[index].setName(text.toStdString());
                     refreshMenuList();
+                } });
+    connect(m_useLowLevelHookCheck, &QCheckBox::toggled, this, [this](bool checked)
+            {
+                const int index = currentMenuIndex();
+                if (index >= 0)
+                {
+                    m_menus[index].setUseLowLevelHook(checked);
                 } });
     connect(m_executeOnReleaseCheck, &QCheckBox::toggled, this, [this](bool checked)
             {
@@ -1363,78 +1396,108 @@ void SettingsWindow::updateCancelChannelVisibility(CancelLevel level)
 
 bool SettingsWindow::eventFilter(QObject *obj, QEvent *event)
 {
+    // Trigger recording uses WH_KEYBOARD_LL (see beginTriggerCapture). Keep a
+    // Qt fallback for Escape / rare cases where the hook is unavailable.
     if (m_isRecordingKeystroke && event->type() == QEvent::KeyPress)
     {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         int key = keyEvent->key();
-        
-        // Ignore modifier-only presses until they press a main key
-        if (key == Qt::Key_Control || key == Qt::Key_Shift || key == Qt::Key_Alt || key == Qt::Key_Meta || 
-            key == Qt::Key_Super_L || key == Qt::Key_Super_R || 
+
+        if (key == Qt::Key_Control || key == Qt::Key_Shift || key == Qt::Key_Alt || key == Qt::Key_Meta ||
+            key == Qt::Key_Super_L || key == Qt::Key_Super_R ||
             key == Qt::Key_AltGr || key == Qt::Key_Menu)
         {
             return true;
         }
 
-        // Escape cancels recording without changing the existing bind.
         if (key == Qt::Key_Escape)
         {
-            m_isRecordingKeystroke = false;
-            m_keystrokeRecordButton->releaseKeyboard();
-            updateKeystrokeButtonText();
+            finishTriggerRecording(0, 0);
             return true;
         }
 
-        int idx = currentMenuIndex();
-        if (idx >= 0)
-        {
-            const int newVk = static_cast<int>(keyEvent->nativeVirtualKey());
-            int newMod = 0;
+        const int newVk = static_cast<int>(keyEvent->nativeVirtualKey());
+        int newMod = 0;
+        Qt::KeyboardModifiers modifiers = keyEvent->modifiers();
+        if (modifiers & Qt::ControlModifier)
+            newMod |= 0x0002;
+        if (modifiers & Qt::AltModifier)
+            newMod |= 0x0001;
+        if (modifiers & Qt::ShiftModifier)
+            newMod |= 0x0004;
+        if (modifiers & Qt::MetaModifier)
+            newMod |= 0x0008;
 
-            Qt::KeyboardModifiers modifiers = keyEvent->modifiers();
-            if (modifiers & Qt::ControlModifier) newMod |= 0x0002;
-            if (modifiers & Qt::AltModifier)     newMod |= 0x0001;
-            if (modifiers & Qt::ShiftModifier)   newMod |= 0x0004;
-            if (modifiers & Qt::MetaModifier)    newMod |= 0x0008;
-
-            QString conflictMenuName;
-            for (int i = 0; i < static_cast<int>(m_menus.size()); ++i)
-            {
-                if (i == idx)
-                {
-                    continue;
-                }
-                if (m_menus[i].triggerVk() == newVk && m_menus[i].triggerMod() == newMod && newVk != 0)
-                {
-                    conflictMenuName = QString::fromStdString(m_menus[i].name());
-                    break;
-                }
-            }
-
-            if (!conflictMenuName.isEmpty())
-            {
-                QMessageBox::warning(
-                    this,
-                    "Keystroke Already Used",
-                    QString("That keystroke is already assigned to \"%1\". "
-                            "Clear the other menu's keystroke first, or choose a different combination.")
-                        .arg(conflictMenuName));
-                m_isRecordingKeystroke = false;
-                m_keystrokeRecordButton->releaseKeyboard();
-                updateKeystrokeButtonText();
-                return true;
-            }
-
-            m_menus[idx].setTriggerVk(newVk);
-            m_menus[idx].setTriggerMod(newMod);
-        }
-
-        m_isRecordingKeystroke = false;
-        m_keystrokeRecordButton->releaseKeyboard();
-        updateKeystrokeButtonText();
+        finishTriggerRecording(newMod, newVk);
         return true;
     }
     return QWidget::eventFilter(obj, event);
+}
+
+void SettingsWindow::finishTriggerRecording(int newMod, int newVk)
+{
+    if (!m_isRecordingKeystroke)
+    {
+        return;
+    }
+
+    m_isRecordingKeystroke = false;
+    if (m_keystrokeRecordButton != nullptr)
+    {
+        m_keystrokeRecordButton->releaseKeyboard();
+    }
+    App::instance().endTriggerCapture();
+
+    if (newVk == 0 && newMod == 0)
+    {
+        updateKeystrokeButtonText();
+        return;
+    }
+
+    const int idx = currentMenuIndex();
+    if (idx < 0)
+    {
+        updateKeystrokeButtonText();
+        return;
+    }
+
+    QString conflictMenuName;
+    for (int i = 0; i < static_cast<int>(m_menus.size()); ++i)
+    {
+        if (i == idx)
+        {
+            continue;
+        }
+        if (m_menus[i].triggerVk() == newVk && m_menus[i].triggerMod() == newMod && newVk != 0)
+        {
+            conflictMenuName = QString::fromStdString(m_menus[i].name());
+            break;
+        }
+    }
+
+    if (!conflictMenuName.isEmpty())
+    {
+        QMessageBox::warning(
+            this,
+            "Keystroke Already Used",
+            QString("That keystroke is already assigned to \"%1\". "
+                    "Clear the other menu's keystroke first, or choose a different combination.")
+                .arg(conflictMenuName));
+        updateKeystrokeButtonText();
+        return;
+    }
+
+    m_menus[idx].setTriggerVk(newVk);
+    m_menus[idx].setTriggerMod(newMod);
+    // Win-reserved chords need the LL hook path; nudge the toggle on for Win+*.
+    if ((newMod & 0x0008) != 0 && m_useLowLevelHookCheck != nullptr)
+    {
+        const QSignalBlocker hookBlocker(m_useLowLevelHookCheck);
+        m_menus[idx].setUseLowLevelHook(true);
+        m_useLowLevelHookCheck->setChecked(true);
+    }
+
+    updateKeystrokeButtonText();
 }
 
 void SettingsWindow::closeEvent(QCloseEvent *event)
@@ -1446,6 +1509,7 @@ void SettingsWindow::closeEvent(QCloseEvent *event)
         {
             m_keystrokeRecordButton->releaseKeyboard();
         }
+        App::instance().endTriggerCapture();
         updateKeystrokeButtonText();
     }
 
@@ -1563,11 +1627,13 @@ void SettingsWindow::refreshMenuEditor()
     }
 
     const QSignalBlocker nameBlocker(m_menuNameEdit);
+    const QSignalBlocker hookBlocker(m_useLowLevelHookCheck);
     const QSignalBlocker releaseBlocker(m_executeOnReleaseCheck);
     const QSignalBlocker exitBlocker(m_exitOnActionCheck);
     const QSignalBlocker centerMouseBlocker(m_centerMouseOnOpenCheck);
     const QSignalBlocker restoreMouseBlocker(m_restoreMouseOnCloseCheck);
     m_menuNameEdit->setText(QString::fromStdString(m_menus[index].name()));
+    m_useLowLevelHookCheck->setChecked(m_menus[index].useLowLevelHook());
     m_executeOnReleaseCheck->setChecked(m_menus[index].executeOnRelease());
     m_exitOnActionCheck->setChecked(m_menus[index].exitOnAction());
     m_centerMouseOnOpenCheck->setChecked(m_menus[index].centerMouseOnOpen());
@@ -2559,7 +2625,8 @@ void SettingsWindow::deleteActionReferences(const std::string &actionId)
                          menu.restoreMouseOnClose(),
                          menu.name(),
                          keptIds,
-                         menu.id());
+                         menu.id(),
+                         menu.useLowLevelHook());
         menu = replacement;
     }
 }
