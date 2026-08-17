@@ -353,7 +353,7 @@ bool testConfigSaveLoadRoundTrip()
         actions.emplace_back(std::move(items), "RT Search", "", "act-rt", 0);
     }
     std::vector<std::unique_ptr<Menu>> menus;
-    menus.push_back(std::make_unique<Menu>(0, 0, false, false, true, false, "RT Menu",
+    menus.push_back(std::make_unique<Menu>(0, 0, false, false, true, false, false, "RT Menu",
                                            std::vector<std::string>{"act-rt"}, "menu-rt"));
 
     const QString path = dir.filePath("roundtrip.json");
@@ -515,7 +515,7 @@ void installSearchFixtures(App &app)
     if (app.findMenuById(kFixtureMenuId) == nullptr)
     {
         app.loadedMenus().push_back(std::make_unique<Menu>(
-            0, 0, false, false, true, false, "Zzqx Fixture Menu",
+            0, 0, false, false, true, false, false, "Zzqx Fixture Menu",
             std::vector<std::string>{kFixtureActionA}, kFixtureMenuId));
     }
 }

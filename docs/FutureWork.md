@@ -38,9 +38,9 @@ Some test actions, default actions, or example programs may still be hardcoded o
 
 Basic performance and responsiveness were tested, but deeper benchmark testing is limited. More testing would be needed with actual games, high-load applications, and longer runtime sessions.
 
-### Heavily Suggested to Set Exit on Action to True for Mouse Inputs
+### Heavily Suggested to set deferUntilExit to True for Mouse Inputs
 
-Currently, due to the way Windows handles mouse inputs, Wheel Time cannot pass simulated mouse clicks through to the underlying application while the menu is open. This may result in repeated action loops caused by actions triggering other actions. That behavior may be intentional for self-repeating macros, but users should enable exit-on-action before simulating a left click if they do not want the launcher to stay open.
+Currently, due to the way Windows handles mouse inputs, Wheel Time cannot pass simulated mouse clicks through to the underlying application while the menu is open. This may result in repeated action loops caused by actions triggering other actions or your inputs being eaten. That behavior may be intentional for self-repeating macros, but users should enable exit-on-action + deferUntilExit before simulating a left click if they do not want the launcher to stay open.
 
 ---
 

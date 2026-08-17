@@ -51,6 +51,8 @@ public:
     void modifiersUp(int mod);
     /// @brief Mouse button press/release. `button`: 0 left, 1 right, 2 middle.
     void mouseButton(int button, bool down);
+    /// @brief Mouse wheel. Positive `dy` = up, positive `dx` = right (Win32 wheel units; 120 ≈ one notch).
+    void mouseScroll(int dx, int dy);
     void executeScript(std::string filepath);
     /**
      * @brief Launches one of the built-in app presets using platform-specific resolution.

@@ -229,6 +229,11 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_exitOnActionCheck = new QCheckBox("Exit on action", menuSettingsGroup);
     m_centerMouseOnOpenCheck = new QCheckBox("Center mouse on open", menuSettingsGroup);
     m_restoreMouseOnCloseCheck = new QCheckBox("Restore mouse on close", menuSettingsGroup);
+    m_deferUntilExitCheck = new QCheckBox("Defer actions until exit", menuSettingsGroup);
+    m_deferUntilExitCheck->setToolTip(
+        QStringLiteral("Queue wheel picks while this menu is open, then run them in order "
+                       "after the menu closes (after mouse restore, if enabled). Pair with "
+                       "Exit on action for close-then-run on a single pick."));
     menuForm->addRow("Menu Name", m_menuNameEdit);
     menuForm->addRow("Trigger Keystroke", keystrokeLayout);
     menuForm->addRow("", m_useLowLevelHookCheck);
@@ -236,6 +241,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     menuForm->addRow("", m_exitOnActionCheck);
     menuForm->addRow("", m_centerMouseOnOpenCheck);
     menuForm->addRow("", m_restoreMouseOnCloseCheck);
+    menuForm->addRow("", m_deferUntilExitCheck);
     menuEditorSplit->addWidget(menuSettingsGroup);
 
     auto *slotsGroup = new QGroupBox("Wheel Slots", m_menuEditor);
@@ -329,6 +335,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     addItemType("Press Keystroke", "keystroke");
     addItemType("Mouse Button", "mouse_button");
     addItemType("Mouse Move", "mouse_move");
+    addItemType("Mouse Scroll", "mouse_scroll");
     addItemType("Delay", "delay");
     addItemType("Open Menu", "menu");
     addItemType("Search Palette", "search");
@@ -461,6 +468,46 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     mouseButtonForm->addRow("Hold Time", m_mouseButtonHoldSpin);
     mouseButtonForm->addRow("", m_mouseButtonProceedCheck);
 
+    m_itemMouseScrollPage = new QWidget(m_itemDetailStack);
+    auto *mouseScrollForm = new QFormLayout(m_itemMouseScrollPage);
+    auto *mouseScrollModifiers = new QWidget(m_itemMouseScrollPage);
+    auto *mouseScrollModifiersLayout = new QHBoxLayout(mouseScrollModifiers);
+    mouseScrollModifiersLayout->setContentsMargins(0, 0, 0, 0);
+    mouseScrollModifiersLayout->setSpacing(8);
+    m_mouseScrollCtrlCheck = new QCheckBox("Ctrl", mouseScrollModifiers);
+    m_mouseScrollAltCheck = new QCheckBox("Alt", mouseScrollModifiers);
+    m_mouseScrollShiftCheck = new QCheckBox("Shift", mouseScrollModifiers);
+    m_mouseScrollWinCheck = new QCheckBox("Win", mouseScrollModifiers);
+    mouseScrollModifiersLayout->addWidget(m_mouseScrollCtrlCheck);
+    mouseScrollModifiersLayout->addWidget(m_mouseScrollAltCheck);
+    mouseScrollModifiersLayout->addWidget(m_mouseScrollShiftCheck);
+    mouseScrollModifiersLayout->addWidget(m_mouseScrollWinCheck);
+    mouseScrollModifiersLayout->addStretch();
+    m_mouseScrollDxSpin = new QSpinBox(m_itemMouseScrollPage);
+    m_mouseScrollDySpin = new QSpinBox(m_itemMouseScrollPage);
+    m_mouseScrollDxSpin->setRange(-12000, 12000);
+    m_mouseScrollDySpin->setRange(-12000, 12000);
+    m_mouseScrollDxSpin->setSingleStep(120);
+    m_mouseScrollDySpin->setSingleStep(120);
+    m_mouseScrollIntervalSpin = new QDoubleSpinBox(m_itemMouseScrollPage);
+    m_mouseScrollIntervalSpin->setRange(0.001, 5.0);
+    m_mouseScrollIntervalSpin->setDecimals(3);
+    m_mouseScrollIntervalSpin->setSingleStep(0.001);
+    m_mouseScrollIntervalSpin->setSuffix(" s");
+    m_mouseScrollIntervalSpin->setValue(0.05);
+    m_mouseScrollHoldSpin = new QDoubleSpinBox(m_itemMouseScrollPage);
+    m_mouseScrollHoldSpin->setRange(0.0, 3600.0);
+    m_mouseScrollHoldSpin->setDecimals(2);
+    m_mouseScrollHoldSpin->setSingleStep(0.1);
+    m_mouseScrollHoldSpin->setSuffix(" s");
+    m_mouseScrollProceedCheck = new QCheckBox("Continue immediately", m_itemMouseScrollPage);
+    mouseScrollForm->addRow("Modifiers", mouseScrollModifiers);
+    mouseScrollForm->addRow("Horizontal", m_mouseScrollDxSpin);
+    mouseScrollForm->addRow("Vertical", m_mouseScrollDySpin);
+    mouseScrollForm->addRow("Tick Interval", m_mouseScrollIntervalSpin);
+    mouseScrollForm->addRow("Hold Time", m_mouseScrollHoldSpin);
+    mouseScrollForm->addRow("", m_mouseScrollProceedCheck);
+
     m_itemCancelPage = new QWidget(m_itemDetailStack);
     auto *cancelForm = new QFormLayout(m_itemCancelPage);
     m_cancelLevelCombo = new QComboBox(m_itemCancelPage);
@@ -548,6 +595,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_itemDetailStack->addWidget(m_itemKeystrokePage);
     m_itemDetailStack->addWidget(m_itemMouseMovePage);
     m_itemDetailStack->addWidget(m_itemMouseButtonPage);
+    m_itemDetailStack->addWidget(m_itemMouseScrollPage);
     m_itemDetailStack->addWidget(m_itemCancelPage);
     m_itemDetailStack->addWidget(m_itemNthPage);
     m_itemDetailStack->addWidget(m_itemSocketPage);
@@ -656,7 +704,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
 
     connect(addMenuButton, &QPushButton::clicked, this, [this]()
             {
-                Menu menu(0, 0, false, false, true, false, "New Menu", {}, makeUniqueMenuId("New Menu"));
+                Menu menu(0, 0, false, false, true, false, false, "New Menu", {}, makeUniqueMenuId("New Menu"));
                 m_menus.push_back(menu);
                 refreshLists();
                 setSelectedMenu(static_cast<int>(m_menus.size()) - 1); });
@@ -734,6 +782,13 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 if (index >= 0)
                 {
                     m_menus[index].setRestoreMouseOnClose(checked);
+                } });
+    connect(m_deferUntilExitCheck, &QCheckBox::toggled, this, [this](bool checked)
+            {
+                const int index = currentMenuIndex();
+                if (index >= 0)
+                {
+                    m_menus[index].setDeferUntilExit(checked);
                 } });
     connect(addSlotButton, &QPushButton::clicked, this, [this]()
             {
@@ -889,6 +944,10 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 else if (typeId == "mouse_move")
                 {
                     item = std::make_unique<AI_MouseMove>(0, 0);
+                }
+                else if (typeId == "mouse_scroll")
+                {
+                    item = std::make_unique<AI_MouseScroll>(0, 120, 0.0f, false, 0, 0.05f);
                 }
                 else if (typeId == "delay")
                 {
@@ -1160,6 +1219,50 @@ SettingsWindow::SettingsWindow(QWidget *parent)
             { mouseButtonEditorChanged(); });
     connect(m_mouseButtonProceedCheck, &QCheckBox::toggled, this, [mouseButtonEditorChanged](bool)
             { mouseButtonEditorChanged(); });
+    auto mouseScrollEditorChanged = [this]()
+    {
+        if (m_isRefreshing)
+        {
+            return;
+        }
+        const int actionIndex = currentActionIndex();
+        const int itemIndex = currentActionItemIndex();
+        auto *item = actionIndex >= 0 ? dynamic_cast<AI_MouseScroll *>(m_actions[actionIndex].item(itemIndex)) : nullptr;
+        if (item == nullptr)
+        {
+            return;
+        }
+        item->dx = m_mouseScrollDxSpin->value();
+        item->dy = m_mouseScrollDySpin->value();
+        item->modifiers = modifierMask(
+            m_mouseScrollCtrlCheck->isChecked(),
+            m_mouseScrollAltCheck->isChecked(),
+            m_mouseScrollShiftCheck->isChecked(),
+            m_mouseScrollWinCheck->isChecked());
+        item->intervalSec = static_cast<float>(m_mouseScrollIntervalSpin->value());
+        item->holdDurationSec = static_cast<float>(m_mouseScrollHoldSpin->value());
+        item->proceed = m_mouseScrollProceedCheck->isChecked();
+        refreshActionItemList();
+        refreshActionSummary();
+    };
+    connect(m_mouseScrollDxSpin, qOverload<int>(&QSpinBox::valueChanged), this, [mouseScrollEditorChanged](int)
+            { mouseScrollEditorChanged(); });
+    connect(m_mouseScrollDySpin, qOverload<int>(&QSpinBox::valueChanged), this, [mouseScrollEditorChanged](int)
+            { mouseScrollEditorChanged(); });
+    connect(m_mouseScrollCtrlCheck, &QCheckBox::toggled, this, [mouseScrollEditorChanged](bool)
+            { mouseScrollEditorChanged(); });
+    connect(m_mouseScrollAltCheck, &QCheckBox::toggled, this, [mouseScrollEditorChanged](bool)
+            { mouseScrollEditorChanged(); });
+    connect(m_mouseScrollShiftCheck, &QCheckBox::toggled, this, [mouseScrollEditorChanged](bool)
+            { mouseScrollEditorChanged(); });
+    connect(m_mouseScrollWinCheck, &QCheckBox::toggled, this, [mouseScrollEditorChanged](bool)
+            { mouseScrollEditorChanged(); });
+    connect(m_mouseScrollIntervalSpin, qOverload<double>(&QDoubleSpinBox::valueChanged), this, [mouseScrollEditorChanged](double)
+            { mouseScrollEditorChanged(); });
+    connect(m_mouseScrollHoldSpin, qOverload<double>(&QDoubleSpinBox::valueChanged), this, [mouseScrollEditorChanged](double)
+            { mouseScrollEditorChanged(); });
+    connect(m_mouseScrollProceedCheck, &QCheckBox::toggled, this, [mouseScrollEditorChanged](bool)
+            { mouseScrollEditorChanged(); });
     auto cancelEditorChanged = [this]()
     {
         if (m_isRefreshing)
@@ -1632,12 +1735,14 @@ void SettingsWindow::refreshMenuEditor()
     const QSignalBlocker exitBlocker(m_exitOnActionCheck);
     const QSignalBlocker centerMouseBlocker(m_centerMouseOnOpenCheck);
     const QSignalBlocker restoreMouseBlocker(m_restoreMouseOnCloseCheck);
+    const QSignalBlocker deferBlocker(m_deferUntilExitCheck);
     m_menuNameEdit->setText(QString::fromStdString(m_menus[index].name()));
     m_useLowLevelHookCheck->setChecked(m_menus[index].useLowLevelHook());
     m_executeOnReleaseCheck->setChecked(m_menus[index].executeOnRelease());
     m_exitOnActionCheck->setChecked(m_menus[index].exitOnAction());
     m_centerMouseOnOpenCheck->setChecked(m_menus[index].centerMouseOnOpen());
     m_restoreMouseOnCloseCheck->setChecked(m_menus[index].restoreMouseOnClose());
+    m_deferUntilExitCheck->setChecked(m_menus[index].deferUntilExit());
 
     updateKeystrokeButtonText();
     refreshSlotList();
@@ -1946,6 +2051,30 @@ void SettingsWindow::refreshItemDetail()
         return;
     }
 
+    if (auto *mouseScroll = dynamic_cast<AI_MouseScroll *>(item))
+    {
+        const QSignalBlocker dxBlocker(m_mouseScrollDxSpin);
+        const QSignalBlocker dyBlocker(m_mouseScrollDySpin);
+        const QSignalBlocker ctrlBlocker(m_mouseScrollCtrlCheck);
+        const QSignalBlocker altBlocker(m_mouseScrollAltCheck);
+        const QSignalBlocker shiftBlocker(m_mouseScrollShiftCheck);
+        const QSignalBlocker winBlocker(m_mouseScrollWinCheck);
+        const QSignalBlocker intervalBlocker(m_mouseScrollIntervalSpin);
+        const QSignalBlocker holdBlocker(m_mouseScrollHoldSpin);
+        const QSignalBlocker proceedBlocker(m_mouseScrollProceedCheck);
+        m_mouseScrollDxSpin->setValue(mouseScroll->dx);
+        m_mouseScrollDySpin->setValue(mouseScroll->dy);
+        m_mouseScrollCtrlCheck->setChecked((mouseScroll->modifiers & 0x0002) != 0);
+        m_mouseScrollAltCheck->setChecked((mouseScroll->modifiers & 0x0001) != 0);
+        m_mouseScrollShiftCheck->setChecked((mouseScroll->modifiers & 0x0004) != 0);
+        m_mouseScrollWinCheck->setChecked((mouseScroll->modifiers & 0x0008) != 0);
+        m_mouseScrollIntervalSpin->setValue(mouseScroll->intervalSec);
+        m_mouseScrollHoldSpin->setValue(mouseScroll->holdDurationSec);
+        m_mouseScrollProceedCheck->setChecked(mouseScroll->proceed);
+        m_itemDetailStack->setCurrentWidget(m_itemMouseScrollPage);
+        return;
+    }
+
     if (auto *cancel = dynamic_cast<AI_Cancel *>(item))
     {
         const QSignalBlocker levelBlocker(m_cancelLevelCombo);
@@ -2063,6 +2192,29 @@ void SettingsWindow::refreshItemDetail()
         return;
     }
 
+    if (auto *mouseScrollRelease = dynamic_cast<AI_MouseScrollRelease *>(item))
+    {
+        m_keyReleaseHelpLabel->setText(
+            QString("Internal mouse scroll release (mods %1).\n"
+                    "Created automatically by Mouse Scroll holds for cancel-flush / "
+                    "delayed release. Not added from the item picker.")
+                .arg(mouseScrollRelease->modifiers));
+        m_itemDetailStack->setCurrentWidget(m_itemKeyReleasePage);
+        return;
+    }
+
+    if (auto *mouseScrollTick = dynamic_cast<AI_MouseScrollTick *>(item))
+    {
+        m_keyReleaseHelpLabel->setText(
+            QString("Internal mouse scroll tick (dx %1, dy %2).\n"
+                    "Created automatically by Mouse Scroll holds. "
+                    "Not added from the item picker.")
+                .arg(mouseScrollTick->dx)
+                .arg(mouseScrollTick->dy));
+        m_itemDetailStack->setCurrentWidget(m_itemKeyReleasePage);
+        return;
+    }
+
     m_itemDetailStack->setCurrentWidget(m_itemNonePage);
 }
 
@@ -2175,6 +2327,41 @@ QString SettingsWindow::describeActionItem(const ActionItem *item) const
             name = "Middle";
         }
         return QString("Mouse Button Release: %1").arg(name);
+    }
+    case ActionItemKind::MouseScroll:
+    {
+        const auto *scroll = static_cast<const AI_MouseScroll *>(item);
+        QStringList keys;
+        if ((scroll->modifiers & 0x0002) != 0)
+            keys << "Ctrl";
+        if ((scroll->modifiers & 0x0001) != 0)
+            keys << "Alt";
+        if ((scroll->modifiers & 0x0004) != 0)
+            keys << "Shift";
+        if ((scroll->modifiers & 0x0008) != 0)
+            keys << "Win";
+        QString label = QString("Mouse Scroll: dx=%1 dy=%2").arg(scroll->dx).arg(scroll->dy);
+        if (!keys.isEmpty())
+        {
+            label += QString(" (%1)").arg(keys.join("+"));
+        }
+        if (scroll->holdDurationSec > 0.0f)
+        {
+            label += QString(" hold %1s @ %2s")
+                         .arg(scroll->holdDurationSec, 0, 'f', 2)
+                         .arg(scroll->intervalSec, 0, 'f', 3);
+        }
+        return label;
+    }
+    case ActionItemKind::MouseScrollRelease:
+    {
+        const auto *release = static_cast<const AI_MouseScrollRelease *>(item);
+        return QString("Mouse Scroll Release (mods %1)").arg(release->modifiers);
+    }
+    case ActionItemKind::MouseScrollTick:
+    {
+        const auto *tick = static_cast<const AI_MouseScrollTick *>(item);
+        return QString("Mouse Scroll Tick: dx=%1 dy=%2").arg(tick->dx).arg(tick->dy);
     }
     case ActionItemKind::Cancel:
     {
@@ -2623,6 +2810,7 @@ void SettingsWindow::deleteActionReferences(const std::string &actionId)
                          menu.exitOnAction(),
                          menu.centerMouseOnOpen(),
                          menu.restoreMouseOnClose(),
+                         menu.deferUntilExit(),
                          menu.name(),
                          keptIds,
                          menu.id(),
@@ -2804,6 +2992,20 @@ bool SettingsWindow::validateWorkingCopy(QString &errorMessage) const
                 if (release->button < 0 || release->button > 2)
                 {
                     errorMessage = QString("Mouse Button Release item in '%1' has an invalid button.").arg(QString::fromStdString(action.name()));
+                    return false;
+                }
+            }
+            else if (itemPtr->kind() == ActionItemKind::MouseScroll)
+            {
+                const auto *scroll = static_cast<const AI_MouseScroll *>(itemPtr.get());
+                if (scroll->holdDurationSec < 0.0f)
+                {
+                    errorMessage = QString("Mouse Scroll item in '%1' has an invalid hold time.").arg(QString::fromStdString(action.name()));
+                    return false;
+                }
+                if (scroll->intervalSec < 0.001f)
+                {
+                    errorMessage = QString("Mouse Scroll item in '%1' has an invalid tick interval.").arg(QString::fromStdString(action.name()));
                     return false;
                 }
             }

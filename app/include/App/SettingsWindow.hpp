@@ -130,6 +130,7 @@ private:
     QCheckBox *m_exitOnActionCheck{nullptr};
     QCheckBox *m_centerMouseOnOpenCheck{nullptr};
     QCheckBox *m_restoreMouseOnCloseCheck{nullptr};
+    QCheckBox *m_deferUntilExitCheck{nullptr};
     QListWidget *m_slotList{nullptr};
     QComboBox *m_slotActionCombo{nullptr};
 
@@ -152,6 +153,7 @@ private:
     QWidget *m_itemKeystrokePage{nullptr};
     QWidget *m_itemMouseMovePage{nullptr};
     QWidget *m_itemMouseButtonPage{nullptr};
+    QWidget *m_itemMouseScrollPage{nullptr};
     QWidget *m_itemCancelPage{nullptr};
     QWidget *m_itemNthPage{nullptr};
     QWidget *m_itemSocketPage{nullptr};
@@ -181,6 +183,15 @@ private:
     QCheckBox *m_mouseButtonWinCheck{nullptr};
     QDoubleSpinBox *m_mouseButtonHoldSpin{nullptr};
     QCheckBox *m_mouseButtonProceedCheck{nullptr};
+    QSpinBox *m_mouseScrollDxSpin{nullptr};
+    QSpinBox *m_mouseScrollDySpin{nullptr};
+    QCheckBox *m_mouseScrollCtrlCheck{nullptr};
+    QCheckBox *m_mouseScrollAltCheck{nullptr};
+    QCheckBox *m_mouseScrollShiftCheck{nullptr};
+    QCheckBox *m_mouseScrollWinCheck{nullptr};
+    QDoubleSpinBox *m_mouseScrollIntervalSpin{nullptr};
+    QDoubleSpinBox *m_mouseScrollHoldSpin{nullptr};
+    QCheckBox *m_mouseScrollProceedCheck{nullptr};
     QComboBox *m_cancelLevelCombo{nullptr};
     QSpinBox *m_cancelChannelSpin{nullptr};
     QLabel *m_cancelHelpLabel{nullptr};

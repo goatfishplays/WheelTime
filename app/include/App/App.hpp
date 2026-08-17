@@ -159,9 +159,13 @@ private:
     Platform::Vec2 m_priorMousePos;
     Platform::Window m_priorWindow;
     bool m_overlayInitialized{false};
+    /// @brief Action IDs queued while deferUntilExit is on; flushed in hideGui.
+    std::vector<std::string> m_deferredActionIds;
 
     void gatherPriors();
     void restorePriors();
+    /// @brief Submit actions queued by deferUntilExit after the menu has closed.
+    void flushDeferredActions();
     void initializeOverlay();
     void configureOverlayForCursor();
     /// @brief Unregisters live menu hotkeys so settings can capture those keys.

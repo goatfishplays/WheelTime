@@ -112,7 +112,7 @@ bool installSmokeFixtures(App &app)
     if (app.loadedMenus().empty())
     {
         app.loadedMenus().push_back(
-            std::make_unique<Menu>(0, 0, false, false, true, false, "Smoke Menu",
+            std::make_unique<Menu>(0, 0, false, false, true, false, false, "Smoke Menu",
                                    std::vector<std::string>{}, "menu-smoke"));
     }
 

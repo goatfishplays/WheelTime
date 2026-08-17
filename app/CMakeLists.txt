@@ -23,6 +23,7 @@ add_library(App
     src/ActionItems/NthFrequent.cpp
     src/ActionItems/MouseMove.cpp
     src/ActionItems/MouseButton.cpp
+    src/ActionItems/MouseScroll.cpp
     src/ActionItems/Cancel.cpp
     src/ActionItems/Search.cpp
     src/ActionHistory.cpp
@@ -42,6 +43,7 @@ add_library(App
     include/App/ActionItems/NthFrequent.hpp
     include/App/ActionItems/MouseMove.hpp
     include/App/ActionItems/MouseButton.hpp
+    include/App/ActionItems/MouseScroll.hpp
     include/App/ActionItems/Cancel.hpp
     include/App/ActionItems/Search.hpp
     include/App/ActionHistory.hpp

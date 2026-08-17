@@ -33,6 +33,9 @@ enum class ActionItemKind
     MouseMove,
     MouseButton,
     MouseButtonRelease,
+    MouseScroll,
+    MouseScrollRelease,
+    MouseScrollTick,
     Cancel,
     Search
 };

@@ -18,6 +18,7 @@ Menu::Menu(int triggerMod,
            bool exitOnAction,
            bool centerMouseOnOpen,
            bool restoreMouseOnClose,
+           bool deferUntilExit,
            std::string name,
            std::vector<std::string> actionIds,
            std::string id,
@@ -28,6 +29,7 @@ Menu::Menu(int triggerMod,
     , m_exitOnAction(exitOnAction)
     , m_centerMouseOnOpen(centerMouseOnOpen)
     , m_restoreMouseOnClose(restoreMouseOnClose)
+    , m_deferUntilExit(deferUntilExit)
     , m_useLowLevelHook(useLowLevelHook)
     , m_name(std::move(name))
     , m_id(std::move(id))
@@ -175,6 +177,16 @@ bool Menu::restoreMouseOnClose() const noexcept
 void Menu::setRestoreMouseOnClose(bool enabled) noexcept
 {
     m_restoreMouseOnClose = enabled;
+}
+
+bool Menu::deferUntilExit() const noexcept
+{
+    return m_deferUntilExit;
+}
+
+void Menu::setDeferUntilExit(bool enabled) noexcept
+{
+    m_deferUntilExit = enabled;
 }
 
 bool Menu::useLowLevelHook() const noexcept

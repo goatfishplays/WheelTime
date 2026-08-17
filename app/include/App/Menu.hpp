@@ -28,6 +28,7 @@ public:
          bool exitOnAction = false,
          bool centerMouseOnOpen = true,
          bool restoreMouseOnClose = false,
+         bool deferUntilExit = false,
          std::string name = "Unnamed Menu",
          std::vector<std::string> actionIds = {},
          std::string id = "",
@@ -77,6 +78,15 @@ public:
     void setRestoreMouseOnClose(bool enabled) noexcept;
 
     /**
+     * @brief Queue wheel picks until this menu closes, then run them in order.
+     *
+     * Flush order is hide → restore mouse (if enabled) → submit queued actions.
+     * Does not auto-close; pair with Exit on Action for one-shot close-then-run.
+     */
+    [[nodiscard]] bool deferUntilExit() const noexcept;
+    void setDeferUntilExit(bool enabled) noexcept;
+
+    /**
      * @brief Capture this menu's trigger via WH_KEYBOARD_LL instead of RegisterHotKey.
      *
      * Needed for shell-reserved chords (Win+R, Win+S, …). Off by default.
@@ -91,6 +101,7 @@ private:
     bool m_exitOnAction = false;
     bool m_centerMouseOnOpen = true;
     bool m_restoreMouseOnClose = false;
+    bool m_deferUntilExit = false;
     bool m_useLowLevelHook = false;
     std::string m_name;
     std::string m_id;

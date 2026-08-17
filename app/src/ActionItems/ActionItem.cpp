@@ -42,6 +42,12 @@ const char *actionItemKindName(ActionItemKind kind) noexcept
         return "mouse_button";
     case ActionItemKind::MouseButtonRelease:
         return "mouse_button_release";
+    case ActionItemKind::MouseScroll:
+        return "mouse_scroll";
+    case ActionItemKind::MouseScrollRelease:
+        return "mouse_scroll_release";
+    case ActionItemKind::MouseScrollTick:
+        return "mouse_scroll_tick";
     case ActionItemKind::Cancel:
         return "cancel";
     case ActionItemKind::Search:

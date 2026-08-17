@@ -204,6 +204,21 @@ namespace
                     itemObject.value("button").toInt(0),
                     itemObject.value("modifiers").toInt(0)));
             }
+            else if (type == "mouse_scroll")
+            {
+                items.push_back(std::make_unique<AI_MouseScroll>(
+                    itemObject.value("dx").toInt(0),
+                    itemObject.value("dy").toInt(120),
+                    static_cast<float>(itemObject.value("holdDuration").toDouble(0.0)),
+                    itemObject.value("proceed").toBool(false),
+                    itemObject.value("modifiers").toInt(0),
+                    static_cast<float>(itemObject.value("interval").toDouble(0.05))));
+            }
+            else if (type == "mouse_scroll_release")
+            {
+                items.push_back(std::make_unique<AI_MouseScrollRelease>(
+                    itemObject.value("modifiers").toInt(0)));
+            }
             else if (type == "key_release")
             {
                 items.push_back(std::make_unique<AI_KeyRelease>(
@@ -340,6 +355,7 @@ namespace
                 menuObject.value("exitOnAction").toBool(false),
                 menuObject.value("centerMouseOnOpen").toBool(true),
                 menuObject.value("restoreMouseOnClose").toBool(false),
+                menuObject.value("deferUntilExit").toBool(false),
                 menuObject.value("name").toString("Unnamed Menu").toStdString(),
                 actionIds,
                 menuObject.value("id").toString().toStdString(),
@@ -399,6 +415,7 @@ namespace
                 menuObject.value("exitOnAction").toBool(false),
                 menuObject.value("centerMouseOnOpen").toBool(true),
                 menuObject.value("restoreMouseOnClose").toBool(false),
+                menuObject.value("deferUntilExit").toBool(false),
                 menuObject.value("name").toString("Unnamed Menu").toStdString(),
                 menuActionIds,
                 menuId));
@@ -455,6 +472,29 @@ namespace
             itemObject.insert("type", "mouse_button_release");
             itemObject.insert("button", static_cast<const AI_MouseButtonRelease &>(item).button);
             itemObject.insert("modifiers", static_cast<const AI_MouseButtonRelease &>(item).modifiers);
+            break;
+        case ActionItemKind::MouseScroll:
+            itemObject.insert("type", "mouse_scroll");
+            itemObject.insert("dx", static_cast<const AI_MouseScroll &>(item).dx);
+            itemObject.insert("dy", static_cast<const AI_MouseScroll &>(item).dy);
+            itemObject.insert("modifiers", static_cast<const AI_MouseScroll &>(item).modifiers);
+            itemObject.insert("holdDuration", static_cast<const AI_MouseScroll &>(item).holdDurationSec);
+            itemObject.insert("proceed", static_cast<const AI_MouseScroll &>(item).proceed);
+            itemObject.insert("interval", static_cast<const AI_MouseScroll &>(item).intervalSec);
+            break;
+        case ActionItemKind::MouseScrollRelease:
+            itemObject.insert("type", "mouse_scroll_release");
+            itemObject.insert("modifiers", static_cast<const AI_MouseScrollRelease &>(item).modifiers);
+            break;
+        case ActionItemKind::MouseScrollTick:
+            // Runtime-only hold ticks; persist as a no-op scroll release is wrong — store dx/dy.
+            itemObject.insert("type", "mouse_scroll");
+            itemObject.insert("dx", static_cast<const AI_MouseScrollTick &>(item).dx);
+            itemObject.insert("dy", static_cast<const AI_MouseScrollTick &>(item).dy);
+            itemObject.insert("modifiers", 0);
+            itemObject.insert("holdDuration", 0.0);
+            itemObject.insert("proceed", false);
+            itemObject.insert("interval", 0.05);
             break;
         case ActionItemKind::KeyRelease:
             itemObject.insert("type", "key_release");
@@ -613,6 +653,7 @@ bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appC
         menuObject.insert("exitOnAction", menu.exitOnAction());
         menuObject.insert("centerMouseOnOpen", menu.centerMouseOnOpen());
         menuObject.insert("restoreMouseOnClose", menu.restoreMouseOnClose());
+        menuObject.insert("deferUntilExit", menu.deferUntilExit());
         menuObject.insert("triggerMod", menu.triggerMod());
         menuObject.insert("triggerVk", menu.triggerVk());
         menuObject.insert("useLowLevelHook", menu.useLowLevelHook());

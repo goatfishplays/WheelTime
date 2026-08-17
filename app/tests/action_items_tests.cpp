@@ -147,6 +147,81 @@ bool testMouseMoveAndButton()
     return true;
 }
 
+bool testMouseScroll()
+{
+    AI_MouseScroll scroll{0, 120, 0.5f, true, 0x0002, 0.05f};
+    AI_MouseScrollRelease release{0x0002};
+    AI_MouseScrollTick tick{0, 120};
+
+    if (scroll.kind() != ActionItemKind::MouseScroll
+        || scroll.clone()->kind() != ActionItemKind::MouseScroll)
+    {
+        std::cerr << "mouse_scroll: wrong kind/clone\n";
+        return false;
+    }
+    if (scroll.dx != 0 || scroll.dy != 120 || scroll.holdDurationSec != 0.5f || !scroll.proceed
+        || scroll.modifiers != 0x0002 || scroll.intervalSec != 0.05f)
+    {
+        std::cerr << "mouse_scroll: fields not stored\n";
+        return false;
+    }
+    if (release.kind() != ActionItemKind::MouseScrollRelease
+        || release.clone()->kind() != ActionItemKind::MouseScrollRelease
+        || release.modifiers != 0x0002)
+    {
+        std::cerr << "mouse_scroll_release: wrong kind/clone/fields\n";
+        return false;
+    }
+    if (tick.kind() != ActionItemKind::MouseScrollTick || tick.clone()->kind() != ActionItemKind::MouseScrollTick
+        || tick.dx != 0 || tick.dy != 120)
+    {
+        std::cerr << "mouse_scroll_tick: wrong kind/clone/fields\n";
+        return false;
+    }
+
+    // Hold with proceed=true should register cancel-flush + scheduled tick chain.
+    // Skip calling execute on tap — that hits SendInput like other mouse smokes.
+    std::vector<std::unique_ptr<ActionItem>> items;
+    items.push_back(std::make_unique<AI_MouseScroll>(0, 120, 0.05f, true, 0, 0.05f));
+    auto action = std::make_unique<Action>(std::move(items), "scroll-hold", "", "scroll-hold", 1);
+    ActionExecutionContext ctx{std::move(action)};
+    ActionItem *item = ctx.currentItem();
+    if (item == nullptr)
+    {
+        std::cerr << "mouse_scroll_hold: no item\n";
+        return false;
+    }
+    const ExecuteResult result = item->execute(ctx);
+    if (result.type() != ExecuteResult::Type::Continue)
+    {
+        std::cerr << "mouse_scroll_hold: expected Continue when proceed=true\n";
+        return false;
+    }
+    if (!ctx.hasPendingSchedulerRequests())
+    {
+        std::cerr << "mouse_scroll_hold: expected cancel-flush / scheduleAction requests\n";
+        return false;
+    }
+    auto flushes = ctx.takeCancelFlushes();
+    auto scheduled = ctx.takeScheduledActions();
+    if (flushes.empty() || scheduled.empty())
+    {
+        std::cerr << "mouse_scroll_hold: missing flush or scheduled ticks\n";
+        return false;
+    }
+    if (flushes.front()->isCancelable() || scheduled.front().action->isCancelable())
+    {
+        std::cerr << "mouse_scroll_hold: cleanup Actions should be uncancelable\n";
+        return false;
+    }
+    if (!scheduled.front().removeIfParentCancelled)
+    {
+        std::cerr << "mouse_scroll_hold: expected removeIfParentCancelled\n";
+        return false;
+    }
+    return true;
+}
+
 bool testMouseButtonHoldRegistersCleanup()
 {
     std::vector<std::unique_ptr<ActionItem>> items;
@@ -804,6 +879,7 @@ int main(int argc, char *argv[])
         {"keystroke_hold_cleanup", testKeystrokeHoldRegistersCleanup},
         {"keystroke_hold_blocks", testKeystrokeHoldBlocksWhenNotProceed},
         {"mouse_move_button", testMouseMoveAndButton},
+        {"mouse_scroll", testMouseScroll},
         {"mouse_button_hold_cleanup", testMouseButtonHoldRegistersCleanup},
         {"key_release", testKeyRelease},
         {"cancel_items", testCancelItemsRecordRequests},

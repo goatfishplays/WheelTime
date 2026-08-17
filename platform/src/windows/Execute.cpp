@@ -797,6 +797,32 @@ public:
         sendInputs(inputs);
     }
 
+    void mouseScroll(int dx, int dy)
+    {
+        std::vector<INPUT> inputs;
+        inputs.reserve(2);
+        if (dy != 0)
+        {
+            INPUT input{};
+            input.type = INPUT_MOUSE;
+            input.mi.dwFlags = MOUSEEVENTF_WHEEL;
+            input.mi.mouseData = static_cast<DWORD>(dy);
+            inputs.push_back(input);
+        }
+        if (dx != 0)
+        {
+            INPUT input{};
+            input.type = INPUT_MOUSE;
+            input.mi.dwFlags = MOUSEEVENTF_HWHEEL;
+            input.mi.mouseData = static_cast<DWORD>(dx);
+            inputs.push_back(input);
+        }
+        if (!inputs.empty())
+        {
+            sendInputs(inputs);
+        }
+    }
+
     bool sendSocket(const SocketSendRequest &request)
     {
         switch (request.protocol)
@@ -870,6 +896,11 @@ void Executor::modifiersUp(int mod)
 void Executor::mouseButton(int button, bool down)
 {
     m_impl->mouseButton(button, down);
+}
+
+void Executor::mouseScroll(int dx, int dy)
+{
+    m_impl->mouseScroll(dx, dy);
 }
 
 bool Executor::sendSocket(const SocketSendRequest &request)

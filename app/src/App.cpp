@@ -147,7 +147,7 @@ App::App()
         items.push_back(std::make_unique<AI_Close>());
         m_actionLibrary.push_back(Action(std::move(items), "Config missing", "", "action-config-missing"));
         m_loadedMenus.push_back(std::make_unique<Menu>(
-            0, 0, false, false, true, false, "Config Error",
+            0, 0, false, false, true, false, false, "Config Error",
             std::vector<std::string>{"action-config-missing"}, "menu-config-error"));
     }
 
@@ -662,6 +662,8 @@ void App::showGui(Menu *menu)
     initializeOverlay();
     gatherPriors();
     m_activeMenu = menu;
+    // Stale picks should not survive a fresh open if hide somehow skipped flush.
+    m_deferredActionIds.clear();
     // Size the overlay to the current monitor first so radius/layout use final dims.
     configureOverlayForCursor();
 
@@ -723,6 +725,22 @@ void App::hideGui()
     overlayWindow.setClickThrough(true);
     overlayWindow.showNoActivate();
     restorePriors();
+    flushDeferredActions();
+}
+
+void App::flushDeferredActions()
+{
+    if (m_deferredActionIds.empty())
+    {
+        return;
+    }
+
+    std::vector<std::string> ids;
+    ids.swap(m_deferredActionIds);
+    for (const std::string &actionId : ids)
+    {
+        executeActionById(actionId);
+    }
 }
 
 void App::showSearchOverlay(const SearchConfig &config)
@@ -834,7 +852,14 @@ void App::executeAction(int actionIndex)
         m_executor.modifiersUp(m_activeMenu->triggerMod());
     }
 
-    executeActionById(action->id());
+    if (m_activeMenu->deferUntilExit() && m_gui.isLauncherVisible())
+    {
+        m_deferredActionIds.push_back(action->id());
+    }
+    else
+    {
+        executeActionById(action->id());
+    }
 
     if (m_activeMenu->exitOnAction() && m_gui.isLauncherVisible())
     {
@@ -1070,6 +1095,16 @@ void App::showSettingsWindow()
     if (m_gui.isSearchVisible())
     {
         hideSearchOverlay(/*restoreFocus=*/false);
+    }
+
+    // Treat opening settings as leaving the wheel session: restore cursor and
+    // flush any defer-until-exit picks so they are not stranded.
+    if (m_gui.isLauncherVisible())
+    {
+        disarmExecuteOnRelease();
+        disarmEscapeDismiss();
+        restorePriors();
+        flushDeferredActions();
     }
 
     if (m_settingsWindow == nullptr)
