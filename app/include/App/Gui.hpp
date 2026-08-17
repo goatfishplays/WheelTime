@@ -25,6 +25,7 @@
 #include "App/Action.hpp"
 #include "App/RadialMenuWidget.hpp"
 #include "App/SearchConfig.hpp"
+#include "App/Theme.hpp"
 
 namespace Application
 {
@@ -48,6 +49,8 @@ public:
     void onSelectChange(int selectionIndex);
     /// @brief Displays a menu plus the resolved labels/icons for its action slots.
     void setMenu(const Menu &menu, const std::vector<ActionSlotVisual> &slotVisuals);
+    /// @brief Apply resolved ring radius, start angle, and deadzone.
+    void applyRice(const RiceSettings &rice);
     /// @brief Puts the overlay into visible, mouse-interactive mode.
     void enterInteractiveOverlay();
     /// @brief Hides launcher visuals and leaves the shell alive for click-through mode.
@@ -73,6 +76,8 @@ public:
     [[nodiscard]] bool isSearchVisible() const;
     /// @brief Seeds Distance-mode selection from the current cursor position.
     void refreshSelectionFromCursor();
+    /// @brief Global cursor target for Center mouse on open (overlay width/height units).
+    [[nodiscard]] QPoint mouseOpenGlobalPosition(double xFraction, double yFraction) const;
     /// @brief Currently selected wheel slot, or -1 when none.
     [[nodiscard]] int selectedActionIndex() const;
 

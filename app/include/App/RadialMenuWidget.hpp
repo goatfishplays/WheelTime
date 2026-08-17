@@ -7,6 +7,7 @@
 #include "App/Action.hpp"
 #include "App/HoverButton.hpp"
 #include "App/Menu.hpp"
+#include "App/Theme.hpp"
 
 #include <QEnterEvent>
 #include <QHBoxLayout>
@@ -15,6 +16,7 @@
 #include <QLabel>
 #include <QMouseEvent>
 #include <QResizeEvent>
+#include <QSize>
 #include <QSpacerItem>
 #include <QVBoxLayout>
 #include <QWidget>
@@ -60,10 +62,10 @@ public:
      */
     void setCenterText(const QString &text);
     /**
-     * @brief Set the button ring radius as a fraction of the shorter widget side.
+     * @brief Set the button ring radius as a fraction of the overlay's shorter side.
      *
      * Values are clamped to a usable range; the effective pixel radius is
-     * recomputed on resize so the wheel scales with the monitor/panel size.
+     * recomputed on resize so the wheel scales with the monitor.
      *
      * @param fraction Typically ~0.25–0.40 (default 0.32)
      */
@@ -75,6 +77,22 @@ public:
      * @param radius Absolute distance from center to button centers
      */
     void setButtonRadius(int radius);
+    /**
+     * @brief Rotate the ring; 0 keeps the current 12 o'clock start, clockwise positive.
+     */
+    void setStartAngleDegrees(double degrees);
+    /**
+     * @brief Inner deadzone as a fraction of the overlay's shorter side. 0 disables it.
+     */
+    void setInnerDeadzoneFraction(double fraction);
+    /**
+     * @brief Inner deadzone in pixels from center (disables fraction scaling). 0 disables it.
+     */
+    void setInnerDeadzone(int radiusPx);
+    /**
+     * @brief Apply resolved rice (radius, start angle, deadzone) and relayout.
+     */
+    void applyRice(const RiceSettings &rice);
     /**
      * @brief Set the Activation mode.
      * TODO: Drop ClosestAngle if Distance covers the same selection cases.
@@ -105,6 +123,9 @@ public:
      * @param globalPos
      */
     void updateSelectionFromGlobalMousePosition(const QPoint &globalPos);
+    /// @brief Global cursor target for Center mouse on open. Offsets are
+    /// fractions of overlay width (X) and height (Y); Y positive is up.
+    [[nodiscard]] QPoint mouseOpenGlobalPosition(double xFraction, double yFraction) const;
 
 signals:
     void selectedIndexChanged(int index);
@@ -126,8 +147,12 @@ private:
     [[nodiscard]] static QPointF widgetCenter(const QWidget *widget);
     /// @brief Move @p widget so its geometric center sits on @p center.
     static void placeWidgetCentered(QWidget *widget, QPointF center);
-    /// @brief Pixel ring radius for the current widget size / mode.
+    /// @brief Pixel ring radius for the current overlay size / mode.
     [[nodiscard]] int effectiveButtonRadius() const;
+    /// @brief Pixel inner-deadzone radius; 0 means disabled.
+    [[nodiscard]] double effectiveInnerDeadzone() const;
+    /// @brief Overlay (top-level window) size; falls back to this widget.
+    [[nodiscard]] QSize overlaySize() const;
     /// @brief Cached QIcon for @p path (empty path → null icon).
     [[nodiscard]] QIcon iconForPath(const std::string &path) const;
 
@@ -140,8 +165,12 @@ private:
     mutable std::unordered_map<std::string, QIcon> m_iconCache;
 
     int m_buttonRadius{220};
-    double m_buttonRadiusFraction{0.32};
+    double m_buttonRadiusFraction{kDefaultButtonRadiusFraction};
     bool m_useFixedButtonRadius{false};
+    double m_startAngleDegrees{0.0};
+    double m_innerDeadzoneFraction{0.0};
+    int m_innerDeadzonePx{0};
+    bool m_useFixedInnerDeadzone{false};
     ActivationMode m_mode{ActivationMode::Exact};
     double m_maxDistance{-1.0};
     int m_selectedIndex{-1};

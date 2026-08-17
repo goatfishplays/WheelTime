@@ -26,6 +26,7 @@ qt_add_resources(${PROJECT_NAME} "target"
     FILES
         "${CMAKE_SOURCE_DIR}/resources/styles/defaultWheel.qss"
         "${CMAKE_SOURCE_DIR}/resources/styles/darkWheel.qss"
+        "${CMAKE_SOURCE_DIR}/resources/styles/exampleOverlay.qss"
 )
 
 qt_add_resources(${PROJECT_NAME} "icons"

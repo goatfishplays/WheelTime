@@ -199,4 +199,14 @@ void Menu::setUseLowLevelHook(bool enabled) noexcept
     m_useLowLevelHook = enabled;
 }
 
+const RiceOverrides &Menu::rice() const noexcept
+{
+    return m_rice;
+}
+
+void Menu::setRice(RiceOverrides overrides)
+{
+    m_rice = std::move(overrides);
+}
+
 } // namespace Application

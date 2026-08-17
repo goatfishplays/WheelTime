@@ -72,8 +72,8 @@ The following high-priority user stories and bug fixes should guide future work 
 
 ### Original Release Plan Backlog Stories
 
-1. **Superior ricing support**
-  As a user, I want be able to customize the graphics so it can better fit with the rest of my system theming.
+1. **Superior ricing support (v1 landed)**
+  Bundled light/dark QSS plus an optional user overlay, with global/per-menu ring radius, start angle, center deadzone, and mouse-on-open offset. Per-menu QSS files and outer selection limits are still future work.
 2. **Expand automated testing and allow action item plugins**
   As a developer, I want more automated tests and extensibility for settings, action validation, action items, and launcher behavior so future changes are safer and I can add custom behaviors.
 3. **Add full Linux support**
@@ -104,7 +104,7 @@ The following high-priority user stories and bug fixes should guide future work 
 9. **Running actions display**
   As a user, I want to have an optional visual of what actions are currently running or queued so I can easier tell what is happening in the background.
 10. **Deadzone/Custom Layouts**
-  As a user, I want to be able to set deadzones and custom button layouts beyond the original wheel so I can pack more actions into 1 menu.
+  Inner center deadzone is in ricing v1. Remaining: outer selection limits and custom button layouts beyond the original wheel.
 11. **Socket Receiver**
   As a user, I want to be able to receive socket messages and automatically execute actions in response so I can make use of the replies generated when sending out socket messages.
 

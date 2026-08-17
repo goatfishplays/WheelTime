@@ -1,3 +1,15 @@
+/* WheelTime bundled dark theme.
+ *
+ * Object-name contract (user overlays append after this file):
+ *   #launcherOverlay, #launcherPanel, #launcherPanelBody, #launcherTitle,
+ *   RadialMenuWidget, #radialCenterLabel, #wheelActionButton,
+ *   #settingsWindow, #settingsOverlayHost, #searchOverlayHost, #searchPanel,
+ *   #searchInput, #searchResults, #primaryButton
+ *
+ * Do not add a universal QWidget font-size/color rule — Qt re-evaluates
+ * that for every child widget and it causes massive lag.
+ */
+
 /* Apply base font and color only to the main root windows so Qt doesn't
    re-evaluate this rule for every single child widget, which causes massive lag. */
 QWidget#settingsWindow,
@@ -115,6 +127,19 @@ QToolButton#searchFilterChip:checked {
     border-color: #1177bb;
     color: #ffffff;
     font-weight: 600;
+}
+
+QToolButton#sectionCollapseToggle {
+    background: transparent;
+    border: none;
+    color: #cccccc;
+    font-weight: 600;
+    padding: 2px 0;
+    text-align: left;
+}
+
+QToolButton#sectionCollapseToggle:hover {
+    color: #ffffff;
 }
 
 /* Sidebar, editor pages, and detail stack sit flat on the settings window
@@ -254,6 +279,30 @@ QPushButton#primaryButton:hover {
 
 QPushButton#primaryButton:pressed {
     background-color: #094771;
+}
+
+QPushButton#keystrokeClearButton {
+    color: #cccccc;
+    background-color: transparent;
+    border: none;
+    border-radius: 4px;
+    padding: 0px;
+    font-size: 14px;
+}
+
+QPushButton#keystrokeClearButton:hover {
+    background-color: #e81123;
+    color: #ffffff;
+}
+
+QLabel#actionIconPreview {
+    border: 1px solid #3e3e42;
+    border-radius: 6px;
+    background: #1e1e1e;
+}
+
+QLabel#actionChannelHelp {
+    color: #999999;
 }
 
 QToolButton#wheelActionButton {

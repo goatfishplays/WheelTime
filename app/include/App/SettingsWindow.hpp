@@ -24,6 +24,7 @@
 #include "App/Action.hpp"
 #include "App/ActionItems/Cancel.hpp"
 #include "App/Menu.hpp"
+#include "App/Theme.hpp"
 
 namespace Application
 {
@@ -74,6 +75,13 @@ private:
     void refreshMenuEditor();
     void refreshActionEditor();
     void refreshSlotList();
+    void refreshGlobalRiceEditor();
+    void refreshMenuRiceEditor();
+    void syncGlobalRiceFromUi();
+    void syncMenuRiceFromUi();
+    void updateRiceControlEnabledState();
+    [[nodiscard]] RiceSettings riceFromGlobalUi() const;
+    [[nodiscard]] RiceOverrides riceOverridesFromMenuUi() const;
     void refreshActionItemList();
     void refreshActionSummary();
     void refreshActionIconPreview();
@@ -120,6 +128,18 @@ private:
 
     QGroupBox *m_globalGroup{nullptr};
     QCheckBox *m_darkModeCheck{nullptr};
+    QLineEdit *m_themeOverlayEdit{nullptr};
+    QPushButton *m_browseThemeOverlayButton{nullptr};
+    QPushButton *m_clearThemeOverlayButton{nullptr};
+    QDoubleSpinBox *m_radiusFractionSpin{nullptr};
+    QCheckBox *m_radiusFixedCheck{nullptr};
+    QSpinBox *m_radiusPxSpin{nullptr};
+    QDoubleSpinBox *m_startAngleSpin{nullptr};
+    QDoubleSpinBox *m_deadzoneFractionSpin{nullptr};
+    QCheckBox *m_deadzoneFixedCheck{nullptr};
+    QSpinBox *m_deadzonePxSpin{nullptr};
+    QDoubleSpinBox *m_mouseOpenOffsetXSpin{nullptr};
+    QDoubleSpinBox *m_mouseOpenOffsetYSpin{nullptr};
 
     QPushButton *m_keystrokeRecordButton{nullptr};
     QPushButton *m_keystrokeClearButton{nullptr};
@@ -131,6 +151,19 @@ private:
     QCheckBox *m_centerMouseOnOpenCheck{nullptr};
     QCheckBox *m_restoreMouseOnCloseCheck{nullptr};
     QCheckBox *m_deferUntilExitCheck{nullptr};
+    QCheckBox *m_overrideRadiusCheck{nullptr};
+    QDoubleSpinBox *m_menuRadiusFractionSpin{nullptr};
+    QCheckBox *m_menuRadiusFixedCheck{nullptr};
+    QSpinBox *m_menuRadiusPxSpin{nullptr};
+    QCheckBox *m_overrideStartAngleCheck{nullptr};
+    QDoubleSpinBox *m_menuStartAngleSpin{nullptr};
+    QCheckBox *m_overrideDeadzoneCheck{nullptr};
+    QDoubleSpinBox *m_menuDeadzoneFractionSpin{nullptr};
+    QCheckBox *m_menuDeadzoneFixedCheck{nullptr};
+    QSpinBox *m_menuDeadzonePxSpin{nullptr};
+    QCheckBox *m_overrideMouseOpenOffsetCheck{nullptr};
+    QDoubleSpinBox *m_menuMouseOpenOffsetXSpin{nullptr};
+    QDoubleSpinBox *m_menuMouseOpenOffsetYSpin{nullptr};
     QListWidget *m_slotList{nullptr};
     QComboBox *m_slotActionCombo{nullptr};
 

@@ -64,6 +64,8 @@ add_library(App
     include/App/DelayQueue.hpp
     src/ChannelManager.cpp
     include/App/ChannelManager.hpp
+    src/Theme.cpp
+    include/App/Theme.hpp
     src/MenuConfigLoader.cpp
     include/App/MenuConfigLoader.hpp
     src/SettingsWindow.cpp
@@ -152,6 +154,19 @@ target_link_libraries(search_palette_tests
         App
 )
 target_compile_features(search_palette_tests
+    PRIVATE
+        cxx_std_23
+)
+
+# Theme / rice layout config tests.
+add_executable(theme_tests
+    tests/theme_tests.cpp
+)
+target_link_libraries(theme_tests
+    PRIVATE
+        App
+)
+target_compile_features(theme_tests
     PRIVATE
         cxx_std_23
 )

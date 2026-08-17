@@ -1,0 +1,33 @@
+/* WheelTime theme overlay
+ *
+ * This file is appended to the bundled light or dark stylesheet. Later rules
+ * with the same selectors win, so you only need to override widgets you care
+ * about. Do not add a universal QWidget font-size or color rule (or similar);
+ * Qt re-evaluates those for every child and it causes large lag.
+ *
+ * Object-name contract (the ricing API):
+ *   QWidget#launcherOverlay          fullscreen overlay shell
+ *   QWidget#launcherPanel            dimmed wheel panel
+ *   QWidget#launcherPanelBody        area behind the radial widget
+ *   QLabel#launcherTitle             menu title above the wheel
+ *   RadialMenuWidget                 the wheel itself
+ *   QLabel#radialCenterLabel         hub caption
+ *   QToolButton#wheelActionButton    slot buttons (also [selectedAction])
+ *   QWidget#settingsWindow           settings editor
+ *   QWidget#settingsOverlayHost      dimmer behind settings
+ *   QWidget#searchOverlayHost        dimmer behind search
+ *   QWidget#searchPanel              search palette
+ *   QLineEdit#searchInput
+ *   QListWidget#searchResults
+ *   QPushButton#primaryButton        settings Save
+ */
+
+/* Example: rounder wheel buttons and a cooler overlay tint.
+QToolButton#wheelActionButton {
+    border-radius: 36px;
+}
+
+QWidget#launcherPanel {
+    background-color: rgba(20, 8, 40, 160);
+}
+*/

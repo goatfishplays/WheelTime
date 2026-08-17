@@ -84,8 +84,7 @@ Gui::Gui(QWidget *parent)
     bottomRow->addWidget(m_settingsButton);
     panelLayout->addLayout(bottomRow);
 
-    // Ring radius tracks the radial panel size (monitor body after chrome).
-    m_radialMenu->setButtonRadiusFraction(0.32);
+    // Ring radius tracks the overlay (monitor) short side.
     m_radialMenu->setActivationMode(RadialMenuWidget::ActivationMode::Distance);
 
     connect(m_radialMenu, &RadialMenuWidget::selectedIndexChanged, this, &Gui::onSelectChange);
@@ -238,6 +237,11 @@ void Gui::setMenu(const Menu &menu, const std::vector<ActionSlotVisual> &slotVis
     m_radialMenu->setMenu(menu, slotVisuals);
 }
 
+void Gui::applyRice(const RiceSettings &rice)
+{
+    m_radialMenu->applyRice(rice);
+}
+
 void Gui::enterInteractiveOverlay()
 {
     m_overlayMode = OverlayMode::Wheel;
@@ -296,12 +300,12 @@ void Gui::showSettingsPanel(SettingsWindow *settingsWindow)
     // this method; wheel mode restores no-activate behavior afterward.
     settingsWindow->setParent(m_settingsHost);
     settingsWindow->setWindowFlags(Qt::Widget);
-    settingsWindow->setMaximumSize(1180, 820);
-    settingsWindow->setMinimumSize(820, 560);
+    settingsWindow->setMinimumSize(960, 680);
+    settingsWindow->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
     settingsWindow->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     if (m_settingsHostLayout->indexOf(settingsWindow) < 0)
     {
-        m_settingsHostLayout->addWidget(settingsWindow, 0, 0, Qt::AlignCenter);
+        m_settingsHostLayout->addWidget(settingsWindow, 0, 0);
     }
 
     m_settingsHost->show();
@@ -391,6 +395,15 @@ void Gui::refreshSelectionFromCursor()
     {
         m_radialMenu->updateSelectionFromGlobalMousePosition(QCursor::pos());
     }
+}
+
+QPoint Gui::mouseOpenGlobalPosition(double xFraction, double yFraction) const
+{
+    if (m_radialMenu == nullptr)
+    {
+        return QCursor::pos();
+    }
+    return m_radialMenu->mouseOpenGlobalPosition(xFraction, yFraction);
 }
 
 int Gui::selectedActionIndex() const

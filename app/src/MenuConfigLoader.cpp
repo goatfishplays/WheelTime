@@ -2,6 +2,7 @@
 
 #include "App/Action.hpp"
 #include "App/ActionItems.hpp"
+#include "App/Theme.hpp"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -18,6 +19,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <optional>
 
 using namespace Application;
 
@@ -309,6 +311,144 @@ namespace
         return items;
     }
 
+    RiceSettings parseRiceSettings(const QJsonObject &obj)
+    {
+        RiceSettings rice;
+        if (obj.contains("buttonRadiusFraction"))
+        {
+            rice.buttonRadiusFraction = obj.value("buttonRadiusFraction").toDouble(rice.buttonRadiusFraction);
+        }
+        if (obj.contains("buttonRadiusPx") && !obj.value("buttonRadiusPx").isNull())
+        {
+            rice.buttonRadiusPx = obj.value("buttonRadiusPx").toInt();
+        }
+        if (obj.contains("startAngleDegrees"))
+        {
+            rice.startAngleDegrees = obj.value("startAngleDegrees").toDouble(0.0);
+        }
+        if (obj.contains("innerDeadzoneFraction"))
+        {
+            rice.innerDeadzoneFraction = obj.value("innerDeadzoneFraction").toDouble(0.0);
+        }
+        if (obj.contains("innerDeadzonePx") && !obj.value("innerDeadzonePx").isNull())
+        {
+            rice.innerDeadzonePx = obj.value("innerDeadzonePx").toInt();
+        }
+        if (obj.contains("mouseOpenOffsetXFraction"))
+        {
+            rice.mouseOpenOffsetXFraction = obj.value("mouseOpenOffsetXFraction").toDouble(0.0);
+        }
+        if (obj.contains("mouseOpenOffsetYFraction"))
+        {
+            rice.mouseOpenOffsetYFraction =
+                obj.value("mouseOpenOffsetYFraction").toDouble(kDefaultMouseOpenOffsetYFraction);
+        }
+        return rice;
+    }
+
+    RiceOverrides parseRiceOverrides(const QJsonObject &obj)
+    {
+        RiceOverrides overrides;
+        if (obj.contains("buttonRadiusFraction"))
+        {
+            overrides.buttonRadiusFraction = obj.value("buttonRadiusFraction").toDouble();
+        }
+        if (obj.contains("buttonRadiusPx") && !obj.value("buttonRadiusPx").isNull())
+        {
+            overrides.buttonRadiusPx = obj.value("buttonRadiusPx").toInt();
+        }
+        if (obj.contains("startAngleDegrees"))
+        {
+            overrides.startAngleDegrees = obj.value("startAngleDegrees").toDouble();
+        }
+        if (obj.contains("innerDeadzoneFraction"))
+        {
+            overrides.innerDeadzoneFraction = obj.value("innerDeadzoneFraction").toDouble();
+        }
+        if (obj.contains("innerDeadzonePx") && !obj.value("innerDeadzonePx").isNull())
+        {
+            overrides.innerDeadzonePx = obj.value("innerDeadzonePx").toInt();
+        }
+        if (obj.contains("mouseOpenOffsetXFraction"))
+        {
+            overrides.mouseOpenOffsetXFraction = obj.value("mouseOpenOffsetXFraction").toDouble();
+        }
+        if (obj.contains("mouseOpenOffsetYFraction"))
+        {
+            overrides.mouseOpenOffsetYFraction = obj.value("mouseOpenOffsetYFraction").toDouble();
+        }
+        return overrides;
+    }
+
+    QJsonObject serializeRiceSettings(const RiceSettings &rice)
+    {
+        QJsonObject obj;
+        obj.insert("buttonRadiusFraction", rice.buttonRadiusFraction);
+        if (rice.buttonRadiusPx.has_value())
+        {
+            obj.insert("buttonRadiusPx", *rice.buttonRadiusPx);
+        }
+        obj.insert("startAngleDegrees", rice.startAngleDegrees);
+        obj.insert("innerDeadzoneFraction", rice.innerDeadzoneFraction);
+        if (rice.innerDeadzonePx.has_value())
+        {
+            obj.insert("innerDeadzonePx", *rice.innerDeadzonePx);
+        }
+        obj.insert("mouseOpenOffsetXFraction", rice.mouseOpenOffsetXFraction);
+        obj.insert("mouseOpenOffsetYFraction", rice.mouseOpenOffsetYFraction);
+        return obj;
+    }
+
+    QJsonObject serializeRiceOverrides(const RiceOverrides &overrides)
+    {
+        QJsonObject obj;
+        if (overrides.buttonRadiusFraction.has_value())
+        {
+            obj.insert("buttonRadiusFraction", *overrides.buttonRadiusFraction);
+        }
+        if (overrides.buttonRadiusPx.has_value())
+        {
+            obj.insert("buttonRadiusPx", *overrides.buttonRadiusPx);
+        }
+        if (overrides.startAngleDegrees.has_value())
+        {
+            obj.insert("startAngleDegrees", *overrides.startAngleDegrees);
+        }
+        if (overrides.innerDeadzoneFraction.has_value())
+        {
+            obj.insert("innerDeadzoneFraction", *overrides.innerDeadzoneFraction);
+        }
+        if (overrides.innerDeadzonePx.has_value())
+        {
+            obj.insert("innerDeadzonePx", *overrides.innerDeadzonePx);
+        }
+        if (overrides.mouseOpenOffsetXFraction.has_value())
+        {
+            obj.insert("mouseOpenOffsetXFraction", *overrides.mouseOpenOffsetXFraction);
+        }
+        if (overrides.mouseOpenOffsetYFraction.has_value())
+        {
+            obj.insert("mouseOpenOffsetYFraction", *overrides.mouseOpenOffsetYFraction);
+        }
+        return obj;
+    }
+
+    void loadAppConfigFields(const QJsonObject &rootObject, AppConfig &appConfig)
+    {
+        if (rootObject.contains("darkMode") && rootObject["darkMode"].isBool())
+        {
+            appConfig.darkMode = rootObject["darkMode"].toBool();
+        }
+        if (rootObject.contains("themeOverlay"))
+        {
+            appConfig.themeOverlayPath = rootObject.value("themeOverlay").toString();
+        }
+        if (rootObject.contains("rice") && rootObject.value("rice").isObject())
+        {
+            appConfig.rice = parseRiceSettings(rootObject.value("rice").toObject());
+        }
+    }
+
     Action parseLibraryAction(const QJsonObject &actionObject)
     {
         const std::string id = actionObject.value("id").toString().toStdString();
@@ -321,10 +461,7 @@ namespace
     bool loadNewSchema(const QJsonObject &rootObject, AppConfig &appConfig, std::vector<Action> &actions,
                        std::vector<std::unique_ptr<Menu>> &menus)
     {
-        if (rootObject.contains("darkMode") && rootObject["darkMode"].isBool())
-        {
-            appConfig.darkMode = rootObject["darkMode"].toBool();
-        }
+        loadAppConfigFields(rootObject, appConfig);
 
         const QJsonArray actionsArray = rootObject.value("actions").toArray();
         const QJsonArray menusArray = rootObject.value("menus").toArray();
@@ -348,7 +485,7 @@ namespace
                 actionIds.push_back(idValue.toString().toStdString());
             }
 
-            menus.push_back(std::make_unique<Menu>(
+            auto menu = std::make_unique<Menu>(
                 menuObject.value("triggerMod").toInt(0),
                 menuObject.value("triggerVk").toInt(0),
                 menuObject.value("executeOnRelease").toBool(false),
@@ -359,7 +496,12 @@ namespace
                 menuObject.value("name").toString("Unnamed Menu").toStdString(),
                 actionIds,
                 menuObject.value("id").toString().toStdString(),
-                menuObject.value("useLowLevelHook").toBool(false)));
+                menuObject.value("useLowLevelHook").toBool(false));
+            if (menuObject.contains("rice") && menuObject.value("rice").isObject())
+            {
+                menu->setRice(parseRiceOverrides(menuObject.value("rice").toObject()));
+            }
+            menus.push_back(std::move(menu));
         }
 
         return !menus.empty();
@@ -368,10 +510,7 @@ namespace
     bool loadLegacySchema(const QJsonObject &rootObject, AppConfig &appConfig, std::vector<Action> &actions,
                           std::vector<std::unique_ptr<Menu>> &menus)
     {
-        if (rootObject.contains("darkMode") && rootObject["darkMode"].isBool())
-        {
-            appConfig.darkMode = rootObject["darkMode"].toBool();
-        }
+        loadAppConfigFields(rootObject, appConfig);
 
         const QJsonArray menusArray = rootObject.value("menus").toArray();
         if (menusArray.isEmpty())
@@ -657,6 +796,10 @@ bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appC
         menuObject.insert("triggerMod", menu.triggerMod());
         menuObject.insert("triggerVk", menu.triggerVk());
         menuObject.insert("useLowLevelHook", menu.useLowLevelHook());
+        if (!riceOverridesEmpty(menu.rice()))
+        {
+            menuObject.insert("rice", serializeRiceOverrides(menu.rice()));
+        }
 
         QJsonArray actionIdsArray;
         for (const std::string &actionId : menu.actionIds())
@@ -669,6 +812,11 @@ bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appC
 
     QJsonObject rootObject;
     rootObject.insert("darkMode", appConfig.darkMode);
+    if (!appConfig.themeOverlayPath.isEmpty())
+    {
+        rootObject.insert("themeOverlay", appConfig.themeOverlayPath);
+    }
+    rootObject.insert("rice", serializeRiceSettings(appConfig.rice));
     rootObject.insert("actions", actionsArray);
     rootObject.insert("menus", menusArray);
 

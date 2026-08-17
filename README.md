@@ -9,7 +9,7 @@ WheelTime is a Windows radial launcher for quick actions, app launches, hotkeys,
 - Settings editor manages menus, menu hotkeys, action slots, and action items.
 - Built-in action items include keystrokes, app launch, delay, search palette, cancel, menu switching, mouse actions, socket actions, and close.
 - Search palette can search actions, menus, programs, and optional web search.
-- User settings are saved to a writable app config folder after first run.
+- User settings are saved to a writable app config folder after first run. Theme overlays and layout rice (ring radius, start angle, center deadzone, mouse-on-open offset) are edited in Settings → Graphics, with optional per-menu layout overrides.
 
 ## Get WheelTime
 
@@ -88,6 +88,7 @@ Examples:
 ```powershell
 .\build\Debug\scheduler_tests.exe
 .\build\Debug\search_palette_tests.exe
+.\build\Debug\theme_tests.exe
 ```
 
 ## Release Packaging
@@ -121,5 +122,5 @@ NSIS is optional. Without NSIS, the portable zip is still produced.
 - `app/` contains menus, actions, settings UI, search palette, scheduler, and radial UI.
 - `platform/` contains Windows-specific input, window, launching, and key/mouse execution code.
 - `config/default_menu.json` is the bundled default config template.
-- `resources/styles/defaultWheel.qss` contains the Qt styling.
+- `resources/styles/defaultWheel.qss` and `darkWheel.qss` are the bundled base themes. An optional user `.qss` overlay is appended on top; on first run WheelTime seeds `themes/example-overlay.qss` next to the user config. Layout percents (ring radius, center deadzone, mouse-on-open offset) are fractions of the overlay/monitor size and can be overridden per menu.
 - `scripts/package-windows.ps1` builds release artifacts.

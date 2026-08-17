@@ -1,7 +1,9 @@
 #include "App/SettingsWindow.hpp"
 
 #include "App/ActionItems.hpp"
+#include "App/Theme.hpp"
 
+#include <QDir>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QFormLayout>
@@ -17,7 +19,9 @@
 #include <QRegularExpression>
 #include <QScrollArea>
 #include <QSignalBlocker>
+#include <QSizePolicy>
 #include <QSplitter>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 #include <algorithm>
@@ -106,13 +110,65 @@ namespace
         content->setAutoFillBackground(false);
         return scroll;
     }
+
+    constexpr int kRiceSpinMinWidth = 92;
+
+    void sizeRiceSpin(QWidget *spin)
+    {
+        spin->setMinimumWidth(kRiceSpinMinWidth);
+        spin->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+    }
+
+    /// @brief Left-aligns rice spins so fraction/angle/% share one column.
+    QWidget *riceControlRow(QWidget *parent, QWidget *primary, QWidget *toggle = nullptr,
+                            QWidget *secondary = nullptr)
+    {
+        auto *row = new QWidget(parent);
+        auto *layout = new QHBoxLayout(row);
+        layout->setContentsMargins(0, 0, 0, 0);
+        layout->setSpacing(8);
+        layout->addWidget(primary, 0, Qt::AlignVCenter);
+        if (toggle != nullptr)
+        {
+            layout->addWidget(toggle, 0, Qt::AlignVCenter);
+        }
+        if (secondary != nullptr)
+        {
+            layout->addWidget(secondary, 0, Qt::AlignVCenter);
+        }
+        layout->addStretch(1);
+        return row;
+    }
+
+    QToolButton *makeCollapseToggle(const QString &title, QWidget *parent)
+    {
+        auto *toggle = new QToolButton(parent);
+        toggle->setText(title);
+        toggle->setCheckable(true);
+        toggle->setChecked(true);
+        toggle->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        toggle->setArrowType(Qt::DownArrow);
+        toggle->setAutoRaise(true);
+        toggle->setObjectName("sectionCollapseToggle");
+        toggle->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        return toggle;
+    }
+
+    void bindCollapseToggle(QToolButton *toggle, QWidget *body)
+    {
+        QObject::connect(toggle, &QToolButton::toggled, body, [toggle, body](bool expanded)
+                         {
+                             body->setVisible(expanded);
+                             toggle->setArrowType(expanded ? Qt::DownArrow : Qt::RightArrow);
+                         });
+    }
 }
 
 SettingsWindow::SettingsWindow(QWidget *parent)
     : QWidget(parent)
 {
     setWindowTitle("WheelTime Settings");
-    resize(1000, 620);
+    resize(1180, 760);
     setObjectName("settingsWindow");
     // QWidget subclasses need this for QSS background/border painting;
     // without it the styled rounded panel is never drawn and the dark
@@ -127,49 +183,159 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     auto *splitter = new QSplitter(Qt::Horizontal, this);
     root->addWidget(splitter, 1);
 
-    auto *leftPane = new QWidget(splitter);
+    auto *leftPane = new QWidget();
     leftPane->setObjectName("settingsSidebar");
     auto *leftLayout = new QVBoxLayout(leftPane);
-    leftLayout->setContentsMargins(12, 12, 12, 12);
-    leftLayout->setSpacing(12);
+    leftLayout->setContentsMargins(8, 8, 8, 8);
+    leftLayout->setSpacing(0);
 
-    m_globalGroup = new QGroupBox("Global Settings", leftPane);
-    auto *globalLayout = new QVBoxLayout(m_globalGroup);
-    m_darkModeCheck = new QCheckBox("Dark Mode", m_globalGroup);
+    auto *leftSplit = new QSplitter(Qt::Vertical, leftPane);
+    leftSplit->setChildrenCollapsible(false);
+    leftSplit->setOpaqueResize(true);
+
+    m_globalGroup = new QGroupBox("Graphics", leftSplit);
+    auto *graphicsBody = new QWidget(m_globalGroup);
+    auto *graphicsForm = new QFormLayout(graphicsBody);
+    graphicsForm->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow);
+    graphicsForm->setFormAlignment(Qt::AlignLeft | Qt::AlignTop);
+    graphicsForm->setLabelAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    graphicsForm->setHorizontalSpacing(12);
+
+    m_darkModeCheck = new QCheckBox("Dark Mode", graphicsBody);
     m_darkModeCheck->setObjectName("darkModeToggle");
-    globalLayout->addWidget(m_darkModeCheck);
-    leftLayout->addWidget(m_globalGroup);
+    graphicsForm->addRow(m_darkModeCheck);
 
-    auto *menusGroup = new QGroupBox("Menus", leftPane);
+    auto *overlayRow = new QWidget(graphicsBody);
+    auto *overlayLayout = new QHBoxLayout(overlayRow);
+    overlayLayout->setContentsMargins(0, 0, 0, 0);
+    overlayLayout->setSpacing(8);
+    m_themeOverlayEdit = new QLineEdit(overlayRow);
+    m_themeOverlayEdit->setPlaceholderText("Optional .qss overlay (relative to config folder)");
+    m_browseThemeOverlayButton = new QPushButton("Browse...", overlayRow);
+    m_clearThemeOverlayButton = new QPushButton("Clear", overlayRow);
+    overlayLayout->addWidget(m_themeOverlayEdit, 1);
+    overlayLayout->addWidget(m_browseThemeOverlayButton);
+    overlayLayout->addWidget(m_clearThemeOverlayButton);
+    graphicsForm->addRow("Theme overlay", overlayRow);
+
+    m_radiusFractionSpin = new QDoubleSpinBox(graphicsBody);
+    m_radiusFractionSpin->setRange(kMinButtonRadiusFraction * 100.0, kMaxButtonRadiusFraction * 100.0);
+    m_radiusFractionSpin->setSingleStep(1.0);
+    m_radiusFractionSpin->setDecimals(1);
+    m_radiusFractionSpin->setSuffix(" %");
+    m_radiusFractionSpin->setToolTip(
+        "Distance from wheel center to the buttons, as a percent of the overlay's shorter side.");
+    sizeRiceSpin(m_radiusFractionSpin);
+    m_radiusFixedCheck = new QCheckBox("Fixed px", graphicsBody);
+    m_radiusPxSpin = new QSpinBox(graphicsBody);
+    m_radiusPxSpin->setRange(1, 2000);
+    m_radiusPxSpin->setSuffix(" px");
+    sizeRiceSpin(m_radiusPxSpin);
+    graphicsForm->addRow("Ring radius",
+                         riceControlRow(graphicsBody, m_radiusFractionSpin, m_radiusFixedCheck, m_radiusPxSpin));
+
+    m_startAngleSpin = new QDoubleSpinBox(graphicsBody);
+    m_startAngleSpin->setRange(-360.0, 360.0);
+    m_startAngleSpin->setSingleStep(5.0);
+    m_startAngleSpin->setDecimals(1);
+    m_startAngleSpin->setSuffix(" deg");
+    m_startAngleSpin->setToolTip("0 keeps the first slot at 12 o'clock. Positive rotates clockwise.");
+    sizeRiceSpin(m_startAngleSpin);
+    graphicsForm->addRow("Start angle", riceControlRow(graphicsBody, m_startAngleSpin));
+
+    m_deadzoneFractionSpin = new QDoubleSpinBox(graphicsBody);
+    m_deadzoneFractionSpin->setRange(0.0, 100.0);
+    m_deadzoneFractionSpin->setSingleStep(1.0);
+    m_deadzoneFractionSpin->setDecimals(1);
+    m_deadzoneFractionSpin->setSuffix(" %");
+    m_deadzoneFractionSpin->setToolTip(
+        "Center hole as a percent of the overlay's shorter side. 0 is off. "
+        "1% mouse Y with a 1.5% deadzone starts in the hole.");
+    sizeRiceSpin(m_deadzoneFractionSpin);
+    m_deadzoneFixedCheck = new QCheckBox("Fixed px", graphicsBody);
+    m_deadzonePxSpin = new QSpinBox(graphicsBody);
+    m_deadzonePxSpin->setRange(0, 2000);
+    m_deadzonePxSpin->setSuffix(" px");
+    sizeRiceSpin(m_deadzonePxSpin);
+    graphicsForm->addRow("Center deadzone",
+                         riceControlRow(graphicsBody, m_deadzoneFractionSpin, m_deadzoneFixedCheck, m_deadzonePxSpin));
+
+    m_mouseOpenOffsetXSpin = new QDoubleSpinBox(graphicsBody);
+    m_mouseOpenOffsetXSpin->setRange(kMinMouseOpenOffsetFraction * 100.0, kMaxMouseOpenOffsetFraction * 100.0);
+    m_mouseOpenOffsetXSpin->setSingleStep(1.0);
+    m_mouseOpenOffsetXSpin->setDecimals(1);
+    m_mouseOpenOffsetXSpin->setSuffix(" %");
+    m_mouseOpenOffsetXSpin->setPrefix("X ");
+    m_mouseOpenOffsetXSpin->setToolTip(
+        "Where to place the cursor when Center mouse on open is enabled. "
+        "Percent of overlay width from the wheel center; positive is right.");
+    m_mouseOpenOffsetYSpin = new QDoubleSpinBox(graphicsBody);
+    m_mouseOpenOffsetYSpin->setRange(kMinMouseOpenOffsetFraction * 100.0, kMaxMouseOpenOffsetFraction * 100.0);
+    m_mouseOpenOffsetYSpin->setSingleStep(1.0);
+    m_mouseOpenOffsetYSpin->setDecimals(1);
+    m_mouseOpenOffsetYSpin->setSuffix(" %");
+    m_mouseOpenOffsetYSpin->setPrefix("Y ");
+    m_mouseOpenOffsetYSpin->setToolTip(
+        "Percent of overlay height from the wheel center; positive is up.");
+    m_mouseOpenOffsetYSpin->setValue(kDefaultMouseOpenOffsetYFraction * 100.0);
+    sizeRiceSpin(m_mouseOpenOffsetXSpin);
+    sizeRiceSpin(m_mouseOpenOffsetYSpin);
+    m_mouseOpenOffsetXSpin->setMinimumWidth(118);
+    m_mouseOpenOffsetYSpin->setMinimumWidth(118);
+    graphicsForm->addRow("Mouse on open",
+                         riceControlRow(graphicsBody, m_mouseOpenOffsetXSpin, nullptr, m_mouseOpenOffsetYSpin));
+
+    auto *graphicsLayout = new QVBoxLayout(m_globalGroup);
+    graphicsLayout->setContentsMargins(8, 8, 8, 8);
+    auto *graphicsScroll = wrapInScrollArea(graphicsBody, m_globalGroup);
+    graphicsLayout->addWidget(graphicsScroll);
+    m_globalGroup->setMinimumHeight(140);
+
+    auto *menusGroup = new QGroupBox("Menus", leftSplit);
     auto *menusLayout = new QVBoxLayout(menusGroup);
     m_menuList = new QListWidget(menusGroup);
     m_menuList->setObjectName("menuList");
     menusLayout->addWidget(m_menuList);
-
     auto *menuButtons = new QHBoxLayout();
     auto *addMenuButton = new QPushButton("Add Menu", menusGroup);
     auto *removeMenuButton = new QPushButton("Delete Menu", menusGroup);
     menuButtons->addWidget(addMenuButton);
     menuButtons->addWidget(removeMenuButton);
     menusLayout->addLayout(menuButtons);
-    leftLayout->addWidget(menusGroup);
+    menusGroup->setMinimumHeight(140);
 
-    auto *actionsGroup = new QGroupBox("Actions", leftPane);
+    auto *actionsGroup = new QGroupBox("Actions", leftSplit);
     auto *actionsLayout = new QVBoxLayout(actionsGroup);
     m_actionList = new QListWidget(actionsGroup);
     m_actionList->setObjectName("actionList");
     actionsLayout->addWidget(m_actionList);
-
     auto *actionButtons = new QHBoxLayout();
     auto *addActionButton = new QPushButton("Add Action", actionsGroup);
     auto *removeActionButton = new QPushButton("Delete Action", actionsGroup);
     actionButtons->addWidget(addActionButton);
     actionButtons->addWidget(removeActionButton);
     actionsLayout->addLayout(actionButtons);
-    leftLayout->addWidget(actionsGroup);
+    actionsGroup->setMinimumHeight(140);
+
+    leftSplit->addWidget(m_globalGroup);
+    leftSplit->addWidget(menusGroup);
+    leftSplit->addWidget(actionsGroup);
+    leftSplit->setStretchFactor(0, 1);
+    leftSplit->setStretchFactor(1, 1);
+    leftSplit->setStretchFactor(2, 1);
+    leftSplit->setSizes({240, 260, 260});
+    leftLayout->addWidget(leftSplit, 1);
+
+    splitter->addWidget(leftPane);
+    leftPane->setMinimumWidth(300);
 
     m_editorStack = new QStackedWidget(splitter);
     m_editorStack->setObjectName("settingsEditorStack");
+    splitter->setStretchFactor(0, 1);
+    splitter->setStretchFactor(1, 2);
+    splitter->setCollapsible(0, false);
+    splitter->setCollapsible(1, false);
+    splitter->setSizes({360, 820});
 
     m_emptyEditor = new QWidget(m_editorStack);
     m_emptyEditor->setObjectName("emptyEditor");
@@ -196,22 +362,9 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_menuNameEdit = new QLineEdit(menuSettingsGroup);
     m_keystrokeRecordButton = new QPushButton("Unassigned", menuSettingsGroup);
     m_keystrokeClearButton = new QPushButton("✕", menuSettingsGroup);
+    m_keystrokeClearButton->setObjectName("keystrokeClearButton");
     m_keystrokeClearButton->setFixedWidth(30);
     m_keystrokeClearButton->setCursor(Qt::PointingHandCursor);
-    m_keystrokeClearButton->setStyleSheet(
-        "QPushButton {"
-        "   color: #5f6368;"
-        "   background-color: transparent;"
-        "   font-family: 'Segoe UI', sans-serif;"
-        "   font-size: 14px;"
-        "   border: none;"
-        "   border-radius: 4px;"
-        "}"
-        "QPushButton:hover {"
-        "   background-color: #e81123;"
-        "   color: white;"
-        "}"
-    );
 
     auto *keystrokeLayout = new QHBoxLayout();
     keystrokeLayout->addWidget(m_keystrokeRecordButton);
@@ -228,6 +381,9 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_executeOnReleaseCheck = new QCheckBox("Execute on release", menuSettingsGroup);
     m_exitOnActionCheck = new QCheckBox("Exit on action", menuSettingsGroup);
     m_centerMouseOnOpenCheck = new QCheckBox("Center mouse on open", menuSettingsGroup);
+    m_centerMouseOnOpenCheck->setToolTip(
+        QStringLiteral("Move the cursor when this menu opens. Offset is set in Graphics "
+                       "(Mouse on open) or a per-menu layout override."));
     m_restoreMouseOnCloseCheck = new QCheckBox("Restore mouse on close", menuSettingsGroup);
     m_deferUntilExitCheck = new QCheckBox("Defer actions until exit", menuSettingsGroup);
     m_deferUntilExitCheck->setToolTip(
@@ -242,7 +398,115 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     menuForm->addRow("", m_centerMouseOnOpenCheck);
     menuForm->addRow("", m_restoreMouseOnCloseCheck);
     menuForm->addRow("", m_deferUntilExitCheck);
+
+    auto *layoutOverridesGroup = new QGroupBox("Layout overrides", m_menuEditor);
+    auto *layoutOverridesOuter = new QVBoxLayout(layoutOverridesGroup);
+    layoutOverridesOuter->setContentsMargins(8, 8, 8, 8);
+    layoutOverridesOuter->setSpacing(6);
+    auto *layoutOverridesToggle = makeCollapseToggle("Show per-menu layout", layoutOverridesGroup);
+    auto *layoutOverridesBody = new QWidget(layoutOverridesGroup);
+    auto *layoutOverridesForm = new QFormLayout(layoutOverridesBody);
+    layoutOverridesForm->setContentsMargins(0, 4, 0, 0);
+    layoutOverridesForm->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
+    layoutOverridesForm->setFormAlignment(Qt::AlignLeft | Qt::AlignTop);
+    layoutOverridesForm->setLabelAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    layoutOverridesForm->setHorizontalSpacing(12);
+
+    m_overrideRadiusCheck = new QCheckBox("Override", layoutOverridesBody);
+    m_menuRadiusFractionSpin = new QDoubleSpinBox(layoutOverridesBody);
+    m_menuRadiusFractionSpin->setRange(kMinButtonRadiusFraction * 100.0, kMaxButtonRadiusFraction * 100.0);
+    m_menuRadiusFractionSpin->setSingleStep(1.0);
+    m_menuRadiusFractionSpin->setDecimals(1);
+    m_menuRadiusFractionSpin->setSuffix(" %");
+    sizeRiceSpin(m_menuRadiusFractionSpin);
+    m_menuRadiusFixedCheck = new QCheckBox("Fixed px", layoutOverridesBody);
+    m_menuRadiusPxSpin = new QSpinBox(layoutOverridesBody);
+    m_menuRadiusPxSpin->setRange(1, 2000);
+    m_menuRadiusPxSpin->setSuffix(" px");
+    sizeRiceSpin(m_menuRadiusPxSpin);
+    auto *menuRadiusControls = riceControlRow(layoutOverridesBody, m_menuRadiusFractionSpin,
+                                              m_menuRadiusFixedCheck, m_menuRadiusPxSpin);
+    auto *menuRadiusRow = new QWidget(layoutOverridesBody);
+    auto *menuRadiusRowLayout = new QHBoxLayout(menuRadiusRow);
+    menuRadiusRowLayout->setContentsMargins(0, 0, 0, 0);
+    menuRadiusRowLayout->setSpacing(8);
+    menuRadiusRowLayout->addWidget(m_overrideRadiusCheck, 0, Qt::AlignVCenter);
+    menuRadiusRowLayout->addWidget(menuRadiusControls, 1);
+    layoutOverridesForm->addRow("Ring radius", menuRadiusRow);
+
+    m_overrideStartAngleCheck = new QCheckBox("Override", layoutOverridesBody);
+    m_menuStartAngleSpin = new QDoubleSpinBox(layoutOverridesBody);
+    m_menuStartAngleSpin->setRange(-360.0, 360.0);
+    m_menuStartAngleSpin->setSingleStep(5.0);
+    m_menuStartAngleSpin->setDecimals(1);
+    m_menuStartAngleSpin->setSuffix(" deg");
+    sizeRiceSpin(m_menuStartAngleSpin);
+    auto *menuAngleControls = riceControlRow(layoutOverridesBody, m_menuStartAngleSpin);
+    auto *menuAngleRow = new QWidget(layoutOverridesBody);
+    auto *menuAngleRowLayout = new QHBoxLayout(menuAngleRow);
+    menuAngleRowLayout->setContentsMargins(0, 0, 0, 0);
+    menuAngleRowLayout->setSpacing(8);
+    menuAngleRowLayout->addWidget(m_overrideStartAngleCheck, 0, Qt::AlignVCenter);
+    menuAngleRowLayout->addWidget(menuAngleControls, 1);
+    layoutOverridesForm->addRow("Start angle", menuAngleRow);
+
+    m_overrideDeadzoneCheck = new QCheckBox("Override", layoutOverridesBody);
+    m_menuDeadzoneFractionSpin = new QDoubleSpinBox(layoutOverridesBody);
+    m_menuDeadzoneFractionSpin->setRange(0.0, 100.0);
+    m_menuDeadzoneFractionSpin->setSingleStep(1.0);
+    m_menuDeadzoneFractionSpin->setDecimals(1);
+    m_menuDeadzoneFractionSpin->setSuffix(" %");
+    sizeRiceSpin(m_menuDeadzoneFractionSpin);
+    m_menuDeadzoneFixedCheck = new QCheckBox("Fixed px", layoutOverridesBody);
+    m_menuDeadzonePxSpin = new QSpinBox(layoutOverridesBody);
+    m_menuDeadzonePxSpin->setRange(0, 2000);
+    m_menuDeadzonePxSpin->setSuffix(" px");
+    sizeRiceSpin(m_menuDeadzonePxSpin);
+    auto *menuDeadzoneControls = riceControlRow(layoutOverridesBody, m_menuDeadzoneFractionSpin,
+                                                m_menuDeadzoneFixedCheck, m_menuDeadzonePxSpin);
+    auto *menuDeadzoneRow = new QWidget(layoutOverridesBody);
+    auto *menuDeadzoneRowLayout = new QHBoxLayout(menuDeadzoneRow);
+    menuDeadzoneRowLayout->setContentsMargins(0, 0, 0, 0);
+    menuDeadzoneRowLayout->setSpacing(8);
+    menuDeadzoneRowLayout->addWidget(m_overrideDeadzoneCheck, 0, Qt::AlignVCenter);
+    menuDeadzoneRowLayout->addWidget(menuDeadzoneControls, 1);
+    layoutOverridesForm->addRow("Center deadzone", menuDeadzoneRow);
+
+    m_overrideMouseOpenOffsetCheck = new QCheckBox("Override", layoutOverridesBody);
+    m_menuMouseOpenOffsetXSpin = new QDoubleSpinBox(layoutOverridesBody);
+    m_menuMouseOpenOffsetXSpin->setRange(kMinMouseOpenOffsetFraction * 100.0,
+                                         kMaxMouseOpenOffsetFraction * 100.0);
+    m_menuMouseOpenOffsetXSpin->setSingleStep(1.0);
+    m_menuMouseOpenOffsetXSpin->setDecimals(1);
+    m_menuMouseOpenOffsetXSpin->setSuffix(" %");
+    m_menuMouseOpenOffsetXSpin->setPrefix("X ");
+    m_menuMouseOpenOffsetYSpin = new QDoubleSpinBox(layoutOverridesBody);
+    m_menuMouseOpenOffsetYSpin->setRange(kMinMouseOpenOffsetFraction * 100.0,
+                                         kMaxMouseOpenOffsetFraction * 100.0);
+    m_menuMouseOpenOffsetYSpin->setSingleStep(1.0);
+    m_menuMouseOpenOffsetYSpin->setDecimals(1);
+    m_menuMouseOpenOffsetYSpin->setSuffix(" %");
+    m_menuMouseOpenOffsetYSpin->setPrefix("Y ");
+    m_menuMouseOpenOffsetYSpin->setValue(kDefaultMouseOpenOffsetYFraction * 100.0);
+    sizeRiceSpin(m_menuMouseOpenOffsetXSpin);
+    sizeRiceSpin(m_menuMouseOpenOffsetYSpin);
+    m_menuMouseOpenOffsetXSpin->setMinimumWidth(118);
+    m_menuMouseOpenOffsetYSpin->setMinimumWidth(118);
+    auto *menuMouseControls = riceControlRow(layoutOverridesBody, m_menuMouseOpenOffsetXSpin, nullptr,
+                                             m_menuMouseOpenOffsetYSpin);
+    auto *menuMouseRow = new QWidget(layoutOverridesBody);
+    auto *menuMouseRowLayout = new QHBoxLayout(menuMouseRow);
+    menuMouseRowLayout->setContentsMargins(0, 0, 0, 0);
+    menuMouseRowLayout->setSpacing(8);
+    menuMouseRowLayout->addWidget(m_overrideMouseOpenOffsetCheck, 0, Qt::AlignVCenter);
+    menuMouseRowLayout->addWidget(menuMouseControls, 1);
+    layoutOverridesForm->addRow("Mouse on open", menuMouseRow);
+
+    bindCollapseToggle(layoutOverridesToggle, layoutOverridesBody);
+    layoutOverridesOuter->addWidget(layoutOverridesToggle);
+    layoutOverridesOuter->addWidget(layoutOverridesBody);
     menuEditorSplit->addWidget(menuSettingsGroup);
+    menuEditorSplit->addWidget(layoutOverridesGroup);
 
     auto *slotsGroup = new QGroupBox("Wheel Slots", m_menuEditor);
     auto *slotsLayout = new QVBoxLayout(slotsGroup);
@@ -267,7 +531,8 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     slotsLayout->addWidget(m_slotActionCombo);
     menuEditorSplit->addWidget(slotsGroup);
     menuEditorSplit->setStretchFactor(0, 0);
-    menuEditorSplit->setStretchFactor(1, 1);
+    menuEditorSplit->setStretchFactor(1, 0);
+    menuEditorSplit->setStretchFactor(2, 1);
     menuEditorLayout->addWidget(wrapInScrollArea(menuEditorSplit, m_menuEditor));
 
     m_actionEditor = new QWidget(m_editorStack);
@@ -297,9 +562,9 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     actionForm->addRow("Icon", iconRow);
 
     m_actionIconPreview = new QLabel(actionSettingsGroup);
+    m_actionIconPreview->setObjectName("actionIconPreview");
     m_actionIconPreview->setFixedSize(48, 48);
     m_actionIconPreview->setAlignment(Qt::AlignCenter);
-    m_actionIconPreview->setStyleSheet("border: 1px solid #adc3d8; border-radius: 6px; background: #ffffff;");
     actionForm->addRow("Preview", m_actionIconPreview);
 
     m_actionChannelSpin = new QSpinBox(actionSettingsGroup);
@@ -309,8 +574,8 @@ SettingsWindow::SettingsWindow(QWidget *parent)
         ">0 = shared FIFO with other actions on the same channel.");
     actionForm->addRow("Run Channel", m_actionChannelSpin);
     m_actionChannelHelpLabel = new QLabel(actionSettingsGroup);
+    m_actionChannelHelpLabel->setObjectName("actionChannelHelp");
     m_actionChannelHelpLabel->setWordWrap(true);
-    m_actionChannelHelpLabel->setStyleSheet("color: #666;");
     actionForm->addRow("", m_actionChannelHelpLabel);
     m_actionSequenceLabel = new QLabel(actionSettingsGroup);
     m_actionSequenceLabel->setWordWrap(true);
@@ -790,6 +1055,93 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 {
                     m_menus[index].setDeferUntilExit(checked);
                 } });
+
+    const auto bindGlobalRice = [this]()
+    {
+        connect(m_themeOverlayEdit, &QLineEdit::textEdited, this, [this]()
+                { syncGlobalRiceFromUi(); });
+        connect(m_radiusFractionSpin, &QDoubleSpinBox::valueChanged, this, [this](double)
+                { syncGlobalRiceFromUi(); });
+        connect(m_radiusFixedCheck, &QCheckBox::toggled, this, [this](bool)
+                { syncGlobalRiceFromUi(); });
+        connect(m_radiusPxSpin, &QSpinBox::valueChanged, this, [this](int)
+                { syncGlobalRiceFromUi(); });
+        connect(m_startAngleSpin, &QDoubleSpinBox::valueChanged, this, [this](double)
+                { syncGlobalRiceFromUi(); });
+        connect(m_deadzoneFractionSpin, &QDoubleSpinBox::valueChanged, this, [this](double)
+                { syncGlobalRiceFromUi(); });
+        connect(m_deadzoneFixedCheck, &QCheckBox::toggled, this, [this](bool)
+                { syncGlobalRiceFromUi(); });
+        connect(m_deadzonePxSpin, &QSpinBox::valueChanged, this, [this](int)
+                { syncGlobalRiceFromUi(); });
+        connect(m_mouseOpenOffsetXSpin, &QDoubleSpinBox::valueChanged, this, [this](double)
+                { syncGlobalRiceFromUi(); });
+        connect(m_mouseOpenOffsetYSpin, &QDoubleSpinBox::valueChanged, this, [this](double)
+                { syncGlobalRiceFromUi(); });
+    };
+    bindGlobalRice();
+
+    connect(m_browseThemeOverlayButton, &QPushButton::clicked, this, [this]()
+            {
+                const QDir configDir = QFileInfo(App::instance().configPath()).absoluteDir();
+                const QString themesDir = configDir.filePath(QStringLiteral("themes"));
+                const QString selected = QFileDialog::getOpenFileName(
+                    this,
+                    "Select theme overlay",
+                    themesDir,
+                    "Qt Style Sheets (*.qss)");
+                if (selected.isEmpty())
+                {
+                    return;
+                }
+                const QString relative = QDir::toNativeSeparators(configDir.relativeFilePath(selected));
+                if (!relative.startsWith(QStringLiteral("..")))
+                {
+                    m_themeOverlayEdit->setText(QDir::fromNativeSeparators(relative));
+                }
+                else
+                {
+                    m_themeOverlayEdit->setText(selected);
+                }
+                syncGlobalRiceFromUi();
+            });
+    connect(m_clearThemeOverlayButton, &QPushButton::clicked, this, [this]()
+            {
+                m_themeOverlayEdit->clear();
+                syncGlobalRiceFromUi();
+            });
+
+    const auto bindMenuRice = [this]()
+    {
+        connect(m_overrideRadiusCheck, &QCheckBox::toggled, this, [this](bool)
+                { syncMenuRiceFromUi(); });
+        connect(m_menuRadiusFractionSpin, &QDoubleSpinBox::valueChanged, this, [this](double)
+                { syncMenuRiceFromUi(); });
+        connect(m_menuRadiusFixedCheck, &QCheckBox::toggled, this, [this](bool)
+                { syncMenuRiceFromUi(); });
+        connect(m_menuRadiusPxSpin, &QSpinBox::valueChanged, this, [this](int)
+                { syncMenuRiceFromUi(); });
+        connect(m_overrideStartAngleCheck, &QCheckBox::toggled, this, [this](bool)
+                { syncMenuRiceFromUi(); });
+        connect(m_menuStartAngleSpin, &QDoubleSpinBox::valueChanged, this, [this](double)
+                { syncMenuRiceFromUi(); });
+        connect(m_overrideDeadzoneCheck, &QCheckBox::toggled, this, [this](bool)
+                { syncMenuRiceFromUi(); });
+        connect(m_menuDeadzoneFractionSpin, &QDoubleSpinBox::valueChanged, this, [this](double)
+                { syncMenuRiceFromUi(); });
+        connect(m_menuDeadzoneFixedCheck, &QCheckBox::toggled, this, [this](bool)
+                { syncMenuRiceFromUi(); });
+        connect(m_menuDeadzonePxSpin, &QSpinBox::valueChanged, this, [this](int)
+                { syncMenuRiceFromUi(); });
+        connect(m_overrideMouseOpenOffsetCheck, &QCheckBox::toggled, this, [this](bool)
+                { syncMenuRiceFromUi(); });
+        connect(m_menuMouseOpenOffsetXSpin, &QDoubleSpinBox::valueChanged, this, [this](double)
+                { syncMenuRiceFromUi(); });
+        connect(m_menuMouseOpenOffsetYSpin, &QDoubleSpinBox::valueChanged, this, [this](double)
+                { syncMenuRiceFromUi(); });
+    };
+    bindMenuRice();
+
     connect(addSlotButton, &QPushButton::clicked, this, [this]()
             {
                 const int menuIndex = currentMenuIndex();
@@ -1630,6 +1982,7 @@ void SettingsWindow::loadWorkingCopy(const AppConfig &appConfig, const std::vect
         m_darkModeCheck->setChecked(m_appConfig.darkMode);
         m_darkModeCheck->setText(m_appConfig.darkMode ? "Light Mode" : "Dark Mode");
     }
+    refreshGlobalRiceEditor();
 
     m_selectionKind = SelectionKind::None;
     
@@ -1657,6 +2010,10 @@ void SettingsWindow::exportWorkingCopy(AppConfig &appConfig, std::vector<Action>
     if (m_darkModeCheck) {
         appConfig.darkMode = m_darkModeCheck->isChecked();
     }
+    appConfig.themeOverlayPath = m_themeOverlayEdit != nullptr
+        ? m_themeOverlayEdit->text().trimmed()
+        : m_appConfig.themeOverlayPath;
+    appConfig.rice = riceFromGlobalUi();
     actions = m_actions;
     menus = m_menus;
 }
@@ -1721,6 +2078,284 @@ void SettingsWindow::refreshEditors()
     m_editorStack->setCurrentWidget(m_emptyEditor);
 }
 
+RiceSettings SettingsWindow::riceFromGlobalUi() const
+{
+    RiceSettings rice;
+    if (m_radiusFractionSpin != nullptr)
+    {
+        rice.buttonRadiusFraction = m_radiusFractionSpin->value() / 100.0;
+    }
+    if (m_radiusFixedCheck != nullptr && m_radiusFixedCheck->isChecked() && m_radiusPxSpin != nullptr)
+    {
+        rice.buttonRadiusPx = m_radiusPxSpin->value();
+    }
+    if (m_startAngleSpin != nullptr)
+    {
+        rice.startAngleDegrees = m_startAngleSpin->value();
+    }
+    if (m_deadzoneFractionSpin != nullptr)
+    {
+        rice.innerDeadzoneFraction = m_deadzoneFractionSpin->value() / 100.0;
+    }
+    if (m_deadzoneFixedCheck != nullptr && m_deadzoneFixedCheck->isChecked() && m_deadzonePxSpin != nullptr)
+    {
+        rice.innerDeadzonePx = m_deadzonePxSpin->value();
+    }
+    if (m_mouseOpenOffsetXSpin != nullptr)
+    {
+        rice.mouseOpenOffsetXFraction = m_mouseOpenOffsetXSpin->value() / 100.0;
+    }
+    if (m_mouseOpenOffsetYSpin != nullptr)
+    {
+        rice.mouseOpenOffsetYFraction = m_mouseOpenOffsetYSpin->value() / 100.0;
+    }
+    return rice;
+}
+
+RiceOverrides SettingsWindow::riceOverridesFromMenuUi() const
+{
+    RiceOverrides overrides;
+    if (m_overrideRadiusCheck != nullptr && m_overrideRadiusCheck->isChecked())
+    {
+        overrides.buttonRadiusFraction = m_menuRadiusFractionSpin->value() / 100.0;
+        if (m_menuRadiusFixedCheck != nullptr && m_menuRadiusFixedCheck->isChecked())
+        {
+            overrides.buttonRadiusPx = m_menuRadiusPxSpin->value();
+        }
+    }
+    if (m_overrideStartAngleCheck != nullptr && m_overrideStartAngleCheck->isChecked())
+    {
+        overrides.startAngleDegrees = m_menuStartAngleSpin->value();
+    }
+    if (m_overrideDeadzoneCheck != nullptr && m_overrideDeadzoneCheck->isChecked())
+    {
+        overrides.innerDeadzoneFraction = m_menuDeadzoneFractionSpin->value() / 100.0;
+        if (m_menuDeadzoneFixedCheck != nullptr && m_menuDeadzoneFixedCheck->isChecked())
+        {
+            overrides.innerDeadzonePx = m_menuDeadzonePxSpin->value();
+        }
+    }
+    if (m_overrideMouseOpenOffsetCheck != nullptr && m_overrideMouseOpenOffsetCheck->isChecked())
+    {
+        overrides.mouseOpenOffsetXFraction = m_menuMouseOpenOffsetXSpin->value() / 100.0;
+        overrides.mouseOpenOffsetYFraction = m_menuMouseOpenOffsetYSpin->value() / 100.0;
+    }
+    return overrides;
+}
+
+void SettingsWindow::updateRiceControlEnabledState()
+{
+    const bool radiusFixed = m_radiusFixedCheck != nullptr && m_radiusFixedCheck->isChecked();
+    if (m_radiusFractionSpin != nullptr)
+    {
+        m_radiusFractionSpin->setEnabled(!radiusFixed);
+    }
+    if (m_radiusPxSpin != nullptr)
+    {
+        m_radiusPxSpin->setEnabled(radiusFixed);
+    }
+
+    const bool deadzoneFixed = m_deadzoneFixedCheck != nullptr && m_deadzoneFixedCheck->isChecked();
+    if (m_deadzoneFractionSpin != nullptr)
+    {
+        m_deadzoneFractionSpin->setEnabled(!deadzoneFixed);
+    }
+    if (m_deadzonePxSpin != nullptr)
+    {
+        m_deadzonePxSpin->setEnabled(deadzoneFixed);
+    }
+
+    const bool overrideRadius = m_overrideRadiusCheck != nullptr && m_overrideRadiusCheck->isChecked();
+    const bool menuRadiusFixed = m_menuRadiusFixedCheck != nullptr && m_menuRadiusFixedCheck->isChecked();
+    if (m_menuRadiusFractionSpin != nullptr)
+    {
+        m_menuRadiusFractionSpin->setEnabled(overrideRadius && !menuRadiusFixed);
+    }
+    if (m_menuRadiusFixedCheck != nullptr)
+    {
+        m_menuRadiusFixedCheck->setEnabled(overrideRadius);
+    }
+    if (m_menuRadiusPxSpin != nullptr)
+    {
+        m_menuRadiusPxSpin->setEnabled(overrideRadius && menuRadiusFixed);
+    }
+
+    const bool overrideAngle = m_overrideStartAngleCheck != nullptr && m_overrideStartAngleCheck->isChecked();
+    if (m_menuStartAngleSpin != nullptr)
+    {
+        m_menuStartAngleSpin->setEnabled(overrideAngle);
+    }
+
+    const bool overrideDeadzone = m_overrideDeadzoneCheck != nullptr && m_overrideDeadzoneCheck->isChecked();
+    const bool menuDeadzoneFixed = m_menuDeadzoneFixedCheck != nullptr && m_menuDeadzoneFixedCheck->isChecked();
+    if (m_menuDeadzoneFractionSpin != nullptr)
+    {
+        m_menuDeadzoneFractionSpin->setEnabled(overrideDeadzone && !menuDeadzoneFixed);
+    }
+    if (m_menuDeadzoneFixedCheck != nullptr)
+    {
+        m_menuDeadzoneFixedCheck->setEnabled(overrideDeadzone);
+    }
+    if (m_menuDeadzonePxSpin != nullptr)
+    {
+        m_menuDeadzonePxSpin->setEnabled(overrideDeadzone && menuDeadzoneFixed);
+    }
+
+    const bool overrideMouse = m_overrideMouseOpenOffsetCheck != nullptr
+        && m_overrideMouseOpenOffsetCheck->isChecked();
+    if (m_menuMouseOpenOffsetXSpin != nullptr)
+    {
+        m_menuMouseOpenOffsetXSpin->setEnabled(overrideMouse);
+    }
+    if (m_menuMouseOpenOffsetYSpin != nullptr)
+    {
+        m_menuMouseOpenOffsetYSpin->setEnabled(overrideMouse);
+    }
+}
+
+void SettingsWindow::syncGlobalRiceFromUi()
+{
+    if (m_isRefreshing)
+    {
+        return;
+    }
+    m_appConfig.themeOverlayPath = m_themeOverlayEdit != nullptr
+        ? m_themeOverlayEdit->text().trimmed()
+        : m_appConfig.themeOverlayPath;
+    m_appConfig.rice = riceFromGlobalUi();
+    updateRiceControlEnabledState();
+}
+
+void SettingsWindow::syncMenuRiceFromUi()
+{
+    if (m_isRefreshing)
+    {
+        return;
+    }
+    const int index = currentMenuIndex();
+    if (index >= 0)
+    {
+        m_menus[index].setRice(riceOverridesFromMenuUi());
+    }
+    updateRiceControlEnabledState();
+}
+
+void SettingsWindow::refreshGlobalRiceEditor()
+{
+    m_isRefreshing = true;
+    const QSignalBlocker overlayBlocker(m_themeOverlayEdit);
+    const QSignalBlocker radiusFractionBlocker(m_radiusFractionSpin);
+    const QSignalBlocker radiusFixedBlocker(m_radiusFixedCheck);
+    const QSignalBlocker radiusPxBlocker(m_radiusPxSpin);
+    const QSignalBlocker angleBlocker(m_startAngleSpin);
+    const QSignalBlocker deadzoneFractionBlocker(m_deadzoneFractionSpin);
+    const QSignalBlocker deadzoneFixedBlocker(m_deadzoneFixedCheck);
+    const QSignalBlocker deadzonePxBlocker(m_deadzonePxSpin);
+    const QSignalBlocker mouseOpenXBlocker(m_mouseOpenOffsetXSpin);
+    const QSignalBlocker mouseOpenYBlocker(m_mouseOpenOffsetYSpin);
+
+    if (m_themeOverlayEdit != nullptr)
+    {
+        m_themeOverlayEdit->setText(m_appConfig.themeOverlayPath);
+    }
+    const RiceSettings &rice = m_appConfig.rice;
+    if (m_radiusFractionSpin != nullptr)
+    {
+        m_radiusFractionSpin->setValue(rice.buttonRadiusFraction * 100.0);
+    }
+    if (m_radiusFixedCheck != nullptr)
+    {
+        m_radiusFixedCheck->setChecked(rice.buttonRadiusPx.has_value());
+    }
+    if (m_radiusPxSpin != nullptr)
+    {
+        m_radiusPxSpin->setValue(rice.buttonRadiusPx.value_or(220));
+    }
+    if (m_startAngleSpin != nullptr)
+    {
+        m_startAngleSpin->setValue(rice.startAngleDegrees);
+    }
+    if (m_deadzoneFractionSpin != nullptr)
+    {
+        m_deadzoneFractionSpin->setValue(rice.innerDeadzoneFraction * 100.0);
+    }
+    if (m_deadzoneFixedCheck != nullptr)
+    {
+        m_deadzoneFixedCheck->setChecked(rice.innerDeadzonePx.has_value());
+    }
+    if (m_deadzonePxSpin != nullptr)
+    {
+        m_deadzonePxSpin->setValue(rice.innerDeadzonePx.value_or(0));
+    }
+    if (m_mouseOpenOffsetXSpin != nullptr)
+    {
+        m_mouseOpenOffsetXSpin->setValue(rice.mouseOpenOffsetXFraction * 100.0);
+    }
+    if (m_mouseOpenOffsetYSpin != nullptr)
+    {
+        m_mouseOpenOffsetYSpin->setValue(rice.mouseOpenOffsetYFraction * 100.0);
+    }
+    m_isRefreshing = false;
+    updateRiceControlEnabledState();
+}
+
+void SettingsWindow::refreshMenuRiceEditor()
+{
+    const int index = currentMenuIndex();
+    if (index < 0)
+    {
+        return;
+    }
+
+    m_isRefreshing = true;
+    const QSignalBlocker overrideRadiusBlocker(m_overrideRadiusCheck);
+    const QSignalBlocker menuRadiusFractionBlocker(m_menuRadiusFractionSpin);
+    const QSignalBlocker menuRadiusFixedBlocker(m_menuRadiusFixedCheck);
+    const QSignalBlocker menuRadiusPxBlocker(m_menuRadiusPxSpin);
+    const QSignalBlocker overrideAngleBlocker(m_overrideStartAngleCheck);
+    const QSignalBlocker menuAngleBlocker(m_menuStartAngleSpin);
+    const QSignalBlocker overrideDeadzoneBlocker(m_overrideDeadzoneCheck);
+    const QSignalBlocker menuDeadzoneFractionBlocker(m_menuDeadzoneFractionSpin);
+    const QSignalBlocker menuDeadzoneFixedBlocker(m_menuDeadzoneFixedCheck);
+    const QSignalBlocker menuDeadzonePxBlocker(m_menuDeadzonePxSpin);
+    const QSignalBlocker overrideMouseBlocker(m_overrideMouseOpenOffsetCheck);
+    const QSignalBlocker menuMouseXBlocker(m_menuMouseOpenOffsetXSpin);
+    const QSignalBlocker menuMouseYBlocker(m_menuMouseOpenOffsetYSpin);
+
+    const RiceOverrides &overrides = m_menus[index].rice();
+    const bool radiusOverridden = overrides.buttonRadiusFraction.has_value()
+        || overrides.buttonRadiusPx.has_value();
+    const bool deadzoneOverridden = overrides.innerDeadzoneFraction.has_value()
+        || overrides.innerDeadzonePx.has_value();
+
+    m_overrideRadiusCheck->setChecked(radiusOverridden);
+    m_menuRadiusFractionSpin->setValue(
+        overrides.buttonRadiusFraction.value_or(m_appConfig.rice.buttonRadiusFraction) * 100.0);
+    m_menuRadiusFixedCheck->setChecked(overrides.buttonRadiusPx.has_value());
+    m_menuRadiusPxSpin->setValue(overrides.buttonRadiusPx.value_or(220));
+
+    m_overrideStartAngleCheck->setChecked(overrides.startAngleDegrees.has_value());
+    m_menuStartAngleSpin->setValue(
+        overrides.startAngleDegrees.value_or(m_appConfig.rice.startAngleDegrees));
+
+    m_overrideDeadzoneCheck->setChecked(deadzoneOverridden);
+    m_menuDeadzoneFractionSpin->setValue(
+        overrides.innerDeadzoneFraction.value_or(m_appConfig.rice.innerDeadzoneFraction) * 100.0);
+    m_menuDeadzoneFixedCheck->setChecked(overrides.innerDeadzonePx.has_value());
+    m_menuDeadzonePxSpin->setValue(overrides.innerDeadzonePx.value_or(0));
+
+    const bool mouseOverridden = overrides.mouseOpenOffsetXFraction.has_value()
+        || overrides.mouseOpenOffsetYFraction.has_value();
+    m_overrideMouseOpenOffsetCheck->setChecked(mouseOverridden);
+    m_menuMouseOpenOffsetXSpin->setValue(
+        overrides.mouseOpenOffsetXFraction.value_or(m_appConfig.rice.mouseOpenOffsetXFraction) * 100.0);
+    m_menuMouseOpenOffsetYSpin->setValue(
+        overrides.mouseOpenOffsetYFraction.value_or(m_appConfig.rice.mouseOpenOffsetYFraction) * 100.0);
+
+    m_isRefreshing = false;
+    updateRiceControlEnabledState();
+}
+
 void SettingsWindow::refreshMenuEditor()
 {
     const int index = currentMenuIndex();
@@ -1743,6 +2378,7 @@ void SettingsWindow::refreshMenuEditor()
     m_centerMouseOnOpenCheck->setChecked(m_menus[index].centerMouseOnOpen());
     m_restoreMouseOnCloseCheck->setChecked(m_menus[index].restoreMouseOnClose());
     m_deferUntilExitCheck->setChecked(m_menus[index].deferUntilExit());
+    refreshMenuRiceEditor();
 
     updateKeystrokeButtonText();
     refreshSlotList();
@@ -2815,6 +3451,7 @@ void SettingsWindow::deleteActionReferences(const std::string &actionId)
                          keptIds,
                          menu.id(),
                          menu.useLowLevelHook());
+        replacement.setRice(menu.rice());
         menu = replacement;
     }
 }

@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "App/Action.hpp"
+#include "App/Theme.hpp"
 
 namespace Application
 {
@@ -94,6 +95,10 @@ public:
     [[nodiscard]] bool useLowLevelHook() const noexcept;
     void setUseLowLevelHook(bool enabled) noexcept;
 
+    /// @brief Sparse layout overrides; empty means inherit global rice.
+    [[nodiscard]] const RiceOverrides &rice() const noexcept;
+    void setRice(RiceOverrides overrides);
+
 private:
     int m_triggerMod = 0;
     int m_triggerVk = 0;
@@ -106,6 +111,7 @@ private:
     std::string m_name;
     std::string m_id;
     std::vector<std::string> m_actionIds;
+    RiceOverrides m_rice;
 };
 
 } // namespace Application

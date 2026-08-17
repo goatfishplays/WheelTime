@@ -9,6 +9,7 @@
 #include "App/Log.hpp"
 #include "App/MenuConfigLoader.hpp"
 #include "App/SettingsWindow.hpp"
+#include "App/Theme.hpp"
 
 #include <Platform/Execute.hpp>
 #include <Platform/Inputs.hpp>
@@ -17,6 +18,7 @@
 #include <QAbstractNativeEventFilter>
 #include <QAction>
 #include <QApplication>
+#include <QDateTime>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -63,21 +65,35 @@ void deliverLlHotkey(int hotkeyId, void *userData)
 }
 } // namespace
 
-void App::applyTheme(bool isDark)
+void App::applyTheme()
 {
-    static int currentTheme = -1;
-    int newTheme = isDark ? 1 : 0;
-    if (currentTheme == newTheme)
+    static bool applied = false;
+    static bool lastDark = false;
+    static QString lastOverlayPath;
+    static qint64 lastOverlayMtime = -1;
+
+    const QString overlayPath = Theme::resolveOverlayPath(m_appConfig.themeOverlayPath, m_configPath);
+    qint64 overlayMtime = -1;
+    if (!overlayPath.isEmpty())
+    {
+        const QFileInfo overlayInfo(overlayPath);
+        if (overlayInfo.exists())
+        {
+            overlayMtime = overlayInfo.lastModified().toMSecsSinceEpoch();
+        }
+    }
+
+    if (applied && lastDark == m_appConfig.darkMode && lastOverlayPath == overlayPath
+        && lastOverlayMtime == overlayMtime)
     {
         return;
     }
 
-    QFile file(isDark ? ":/styles/darkWheel.qss" : ":/styles/defaultWheel.qss");
-    if (file.open(QFile::ReadOnly))
-    {
-        qApp->setStyleSheet(file.readAll());
-        currentTheme = newTheme;
-    }
+    qApp->setStyleSheet(Theme::composeStylesheet(m_appConfig.darkMode, overlayPath));
+    applied = true;
+    lastDark = m_appConfig.darkMode;
+    lastOverlayPath = overlayPath;
+    lastOverlayMtime = overlayMtime;
 }
 
 /// @brief True if @p action is a history/cancel helper that must not enter MRU/MFU.
@@ -151,7 +167,8 @@ App::App()
             std::vector<std::string>{"action-config-missing"}, "menu-config-error"));
     }
 
-    applyTheme(m_appConfig.darkMode);
+    applyTheme();
+    Theme::seedExampleOverlay(m_configPath);
 
     m_inputReceiver.setHotkeyTriggeredHandler(&deliverLlHotkey, this);
 
@@ -197,7 +214,7 @@ App::App()
     if (!m_loadedMenus.empty())
     {
         m_activeMenu = m_loadedMenus.front().get();
-        m_gui.setMenu(*m_activeMenu, actionSlotVisualsForMenu(*m_activeMenu));
+        applyMenuToGui(*m_activeMenu);
     }
 
     initializeOverlay();
@@ -629,6 +646,12 @@ void App::configureOverlayForCursor()
     overlayWindow.setTopmost(true);
 }
 
+void App::applyMenuToGui(const Menu &menu)
+{
+    m_gui.applyRice(Theme::resolve(m_appConfig.rice, menu.rice()));
+    m_gui.setMenu(menu, actionSlotVisualsForMenu(menu));
+}
+
 void App::showGui(Menu *menu)
 {
     if (menu == nullptr)
@@ -666,27 +689,26 @@ void App::showGui(Menu *menu)
     m_deferredActionIds.clear();
     // Size the overlay to the current monitor first so radius/layout use final dims.
     configureOverlayForCursor();
-
-    if (m_activeMenu->centerMouseOnOpen())
-    {
-        const Platform::Vec2 cursorPos = m_inputReceiver.absoluteMousePosition();
-        Platform::Window overlayWindow(reinterpret_cast<void *>(m_gui.winId()));
-        const Platform::WindowRect bounds =
-            overlayWindow.monitorBoundsForPoint(cursorPos.x, cursorPos.y);
-        // Start the cursor slightly above the wheel center; scales with the
-        // monitor so the nudge feels the same across resolutions.
-        const int upwardNudge = bounds.height * 2 / 100;
-        m_inputReceiver.setAbsoluteMousePosition(Platform::Vec2{
-            bounds.x + bounds.width / 2,
-            bounds.y + bounds.height / 2 - upwardNudge});
-    }
-
-    m_gui.setMenu(*m_activeMenu, actionSlotVisualsForMenu(*m_activeMenu));
+    applyMenuToGui(*m_activeMenu);
 
     Platform::Window overlayWindow(reinterpret_cast<void *>(m_gui.winId()));
     overlayWindow.setClickThrough(false);
     overlayWindow.showNoActivate();
     m_gui.enterInteractiveOverlay();
+    if (m_gui.layout() != nullptr)
+    {
+        m_gui.layout()->activate();
+    }
+
+    if (m_activeMenu->centerMouseOnOpen())
+    {
+        const RiceSettings rice = Theme::resolve(m_appConfig.rice, m_activeMenu->rice());
+        const QPoint target = m_gui.mouseOpenGlobalPosition(
+            rice.mouseOpenOffsetXFraction, rice.mouseOpenOffsetYFraction);
+        m_inputReceiver.setAbsoluteMousePosition(Platform::Vec2{target.x(), target.y()});
+        m_gui.refreshSelectionFromCursor();
+    }
+
     armEscapeDismiss();
 }
 
@@ -1205,7 +1227,7 @@ bool App::applyConfig(const AppConfig &appConfig, const std::vector<Action> &act
     }
 
     m_appConfig = appConfig;
-    applyTheme(m_appConfig.darkMode);
+    applyTheme();
 
     // Drop in-flight macros that may reference old library Actions / menus.
     if (m_scheduler)
@@ -1254,11 +1276,16 @@ void App::refreshActiveMenu()
 {
     if (m_activeMenu != nullptr)
     {
-        m_gui.setMenu(*m_activeMenu, actionSlotVisualsForMenu(*m_activeMenu));
+        applyMenuToGui(*m_activeMenu);
     }
 }
 
 QString App::configPath() const
 {
     return m_configPath;
+}
+
+const AppConfig &App::appConfig() const noexcept
+{
+    return m_appConfig;
 }

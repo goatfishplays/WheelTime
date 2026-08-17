@@ -14,6 +14,7 @@
 #include "App/Menu.hpp"
 #include "App/Scheduler.hpp"
 #include "App/SearchConfig.hpp"
+#include "App/Theme.hpp"
 
 #include <QApplication>
 #include <QString>
@@ -33,6 +34,8 @@ class SettingsWindow;
 struct AppConfig
 {
     bool darkMode = false;
+    QString themeOverlayPath;
+    RiceSettings rice;
 };
 
 /**
@@ -143,16 +146,19 @@ public:
     /// @brief Re-renders the active menu after config changes.
     void refreshActiveMenu();
     QString configPath() const;
+    /// @brief Global app settings (theme base, overlay path, default rice).
+    [[nodiscard]] const AppConfig &appConfig() const noexcept;
 
     /// @brief The multithreaded Action scheduler used for all launcher macros.
     [[nodiscard]] Scheduler &scheduler() noexcept;
     [[nodiscard]] const Scheduler &scheduler() const noexcept;
 
     /**
-     * @brief Applies the application's visual theme based on the given boolean.
-     * @param isDark True if the dark theme should be applied, false for the light theme.
+     * @brief Applies bundled light/dark QSS plus the optional user overlay.
+     *
+     * Called at startup and after settings save — never on the menu-open path.
      */
-    void applyTheme(bool isDark);
+    void applyTheme();
 
 private:
     Menu *m_activeMenu;
@@ -168,6 +174,8 @@ private:
     void flushDeferredActions();
     void initializeOverlay();
     void configureOverlayForCursor();
+    /// @brief Push rice + slot visuals for @p menu onto the overlay widget.
+    void applyMenuToGui(const Menu &menu);
     /// @brief Unregisters live menu hotkeys so settings can capture those keys.
     void suspendHotkeys();
     /// @brief Re-registers menu hotkeys after settings closes.

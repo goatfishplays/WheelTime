@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QMouseEvent>
+#include <QSize>
 #include <QStyle>
 #include <QToolButton>
 #include <QVBoxLayout>
@@ -68,7 +69,7 @@ void RadialMenuWidget::setCenterText(const QString &text)
 
 void RadialMenuWidget::setButtonRadiusFraction(double fraction)
 {
-    m_buttonRadiusFraction = std::clamp(fraction, 0.15, 0.48);
+    m_buttonRadiusFraction = std::clamp(fraction, kMinButtonRadiusFraction, kMaxButtonRadiusFraction);
     m_useFixedButtonRadius = false;
     repositionButtons();
 }
@@ -78,6 +79,45 @@ void RadialMenuWidget::setButtonRadius(int radius)
     m_buttonRadius = std::max(1, radius);
     m_useFixedButtonRadius = true;
     repositionButtons();
+}
+
+void RadialMenuWidget::setStartAngleDegrees(double degrees)
+{
+    m_startAngleDegrees = degrees;
+    repositionButtons();
+}
+
+void RadialMenuWidget::setInnerDeadzoneFraction(double fraction)
+{
+    m_innerDeadzoneFraction = std::clamp(fraction, 0.0, 1.0);
+    m_useFixedInnerDeadzone = false;
+}
+
+void RadialMenuWidget::setInnerDeadzone(int radiusPx)
+{
+    m_innerDeadzonePx = std::max(0, radiusPx);
+    m_useFixedInnerDeadzone = true;
+}
+
+void RadialMenuWidget::applyRice(const RiceSettings &rice)
+{
+    if (rice.buttonRadiusPx.has_value())
+    {
+        setButtonRadius(*rice.buttonRadiusPx);
+    }
+    else
+    {
+        setButtonRadiusFraction(rice.buttonRadiusFraction);
+    }
+    setStartAngleDegrees(rice.startAngleDegrees);
+    if (rice.innerDeadzonePx.has_value())
+    {
+        setInnerDeadzone(*rice.innerDeadzonePx);
+    }
+    else
+    {
+        setInnerDeadzoneFraction(rice.innerDeadzoneFraction);
+    }
 }
 
 void RadialMenuWidget::setActivationMode(ActivationMode mode)
@@ -202,6 +242,7 @@ void RadialMenuWidget::repositionButtons()
     }
 
     const double radius = static_cast<double>(effectiveButtonRadius());
+    const double startAngle = (-M_PI / 2.0) + (m_startAngleDegrees * M_PI / 180.0);
 
     // Angles are measured from the top and increase clockwise.
     // 1 button: 12:00
@@ -211,7 +252,7 @@ void RadialMenuWidget::repositionButtons()
     // etc.
     for (int i = 0; i < count; ++i)
     {
-        const double angle = (-M_PI / 2.0) + (2.0 * M_PI * i / count);
+        const double angle = startAngle + (2.0 * M_PI * i / count);
 
         HoverButton *button = m_buttons[i];
         button->ensurePolished();
@@ -255,13 +296,39 @@ int RadialMenuWidget::effectiveButtonRadius() const
         return m_buttonRadius;
     }
 
-    // Scale with the radial panel (monitor-sized after title/footer chrome).
-    // Leave margin so enlarged selected buttons don't clip the edges.
-    const int shortSide = std::min(width(), height());
+    // Scale with the fullscreen overlay (active monitor). Leave margin so
+    // enlarged selected buttons don't clip the edges.
+    const QSize overlay = overlaySize();
+    const int shortSide = std::min(overlay.width(), overlay.height());
     const int edgeMargin = 80;
     const int scaled = qRound(shortSide * m_buttonRadiusFraction);
     const int maxRadius = std::max(60, shortSide / 2 - edgeMargin);
     return std::clamp(scaled, 60, maxRadius);
+}
+
+double RadialMenuWidget::effectiveInnerDeadzone() const
+{
+    if (m_useFixedInnerDeadzone)
+    {
+        return static_cast<double>(m_innerDeadzonePx);
+    }
+    if (m_innerDeadzoneFraction <= 0.0)
+    {
+        return 0.0;
+    }
+    const QSize overlay = overlaySize();
+    const int shortSide = std::min(overlay.width(), overlay.height());
+    return static_cast<double>(shortSide) * m_innerDeadzoneFraction;
+}
+
+QSize RadialMenuWidget::overlaySize() const
+{
+    const QWidget *overlay = window();
+    if (overlay != nullptr && overlay->width() > 0 && overlay->height() > 0)
+    {
+        return overlay->size();
+    }
+    return size();
 }
 
 QIcon RadialMenuWidget::iconForPath(const std::string &path) const
@@ -303,6 +370,16 @@ void RadialMenuWidget::updateSelectionFromGlobalMousePosition(const QPoint &glob
     updateSelection();
 }
 
+QPoint RadialMenuWidget::mouseOpenGlobalPosition(double xFraction, double yFraction) const
+{
+    const QPointF center = layoutCenter();
+    const QSize overlay = overlaySize();
+    const QPoint local(
+        qRound(center.x() + overlay.width() * xFraction),
+        qRound(center.y() - overlay.height() * yFraction));
+    return mapToGlobal(local);
+}
+
 void RadialMenuWidget::clearSelection()
 {
     if (m_selectedIndex != -1)
@@ -333,6 +410,13 @@ void RadialMenuWidget::updateSelection()
 
     const int count = static_cast<int>(m_buttons.size());
     if (count == 0)
+    {
+        clearSelection();
+        return;
+    }
+
+    const double deadzone = effectiveInnerDeadzone();
+    if (deadzone > 0.0 && dist2 < deadzone * deadzone)
     {
         clearSelection();
         return;
