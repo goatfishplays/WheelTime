@@ -2,7 +2,7 @@
  *
  * Object-name contract (user overlays append after this file):
  *   #launcherOverlay, #launcherPanel, #launcherPanelBody, #launcherTitle,
- *   RadialMenuWidget, #radialCenterLabel, #wheelActionButton,
+ *   #virtualCursor, RadialMenuWidget, #radialCenterLabel, #wheelActionButton,
  *   #settingsWindow, #settingsOverlayHost, #searchOverlayHost, #searchPanel,
  *   #searchInput, #searchResults, #primaryButton
  *
@@ -48,6 +48,12 @@ QLabel#launcherTitle {
     color: #f2f6fa;
     font-size: 24px;
     font-weight: bold;
+}
+
+QWidget#virtualCursor {
+    background-color: #f2f6fa;
+    border: 2px solid #213347;
+    border-radius: 8px;
 }
 
 QLabel#radialCenterLabel {

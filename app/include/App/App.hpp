@@ -31,11 +31,23 @@ namespace Application
 /// @brief Forward declaration for the non-modal settings editor window.
 class SettingsWindow;
 
+/// @brief How the wheel overlay deals with games that clip/recenter the mouse.
+enum class GameMouseCaptureMode
+{
+    /// @brief Keep today's non-activating overlay; game may keep the cursor.
+    Off = 0,
+    /// @brief ClipCursor(NULL) plus a virtual cursor from physical mouse deltas.
+    Unclip = 1,
+    /// @brief Unclip first, then steal focus if the game still recaptures the mouse.
+    StealIfLocked = 2
+};
+
 struct AppConfig
 {
     bool darkMode = false;
     QString themeOverlayPath;
     RiceSettings rice;
+    GameMouseCaptureMode gameMouseCapture = GameMouseCaptureMode::Off;
 };
 
 /**
@@ -127,6 +139,8 @@ public:
     void resetActionFrequencies();
     /// @brief Global hotkey callback used to show or hide the launcher.
     void onHotkeyTriggered(int hotkeyId);
+    /// @brief WH_MOUSE_LL click callback while a game-mouse-capture session is active.
+    void onOverlayMouseButton(Platform::OverlayMouseButton button, bool pressed);
     /// @brief Opens the non-modal settings editor window.
     void showSettingsWindow();
     /// @brief Restores the dormant overlay shell after settings closes.
@@ -194,6 +208,16 @@ private:
     void disarmEscapeDismiss();
     /// @brief QTimer callback: dismiss the wheel on Escape press edges.
     void onEscapeWatchTick();
+    /// @brief Starts virtual-cursor / unclip handling for the current capture mode.
+    void beginGameMouseCaptureSession();
+    /// @brief Stops unclip polling, the mouse hook, and the virtual cursor.
+    void endGameMouseCaptureSession();
+    /// @brief QTimer callback: drain physical mouse deltas and detect recapture.
+    void onGameMouseCaptureTick();
+    /// @brief Activate the overlay so the game releases cursor lock (StealIfLocked).
+    void stealOverlayFocus();
+    /// @brief True when the Settings button sits under the virtual cursor.
+    [[nodiscard]] bool virtualCursorHitsSettingsButton() const;
     /// @brief Creates the always-visible Windows tray icon and context menu.
     void setupTrayIcon();
     /**
@@ -231,6 +255,22 @@ private:
     QTimer *m_escapeWatchTimer{nullptr};
     /// @brief Prior Escape-down sample for rising-edge dismiss detection.
     bool m_escapeWasDown{false};
+    /// @brief Polls clip/recenter and applies physical mouse deltas to the virtual cursor.
+    QTimer *m_mouseCaptureTimer{nullptr};
+    /// @brief True while Unclip/StealIfLocked is driving selection from physical deltas.
+    bool m_usingVirtualCursor{false};
+    /// @brief True after StealIfLocked activated the overlay this wheel session.
+    bool m_stoleGameFocus{false};
+    /// @brief Injected-warp hits accumulated while waiting to steal focus.
+    int m_overlayWarpHits{0};
+    /// @brief Ignore SetCursorPos warps until this epoch (our own center-on-open).
+    qint64 m_ignoreWarpUntilMs{0};
+    /// @brief Overlay selection point when the OS cursor is being recentered.
+    Platform::Vec2 m_virtualCursorPos{};
+    /// @brief Last OS cursor sample, used to detect "device moved, cursor didn't".
+    Platform::Vec2 m_lastOsCursorPos{};
+    /// @brief Last steal attempt epoch so we do not Alt-pulse every 8ms.
+    qint64 m_lastStealAttemptMs{0};
     /// @brief True while settings has unregistered hotkeys for key capture.
     bool m_hotkeysSuspended{false};
 

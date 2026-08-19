@@ -128,6 +128,7 @@ private:
 
     QGroupBox *m_globalGroup{nullptr};
     QCheckBox *m_darkModeCheck{nullptr};
+    QComboBox *m_gameMouseCaptureCombo{nullptr};
     QLineEdit *m_themeOverlayEdit{nullptr};
     QPushButton *m_browseThemeOverlayButton{nullptr};
     QPushButton *m_clearThemeOverlayButton{nullptr};

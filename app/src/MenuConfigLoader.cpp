@@ -433,6 +433,33 @@ namespace
         return obj;
     }
 
+    QString serializeGameMouseCapture(GameMouseCaptureMode mode)
+    {
+        switch (mode)
+        {
+        case GameMouseCaptureMode::Unclip:
+            return QStringLiteral("unclip");
+        case GameMouseCaptureMode::StealIfLocked:
+            return QStringLiteral("stealIfLocked");
+        case GameMouseCaptureMode::Off:
+        default:
+            return QStringLiteral("off");
+        }
+    }
+
+    GameMouseCaptureMode parseGameMouseCapture(const QString &value)
+    {
+        if (value == QLatin1String("unclip"))
+        {
+            return GameMouseCaptureMode::Unclip;
+        }
+        if (value == QLatin1String("stealIfLocked"))
+        {
+            return GameMouseCaptureMode::StealIfLocked;
+        }
+        return GameMouseCaptureMode::Off;
+    }
+
     void loadAppConfigFields(const QJsonObject &rootObject, AppConfig &appConfig)
     {
         if (rootObject.contains("darkMode") && rootObject["darkMode"].isBool())
@@ -446,6 +473,11 @@ namespace
         if (rootObject.contains("rice") && rootObject.value("rice").isObject())
         {
             appConfig.rice = parseRiceSettings(rootObject.value("rice").toObject());
+        }
+        if (rootObject.contains("gameMouseCapture"))
+        {
+            appConfig.gameMouseCapture = parseGameMouseCapture(
+                rootObject.value("gameMouseCapture").toString());
         }
     }
 
@@ -812,6 +844,7 @@ bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appC
 
     QJsonObject rootObject;
     rootObject.insert("darkMode", appConfig.darkMode);
+    rootObject.insert("gameMouseCapture", serializeGameMouseCapture(appConfig.gameMouseCapture));
     if (!appConfig.themeOverlayPath.isEmpty())
     {
         rootObject.insert("themeOverlay", appConfig.themeOverlayPath);

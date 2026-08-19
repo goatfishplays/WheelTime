@@ -4,9 +4,10 @@
  */
 #pragma once
 
-#include <vector>
-#include <string>
 #include <memory>
+#include <optional>
+#include <string>
+#include <vector>
 
 #include <QWidget>
 #include <QKeyEvent>
@@ -80,6 +81,14 @@ public:
     [[nodiscard]] QPoint mouseOpenGlobalPosition(double xFraction, double yFraction) const;
     /// @brief Currently selected wheel slot, or -1 when none.
     [[nodiscard]] int selectedActionIndex() const;
+    /**
+     * @brief Drives wheel selection from a virtual cursor while games recenter.
+     *
+     * Pass a nullopt to hide the marker and go back to QCursor::pos().
+     */
+    void setVirtualCursor(const std::optional<QPoint> &globalPos);
+    /// @brief True when @p globalPos (or the virtual cursor) is over Settings.
+    [[nodiscard]] bool hitsSettingsButton(const QPoint &globalPos) const;
 
 signals:
     /// @brief Emitted when the launcher should be dismissed with Escape.
@@ -106,6 +115,8 @@ private:
     QLabel *m_titleLabel{nullptr};
     RadialMenuWidget *m_radialMenu{nullptr};
     QPushButton *m_settingsButton{nullptr};
+    QWidget *m_virtualCursor{nullptr};
+    std::optional<QPoint> m_virtualCursorOverride;
     OverlayMode m_overlayMode{OverlayMode::Dormant};
 };
 

@@ -30,6 +30,8 @@ public:
     void captureActiveWindow();
     /// @brief Bring the window into active view/focus.
     void focus();
+    /// @brief True when this window is the OS foreground window.
+    [[nodiscard]] bool isForeground() const;
     /// @brief Minimize/hide the window.
     void hide();
     /**

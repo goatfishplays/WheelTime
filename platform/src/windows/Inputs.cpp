@@ -87,10 +87,20 @@ public:
     bool suppressWinKeyUp{false};
     bool captureActive{false};
     HHOOK hook{nullptr};
+    HHOOK mouseHook{nullptr};
     HotkeyTriggeredHandler handler{nullptr};
     void *handlerUser{nullptr};
     ChordCaptureHandler captureHandler{nullptr};
     void *captureUser{nullptr};
+    OverlayMouseButtonHandler overlayButtonHandler{nullptr};
+    void *overlayUser{nullptr};
+    bool overlayMouseSession{false};
+    bool rawInputRegistered{false};
+    POINT lastMousePt{};
+    bool lastMousePtValid{false};
+    int pendingMouseDx{0};
+    int pendingMouseDy{0};
+    int pendingMouseWarps{0};
 
     static Impl *s_active;
 
@@ -141,6 +151,38 @@ public:
         swallowVksUntilUp.clear();
         suppressWinKeyUp = false;
         physicalDown.clear();
+        return previous;
+    }
+
+    void ensureMouseHookLocked()
+    {
+        if (mouseHook != nullptr || !overlayMouseSession)
+        {
+            return;
+        }
+        mouseHook = SetWindowsHookExW(WH_MOUSE_LL, &Impl::lowLevelMouseProc, GetModuleHandleW(nullptr), 0);
+        if (mouseHook == nullptr)
+        {
+            std::cerr << "Failed to install WH_MOUSE_LL. Error code: " << GetLastError() << "\n";
+        }
+        else
+        {
+            std::cout << "Installed WH_MOUSE_LL for overlay mouse session\n";
+        }
+    }
+
+    [[nodiscard]] HHOOK takeMouseHookLocked()
+    {
+        HHOOK previous = mouseHook;
+        mouseHook = nullptr;
+        overlayMouseSession = false;
+        overlayButtonHandler = nullptr;
+        overlayUser = nullptr;
+        lastMousePtValid = false;
+        pendingMouseDx = 0;
+        pendingMouseDy = 0;
+        pendingMouseWarps = 0;
+        rawInputRegistered = false;
         return previous;
     }
 
@@ -373,6 +415,96 @@ public:
         }
         return true;
     }
+
+    static LRESULT CALLBACK lowLevelMouseProc(int code, WPARAM wParam, LPARAM lParam)
+    {
+        Impl *self = s_active;
+        if (code == HC_ACTION && self != nullptr)
+        {
+            if (self->handleLowLevelMouse(wParam, lParam))
+            {
+                return 1;
+            }
+        }
+        return CallNextHookEx(nullptr, code, wParam, lParam);
+    }
+
+    [[nodiscard]] bool handleLowLevelMouse(WPARAM wParam, LPARAM lParam)
+    {
+        const auto *info = reinterpret_cast<MSLLHOOKSTRUCT *>(lParam);
+        if (info == nullptr)
+        {
+            return false;
+        }
+
+        OverlayMouseButtonHandler buttonCb = nullptr;
+        OverlayMouseButton button = OverlayMouseButton::Left;
+        bool pressed = false;
+        void *user = nullptr;
+
+        {
+            std::lock_guard<std::mutex> lock(mutex);
+            if (!overlayMouseSession)
+            {
+                return false;
+            }
+
+            const bool injected = (info->flags & LLMHF_INJECTED) != 0;
+            if (lastMousePtValid && wParam == WM_MOUSEMOVE)
+            {
+                if (injected)
+                {
+                    ++pendingMouseWarps;
+                }
+                else if (!rawInputRegistered)
+                {
+                    // Fallback only: cursor-position deltas rubber-band when a
+                    // game recenters without the injected flag (Minecraft).
+                    pendingMouseDx += info->pt.x - lastMousePt.x;
+                    pendingMouseDy += info->pt.y - lastMousePt.y;
+                }
+            }
+            lastMousePt = info->pt;
+            lastMousePtValid = true;
+
+            if (wParam == WM_MOUSEMOVE || injected)
+            {
+                return false;
+            }
+
+            switch (wParam)
+            {
+            case WM_LBUTTONDOWN:
+                button = OverlayMouseButton::Left;
+                pressed = true;
+                break;
+            case WM_LBUTTONUP:
+                button = OverlayMouseButton::Left;
+                pressed = false;
+                break;
+            case WM_RBUTTONDOWN:
+                button = OverlayMouseButton::Right;
+                pressed = true;
+                break;
+            case WM_RBUTTONUP:
+                button = OverlayMouseButton::Right;
+                pressed = false;
+                break;
+            default:
+                return false;
+            }
+
+            buttonCb = overlayButtonHandler;
+            user = overlayUser;
+        }
+
+        if (buttonCb != nullptr)
+        {
+            buttonCb(button, pressed, user);
+        }
+        // Swallow physical clicks so a captured game does not also receive them.
+        return true;
+    }
 };
 
 InputReceiver::Impl *InputReceiver::Impl::s_active = nullptr;
@@ -386,14 +518,32 @@ InputReceiver::InputReceiver()
 InputReceiver::~InputReceiver()
 {
     HHOOK toUnhook = nullptr;
+    HHOOK mouseToUnhook = nullptr;
+    bool rawRegistered = false;
     {
         std::lock_guard<std::mutex> lock(m_impl->mutex);
         toUnhook = m_impl->takeHookLocked();
+        rawRegistered = m_impl->rawInputRegistered;
+        mouseToUnhook = m_impl->takeMouseHookLocked();
     }
     if (toUnhook != nullptr)
     {
         UnhookWindowsHookEx(toUnhook);
         std::cout << "Uninstalled WH_KEYBOARD_LL\n";
+    }
+    if (mouseToUnhook != nullptr)
+    {
+        UnhookWindowsHookEx(mouseToUnhook);
+        std::cout << "Uninstalled WH_MOUSE_LL\n";
+    }
+    if (rawRegistered)
+    {
+        RAWINPUTDEVICE rid{};
+        rid.usUsagePage = 0x01;
+        rid.usUsage = 0x02;
+        rid.dwFlags = RIDEV_REMOVE;
+        rid.hwndTarget = nullptr;
+        RegisterRawInputDevices(&rid, 1, sizeof(rid));
     }
     if (Impl::s_active == m_impl.get())
     {
@@ -411,6 +561,160 @@ Vec2 InputReceiver::absoluteMousePosition()
 void InputReceiver::setAbsoluteMousePosition(Vec2 position)
 {
     SetCursorPos(position.x, position.y);
+}
+
+void InputReceiver::releaseCursorClip()
+{
+    ClipCursor(nullptr);
+}
+
+bool InputReceiver::isCursorClipActive() const
+{
+    RECT clip{};
+    if (!GetClipCursor(&clip))
+    {
+        return false;
+    }
+
+    const int virtualLeft = GetSystemMetrics(SM_XVIRTUALSCREEN);
+    const int virtualTop = GetSystemMetrics(SM_YVIRTUALSCREEN);
+    const int virtualRight = virtualLeft + GetSystemMetrics(SM_CXVIRTUALSCREEN);
+    const int virtualBottom = virtualTop + GetSystemMetrics(SM_CYVIRTUALSCREEN);
+    constexpr int kSlop = 2;
+    return clip.left > virtualLeft + kSlop || clip.top > virtualTop + kSlop
+           || clip.right < virtualRight - kSlop || clip.bottom < virtualBottom - kSlop;
+}
+
+void InputReceiver::beginOverlayMouseSession(void *nativeHwnd, OverlayMouseButtonHandler buttonHandler, void *userData)
+{
+    POINT cursor{};
+    GetCursorPos(&cursor);
+    HWND hwnd = static_cast<HWND>(nativeHwnd);
+
+    bool rawOk = false;
+    if (hwnd != nullptr)
+    {
+        RAWINPUTDEVICE rid{};
+        rid.usUsagePage = 0x01;
+        rid.usUsage = 0x02;
+        rid.dwFlags = RIDEV_INPUTSINK;
+        rid.hwndTarget = hwnd;
+        rawOk = RegisterRawInputDevices(&rid, 1, sizeof(rid)) != FALSE;
+        if (!rawOk)
+        {
+            std::cerr << "Failed to register raw mouse input. Error code: " << GetLastError() << "\n";
+        }
+        else
+        {
+            std::cout << "Registered RIDEV_INPUTSINK mouse for overlay session\n";
+        }
+    }
+
+    std::lock_guard<std::mutex> lock(m_impl->mutex);
+    m_impl->overlayButtonHandler = buttonHandler;
+    m_impl->overlayUser = userData;
+    m_impl->overlayMouseSession = true;
+    m_impl->rawInputRegistered = rawOk;
+    m_impl->lastMousePt = cursor;
+    m_impl->lastMousePtValid = true;
+    m_impl->pendingMouseDx = 0;
+    m_impl->pendingMouseDy = 0;
+    m_impl->pendingMouseWarps = 0;
+    m_impl->ensureMouseHookLocked();
+}
+
+void InputReceiver::endOverlayMouseSession()
+{
+    HHOOK toUnhook = nullptr;
+    bool rawRegistered = false;
+    {
+        std::lock_guard<std::mutex> lock(m_impl->mutex);
+        rawRegistered = m_impl->rawInputRegistered;
+        toUnhook = m_impl->takeMouseHookLocked();
+    }
+    if (toUnhook != nullptr)
+    {
+        UnhookWindowsHookEx(toUnhook);
+        std::cout << "Uninstalled WH_MOUSE_LL\n";
+    }
+    if (rawRegistered)
+    {
+        RAWINPUTDEVICE rid{};
+        rid.usUsagePage = 0x01;
+        rid.usUsage = 0x02;
+        rid.dwFlags = RIDEV_REMOVE;
+        rid.hwndTarget = nullptr;
+        if (RegisterRawInputDevices(&rid, 1, sizeof(rid)) == FALSE)
+        {
+            std::cerr << "Failed to unregister raw mouse input. Error code: " << GetLastError() << "\n";
+        }
+    }
+}
+
+void InputReceiver::pollOverlayMouseDelta(int &dx, int &dy)
+{
+    std::lock_guard<std::mutex> lock(m_impl->mutex);
+    dx = m_impl->pendingMouseDx;
+    dy = m_impl->pendingMouseDy;
+    m_impl->pendingMouseDx = 0;
+    m_impl->pendingMouseDy = 0;
+}
+
+int InputReceiver::takeOverlayMouseWarpCount()
+{
+    std::lock_guard<std::mutex> lock(m_impl->mutex);
+    const int warps = m_impl->pendingMouseWarps;
+    m_impl->pendingMouseWarps = 0;
+    return warps;
+}
+
+bool InputReceiver::processNativeMessage(void *message)
+{
+    if (message == nullptr)
+    {
+        return false;
+    }
+
+    const MSG *msg = static_cast<MSG *>(message);
+    if (msg->message != WM_INPUT)
+    {
+        return false;
+    }
+
+    UINT size = 0;
+    GetRawInputData(reinterpret_cast<HRAWINPUT>(msg->lParam), RID_INPUT, nullptr, &size, sizeof(RAWINPUTHEADER));
+    if (size == 0)
+    {
+        return false;
+    }
+
+    std::vector<BYTE> buffer(size);
+    if (GetRawInputData(reinterpret_cast<HRAWINPUT>(msg->lParam), RID_INPUT, buffer.data(), &size, sizeof(RAWINPUTHEADER))
+        == static_cast<UINT>(-1))
+    {
+        return false;
+    }
+
+    const auto *raw = reinterpret_cast<RAWINPUT *>(buffer.data());
+    if (raw->header.dwType != RIM_TYPEMOUSE)
+    {
+        return false;
+    }
+
+    const RAWMOUSE &mouse = raw->data.mouse;
+    if ((mouse.usFlags & MOUSE_MOVE_ABSOLUTE) != 0)
+    {
+        return false;
+    }
+
+    std::lock_guard<std::mutex> lock(m_impl->mutex);
+    if (!m_impl->overlayMouseSession)
+    {
+        return false;
+    }
+    m_impl->pendingMouseDx += mouse.lLastX;
+    m_impl->pendingMouseDy += mouse.lLastY;
+    return false;
 }
 
 void InputReceiver::setHotkeyTriggeredHandler(HotkeyTriggeredHandler handler, void *userData)

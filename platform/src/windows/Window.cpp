@@ -71,18 +71,44 @@ void Window::focus()
         if (dwForeThread != dwCurrentThread)
         {
             AttachThreadInput(dwForeThread, dwCurrentThread, TRUE);
-            SetForegroundWindow(hwnd);
-            SetFocus(hwnd);
-            AttachThreadInput(dwForeThread, dwCurrentThread, FALSE);
         }
-        else
+
+        // Unlock the foreground restriction that otherwise blocks SetForegroundWindow
+        // when we steal later than the original hotkey (Minecraft's recenter is not
+        // ClipCursor, so detection often happens after that permission expires).
+        LockSetForegroundWindow(LSFW_UNLOCK);
+        AllowSetForegroundWindow(ASFW_ANY);
+        BringWindowToTop(hwnd);
+        SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+        if (SetForegroundWindow(hwnd) == 0)
         {
+            INPUT altPulse[2] = {};
+            altPulse[0].type = INPUT_KEYBOARD;
+            altPulse[0].ki.wVk = VK_MENU;
+            altPulse[1].type = INPUT_KEYBOARD;
+            altPulse[1].ki.wVk = VK_MENU;
+            altPulse[1].ki.dwFlags = KEYEVENTF_KEYUP;
+            SendInput(2, altPulse, sizeof(INPUT));
             SetForegroundWindow(hwnd);
-            SetFocus(hwnd);
+        }
+        SetFocus(hwnd);
+
+        if (dwForeThread != dwCurrentThread)
+        {
+            AttachThreadInput(dwForeThread, dwCurrentThread, FALSE);
         }
     }
 
     SetActiveWindow(hwnd);
+}
+
+bool Window::isForeground() const
+{
+    if (!m_impl || !m_impl->hwnd)
+    {
+        return false;
+    }
+    return GetForegroundWindow() == m_impl->hwnd;
 }
 
 void Window::captureActiveWindow()

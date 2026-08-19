@@ -93,6 +93,12 @@ Gui::Gui(QWidget *parent)
     connect(m_radialMenu, &RadialMenuWidget::buttonTriggered, this, [](int index)
             { App::instance().executeAction(index); });
 
+    m_virtualCursor = new QWidget(this);
+    m_virtualCursor->setObjectName("virtualCursor");
+    m_virtualCursor->setFixedSize(16, 16);
+    m_virtualCursor->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+    m_virtualCursor->hide();
+
     // Settings shares the long-lived overlay shell so it feels like part of
     // WheelTime instead of an unrelated always-on-top window. It is only shown
     // in settings mode; dormant mode still hides all graphics and becomes
@@ -178,13 +184,14 @@ bool Gui::eventFilter(QObject *watched, QEvent *event)
 
     if (event->type() == QEvent::MouseMove || event->type() == QEvent::HoverMove)
     {
-        m_radialMenu->updateSelectionFromGlobalMousePosition(QCursor::pos());
+        const QPoint pos = m_virtualCursorOverride.value_or(QCursor::pos());
+        m_radialMenu->updateSelectionFromGlobalMousePosition(pos);
     }
 
     if (event->type() == QEvent::MouseButtonPress)
     {
         auto *mouseEvent = static_cast<QMouseEvent *>(event);
-        const QPoint globalPos = mouseEvent->globalPosition().toPoint();
+        const QPoint globalPos = m_virtualCursorOverride.value_or(mouseEvent->globalPosition().toPoint());
         const QPoint localPos = mapFromGlobal(globalPos);
         QWidget *clickedChild = childAt(localPos);
 
@@ -257,13 +264,13 @@ void Gui::enterInteractiveOverlay()
     {
         m_overlayPanel->show();
     }
-    // Seed Distance-mode selection from wherever the cursor already is.
-    m_radialMenu->updateSelectionFromGlobalMousePosition(QCursor::pos());
+    refreshSelectionFromCursor();
 }
 
 void Gui::enterDormantOverlay()
 {
     m_overlayMode = OverlayMode::Dormant;
+    setVirtualCursor(std::nullopt);
     if (m_overlayPanel != nullptr)
     {
         m_overlayPanel->hide();
@@ -391,10 +398,43 @@ bool Gui::isSearchVisible() const
 
 void Gui::refreshSelectionFromCursor()
 {
-    if (m_radialMenu != nullptr)
+    if (m_radialMenu == nullptr)
     {
-        m_radialMenu->updateSelectionFromGlobalMousePosition(QCursor::pos());
+        return;
     }
+    const QPoint pos = m_virtualCursorOverride.value_or(QCursor::pos());
+    m_radialMenu->updateSelectionFromGlobalMousePosition(pos);
+}
+
+void Gui::setVirtualCursor(const std::optional<QPoint> &globalPos)
+{
+    m_virtualCursorOverride = globalPos;
+    if (m_virtualCursor == nullptr)
+    {
+        return;
+    }
+
+    if (!globalPos.has_value())
+    {
+        m_virtualCursor->hide();
+        return;
+    }
+
+    m_virtualCursor->show();
+    m_virtualCursor->raise();
+    const QPoint local = mapFromGlobal(*globalPos);
+    m_virtualCursor->move(local.x() - m_virtualCursor->width() / 2,
+                          local.y() - m_virtualCursor->height() / 2);
+    refreshSelectionFromCursor();
+}
+
+bool Gui::hitsSettingsButton(const QPoint &globalPos) const
+{
+    if (m_settingsButton == nullptr || !m_settingsButton->isVisible())
+    {
+        return false;
+    }
+    return m_settingsButton->rect().contains(m_settingsButton->mapFromGlobal(globalPos));
 }
 
 QPoint Gui::mouseOpenGlobalPosition(double xFraction, double yFraction) const

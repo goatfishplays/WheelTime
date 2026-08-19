@@ -14,6 +14,16 @@ namespace Platform
 /// @brief Invoked when a registered hotkey chord fires (RegisterHotKey or LL hook).
 using HotkeyTriggeredHandler = void (*)(int hotkeyId, void *userData);
 
+/// @brief Mouse buttons observed while the wheel overlay mouse session is active.
+enum class OverlayMouseButton
+{
+    Left,
+    Right
+};
+
+/// @brief Physical (non-injected) mouse button while the overlay mouse session is active.
+using OverlayMouseButtonHandler = void (*)(OverlayMouseButton button, bool pressed, void *userData);
+
 /**
  * @brief One-shot chord capture for settings recording.
  *
@@ -54,6 +64,32 @@ public:
 
     /// @brief Moves the system cursor to an absolute screen position.
     void setAbsoluteMousePosition(Vec2 position);
+
+    /// @brief Clears any process's ClipCursor confinement. Games may re-apply it.
+    void releaseCursorClip();
+    /// @brief True when ClipCursor is tighter than the virtual desktop (2px slop).
+    [[nodiscard]] bool isCursorClipActive() const;
+
+    /**
+     * @brief Starts mouse capture used while the wheel is up.
+     *
+     * Registers raw input (device deltas, immune to SetCursorPos) plus a
+     * WH_MOUSE_LL hook for buttons. @p nativeHwnd is the overlay HWND that
+     * receives WM_INPUT (RIDEV_INPUTSINK).
+     */
+    void beginOverlayMouseSession(void *nativeHwnd, OverlayMouseButtonHandler buttonHandler, void *userData);
+    /// @brief Stops the overlay mouse session and uninstalls the mouse hook.
+    void endOverlayMouseSession();
+    /// @brief Drains accumulated physical mouse deltas since the last poll.
+    void pollOverlayMouseDelta(int &dx, int &dy);
+    /// @brief Drains the injected-warp counter since the last poll.
+    [[nodiscard]] int takeOverlayMouseWarpCount();
+    /**
+     * @brief Handles WM_INPUT for an active overlay mouse session.
+     *
+     * Returns false so Qt still sees the message.
+     */
+    bool processNativeMessage(void *message);
 
     /// @brief Registers an input to be tracked (keyboard hotkeys for now).
     void registerInputBinding(InputBinding);

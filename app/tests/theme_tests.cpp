@@ -5,6 +5,7 @@
 
 #include "App/Action.hpp"
 #include "App/ActionItems.hpp"
+#include "App/App.hpp"
 #include "App/Menu.hpp"
 #include "App/MenuConfigLoader.hpp"
 #include "App/Theme.hpp"
@@ -255,6 +256,7 @@ bool testConfigRiceRoundTrip()
     AppConfig appConfig;
     appConfig.darkMode = true;
     appConfig.themeOverlayPath = "themes/my-tweaks.qss";
+    appConfig.gameMouseCapture = GameMouseCaptureMode::StealIfLocked;
     appConfig.rice.buttonRadiusFraction = 0.28;
     appConfig.rice.innerDeadzoneFraction = 0.35;
     appConfig.rice.startAngleDegrees = 5.0;
@@ -280,6 +282,11 @@ bool testConfigRiceRoundTrip()
     if (!reloadedConfig.darkMode || reloadedConfig.themeOverlayPath != appConfig.themeOverlayPath)
     {
         std::cerr << "roundtrip: theme fields not preserved\n";
+        return false;
+    }
+    if (reloadedConfig.gameMouseCapture != GameMouseCaptureMode::StealIfLocked)
+    {
+        std::cerr << "roundtrip: gameMouseCapture not preserved\n";
         return false;
     }
     if (reloadedConfig.rice.buttonRadiusFraction != 0.28
@@ -337,6 +344,11 @@ bool testOldConfigLoadsWithoutRice()
     if (!appConfig.themeOverlayPath.isEmpty())
     {
         std::cerr << "legacy: overlay path should default empty\n";
+        return false;
+    }
+    if (appConfig.gameMouseCapture != GameMouseCaptureMode::Off)
+    {
+        std::cerr << "legacy: gameMouseCapture should default Off\n";
         return false;
     }
     if (appConfig.rice.buttonRadiusFraction != kDefaultButtonRadiusFraction

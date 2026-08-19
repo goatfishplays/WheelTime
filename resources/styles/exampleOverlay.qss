@@ -10,6 +10,7 @@
  *   QWidget#launcherPanel            dimmed wheel panel
  *   QWidget#launcherPanelBody        area behind the radial widget
  *   QLabel#launcherTitle             menu title above the wheel
+ *   QWidget#virtualCursor            fake cursor while games recenter the OS pointer
  *   RadialMenuWidget                 the wheel itself
  *   QLabel#radialCenterLabel         hub caption
  *   QToolButton#wheelActionButton    slot buttons (also [selectedAction])

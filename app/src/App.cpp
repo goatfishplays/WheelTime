@@ -25,12 +25,17 @@
 #include <QIcon>
 #include <QMenu>
 #include <QMetaObject>
+#include <QPoint>
+#include <QRect>
 #include <QString>
 #include <QSystemTrayIcon>
 #include <QThread>
 #include <QTimer>
 
 #include <algorithm>
+#include <cstdlib>
+#include <iostream>
+#include <optional>
 #include <string>
 #include <thread>
 #include <vector>
@@ -62,6 +67,28 @@ void deliverLlHotkey(int hotkeyId, void *userData)
             }
         },
         Qt::QueuedConnection);
+}
+
+void deliverOverlayMouseButton(Platform::OverlayMouseButton button, bool pressed, void *userData)
+{
+    auto *app = static_cast<App *>(userData);
+    QMetaObject::invokeMethod(
+        qApp,
+        [app, button, pressed]()
+        {
+            if (app != nullptr)
+            {
+                app->onOverlayMouseButton(button, pressed);
+            }
+        },
+        Qt::QueuedConnection);
+}
+
+[[nodiscard]] QPoint clampPointToRect(QPoint pos, const QRect &bounds)
+{
+    pos.setX(std::clamp(pos.x(), bounds.left(), bounds.right()));
+    pos.setY(std::clamp(pos.y(), bounds.top(), bounds.bottom()));
+    return pos;
 }
 } // namespace
 
@@ -121,10 +148,20 @@ bool App::isHistoryMetaAction(const Action &action)
 class HotkeyFilter : public QAbstractNativeEventFilter
 {
 public:
-    explicit HotkeyFilter(App *app) : m_app(app) {}
+    explicit HotkeyFilter(App *app, Platform::InputReceiver *inputs)
+        : m_app(app)
+        , m_inputs(inputs)
+    {
+    }
 
     bool nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result) override
     {
+        (void)eventType;
+        (void)result;
+        if (m_inputs != nullptr)
+        {
+            m_inputs->processNativeMessage(message);
+        }
         int hotkeyId = 0;
         if (Platform::InputReceiver::isHotkeyMessage(message, hotkeyId))
         {
@@ -136,6 +173,7 @@ public:
 
 private:
     App *m_app;
+    Platform::InputReceiver *m_inputs;
 };
 
 App::App()
@@ -185,7 +223,7 @@ App::App()
     }
 
     // Install native event filter to capture WM_HOTKEY
-    m_hotkeyFilter = new HotkeyFilter(this);
+    m_hotkeyFilter = new HotkeyFilter(this, &m_inputReceiver);
     qApp->installNativeEventFilter(m_hotkeyFilter);
 
     // Connect escapePressed signal from Gui to hide and return focus
@@ -236,6 +274,11 @@ App::App()
     QObject::connect(m_escapeWatchTimer, &QTimer::timeout, [this]()
                      { onEscapeWatchTick(); });
 
+    m_mouseCaptureTimer = new QTimer(qApp);
+    m_mouseCaptureTimer->setInterval(8);
+    QObject::connect(m_mouseCaptureTimer, &QTimer::timeout, [this]()
+                     { onGameMouseCaptureTick(); });
+
     setupTrayIcon();
 
     QTimer::singleShot(0, [this]() { showSettingsWindow(); });
@@ -243,6 +286,7 @@ App::App()
 
 App::~App()
 {
+    endGameMouseCaptureSession();
     if (m_trayIcon != nullptr)
     {
         m_trayIcon->hide();
@@ -455,6 +499,185 @@ void App::onEscapeWatchTick()
     m_escapeWasDown = escapeDown;
 }
 
+void App::beginGameMouseCaptureSession()
+{
+    endGameMouseCaptureSession();
+    if (m_appConfig.gameMouseCapture == GameMouseCaptureMode::Off)
+    {
+        return;
+    }
+
+    const Platform::Vec2 cursor = m_inputReceiver.absoluteMousePosition();
+    m_virtualCursorPos = cursor;
+    m_lastOsCursorPos = cursor;
+    m_usingVirtualCursor = true;
+    m_stoleGameFocus = false;
+    m_overlayWarpHits = 0;
+    m_ignoreWarpUntilMs = QDateTime::currentMSecsSinceEpoch() + 150;
+    m_lastStealAttemptMs = 0;
+    m_gui.setVirtualCursor(QPoint(cursor.x, cursor.y));
+    m_inputReceiver.releaseCursorClip();
+    m_inputReceiver.beginOverlayMouseSession(
+        reinterpret_cast<void *>(m_gui.winId()), &deliverOverlayMouseButton, this);
+    if (m_mouseCaptureTimer != nullptr)
+    {
+        m_mouseCaptureTimer->start();
+    }
+}
+
+void App::endGameMouseCaptureSession()
+{
+    if (m_mouseCaptureTimer != nullptr)
+    {
+        m_mouseCaptureTimer->stop();
+    }
+    m_inputReceiver.endOverlayMouseSession();
+    m_usingVirtualCursor = false;
+    m_overlayWarpHits = 0;
+    m_gui.setVirtualCursor(std::nullopt);
+    if (m_overlayInitialized)
+    {
+        m_gui.setAttribute(Qt::WA_ShowWithoutActivating, true);
+        m_gui.setFocusPolicy(Qt::NoFocus);
+        Platform::Window overlayWindow(reinterpret_cast<void *>(m_gui.winId()));
+        overlayWindow.setNonActivating(true);
+    }
+}
+
+void App::onGameMouseCaptureTick()
+{
+    if (!m_gui.isLauncherVisible())
+    {
+        endGameMouseCaptureSession();
+        return;
+    }
+
+    m_inputReceiver.releaseCursorClip();
+
+    int dx = 0;
+    int dy = 0;
+    m_inputReceiver.pollOverlayMouseDelta(dx, dy);
+    const int deviceMove = std::abs(dx) + std::abs(dy);
+    const Platform::Vec2 osCursor = m_inputReceiver.absoluteMousePosition();
+    const int osMove = std::abs(osCursor.x - m_lastOsCursorPos.x) + std::abs(osCursor.y - m_lastOsCursorPos.y);
+    m_lastOsCursorPos = osCursor;
+
+    if (m_usingVirtualCursor && (dx != 0 || dy != 0))
+    {
+        const QRect bounds = m_gui.geometry();
+        const QPoint next = clampPointToRect(
+            QPoint(m_virtualCursorPos.x + dx, m_virtualCursorPos.y + dy), bounds);
+        m_virtualCursorPos = Platform::Vec2{next.x(), next.y()};
+        m_gui.setVirtualCursor(next);
+    }
+
+    if (m_appConfig.gameMouseCapture != GameMouseCaptureMode::StealIfLocked)
+    {
+        return;
+    }
+
+    Platform::Window overlayWindow(reinterpret_cast<void *>(m_gui.winId()));
+    if (m_stoleGameFocus)
+    {
+        if (overlayWindow.isForeground() && !m_inputReceiver.isCursorClipActive())
+        {
+            return;
+        }
+        // Game took the cursor back; resume the virtual cursor.
+        m_stoleGameFocus = false;
+        m_usingVirtualCursor = true;
+        m_gui.setVirtualCursor(QPoint(m_virtualCursorPos.x, m_virtualCursorPos.y));
+    }
+
+    m_overlayWarpHits += m_inputReceiver.takeOverlayMouseWarpCount();
+    const qint64 now = QDateTime::currentMSecsSinceEpoch();
+    if (now < m_ignoreWarpUntilMs)
+    {
+        m_overlayWarpHits = 0;
+    }
+
+    // Minecraft recenters with small non-injected warps: the device moves but
+    // GetCursorPos stays near the game window center.
+    const bool rubberBandLock = deviceMove >= 6 && osMove <= 2;
+    const bool clipped = m_inputReceiver.isCursorClipActive();
+    if (clipped || m_overlayWarpHits >= 2 || rubberBandLock)
+    {
+        stealOverlayFocus();
+    }
+}
+
+void App::stealOverlayFocus()
+{
+    if (!m_gui.isLauncherVisible())
+    {
+        return;
+    }
+
+    const qint64 now = QDateTime::currentMSecsSinceEpoch();
+    if (now - m_lastStealAttemptMs < 200)
+    {
+        return;
+    }
+    m_lastStealAttemptMs = now;
+
+    m_gui.setAttribute(Qt::WA_ShowWithoutActivating, false);
+    m_gui.setFocusPolicy(Qt::ClickFocus);
+
+    Platform::Window overlayWindow(reinterpret_cast<void *>(m_gui.winId()));
+    overlayWindow.setNonActivating(false);
+    overlayWindow.setClickThrough(false);
+    overlayWindow.setTopmost(true);
+    m_gui.activateWindow();
+    overlayWindow.focus();
+
+    if (!overlayWindow.isForeground())
+    {
+        std::cerr << "[mouse-capture] steal focus failed; keeping virtual cursor\n";
+        return;
+    }
+
+    m_stoleGameFocus = true;
+    m_inputReceiver.setAbsoluteMousePosition(m_virtualCursorPos);
+    m_lastOsCursorPos = m_virtualCursorPos;
+    m_ignoreWarpUntilMs = now + 150;
+    m_usingVirtualCursor = false;
+    m_gui.setVirtualCursor(std::nullopt);
+    m_gui.refreshSelectionFromCursor();
+    std::cerr << "[mouse-capture] stole foreground from game\n";
+}
+
+void App::onOverlayMouseButton(Platform::OverlayMouseButton button, bool pressed)
+{
+    if (!pressed || !m_gui.isLauncherVisible())
+    {
+        return;
+    }
+
+    if (button == Platform::OverlayMouseButton::Right)
+    {
+        hideGui();
+        return;
+    }
+
+    if (button != Platform::OverlayMouseButton::Left)
+    {
+        return;
+    }
+
+    if (virtualCursorHitsSettingsButton())
+    {
+        showSettingsWindow();
+        return;
+    }
+
+    executeAction(m_gui.selectedActionIndex());
+}
+
+bool App::virtualCursorHitsSettingsButton() const
+{
+    return m_gui.hitsSettingsButton(QPoint(m_virtualCursorPos.x, m_virtualCursorPos.y));
+}
+
 void App::onExecuteOnReleaseTick()
 {
     if (!m_executeOnReleaseArmed)
@@ -598,8 +821,13 @@ void App::gatherPriors()
 
 void App::restorePriors()
 {
+    if (m_stoleGameFocus)
+    {
+        m_priorWindow.focus();
+        m_stoleGameFocus = false;
+    }
     // The non-activating overlay should leave keyboard focus where it already
-    // is, so we intentionally avoid restoring focus here.
+    // is, so we intentionally avoid restoring focus here unless we stole it.
     if (m_activeMenu != nullptr && m_activeMenu->restoreMouseOnClose())
     {
         m_inputReceiver.setAbsoluteMousePosition(m_priorMousePos);
@@ -683,7 +911,11 @@ void App::showGui(Menu *menu)
     }
 
     initializeOverlay();
-    gatherPriors();
+    const bool alreadyOpen = m_gui.isLauncherVisible();
+    if (!alreadyOpen)
+    {
+        gatherPriors();
+    }
     m_activeMenu = menu;
     // Stale picks should not survive a fresh open if hide somehow skipped flush.
     m_deferredActionIds.clear();
@@ -709,6 +941,7 @@ void App::showGui(Menu *menu)
         m_gui.refreshSelectionFromCursor();
     }
 
+    beginGameMouseCaptureSession();
     armEscapeDismiss();
 }
 
@@ -741,6 +974,7 @@ void App::hideGui()
 
     disarmExecuteOnRelease();
     disarmEscapeDismiss();
+    endGameMouseCaptureSession();
     initializeOverlay();
     m_gui.enterDormantOverlay();
     Platform::Window overlayWindow(reinterpret_cast<void *>(m_gui.winId()));
@@ -789,12 +1023,20 @@ void App::showSearchOverlay(const SearchConfig &config)
     }
 
     disarmExecuteOnRelease();
+    if (m_gui.isLauncherVisible())
+    {
+        disarmEscapeDismiss();
+        endGameMouseCaptureSession();
+        m_stoleGameFocus = false;
+    }
     initializeOverlay();
 
-    // The wheel never takes focus, so even if it is currently up the real
-    // foreground window is still the user's app — capture it before we steal
-    // focus so hideSearchOverlay can give it back.
-    gatherPriors();
+    // Keep the wheel's captured foreground window when search opens over it so
+    // we do not snapshot WheelTime itself after StealIfLocked took activation.
+    if (!m_gui.isLauncherVisible())
+    {
+        gatherPriors();
+    }
     configureOverlayForCursor();
 
     // Search mode needs real keyboard focus for the query field, unlike wheel
@@ -1125,6 +1367,7 @@ void App::showSettingsWindow()
     {
         disarmExecuteOnRelease();
         disarmEscapeDismiss();
+        endGameMouseCaptureSession();
         restorePriors();
         flushDeferredActions();
     }

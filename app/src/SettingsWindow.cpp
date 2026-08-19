@@ -193,7 +193,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     leftSplit->setChildrenCollapsible(false);
     leftSplit->setOpaqueResize(true);
 
-    m_globalGroup = new QGroupBox("Graphics", leftSplit);
+    m_globalGroup = new QGroupBox("Global", leftSplit);
     auto *graphicsBody = new QWidget(m_globalGroup);
     auto *graphicsForm = new QFormLayout(graphicsBody);
     graphicsForm->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow);
@@ -203,14 +203,56 @@ SettingsWindow::SettingsWindow(QWidget *parent)
 
     m_darkModeCheck = new QCheckBox("Dark Mode", graphicsBody);
     m_darkModeCheck->setObjectName("darkModeToggle");
+    m_darkModeCheck->setToolTip("Switches the built-in light and dark look. A theme overlay, if set, still applies on top.");
     graphicsForm->addRow(m_darkModeCheck);
+
+    m_gameMouseCaptureCombo = new QComboBox(graphicsBody);
+    m_gameMouseCaptureCombo->addItem("Don't interrupt the game", static_cast<int>(GameMouseCaptureMode::Off));
+    m_gameMouseCaptureCombo->addItem("Use a WheelTime cursor", static_cast<int>(GameMouseCaptureMode::Unclip));
+    m_gameMouseCaptureCombo->addItem("Take mouse control from the game", static_cast<int>(GameMouseCaptureMode::StealIfLocked));
+    m_gameMouseCaptureCombo->setItemData(
+        0,
+        QStringLiteral("The game keeps the keyboard and mouse. Some games will keep pulling "
+                       "the pointer back to the center, which makes the wheel hard to use."),
+        Qt::ToolTipRole);
+    m_gameMouseCaptureCombo->setItemData(
+        1,
+        QStringLiteral("The game stays in front. WheelTime draws its own pointer so you can "
+                       "still pick a slice, even if the game keeps moving the system pointer. "
+                       "Looking around in the game may still happen while the wheel is open."),
+        Qt::ToolTipRole);
+    m_gameMouseCaptureCombo->setItemData(
+        2,
+        QStringLiteral("Starts like “Use a WheelTime cursor.” If the game keeps locking or "
+                       "recentering the mouse, WheelTime takes over so you can move freely. "
+                       "The game may pause."),
+        Qt::ToolTipRole);
+    m_gameMouseCaptureCombo->view()->setMouseTracking(true);
+    const auto syncGameMouseCaptureTooltip = [this]()
+    {
+        if (m_gameMouseCaptureCombo == nullptr)
+        {
+            return;
+        }
+        m_gameMouseCaptureCombo->setToolTip(
+            m_gameMouseCaptureCombo->itemData(m_gameMouseCaptureCombo->currentIndex(), Qt::ToolTipRole)
+                .toString());
+    };
+    connect(m_gameMouseCaptureCombo, qOverload<int>(&QComboBox::currentIndexChanged), this,
+            [syncGameMouseCaptureTooltip](int)
+            { syncGameMouseCaptureTooltip(); });
+    syncGameMouseCaptureTooltip();
+    graphicsForm->addRow("Game mouse lock", m_gameMouseCaptureCombo);
 
     auto *overlayRow = new QWidget(graphicsBody);
     auto *overlayLayout = new QHBoxLayout(overlayRow);
     overlayLayout->setContentsMargins(0, 0, 0, 0);
     overlayLayout->setSpacing(8);
     m_themeOverlayEdit = new QLineEdit(overlayRow);
-    m_themeOverlayEdit->setPlaceholderText("Optional .qss overlay (relative to config folder)");
+    m_themeOverlayEdit->setPlaceholderText("Optional extra style file");
+    m_themeOverlayEdit->setToolTip(
+        "An optional extra style file that tweaks colors and fonts on top of Light/Dark mode. "
+        "Leave empty to use the built-in look.");
     m_browseThemeOverlayButton = new QPushButton("Browse...", overlayRow);
     m_clearThemeOverlayButton = new QPushButton("Clear", overlayRow);
     overlayLayout->addWidget(m_themeOverlayEdit, 1);
@@ -224,9 +266,10 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_radiusFractionSpin->setDecimals(1);
     m_radiusFractionSpin->setSuffix(" %");
     m_radiusFractionSpin->setToolTip(
-        "Distance from wheel center to the buttons, as a percent of the overlay's shorter side.");
+        "How far the buttons sit from the center of the wheel, as a percent of the screen's shorter side.");
     sizeRiceSpin(m_radiusFractionSpin);
     m_radiusFixedCheck = new QCheckBox("Fixed px", graphicsBody);
+    m_radiusFixedCheck->setToolTip("Use a fixed pixel distance instead of scaling with the screen.");
     m_radiusPxSpin = new QSpinBox(graphicsBody);
     m_radiusPxSpin->setRange(1, 2000);
     m_radiusPxSpin->setSuffix(" px");
@@ -239,7 +282,8 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_startAngleSpin->setSingleStep(5.0);
     m_startAngleSpin->setDecimals(1);
     m_startAngleSpin->setSuffix(" deg");
-    m_startAngleSpin->setToolTip("0 keeps the first slot at 12 o'clock. Positive rotates clockwise.");
+    m_startAngleSpin->setToolTip(
+        "Rotates the whole wheel. 0 puts the first button at the top. Positive values turn it clockwise.");
     sizeRiceSpin(m_startAngleSpin);
     graphicsForm->addRow("Start angle", riceControlRow(graphicsBody, m_startAngleSpin));
 
@@ -249,10 +293,10 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_deadzoneFractionSpin->setDecimals(1);
     m_deadzoneFractionSpin->setSuffix(" %");
     m_deadzoneFractionSpin->setToolTip(
-        "Center hole as a percent of the overlay's shorter side. 0 is off. "
-        "1% mouse Y with a 1.5% deadzone starts in the hole.");
+        "Ignores the pointer near the center of the wheel so nothing is selected. 0 turns this off.");
     sizeRiceSpin(m_deadzoneFractionSpin);
     m_deadzoneFixedCheck = new QCheckBox("Fixed px", graphicsBody);
+    m_deadzoneFixedCheck->setToolTip("Use a fixed pixel radius instead of scaling with the screen.");
     m_deadzonePxSpin = new QSpinBox(graphicsBody);
     m_deadzonePxSpin->setRange(0, 2000);
     m_deadzonePxSpin->setSuffix(" px");
@@ -267,8 +311,8 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_mouseOpenOffsetXSpin->setSuffix(" %");
     m_mouseOpenOffsetXSpin->setPrefix("X ");
     m_mouseOpenOffsetXSpin->setToolTip(
-        "Where to place the cursor when Center mouse on open is enabled. "
-        "Percent of overlay width from the wheel center; positive is right.");
+        "When Center mouse on open is on, how far right of the wheel center to place the pointer, "
+        "as a percent of the screen width. Negative is left.");
     m_mouseOpenOffsetYSpin = new QDoubleSpinBox(graphicsBody);
     m_mouseOpenOffsetYSpin->setRange(kMinMouseOpenOffsetFraction * 100.0, kMaxMouseOpenOffsetFraction * 100.0);
     m_mouseOpenOffsetYSpin->setSingleStep(1.0);
@@ -276,7 +320,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_mouseOpenOffsetYSpin->setSuffix(" %");
     m_mouseOpenOffsetYSpin->setPrefix("Y ");
     m_mouseOpenOffsetYSpin->setToolTip(
-        "Percent of overlay height from the wheel center; positive is up.");
+        "How far above the wheel center, as a percent of the screen height. Negative is down.");
     m_mouseOpenOffsetYSpin->setValue(kDefaultMouseOpenOffsetYFraction * 100.0);
     sizeRiceSpin(m_mouseOpenOffsetXSpin);
     sizeRiceSpin(m_mouseOpenOffsetYSpin);
@@ -365,6 +409,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_keystrokeClearButton->setObjectName("keystrokeClearButton");
     m_keystrokeClearButton->setFixedWidth(30);
     m_keystrokeClearButton->setCursor(Qt::PointingHandCursor);
+    m_keystrokeClearButton->setToolTip("Clear the assigned hotkey.");
 
     auto *keystrokeLayout = new QHBoxLayout();
     keystrokeLayout->addWidget(m_keystrokeRecordButton);
@@ -372,24 +417,26 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     keystrokeLayout->setContentsMargins(0, 0, 0, 0);
 
     m_keystrokeRecordButton->installEventFilter(this);
-    m_useLowLevelHookCheck = new QCheckBox("Use low-level keyboard hook", menuSettingsGroup);
+    m_useLowLevelHookCheck = new QCheckBox("Allow reserved shortcuts (Win+R, Win+S)", menuSettingsGroup);
     m_useLowLevelHookCheck->setToolTip(
-        QStringLiteral("Capture this trigger with a low-level keyboard hook instead of "
-                       "RegisterHotKey. Enable this to steal shell-reserved chords such as "
-                       "Win+R / Win+S. May conflict with other hook-based apps, and can fail "
-                       "while an elevated window is focused."));
+        QStringLiteral("Lets this menu's hotkey work even when Windows normally reserves it, "
+                       "such as Win+R or Win+S. Other keyboard tools may conflict, and it may "
+                       "not work while an Administrator window is in front."));
     m_executeOnReleaseCheck = new QCheckBox("Execute on release", menuSettingsGroup);
+    m_executeOnReleaseCheck->setToolTip(
+        "Runs the highlighted slice when you let go of the hotkey, instead of needing a click.");
     m_exitOnActionCheck = new QCheckBox("Exit on action", menuSettingsGroup);
+    m_exitOnActionCheck->setToolTip("Closes the wheel after a slice runs.");
     m_centerMouseOnOpenCheck = new QCheckBox("Center mouse on open", menuSettingsGroup);
     m_centerMouseOnOpenCheck->setToolTip(
-        QStringLiteral("Move the cursor when this menu opens. Offset is set in Graphics "
-                       "(Mouse on open) or a per-menu layout override."));
+        QStringLiteral("Moves the pointer to the wheel when this menu opens. How far from the "
+                       "center is set under Global → Mouse on open, unless this menu overrides it."));
     m_restoreMouseOnCloseCheck = new QCheckBox("Restore mouse on close", menuSettingsGroup);
+    m_restoreMouseOnCloseCheck->setToolTip("Puts the pointer back where it was when the wheel opened.");
     m_deferUntilExitCheck = new QCheckBox("Defer actions until exit", menuSettingsGroup);
     m_deferUntilExitCheck->setToolTip(
-        QStringLiteral("Queue wheel picks while this menu is open, then run them in order "
-                       "after the menu closes (after mouse restore, if enabled). Pair with "
-                       "Exit on action for close-then-run on a single pick."));
+        QStringLiteral("Holds chosen actions until the wheel closes, then runs them in order. "
+                       "Turn on Exit on action if you want one pick to close the wheel first, then run."));
     menuForm->addRow("Menu Name", m_menuNameEdit);
     menuForm->addRow("Trigger Keystroke", keystrokeLayout);
     menuForm->addRow("", m_useLowLevelHookCheck);
@@ -420,6 +467,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_menuRadiusFractionSpin->setSuffix(" %");
     sizeRiceSpin(m_menuRadiusFractionSpin);
     m_menuRadiusFixedCheck = new QCheckBox("Fixed px", layoutOverridesBody);
+    m_menuRadiusFixedCheck->setToolTip("Use a fixed pixel distance instead of scaling with the screen.");
     m_menuRadiusPxSpin = new QSpinBox(layoutOverridesBody);
     m_menuRadiusPxSpin->setRange(1, 2000);
     m_menuRadiusPxSpin->setSuffix(" px");
@@ -458,6 +506,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_menuDeadzoneFractionSpin->setSuffix(" %");
     sizeRiceSpin(m_menuDeadzoneFractionSpin);
     m_menuDeadzoneFixedCheck = new QCheckBox("Fixed px", layoutOverridesBody);
+    m_menuDeadzoneFixedCheck->setToolTip("Use a fixed pixel radius instead of scaling with the screen.");
     m_menuDeadzonePxSpin = new QSpinBox(layoutOverridesBody);
     m_menuDeadzonePxSpin->setRange(0, 2000);
     m_menuDeadzonePxSpin->setSuffix(" px");
@@ -570,8 +619,8 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_actionChannelSpin = new QSpinBox(actionSettingsGroup);
     m_actionChannelSpin->setRange(0, 1000000);
     m_actionChannelSpin->setToolTip(
-        "0 = independent (does not block other channel-0 actions).\n"
-        ">0 = shared FIFO with other actions on the same channel.");
+        "0 lets this action run at the same time as others. Any other number shares a line "
+        "with actions using that same number — only one of those runs at a time.");
     actionForm->addRow("Run Channel", m_actionChannelSpin);
     m_actionChannelHelpLabel = new QLabel(actionSettingsGroup);
     m_actionChannelHelpLabel->setObjectName("actionChannelHelp");
@@ -689,6 +738,8 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_keystrokeHoldSpin->setSingleStep(0.1);
     m_keystrokeHoldSpin->setSuffix(" s");
     m_keystrokeProceedCheck = new QCheckBox("Continue immediately", m_itemKeystrokePage);
+    m_keystrokeProceedCheck->setToolTip(
+        "Starts the next step right away instead of waiting for this key to be released.");
     keystrokeForm->addRow("Modifiers", keystrokeModifiers);
     keystrokeForm->addRow("Main Key", m_keystrokeKeyCombo);
     keystrokeForm->addRow("Hold Time", m_keystrokeHoldSpin);
@@ -728,6 +779,8 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_mouseButtonHoldSpin->setSingleStep(0.1);
     m_mouseButtonHoldSpin->setSuffix(" s");
     m_mouseButtonProceedCheck = new QCheckBox("Continue immediately", m_itemMouseButtonPage);
+    m_mouseButtonProceedCheck->setToolTip(
+        "Starts the next step right away instead of waiting for this click to finish.");
     mouseButtonForm->addRow("Modifiers", mouseButtonModifiers);
     mouseButtonForm->addRow("Button", m_mouseButtonCombo);
     mouseButtonForm->addRow("Hold Time", m_mouseButtonHoldSpin);
@@ -766,6 +819,8 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_mouseScrollHoldSpin->setSingleStep(0.1);
     m_mouseScrollHoldSpin->setSuffix(" s");
     m_mouseScrollProceedCheck = new QCheckBox("Continue immediately", m_itemMouseScrollPage);
+    m_mouseScrollProceedCheck->setToolTip(
+        "Starts the next step right away instead of waiting for this scroll to finish.");
     mouseScrollForm->addRow("Modifiers", mouseScrollModifiers);
     mouseScrollForm->addRow("Horizontal", m_mouseScrollDxSpin);
     mouseScrollForm->addRow("Vertical", m_mouseScrollDySpin);
@@ -795,7 +850,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_nthHelpLabel->setWordWrap(true);
     m_resetFrequenciesButton = new QPushButton("Reset all frequencies", m_itemNthPage);
     m_resetFrequenciesButton->setToolTip(
-        "Clears launch counts used by Nth Frequent ranking. Recent history is kept.");
+        "Clears how often each action has been used. The recent-actions list is not cleared.");
     m_resetFrequenciesButton->hide();
     nthForm->addRow("N (1 = top)", m_nthSpin);
     nthForm->addRow(m_nthHelpLabel);
@@ -811,7 +866,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_socketDestinationEdit = new QLineEdit(m_itemSocketPage);
     m_socketDestinationEdit->setPlaceholderText("host:port or URL");
     m_socketMessageEdit = new QLineEdit(m_itemSocketPage);
-    m_socketMessageEdit->setPlaceholderText("payload / body");
+    m_socketMessageEdit->setPlaceholderText("Message to send");
     m_socketHttpMethodEdit = new QLineEdit(m_itemSocketPage);
     m_socketHttpMethodEdit->setPlaceholderText("POST");
     m_socketHttpMethodEdit->setText("POST");
@@ -1089,7 +1144,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                     this,
                     "Select theme overlay",
                     themesDir,
-                    "Qt Style Sheets (*.qss)");
+                    "Style sheets (*.qss)");
                 if (selected.isEmpty())
                 {
                     return;
@@ -1262,12 +1317,12 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 if (value == 0)
                 {
                     m_actionChannelHelpLabel->setText(
-                        "Independent: runs without blocking other channel-0 actions.");
+                        "This action can run at the same time as others.");
                 }
                 else
                 {
                     m_actionChannelHelpLabel->setText(
-                        QString("Shared FIFO: only one action on channel %1 runs at a time.").arg(value));
+                        QString("Only one action on channel %1 runs at a time.").arg(value));
                 }
                 refreshActionList();
             });
@@ -1684,8 +1739,8 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 const auto answer = QMessageBox::question(
                     this,
                     "Reset Frequencies",
-                    "Clear all action launch frequencies? Nth Frequent ranking will start empty. "
-                    "Recent history is not affected.",
+                    "Clear how often each action has been used? Most Frequent ranking will start over. "
+                    "The recent-actions list is not affected.",
                     QMessageBox::Yes | QMessageBox::No,
                     QMessageBox::No);
                 if (answer != QMessageBox::Yes)
@@ -1982,6 +2037,16 @@ void SettingsWindow::loadWorkingCopy(const AppConfig &appConfig, const std::vect
         m_darkModeCheck->setChecked(m_appConfig.darkMode);
         m_darkModeCheck->setText(m_appConfig.darkMode ? "Light Mode" : "Dark Mode");
     }
+    if (m_gameMouseCaptureCombo != nullptr)
+    {
+        const int want = static_cast<int>(m_appConfig.gameMouseCapture);
+        int index = m_gameMouseCaptureCombo->findData(want);
+        if (index < 0)
+        {
+            index = 0;
+        }
+        m_gameMouseCaptureCombo->setCurrentIndex(index);
+    }
     refreshGlobalRiceEditor();
 
     m_selectionKind = SelectionKind::None;
@@ -2009,6 +2074,11 @@ void SettingsWindow::exportWorkingCopy(AppConfig &appConfig, std::vector<Action>
     appConfig = m_appConfig;
     if (m_darkModeCheck) {
         appConfig.darkMode = m_darkModeCheck->isChecked();
+    }
+    if (m_gameMouseCaptureCombo != nullptr)
+    {
+        appConfig.gameMouseCapture = static_cast<GameMouseCaptureMode>(
+            m_gameMouseCaptureCombo->currentData().toInt());
     }
     appConfig.themeOverlayPath = m_themeOverlayEdit != nullptr
         ? m_themeOverlayEdit->text().trimmed()
@@ -2404,12 +2474,12 @@ void SettingsWindow::refreshActionEditor()
     if (channel == 0)
     {
         m_actionChannelHelpLabel->setText(
-            "Independent: runs without blocking other channel-0 actions.");
+            "This action can run at the same time as others.");
     }
     else
     {
         m_actionChannelHelpLabel->setText(
-            QString("Shared FIFO: only one action on channel %1 runs at a time.").arg(channel));
+            QString("Only one action on channel %1 runs at a time.").arg(channel));
     }
     refreshActionItemList();
     refreshActionSummary();
