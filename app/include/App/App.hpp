@@ -265,9 +265,9 @@ private:
     int m_overlayWarpHits{0};
     /// @brief Ignore SetCursorPos warps until this epoch (our own center-on-open).
     qint64 m_ignoreWarpUntilMs{0};
-    /// @brief Overlay selection point when the OS cursor is being recentered.
+    /// @brief Overlay selection point in Qt global DIP (not Win32 native pixels).
     Platform::Vec2 m_virtualCursorPos{};
-    /// @brief Last OS cursor sample, used to detect "device moved, cursor didn't".
+    /// @brief Last OS cursor sample in native pixels, used to detect "device moved, cursor didn't".
     Platform::Vec2 m_lastOsCursorPos{};
     /// @brief Last steal attempt epoch so we do not Alt-pulse every 8ms.
     qint64 m_lastStealAttemptMs{0};

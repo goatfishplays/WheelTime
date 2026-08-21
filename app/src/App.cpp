@@ -18,15 +18,18 @@
 #include <QAbstractNativeEventFilter>
 #include <QAction>
 #include <QApplication>
+#include <QCursor>
 #include <QDateTime>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QGuiApplication>
 #include <QIcon>
 #include <QMenu>
 #include <QMetaObject>
 #include <QPoint>
 #include <QRect>
+#include <QScreen>
 #include <QString>
 #include <QSystemTrayIcon>
 #include <QThread>
@@ -89,6 +92,25 @@ void deliverOverlayMouseButton(Platform::OverlayMouseButton button, bool pressed
     pos.setX(std::clamp(pos.x(), bounds.left(), bounds.right()));
     pos.setY(std::clamp(pos.y(), bounds.top(), bounds.bottom()));
     return pos;
+}
+
+[[nodiscard]] QScreen *screenAtQtCursor()
+{
+    QScreen *screen = QGuiApplication::screenAt(QCursor::pos());
+    if (screen == nullptr)
+    {
+        screen = QGuiApplication::primaryScreen();
+    }
+    return screen;
+}
+
+/// @brief Qt widget geometry in device-independent pixels for the cursor's screen.
+void applyQtOverlayGeometry(QWidget &gui)
+{
+    if (QScreen *screen = screenAtQtCursor())
+    {
+        gui.setGeometry(screen->geometry());
+    }
 }
 } // namespace
 
@@ -507,15 +529,15 @@ void App::beginGameMouseCaptureSession()
         return;
     }
 
-    const Platform::Vec2 cursor = m_inputReceiver.absoluteMousePosition();
-    m_virtualCursorPos = cursor;
-    m_lastOsCursorPos = cursor;
+    const QPoint qtCursor = QCursor::pos();
+    m_virtualCursorPos = Platform::Vec2{qtCursor.x(), qtCursor.y()};
+    m_lastOsCursorPos = m_inputReceiver.absoluteMousePosition();
     m_usingVirtualCursor = true;
     m_stoleGameFocus = false;
     m_overlayWarpHits = 0;
     m_ignoreWarpUntilMs = QDateTime::currentMSecsSinceEpoch() + 150;
     m_lastStealAttemptMs = 0;
-    m_gui.setVirtualCursor(QPoint(cursor.x, cursor.y));
+    m_gui.setVirtualCursor(qtCursor);
     m_inputReceiver.releaseCursorClip();
     m_inputReceiver.beginOverlayMouseSession(
         reinterpret_cast<void *>(m_gui.winId()), &deliverOverlayMouseButton, this);
@@ -564,9 +586,12 @@ void App::onGameMouseCaptureTick()
 
     if (m_usingVirtualCursor && (dx != 0 || dy != 0))
     {
+        const qreal dpr = std::max(m_gui.devicePixelRatioF(), qreal(0.01));
         const QRect bounds = m_gui.geometry();
         const QPoint next = clampPointToRect(
-            QPoint(m_virtualCursorPos.x + dx, m_virtualCursorPos.y + dy), bounds);
+            QPoint(m_virtualCursorPos.x + qRound(static_cast<qreal>(dx) / dpr),
+                   m_virtualCursorPos.y + qRound(static_cast<qreal>(dy) / dpr)),
+            bounds);
         m_virtualCursorPos = Platform::Vec2{next.x(), next.y()};
         m_gui.setVirtualCursor(next);
     }
@@ -637,8 +662,8 @@ void App::stealOverlayFocus()
     }
 
     m_stoleGameFocus = true;
-    m_inputReceiver.setAbsoluteMousePosition(m_virtualCursorPos);
-    m_lastOsCursorPos = m_virtualCursorPos;
+    QCursor::setPos(QPoint(m_virtualCursorPos.x, m_virtualCursorPos.y));
+    m_lastOsCursorPos = m_inputReceiver.absoluteMousePosition();
     m_ignoreWarpUntilMs = now + 150;
     m_usingVirtualCursor = false;
     m_gui.setVirtualCursor(std::nullopt);
@@ -841,18 +866,19 @@ void App::initializeOverlay()
         return;
     }
 
-    // Give Qt the same initial fullscreen bounds the native overlay window
-    // will use so layered painting has a valid backing-store size from the
-    // beginning instead of the default tiny top-level widget size.
-    const Platform::Vec2 cursorPos = m_inputReceiver.absoluteMousePosition();
+    // Give Qt DIP geometry for the cursor's screen, then size the HWND in
+    // native pixels. Re-apply Qt geometry after SetWindowPos so widget
+    // coordinates stay device-independent on scaled monitors.
     Platform::Window overlayWindow(reinterpret_cast<void *>(m_gui.winId()));
+    applyQtOverlayGeometry(m_gui);
+    const Platform::Vec2 cursorPos = m_inputReceiver.absoluteMousePosition();
     const Platform::WindowRect bounds = overlayWindow.monitorBoundsForPoint(cursorPos.x, cursorPos.y);
-    m_gui.setGeometry(bounds.x, bounds.y, bounds.width, bounds.height);
     m_gui.show();
     overlayWindow.setTransparentOverlay(true);
     overlayWindow.setNonActivating(true);
     overlayWindow.setTopmost(true);
     overlayWindow.setBounds(bounds);
+    applyQtOverlayGeometry(m_gui);
     overlayWindow.showNoActivate();
     m_gui.enterDormantOverlay();
     overlayWindow.setClickThrough(true);
@@ -861,14 +887,15 @@ void App::initializeOverlay()
 
 void App::configureOverlayForCursor()
 {
-    const Platform::Vec2 cursorPos = m_inputReceiver.absoluteMousePosition();
     Platform::Window overlayWindow(reinterpret_cast<void *>(m_gui.winId()));
+    // Qt geometry is device-independent pixels; Win32 monitor rects are native
+    // pixels. Using the native rect for QWidget::setGeometry makes mapToGlobal
+    // and SetCursorPos disagree on scaled or mixed-DPI monitors, so the drawn
+    // cursor sits on the wheel while the OS cursor does not.
+    const Platform::Vec2 cursorPos = m_inputReceiver.absoluteMousePosition();
     const Platform::WindowRect bounds = overlayWindow.monitorBoundsForPoint(cursorPos.x, cursorPos.y);
-    // Keep Qt's widget geometry in sync with the native overlay bounds. The
-    // shell widget owns the centered panel layout, so it must know its actual
-    // monitor-sized rect for rendering and hit-testing to behave correctly.
-    m_gui.setGeometry(bounds.x, bounds.y, bounds.width, bounds.height);
     overlayWindow.setBounds(bounds);
+    applyQtOverlayGeometry(m_gui);
     overlayWindow.setTransparentOverlay(true);
     overlayWindow.setNonActivating(true);
     overlayWindow.setTopmost(true);
@@ -937,7 +964,8 @@ void App::showGui(Menu *menu)
         const RiceSettings rice = Theme::resolve(m_appConfig.rice, m_activeMenu->rice());
         const QPoint target = m_gui.mouseOpenGlobalPosition(
             rice.mouseOpenOffsetXFraction, rice.mouseOpenOffsetYFraction);
-        m_inputReceiver.setAbsoluteMousePosition(Platform::Vec2{target.x(), target.y()});
+        // QCursor::setPos converts Qt DIP to native pixels; SetCursorPos does not.
+        QCursor::setPos(target);
         m_gui.refreshSelectionFromCursor();
     }
 

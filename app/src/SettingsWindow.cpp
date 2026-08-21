@@ -95,12 +95,16 @@ namespace
      * invisible so the rounded pane corners are not covered by an opaque
      * rectangle.
      */
-    QScrollArea *wrapInScrollArea(QWidget *content, QWidget *parent)
+    QScrollArea *wrapInScrollArea(QWidget *content, QWidget *parent, bool allowHorizontal = false)
     {
         auto *scroll = new QScrollArea(parent);
         scroll->setWidgetResizable(true);
         scroll->setFrameShape(QFrame::NoFrame);
-        scroll->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        scroll->setHorizontalScrollBarPolicy(
+            allowHorizontal ? Qt::ScrollBarAsNeeded : Qt::ScrollBarAlwaysOff);
+        scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        scroll->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+        scroll->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         scroll->setAutoFillBackground(false);
         scroll->viewport()->setAutoFillBackground(false);
         scroll->setWidget(content);
@@ -109,6 +113,82 @@ namespace
         // dark mode) rectangle behind the sections.
         content->setAutoFillBackground(false);
         return scroll;
+    }
+
+    /// @brief Keeps editor content at its natural size so a parent QScrollArea
+    /// scrolls instead of squashing rows (widgetResizable would otherwise shrink
+    /// the widget to the viewport and clip controls that do not fit).
+    void lockScrollContentToHint(QWidget *content)
+    {
+        const auto apply = [content]()
+        {
+            if (content == nullptr)
+            {
+                return;
+            }
+            const QSize hint = content->sizeHint();
+            if (hint.width() > 0)
+            {
+                content->setMinimumWidth(hint.width());
+            }
+            if (hint.height() > 0)
+            {
+                content->setMinimumHeight(hint.height());
+            }
+        };
+        content->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+        apply();
+        QMetaObject::invokeMethod(content, apply, Qt::QueuedConnection);
+    }
+
+    /// @brief Stops QFormLayout from shrinking row labels so "Start angle" cannot
+    /// become "Start angl" when the Global pane is narrow.
+    void lockFormLabelsToFullText(QFormLayout *form)
+    {
+        if (form == nullptr)
+        {
+            return;
+        }
+        const auto apply = [form]()
+        {
+            if (form == nullptr)
+            {
+                return;
+            }
+            int maxLabelWidth = 0;
+            for (int i = 0; i < form->rowCount(); ++i)
+            {
+                QLayoutItem *item = form->itemAt(i, QFormLayout::LabelRole);
+                if (item == nullptr || item->widget() == nullptr)
+                {
+                    continue;
+                }
+                QWidget *widget = item->widget();
+                widget->ensurePolished();
+                widget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+                int width = widget->sizeHint().width();
+                if (auto *label = qobject_cast<QLabel *>(widget))
+                {
+                    label->setWordWrap(false);
+                    width = std::max(width, label->fontMetrics().horizontalAdvance(label->text()) + 8);
+                }
+                widget->setMinimumWidth(width);
+                maxLabelWidth = std::max(maxLabelWidth, width);
+            }
+            for (int i = 0; i < form->rowCount(); ++i)
+            {
+                QLayoutItem *item = form->itemAt(i, QFormLayout::LabelRole);
+                if (item != nullptr && item->widget() != nullptr && maxLabelWidth > 0)
+                {
+                    item->widget()->setMinimumWidth(maxLabelWidth);
+                }
+            }
+        };
+        apply();
+        if (QWidget *host = form->parentWidget())
+        {
+            QMetaObject::invokeMethod(host, apply, Qt::QueuedConnection);
+        }
     }
 
     constexpr int kRiceSpinMinWidth = 92;
@@ -138,6 +218,18 @@ namespace
         }
         layout->addStretch(1);
         return row;
+    }
+
+    /// @brief Stacks rice spins so X/Y (or other pairs) stay visible in a narrow pane.
+    QWidget *riceControlColumn(QWidget *parent, QWidget *first, QWidget *second)
+    {
+        auto *column = new QWidget(parent);
+        auto *layout = new QVBoxLayout(column);
+        layout->setContentsMargins(0, 0, 0, 0);
+        layout->setSpacing(6);
+        layout->addWidget(first, 0, Qt::AlignLeft);
+        layout->addWidget(second, 0, Qt::AlignLeft);
+        return column;
     }
 
     QToolButton *makeCollapseToggle(const QString &title, QWidget *parent)
@@ -200,6 +292,7 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     graphicsForm->setFormAlignment(Qt::AlignLeft | Qt::AlignTop);
     graphicsForm->setLabelAlignment(Qt::AlignRight | Qt::AlignVCenter);
     graphicsForm->setHorizontalSpacing(12);
+    graphicsForm->setSizeConstraint(QLayout::SetMinimumSize);
 
     m_darkModeCheck = new QCheckBox("Dark Mode", graphicsBody);
     m_darkModeCheck->setObjectName("darkModeToggle");
@@ -327,12 +420,14 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_mouseOpenOffsetXSpin->setMinimumWidth(118);
     m_mouseOpenOffsetYSpin->setMinimumWidth(118);
     graphicsForm->addRow("Mouse on open",
-                         riceControlRow(graphicsBody, m_mouseOpenOffsetXSpin, nullptr, m_mouseOpenOffsetYSpin));
+                         riceControlColumn(graphicsBody, m_mouseOpenOffsetXSpin, m_mouseOpenOffsetYSpin));
 
     auto *graphicsLayout = new QVBoxLayout(m_globalGroup);
     graphicsLayout->setContentsMargins(8, 8, 8, 8);
-    auto *graphicsScroll = wrapInScrollArea(graphicsBody, m_globalGroup);
+    auto *graphicsScroll = wrapInScrollArea(graphicsBody, m_globalGroup, true);
     graphicsLayout->addWidget(graphicsScroll);
+    lockFormLabelsToFullText(graphicsForm);
+    lockScrollContentToHint(graphicsBody);
     m_globalGroup->setMinimumHeight(140);
 
     auto *menusGroup = new QGroupBox("Menus", leftSplit);
@@ -541,8 +636,8 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     sizeRiceSpin(m_menuMouseOpenOffsetYSpin);
     m_menuMouseOpenOffsetXSpin->setMinimumWidth(118);
     m_menuMouseOpenOffsetYSpin->setMinimumWidth(118);
-    auto *menuMouseControls = riceControlRow(layoutOverridesBody, m_menuMouseOpenOffsetXSpin, nullptr,
-                                             m_menuMouseOpenOffsetYSpin);
+    auto *menuMouseControls = riceControlColumn(layoutOverridesBody, m_menuMouseOpenOffsetXSpin,
+                                                m_menuMouseOpenOffsetYSpin);
     auto *menuMouseRow = new QWidget(layoutOverridesBody);
     auto *menuMouseRowLayout = new QHBoxLayout(menuMouseRow);
     menuMouseRowLayout->setContentsMargins(0, 0, 0, 0);
