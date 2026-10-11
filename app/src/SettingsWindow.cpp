@@ -299,6 +299,12 @@ SettingsWindow::SettingsWindow(QWidget *parent)
     m_darkModeCheck->setToolTip("Switches the built-in light and dark look. A theme overlay, if set, still applies on top.");
     graphicsForm->addRow(m_darkModeCheck);
 
+    m_startInTrayCheck = new QCheckBox("Start in the tray", graphicsBody);
+    m_startInTrayCheck->setToolTip(
+        "On launch, stay in the system tray instead of opening Settings. "
+        "Takes effect the next time WheelTime starts.");
+    graphicsForm->addRow(m_startInTrayCheck);
+
     m_gameMouseCaptureCombo = new QComboBox(graphicsBody);
     m_gameMouseCaptureCombo->addItem("Don't interrupt the game", static_cast<int>(GameMouseCaptureMode::Off));
     m_gameMouseCaptureCombo->addItem("Use a WheelTime cursor", static_cast<int>(GameMouseCaptureMode::Unclip));
@@ -1137,9 +1143,11 @@ SettingsWindow::SettingsWindow(QWidget *parent)
                 refreshEditors(); });
     connect(addActionButton, &QPushButton::clicked, this, [this]()
             {
-                std::vector<std::unique_ptr<ActionItem>> items;
-                items.push_back(std::make_unique<AI_LaunchApp>("calculator", ""));
-                m_actions.emplace_back(std::move(items), "New Action", "", makeUniqueActionId("New Action"));
+                m_actions.emplace_back(
+                    std::vector<std::unique_ptr<ActionItem>>{},
+                    "New Action",
+                    "",
+                    makeUniqueActionId("New Action"));
                 refreshLists();
                 setSelectedAction(static_cast<int>(m_actions.size()) - 1); });
     connect(removeActionButton, &QPushButton::clicked, this, [this]()
@@ -2132,6 +2140,10 @@ void SettingsWindow::loadWorkingCopy(const AppConfig &appConfig, const std::vect
         m_darkModeCheck->setChecked(m_appConfig.darkMode);
         m_darkModeCheck->setText(m_appConfig.darkMode ? "Light Mode" : "Dark Mode");
     }
+    if (m_startInTrayCheck != nullptr)
+    {
+        m_startInTrayCheck->setChecked(m_appConfig.startInTray);
+    }
     if (m_gameMouseCaptureCombo != nullptr)
     {
         const int want = static_cast<int>(m_appConfig.gameMouseCapture);
@@ -2169,6 +2181,10 @@ void SettingsWindow::exportWorkingCopy(AppConfig &appConfig, std::vector<Action>
     appConfig = m_appConfig;
     if (m_darkModeCheck) {
         appConfig.darkMode = m_darkModeCheck->isChecked();
+    }
+    if (m_startInTrayCheck != nullptr)
+    {
+        appConfig.startInTray = m_startInTrayCheck->isChecked();
     }
     if (m_gameMouseCaptureCombo != nullptr)
     {

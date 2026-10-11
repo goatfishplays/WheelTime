@@ -16,7 +16,7 @@ The system is expected to handle invalid or failed actions safely, but more test
 
 ### Hotkey and Focus Edge Cases
 
-The launcher supports hotkey behavior, but edge cases may still exist depending on the active application, full-screen mode, Windows permissions, or focus behavior. Some games or protected applications may block overlays or input simulation. Simulated key inputs may be inconsistent when physically holding modifiers alongside them because of the way they are handled by the OS. Settings menu may steal focus due to needing keyboard inputs leading to needing to manually refocus your active application after.
+The launcher supports hotkey behavior, but edge cases may still exist depending on the active application, full-screen mode, Windows permissions, or focus behavior. Some games or protected applications may block overlays or input simulation. Simulated key inputs may be inconsistent when physically holding modifiers alongside them because of the way they are handled by the OS. Settings menu may steal focus due to needing keyboard inputs leading to needing to manually refocus your active application after. Some applications require a hotkey to have a hold duration(looking at you OBS...) to function, this is an issue on their end as it is only polled every N ms.
 
 ### Full Screen Games May Or May Not Work
 

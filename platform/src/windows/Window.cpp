@@ -76,6 +76,11 @@ void Window::focus()
         // Unlock the foreground restriction that otherwise blocks SetForegroundWindow
         // when we steal later than the original hotkey (Minecraft's recenter is not
         // ClipCursor, so detection often happens after that permission expires).
+        // HWND_TOPMOST is only that bypass. Leaving it set pins this HWND above
+        // every normal window for the rest of its life, including after we exit.
+        // Drop back out unless it was already topmost (our overlay, or an app the
+        // user pinned on purpose).
+        const bool wasTopmost = (GetWindowLongPtr(hwnd, GWL_EXSTYLE) & WS_EX_TOPMOST) != 0;
         LockSetForegroundWindow(LSFW_UNLOCK);
         AllowSetForegroundWindow(ASFW_ANY);
         BringWindowToTop(hwnd);
@@ -92,6 +97,17 @@ void Window::focus()
             SetForegroundWindow(hwnd);
         }
         SetFocus(hwnd);
+        if (!wasTopmost)
+        {
+            SetWindowPos(
+                hwnd,
+                HWND_NOTOPMOST,
+                0,
+                0,
+                0,
+                0,
+                SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+        }
 
         if (dwForeThread != dwCurrentThread)
         {

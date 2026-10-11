@@ -466,6 +466,10 @@ namespace
         {
             appConfig.darkMode = rootObject["darkMode"].toBool();
         }
+        if (rootObject.contains("startInTray") && rootObject["startInTray"].isBool())
+        {
+            appConfig.startInTray = rootObject["startInTray"].toBool();
+        }
         if (rootObject.contains("themeOverlay"))
         {
             appConfig.themeOverlayPath = rootObject.value("themeOverlay").toString();
@@ -844,6 +848,7 @@ bool MenuConfigLoader::saveConfig(const QString &filepath, const AppConfig &appC
 
     QJsonObject rootObject;
     rootObject.insert("darkMode", appConfig.darkMode);
+    rootObject.insert("startInTray", appConfig.startInTray);
     rootObject.insert("gameMouseCapture", serializeGameMouseCapture(appConfig.gameMouseCapture));
     if (!appConfig.themeOverlayPath.isEmpty())
     {

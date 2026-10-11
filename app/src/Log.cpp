@@ -20,8 +20,12 @@
 #include <fstream>
 #include <iostream>
 #include <memory>
+#include <mutex>
 #include <streambuf>
 #include <string>
+#include <thread>
+#include <unordered_map>
+#include <vector>
 
 using namespace Application;
 
@@ -46,49 +50,99 @@ protected:
         }
 
         const char c = static_cast<char>(ch);
-        m_pending.push_back(c);
-        if (m_original != nullptr)
+        return xsputn(&c, 1) == 1 ? ch : traits_type::eof();
+    }
+
+    std::streamsize xsputn(const char *s, std::streamsize count) override
+    {
+        if (s == nullptr || count <= 0)
         {
-            m_original->sputc(c);
+            return 0;
         }
-        if (c == '\n')
+
+        // One buffer per thread. Stream Unmute's key release and the next
+        // keystroke log at the same time; sharing one string races and hangs.
+        std::vector<std::string> lines;
         {
-            flushPending();
+            std::lock_guard lock{m_mutex};
+            for (std::streamsize i = 0; i < count; ++i)
+            {
+                const char c = s[static_cast<size_t>(i)];
+                pendingForThisThreadLocked().push_back(c);
+                if (c == '\n')
+                {
+                    lines.push_back(detachPendingLocked());
+                }
+            }
+            if (m_original != nullptr)
+            {
+                m_original->sputn(s, count);
+            }
         }
-        return ch;
+
+        for (const std::string &line : lines)
+        {
+            emitLine(line);
+        }
+        return count;
     }
 
     int sync() override
     {
-        if (m_original != nullptr)
+        std::string line;
+        bool shouldEmit = false;
         {
-            m_original->pubsync();
+            std::lock_guard lock{m_mutex};
+            if (m_original != nullptr)
+            {
+                m_original->pubsync();
+            }
+            std::string &pending = pendingForThisThreadLocked();
+            if (!pending.empty())
+            {
+                line = detachPendingLocked();
+                shouldEmit = true;
+            }
         }
-        if (!m_pending.empty())
+        if (shouldEmit)
         {
-            flushPending();
+            emitLine(line);
         }
         return 0;
     }
 
 private:
-    void flushPending()
+    /// @brief Caller holds @c m_mutex.
+    std::string &pendingForThisThreadLocked()
     {
-        std::string line = std::move(m_pending);
-        m_pending.clear();
+        return m_pendingByThread[std::this_thread::get_id()];
+    }
+
+    /// @brief Caller holds @c m_mutex. Detaches this thread's buffer only.
+    std::string detachPendingLocked()
+    {
+        std::string &pending = pendingForThisThreadLocked();
+        std::string line = std::move(pending);
+        pending.clear();
         while (!line.empty() && (line.back() == '\n' || line.back() == '\r'))
         {
             line.pop_back();
         }
+        return line;
+    }
+
+    void emitLine(const std::string &line)
+    {
         if (m_onLine)
         {
             m_onLine(line);
         }
     }
 
+    std::mutex m_mutex;
+    std::unordered_map<std::thread::id, std::string> m_pendingByThread;
     std::streambuf *m_original{nullptr};
     std::function<void(const std::string &)> m_onLine;
-    std::string m_pending;
 };
 
 void qtMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)

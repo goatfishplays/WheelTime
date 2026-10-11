@@ -303,7 +303,10 @@ App::App()
 
     setupTrayIcon();
 
-    QTimer::singleShot(0, [this]() { showSettingsWindow(); });
+    if (!m_appConfig.startInTray)
+    {
+        QTimer::singleShot(0, [this]() { showSettingsWindow(); });
+    }
 }
 
 App::~App()

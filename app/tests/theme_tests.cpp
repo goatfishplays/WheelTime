@@ -255,6 +255,7 @@ bool testConfigRiceRoundTrip()
 
     AppConfig appConfig;
     appConfig.darkMode = true;
+    appConfig.startInTray = true;
     appConfig.themeOverlayPath = "themes/my-tweaks.qss";
     appConfig.gameMouseCapture = GameMouseCaptureMode::StealIfLocked;
     appConfig.rice.buttonRadiusFraction = 0.28;
@@ -279,7 +280,8 @@ bool testConfigRiceRoundTrip()
         return false;
     }
 
-    if (!reloadedConfig.darkMode || reloadedConfig.themeOverlayPath != appConfig.themeOverlayPath)
+    if (!reloadedConfig.darkMode || !reloadedConfig.startInTray
+        || reloadedConfig.themeOverlayPath != appConfig.themeOverlayPath)
     {
         std::cerr << "roundtrip: theme fields not preserved\n";
         return false;
@@ -344,6 +346,11 @@ bool testOldConfigLoadsWithoutRice()
     if (!appConfig.themeOverlayPath.isEmpty())
     {
         std::cerr << "legacy: overlay path should default empty\n";
+        return false;
+    }
+    if (appConfig.startInTray)
+    {
+        std::cerr << "legacy: startInTray should default off\n";
         return false;
     }
     if (appConfig.gameMouseCapture != GameMouseCaptureMode::Off)

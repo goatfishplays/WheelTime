@@ -45,6 +45,8 @@ enum class GameMouseCaptureMode
 struct AppConfig
 {
     bool darkMode = false;
+    /// @brief Launch to the system tray instead of opening Settings.
+    bool startInTray = false;
     QString themeOverlayPath;
     RiceSettings rice;
     GameMouseCaptureMode gameMouseCapture = GameMouseCaptureMode::Off;
